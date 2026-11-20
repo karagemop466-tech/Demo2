@@ -8,6 +8,15 @@ name: Refresh Kalshi demo data
 
 on:
   workflow_dispatch:
+    inputs:
+      ref:
+        description: "Branch to check out and collect from (default: main)"
+        required: false
+        default: "main"
+      push_ref:
+        description: "Branch to push the refreshed data to (default: main)"
+        required: false
+        default: "main"
   schedule:
     # every 10 minutes (GitHub cron is best-effort and may run late)
     - cron: "*/10 * * * *"
@@ -15,6 +24,8 @@ on:
     branches: [main]
     paths:
       - "tools/collector.py"
+      - "tools/alerts.py"
+      - "tools/simulate.py"
       - ".github/workflows/refresh-data.yml"
 
 permissions:
@@ -30,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event.inputs.ref || 'main' }}
 
       - uses: actions/setup-python@v5
         with:
@@ -46,6 +57,11 @@ jobs:
           KALSHI_DEMO_API_KEY_ID: ${{ secrets.KALSHI_DEMO_API_KEY_ID }}
           KALSHI_DEMO_PRIVATE_KEY: ${{ secrets.KALSHI_DEMO_PRIVATE_KEY }}
         run: python tools/collector.py
+
+      - name: Build the alert feed and the simulated-trade book
+        run: |
+          python tools/alerts.py
+          python tools/simulate.py
 
       - name: Show result summary
         run: |
@@ -98,7 +114,7 @@ jobs:
           # Every failure surfaces as a ::warning::/::error:: annotation with the real
           # git output (session eeb796d7: run logs are unreachable this session).
           for attempt in 1 2 3 4 5 6; do
-            out=$(git push origin HEAD:main 2>&1)
+            out=$(git push origin "HEAD:${{ github.event.inputs.push_ref || 'main' }}" 2>&1)
             rc=$?
             if [ $rc -eq 0 ]; then
               echo "snapshot pushed on attempt $attempt"

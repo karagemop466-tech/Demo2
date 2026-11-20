@@ -1,0 +1,13 @@
+{
+ "generated_at_utc": "2026-11-20T19:43:48Z",
+ "alerts": 9,
+ "picks": 0,
+ "by_topic": {
+  "elections": 6,
+  "crypto": 2,
+  "gas": 1
+ },
+ "threshold_dollars": 0.1,
+ "model_name": "Jump Edge Score",
+ "model_version": "1.0"
+}

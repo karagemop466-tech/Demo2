@@ -176,12 +176,20 @@ def get_json(url: str, signer: Signer | None = None, retries: int = 3) -> tuple[
     return None, int(last_status) if isinstance(last_status, int) else 0
 
 
-def paginate(url: str, key: str, signer: Signer | None = None, max_pages: int = 30) -> list[dict]:
-    """Cursor pagination exactly as documented in getting_started/pagination.md."""
+def paginate(url: str, key: str, signer: Signer | None = None, max_pages: int = 30,
+             limit: int = 200) -> list[dict]:
+    """Cursor pagination exactly as documented in getting_started/pagination.md.
+
+    `limit` is the page size. It was hard-coded to 200 before, which meant the
+    settled-markets scan only ever saw the newest 2,000 rows — and the demo
+    exchange settles synthetic short-dated markets every few minutes, so the
+    in-scope settled markets never appeared. The documented maximum for
+    GET /markets is 1,000 (docs.kalshi.com/api-reference/market/get-markets).
+    """
     out: list[dict] = []
     cursor = ""
     for _ in range(max_pages):
-        u = url + ("&" if "?" in url else "?") + "limit=200"
+        u = url + ("&" if "?" in url else "?") + f"limit={limit}"
         if cursor:
             u += "&cursor=" + urllib.parse.quote(cursor, safe="")
         j, status = get_json(u, signer)
@@ -502,17 +510,128 @@ def collect_candles(rows: list[dict], signer: Signer | None, top_n: int = 8) -> 
     return out
 
 
+def collect_trades(rows: list[dict], signer: Signer | None, per_topic: int = 8) -> dict:
+    """GET /markets/trades?ticker=... — the raw trade prints of the biggest markets.
+
+    Docs (Get Trades): each trade carries trade_id, ticker, count_fp,
+    yes_price_dollars, no_price_dollars, taker_outcome_side, taker_book_side,
+    taker_side, created_time and is_block_trade; `limit` is 1..1000 and the
+    response is cursor-paginated. Consecutive prints of one market are what the
+    live alert feed compares to detect a move of $0.10 or more.
+    """
+    by_topic: dict[str, list[dict]] = {}
+    for r in rows:
+        by_topic.setdefault(r["topic"], []).append(r)
+    picked: list[dict] = []
+    for topic, trows in by_topic.items():
+        ranked = sorted(trows, key=lambda r: (implied_dollar_volume(r) or 0), reverse=True)
+        picked.extend(ranked[:per_topic])
+    out: dict[str, dict] = {}
+    for r in picked:
+        t = r["market_ticker"]
+        url = f"{DEMO_REST}/markets/trades?ticker={urllib.parse.quote(t)}&limit=1000"
+        j, status = get_json(url, signer)
+        if not j:
+            out[t] = {"error": f"HTTP {status}", "trades": [], "raw_request": url}
+            continue
+        trades = []
+        for tr in j.get("trades") or []:
+            trades.append({
+                "trade_id": tr.get("trade_id"),
+                "ticker": tr.get("ticker"),
+                "count_fp": tr.get("count_fp"),
+                "yes_price_dollars": tr.get("yes_price_dollars"),
+                "no_price_dollars": tr.get("no_price_dollars"),
+                "taker_outcome_side": tr.get("taker_outcome_side"),
+                "taker_book_side": tr.get("taker_book_side"),
+                "taker_side": tr.get("taker_side"),
+                "created_time": tr.get("created_time"),
+                "is_block_trade": tr.get("is_block_trade"),
+            })
+        # The order book of the SAME market is collected with the prints, so the
+        # alert feed can report how much size is actually available at the price
+        # a trader would have to pay. GET /markets/{ticker}/orderbook returns
+        # yes bids and no bids only; the ask side is derived (1 - bid).
+        ob_url = f"{DEMO_REST}/markets/{urllib.parse.quote(t)}/orderbook?depth=25"
+        ob, ob_status = get_json(ob_url, signer)
+        book: dict[str, Any] = {"http_status": ob_status, "raw_request": ob_url,
+                                "yes_bids": [], "no_bids": []}
+        if ob:
+            obp = ob.get("orderbook_fp") or {}
+            yes = [[float(p), float(q)] for p, q in (obp.get("yes_dollars") or [])]
+            no = [[float(p), float(q)] for p, q in (obp.get("no_dollars") or [])]
+            yes.sort(key=lambda x: x[0], reverse=True)
+            no.sort(key=lambda x: x[0], reverse=True)
+            book["yes_bids"] = yes
+            book["no_bids"] = no
+            book["derived_yes_asks"] = sorted([[round(1 - p, 4), q] for p, q in no],
+                                              key=lambda x: x[0])
+        out[t] = {
+            "topic": r["topic"],
+            "title": r.get("market_title"),
+            "series_ticker": r.get("series_ticker"),
+            "event_ticker": r.get("event_ticker"),
+            "trades": trades,
+            "raw_request": url,
+            "orderbook": book,
+        }
+    return out
+
+
 def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list[dict]:
-    """Settled in-scope markets with the official yes/no `result`."""
-    settled = paginate(DEMO_REST + "/markets?status=settled", "markets", signer, max_pages=10)
+    """Settled in-scope markets with the official yes/no `result`.
+
+    Two things were fixed here on 2026-11-20 (session a23759ab):
+
+    1. The page size. `paginate` used to force limit=200, so the scan only saw
+       the newest 2,000 settled rows. The demo exchange settles synthetic
+       short-dated markets every few minutes, so no in-scope market was ever in
+       that window and the resolutions file came out empty. GET /markets
+       documents a maximum limit of 1,000, so the scan now uses that and walks
+       more pages.
+
+    2. The series lookup. The series ticker was guessed from the event ticker
+       (`event_ticker.split("-")[0]`), which breaks for series whose ticker
+       contains a dash and never matches a series whose ticker does not. The
+       scan now reads the official `series_ticker` from GET /events and falls
+       back to the guess only when the event record is unavailable; unmapped
+       series are enriched with GET /series/{ticker}, the same way the live
+       scope scan does, so the gasoline family (which is only identifiable from
+       `product_metadata.scope`) is picked up too.
+    """
+    settled = paginate(DEMO_REST + "/markets?status=settled", "markets", signer,
+                       max_pages=40, limit=1000)
+
+    # Official event -> series map, straight from GET /events.
+    event_series: dict[str, str] = {}
+    for ev in paginate(DEMO_REST + "/events?status=settled", "events", signer, max_pages=40):
+        et = ev.get("event_ticker")
+        st = ev.get("series_ticker")
+        if et and st:
+            event_series[et] = st
+
     series_idx = load_series_index(signer)
     topic_cache = {t: series_topic(s) for t, s in series_idx.items()}
+    enriched: set[str] = set()
+
+    def topic_for(ev: str, st_hint: str) -> tuple[str | None, str]:
+        st = event_series.get(ev) or st_hint
+        topic = topic_cache.get(st)
+        if topic is None and st and st not in enriched:
+            enriched.add(st)
+            j2, _ = get_json(f"{DEMO_REST}/series/{urllib.parse.quote(st)}", signer)
+            full = (j2 or {}).get("series") if isinstance(j2, dict) else None
+            if isinstance(full, dict) and full.get("ticker"):
+                series_idx[st] = full
+                topic_cache[st] = series_topic(full)
+                topic = topic_cache.get(st)
+        return topic, st
+
     rows: list[dict] = []
     for m in settled:
         ev = m.get("event_ticker") or ""
-        # The series ticker is the leading segment of the event ticker.
-        st = ev.split("-")[0] if ev else ""
-        topic = topic_cache.get(st)
+        st_hint = ev.split("-")[0] if ev else ""
+        topic, st = topic_for(ev, st_hint)
         if topic not in TOPICS:
             continue
         rows.append(
@@ -523,15 +642,21 @@ def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list
                 "market_ticker": m.get("ticker"),
                 "status": m.get("status"),
                 "title": m.get("title"),
+                "yes_sub_title": m.get("yes_sub_title"),
                 "result": m.get("result") or "",          # "yes" / "no" / ""
                 "settlement_value_dollars": m.get("settlement_value_dollars"),
                 "settlement_ts": m.get("settlement_ts"),
                 "close_time": m.get("close_time"),
                 "expiration_value": m.get("expiration_value"),
                 "volume_fp": m.get("volume_fp"),
+                "volume_24h_fp": m.get("volume_24h_fp"),
                 "open_interest_fp": m.get("open_interest_fp"),
+                "last_price_dollars": m.get("last_price_dollars"),
+                "yes_bid_dollars": m.get("yes_bid_dollars"),
+                "yes_ask_dollars": m.get("yes_ask_dollars"),
                 "rules_primary_head": (m.get("rules_primary") or "")[:160] or None,
                 "market_url": f"{DEMO_REST}/markets/{m.get('ticker')}" if m.get("ticker") else None,
+                "source_url": f"{DEMO_REST}/markets?status=settled",
             }
         )
         if len(rows) >= limit_markets:
@@ -576,6 +701,7 @@ def main() -> int:
 
     books = {} if args.scope_only else collect_orderbooks(rows, signer)
     candles = {} if args.scope_only else collect_candles(rows, signer)
+    trades = {} if args.scope_only else collect_trades(rows, signer)
     resolutions = collect_resolutions(signer)
 
     by_topic = {t: [r for r in rows if r["topic"] == t] for t in TOPICS}
@@ -601,6 +727,7 @@ def main() -> int:
             "resolved_in_scope": len(resolutions),
             "orderbooks": len(books),
             "candle_sets": len(candles),
+            "trade_print_markets": len(trades),
         },
         "markets": rows,
         "by_topic": by_topic,
@@ -643,6 +770,14 @@ def main() -> int:
     write_json("resolutions.json", {"generated_at_utc": snapshot["generated_at_utc"],
                                     "count": len(resolutions), "resolutions": resolutions})
 
+    # Raw trade prints for the live alert feed (tools/alerts.py reads this).
+    write_json("trades.json", {
+        "generated_at_utc": snapshot["generated_at_utc"],
+        "endpoint": f"{DEMO_REST}/markets/trades",
+        "endpoint_doc": "https://docs.kalshi.com/api-reference/market/get-trades",
+        "markets": trades,
+    })
+
     # history ledger: append one compact point per market per run (for the price chart)
     hist_path = DATA / "history.json"
     hist = json.loads(hist_path.read_text()) if hist_path.exists() else {"points": {}}
@@ -662,7 +797,7 @@ def main() -> int:
     write_json("history.json", hist)
 
     print(f"OK  in-scope markets={len(rows)}  resolved={len(resolutions)}  "
-          f"books={len(books)}  auth={signer is not None}")
+          f"books={len(books)}  trades={len(trades)}  auth={signer is not None}")
     if not rows:
         print("WARNING: zero in-scope markets returned — scope filter or API issue.", file=sys.stderr)
     return 0
