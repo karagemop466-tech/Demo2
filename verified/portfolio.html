@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio &amp; Trades · Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<header class="top">
+  <div class="brand"><a href="index.html">Kalshi Demo Dashboard</a><span class="tag">DEMO DATA · read-only</span></div>
+  <nav><a href="index.html">Home</a><a href="gas-prices.html">Gas Prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live-dashboard.html">Live Dashboard</a><a href="portfolio.html" class="active">Portfolio &amp; Trades</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="flagged-for-review.html">Flagged for Review</a><a href="repo-review.html">Repo Review</a><a href="../index.html">Main dashboard ↗</a></nav>
+</header>
+<main>
+
+<section class="hero small">
+  <h1>Portfolio &amp; Trades</h1>
+  <div class="banner bad"><strong>Status: blocked, needs your action.</strong> Reading your demo portfolio, placing trades, and tracking trade performance require a Kalshi demo account and an API key. This session cannot create either one without logging in to Kalshi.</div>
+</section>
+
+<section>
+<h2>What is needed (one-time setup)</h2>
+<ol>
+  <li>Create a Kalshi demo account. Kalshi's guide: <a href="https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account" target="_blank" rel="noopener">help.kalshi.com, creating and using a demo account</a>. Demo site: <a href="https://demo.kalshi.co/" target="_blank" rel="noopener">demo.kalshi.co</a>.</li>
+  <li>Generate an API key for that demo account. Kalshi's docs: <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API Keys</a>. The docs say the key process is the same for demo and production, and demo credentials are separate from production.</li>
+  <li>Add the key to a secret store (not to this repository). The repository must never contain credentials.</li>
+</ol>
+<p class="note">Authenticated endpoints and their signing rules are in the <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">Quick Start: Authenticated Requests</a> guide. Trading endpoints are described in <a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noopener">Quick Start: Create your first order</a>. These were not read in full during this session.</p>
+</section>
+
+<section>
+<h2>Trade log (empty; no trades have been placed)</h2>
+<p>Each row will record one order and its result. Fields come from the API response when trading is enabled. No values are filled in here.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Order ID</th><th>Placed (UTC)</th><th>Ticker</th><th>Category</th><th>Side</th><th>Contracts</th><th>Price ($)</th><th>Fee ($)</th><th>Result (yes/no)</th><th>P&amp;L ($)</th><th>Source link</th><th>Strategy tag</th></tr></thead>
+<tbody><tr><td colspan="12">No trades recorded yet.</td></tr></tbody>
+</table></div>
+</section>
+
+<section>
+<h2>Strategy categories proposed for analysis (not yet tested)</h2>
+<p>These are candidate groupings for classifying trades once data exists. They are a plan, not a result. Each one needs a pre-set hypothesis before testing.</p>
+<ul>
+  <li><strong>By topic:</strong> gas prices, elections, culture, crypto, golf (matches the category pages).</li>
+  <li><strong>By entry price band:</strong> low (under $0.20), middle ($0.20 to $0.80), high (over $0.80). Band edges are a proposal.</li>
+  <li><strong>By time to close:</strong> under 1 day, 1 to 7 days, over 7 days.</li>
+  <li><strong>By liquidity at entry:</strong> contracts available at the entry price, from the orderbook.</li>
+  <li><strong>By settlement-source quality:</strong> single official source vs. multiple or unclear sources (see flags F-03, F-05, F-09).</li>
+</ul>
+</section>
+
+</main>
+<footer>
+  <p>Data source: Kalshi <strong>demo</strong> Trade API, <a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a>.
+  Kalshi says demo prices and behavior may not reflect real markets. Not financial advice.
+  Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a>.</p>
+  <p>Site built 2026-11-20 11:17 UTC from data/kalshi_snapshot.json (collected 2026-11-20).</p>
+</footer>
+
+</body>
+</html>
