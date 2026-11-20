@@ -17,7 +17,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parent.parent
-HTML = [ROOT / "index.html"] + sorted((ROOT / "pages").glob("*.html"))
+HTML = [ROOT / "index.html", ROOT / "dashboard.html"] + sorted((ROOT / "pages").glob("*.html"))
 
 errors: list[str] = []
 warnings: list[str] = []
