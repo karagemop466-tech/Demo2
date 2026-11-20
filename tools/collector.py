@@ -975,16 +975,17 @@ def main() -> int:
 
     ranked_all = sorted(
         rows,
-        key=lambda r: (r.get("usd_volume_24h") if r.get("usd_volume_24h") is not None
+        key=lambda r: (1 if r.get("usd_volume_24h") is not None else 0,
+                       r.get("usd_volume_24h") if r.get("usd_volume_24h") is not None
                        else r.get("est_dollar_volume") or -1),
         reverse=True,
     )
     write_json("top.json", {
         "generated_at_utc": snapshot["generated_at_utc"],
-        "method": ("Ranked by usd_volume_24h (computed from public trade prints) where it was "
-                   "computed for that market, otherwise by the est_dollar_volume proxy "
-                   "(volume_fp x last_price_dollars). The row says which one was used in "
-                   "`rank_by`."),
+        "method": ("Two tiers. First every market whose 24-hour dollar turnover was MEASURED "
+                   "from public trade prints (usd_volume_24h), highest first. Then the rest, by "
+                   "the est_dollar_volume proxy (volume_fp x last_price_dollars). `rank_by` on "
+                   "each row says which metric placed it."),
         "count": min(len(ranked_all), 200),
         "rows": [
             dict(r, rank_by=("usd_volume_24h" if r.get("usd_volume_24h") is not None else "est_dollar_volume"))

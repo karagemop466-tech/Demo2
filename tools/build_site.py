@@ -225,7 +225,12 @@ tables on the category, resolution and verification pages still work without it.
 </div>
 
 <h2>Markets ranked by dollar amount</h2>
-<p class="muted" id="rankNote"></p>
+<p class="muted" id="rankNote">Two tiers. Markets whose <b>24-hour dollar turnover was
+measured</b> from public trade prints (<a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get
+Trades</a>: sum of <code>count_fp &times; yes_price_dollars</code> inside 24 h) come first, highest
+first. Everything else follows by the <b>estimate</b> <code>volume_fp &times; last_price_dollars</code>,
+which prices a market's whole history at today's price and is therefore not turnover. An em dash
+in the measured column means it was not measured this run — never zero, never guessed.</p>
 <div class="notice info"><b>What "highest dollar amount" means here.</b> The Trade API has no
   single dollar-volume field. Every row therefore shows the raw official fields
   (<code>volume_fp</code>, <code>open_interest_fp</code>, <code>last_price_dollars</code>) and
@@ -239,6 +244,7 @@ tables on the category, resolution and verification pages still work without it.
       <option value="golf">Golf</option></select></div>
   <div><label for="sortSel">Sort</label>
     <select id="sortSel">
+      <option value="usd24" selected>measured $ traded, 24 h (desc)</option>
       <option value="est">est. dollar volume (desc)</option>
       <option value="volume">volume_fp (desc)</option>
       <option value="oi">open_interest_fp (desc)</option>
@@ -332,9 +338,18 @@ DASH_JS = r"""
       (!q || (m.market_ticker+' '+(m.market_title||'')).toLowerCase().includes(q)));
     const s = $('sortSel').value;
     r.sort((a,b)=>{
+      if(s==='usd24'){
+        const av = a.usd_volume_24h==null ? -1 : a.usd_volume_24h;
+        const bv = b.usd_volume_24h==null ? -1 : b.usd_volume_24h;
+        return bv-av;
+      }
       if(s==='volume') return (parseFloat(b.volume_fp)||0)-(parseFloat(a.volume_fp)||0);
       if(s==='oi') return (parseFloat(b.open_interest_fp)||0)-(parseFloat(a.open_interest_fp)||0);
       if(s==='close') return String(a.close_time||'').localeCompare(String(b.close_time||''));
+      // default: measured turnover first, estimate second
+      const av = a.usd_volume_24h==null ? -1 : a.usd_volume_24h;
+      const bv = b.usd_volume_24h==null ? -1 : b.usd_volume_24h;
+      if(av!==bv) return bv-av;
       return (b.est_dollar_volume||0)-(a.est_dollar_volume||0);
     });
     KR.renderTable($('mktTable'), [
@@ -345,6 +360,16 @@ DASH_JS = r"""
       {label:'Yes bid', num:true, get:(m)=>KR.usd(m.yes_bid_dollars,2)},
       {label:'Yes ask', num:true, get:(m)=>KR.usd(m.yes_ask_dollars,2)},
       {label:'Volume', num:true, get:(m)=>KR.num(m.volume_fp,0)},
+      {label:'$ 24 h <span class="muted">measured</span>', num:true, get:(m)=>m.usd_volume_24h!=null
+          ? `${KR.usd(m.usd_volume_24h,2)}`
+          : '<span class="muted" title="turnover was not measured for this market in this run">—</span>'},
+      {label:'Book', get:(m)=>{
+          const ob=(state.snap.orderbooks||{})[m.market_ticker];
+          if(!ob||ob.error) return '<span class="muted">not sampled</span>';
+          const nb=(ob.yes_bids||[]).length, na=(ob.derived_yes_asks||[]).length;
+          return nb||na ? `<span class="small">${KR.num(ob.yes_bid_contracts,0)} bid / ${KR.num(ob.derived_ask_contracts,0)} offered</span>`
+                        : '<span class="pill flag">empty book</span>';
+      }},
       {label:'Open int.', num:true, get:(m)=>KR.num(m.open_interest_fp,0)},
       {label:'Est. $ volume', num:true, get:(m)=>`${KR.usd(m.est_dollar_volume,0)} <span class="pill flag">est.</span>`},
       {label:'Closes', get:(m)=>`<span class="small">${KR.when(m.close_time)}</span>`},
