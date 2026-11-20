@@ -48,7 +48,9 @@ def strip_code(text: str) -> str:
 # and it is exactly the defect this checker missed on its first run.
 # Require whitespace *before* the full stop: "listed on ." is broken, while
 # "each value is filled in." is ordinary English.
-DANGLING = re.compile(r"\b(?:on|in|at|from|per|as|see|below|above)\s+\.|<\s*\.|>\s*\(\s*\)")
+# "the files in .github/workflows." is a directory path ending a sentence, not a stripped
+# link. Require the full stop to stand alone (not part of a path or number).
+DANGLING = re.compile(r"\b(?:on|in|at|from|per|as|see|below|above)\s+\.(?!\w)|<\s*\.|>\s*\(\s*\)")
 
 
 def check_dangling(rel, scan, problems):

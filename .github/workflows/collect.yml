@@ -19,7 +19,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: collect-kalshi-${{ github.ref }}
+  # Shared with every other workflow that commits data: one writer at a time.
+  group: kalshi-data-writers
   cancel-in-progress: true
 
 jobs:

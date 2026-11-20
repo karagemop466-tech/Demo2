@@ -269,6 +269,13 @@ def series_topic(series: dict) -> str | None:
     """
     if not series:
         return None
+    # 0) official product scope (verified live 2026-11-20 on GET /series/KXAAAGASD:
+    #    product_metadata.scope == "Gasoline" for the AAA gasoline family). The bare
+    #    "Oil & Gas" tag is deliberately NOT mapped here: it also covers crude oil
+    #    (KXWTI), natural gas and TTF series, which are not "gas prices".
+    scope = str(((series.get("product_metadata") or {}).get("scope")) or "").strip().lower()
+    if scope == "gasoline":
+        return "gas"
     tags = [str(t).strip().lower() for t in (series.get("tags") or []) if t]
     cats = [str(c).strip().lower() for c in (series.get("categories") or []) if c]
     primary = str(series.get("category") or "").strip().lower()
@@ -385,7 +392,7 @@ def collect_scope(signer: Signer | None, series_per_topic: int = 0,
                 failed[topic].append({"series": st, "http": done["reason"],
                                       "url": url})
             for m in markets:
-                rows.append(_market_row(topic, st, m))
+                rows.append(_market_row(topic, st, m, series_idx.get(st), None))
 
     unmapped = {s_: 1 for s_, t in topic_cache.items() if t is None}
     return {
@@ -410,13 +417,23 @@ def collect_scope(signer: Signer | None, series_per_topic: int = 0,
     }
 
 
-def _market_row(topic: str, series_ticker: str, m: dict) -> dict:
-    """One row per market. Dollar fields are copied VERBATIM from the API response."""
+def _market_row(topic: str, series_ticker: str, m: dict,
+                series: dict | None = None, event: dict | None = None) -> dict:
+    """One row per market. Dollar fields are copied VERBATIM from the API response.
+
+    Also carries the series-level facts a trader needs to check a market: the official
+    settlement sources, the contract terms and the certification, plus the exact API URL
+    that produced the row. A human-facing kalshi.com market URL could not be confirmed
+    from an official field, so it is not invented (the API URL is used instead).
+    """
+    series = series or {}
+    event = event or {}
     t = m.get("ticker")
     return {
         "topic": topic,
         "event_ticker": m.get("event_ticker"),
         "series_ticker": series_ticker,
+        "event_title": event.get("title"),
         "market_ticker": t,
         "market_title": m.get("title"),
         "yes_sub_title": m.get("yes_sub_title"),
@@ -435,9 +452,16 @@ def _market_row(topic: str, series_ticker: str, m: dict) -> dict:
         "close_time": m.get("close_time"),
         "open_time": m.get("open_time"),
         "updated_time": m.get("updated_time"),
-        "market_url": m.get("market_url") or (
-            f"https://external-api.demo.kalshi.co/trade-api/v2/markets/{urllib.parse.quote(t)}" if t else None
-        ),
+        "price_level_structure": m.get("price_level_structure"),
+        "rules_primary": m.get("rules_primary"),
+        "exchange_index": m.get("exchange_index"),
+        "settlement_sources": series.get("settlement_sources"),
+        "series_category": series.get("category"),
+        "series_categories": series.get("categories"),
+        "contract_terms_url": series.get("contract_terms_url"),
+        "contract_url": series.get("contract_url"),
+        "event_url": f"{DEMO_REST}/events/{urllib.parse.quote(m.get('event_ticker') or '')}",
+        "market_url": f"{DEMO_REST}/markets/{urllib.parse.quote(t)}" if t else None,
     }
 
 
