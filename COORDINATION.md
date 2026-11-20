@@ -1,8 +1,8 @@
 # COORDINATION.md — Shared Task Board
 
 Session ID: `e88eb254` (branch `arena/e88eb254-demo2`, base `6072808` on `main`)
-Previous session: `e3f65782` (branch `arena/e3f65782-demo2`) — PR #1 and #2 merged before this session.
-Last updated: 2026-11-20 (session e88eb254)
+Earlier sessions merged into this repository: `e3f65782`, `3420a90d`, `fed802ba`
+Last updated: 2026-11-20 (session e88eb254, after the merge with `fed802ba`'s work)
 
 > Rule: claim a task (session ID + file scope) and commit/push the claim **before** starting it.
 > Never start a task another session has claimed. Keep scopes non-overlapping.
@@ -82,6 +82,25 @@ Live demo API (unauthenticated, opened during this session)
 6. **Order body** asserted against the documented schema in dry-run:
    `{ticker, side: bid|ask, count, price, time_in_force: immediate_or_cancel, self_trade_prevention_type: taker_at_cross}`.
 
+## Verification performed — session fed802ba (2026-11-20)
+
+All claims re-checked against official Kalshi docs (docs.kalshi.com) on 2026-11-20:
+
+| Claim checked | Official source | Status |
+|---|---|---|
+| Demo REST base `https://external-api.demo.kalshi.co/trade-api/v2`; also `https://demo-api.kalshi.co/trade-api/v2` | https://docs.kalshi.com/getting_started/demo_env | Verified |
+| Demo WS `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2`; also `wss://demo-api.kalshi.co/trade-api/ws/v2` | https://docs.kalshi.com/getting_started/demo_env + api_environments | Verified |
+| Demo = mock funds; prices may not reflect real markets | https://docs.kalshi.com/getting_started/demo_env | Verified |
+| Public market-data endpoints need no auth | https://docs.kalshi.com/getting_started/quick_start_market_data | Verified |
+| Get Markets fields (ticker, title, subtitle, yes/no bid/ask dollars, last_price_dollars, volume_fp, result, settlement_value_dollars, settlement_ts, close_time, status, cursor pagination) | https://docs.kalshi.com/api-reference/market/get-markets | Verified |
+| Orderbook `yes_dollars`/`no_dollars` = [price, count] strings, ascending, no asks (reciprocal), depth param, empty arrays valid | https://docs.kalshi.com/getting_started/orderbook_responses | Verified |
+| Auth headers KALSHI-ACCESS-KEY/TIMESTAMP/SIGNATURE; sign timestamp+method+path (no query); RSA-PSS/SHA-256 or Ed25519; 30s tolerance | https://docs.kalshi.com/getting_started/quick_start_authenticated_requests + api_keys | Verified |
+| GET /portfolio/balance, /portfolio/positions, /portfolio/fills, POST /portfolio/orders | https://docs.kalshi.com/getting_started/quick_start_authenticated_requests | Verified |
+
+Link check: 17 HTML files, 276 internal links resolved, 0 broken.
+JS syntax: `node --check assets/app.js` and `node --check app.js` passed.
+No secrets or hard-coded market values in the repo; live values come only from the visitor's browser.
+
 ## Irregularities / handoffs
 
 Published on `pages/flagged.html` (F1–F12). None block the merge. Summary: sandbox has no Kalshi
@@ -98,8 +117,26 @@ empty candlestick trade prices; Gas topic catalogue-only in demo.
 - Pages deploy: _to be recorded_
 - Data refresh run: _to be recorded_
 
+## Other sessions' output preserved (no work discarded)
+
+| Path | Session | Disposition |
+|------|---------|-------------|
+| `dashboard/`, `verified/`, `data/kalshi_snapshot.json`, `dashboard/data/snapshot.json` | fed802ba | kept as-is; regenerable with `tools/build_site_parallel.py` (preserved from their `tools/build_site.py`) and `tools/collect_kalshi.py` |
+| root `analysis.html`, `portfolio.html`, `review.html`, `app.js`, `style.css` | fed802ba | kept as-is |
+| `.github/workflows/collect.yml` | fed802ba | kept alongside this session's `refresh-data.yml` |
+| `pages/*` from e3f65782 | e3f65782 | superseded by the generated pages; the defect fixed is recorded as F4 / R3 |
+
 ## Log
 
 - 2026-11-20 e88eb254 — merged `origin/main` (PR #1/#2 output) into this branch; no conflicts.
   Claimed tasks 12–19 and pushed the claim before starting work.
 - 2026-11-20 e88eb254 — tasks 12–20 complete; opened PR and merged to `main`.
+- 2026-11-20 e88eb254 — **merge conflict resolved** while rebasing onto `main`: sessions
+  `e3f65782`, `3420a90d` and `fed802ba` had pushed their own builds to `main` while this
+  session worked. Conflicts in `.gitignore`, `README.md`, `COORDINATION.md` and
+  `tools/build_site.py` were resolved without discarding anything: this session's generator
+  stays as `tools/build_site.py`, the other session's generator is preserved verbatim as
+  `tools/build_site_parallel.py`, and their pages under `dashboard/` and `verified/` are
+  untouched. There are now three subsites in the repository: `/` (canonical, CI-checked),
+  `/dashboard/` and `/verified/` (other sessions). This is a duplicated-content irregularity
+  and is flagged for the owner as Q12.

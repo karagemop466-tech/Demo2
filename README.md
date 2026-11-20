@@ -21,7 +21,7 @@ Demo environment only. Mock funds. Not investment advice.
 | `pages/portfolio.html` | Demo balance, positions, fills, executions |
 | `pages/analysis.html` | Cost/payout/realised P&L per fill, five categorisations, strategy candidates |
 | `pages/suggestions.html` | Eight proposals to review and choose between before anything changes |
-| `pages/questions.html` | Ten questions, what is known, what is missing, how to find it |
+| `pages/questions.html` | Eleven questions, what is known, what is missing, how to find it |
 | `pages/api-reference.html` | Every endpoint used, verified line by line against official docs |
 | `pages/verification.html` | Claim → official source → how it was checked → status, plus the live API log |
 | `pages/flagged.html` | Irregularities and judgement calls, with mitigations |
@@ -53,6 +53,19 @@ Read-only by default. Three independent gates must all be open before a demo ord
 Orders use `POST /portfolio/events/orders` with the documented V2 body. The legacy
 `POST /portfolio/orders` is **not** used: it returns `410 Gone`
 ([Create Order (V2)](https://docs.kalshi.com/api-reference/orders/create-order-v2)).
+
+## Other material in this repository
+
+Two earlier/parallel sessions produced their own separate subsites. They are preserved
+rather than deleted, because they contain independently verified research:
+
+| Path | Origin | Why it is still here |
+|------|--------|----------------------|
+| `dashboard/`, `verified/`, `dashboard/data/snapshot.json`, `data/kalshi_snapshot.json` | session `fed802ba` | Independently collected demo data and a per-topic research write-up; regenerable with `tools/build_site_parallel.py`, `tools/collect_kalshi.py` |
+| `analysis.html`, `portfolio.html`, `review.html`, `app.js`, `style.css` (root) | session `fed802ba` | Earlier standalone pages |
+| `pages/executive-summary.html` … `pages/sources.html` | session `e3f65782` | Superseded by the pages generated from `tools/build_site.py` + `tools/build_content.py` |
+
+The canonical, CI-checked site is `index.html` plus `pages/`, generated from `tools/`.
 
 ## Publishing
 

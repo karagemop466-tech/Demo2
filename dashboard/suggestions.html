@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Suggestions — Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div id="nav"></div>
+<main>
+  <h1>Suggestions to improve the site and decisions</h1>
+  <p class="lead"><strong>Nothing on this list has been implemented.</strong> Mark each item Approve, Defer or Reject. Choices are saved in this browser only. Approved items are the only ones that would be built next.</p>
+
+  <div class="panel">
+    <div class="controls">
+      <button class="btn" id="export">Copy my decisions as text</button>
+      <button class="btn" id="reset">Clear all decisions</button>
+      <span class="status-line" id="tally"></span>
+    </div>
+  </div>
+
+  <div id="list"></div>
+</main>
+<footer>Each suggestion cites the official source or the verified observation it depends on. Effort and risk are estimates, not verified facts.</footer>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var KEY = "kalshi-dashboard-decisions-v1";
+  var ITEMS = [
+    { id: "S-01", title: "Environment choice for analysis", why: "Demo and production return different metadata for the same series (e.g., fee_type for KXAAAGASM). Pick one source of truth for analysis.", evidence: "Flagged F3", src: "S_API_GAS_SERIES_DEMO / PROD", effort: "Low", risk: "Low" },
+    { id: "S-02", title: "Define “highest dollar amount” and compute dollar turnover from trades", why: "The API returns contracts traded, not dollars. Dollar turnover could be derived from the public trades feed (price × count), but the exact formula must be confirmed first.", evidence: "Flagged F10", src: "https://docs.kalshi.com/api-reference/market/get-trades", effort: "Medium", risk: "Medium (definition)" },
+    { id: "S-03", title: "Exclude or tag markets with placeholder/search-link settlement sources", why: "Placeholder text and google.com/search links make the resolution source unclear. Tagging them keeps analysis honest.", evidence: "Flagged F1, F2", src: "Series settlement_sources field", effort: "Low", risk: "Low" },
+    { id: "S-04", title: "Use bid/ask (mid) instead of last trade for entries and P&L", why: "Last trade can sit outside the current quote (KXBTCMINY-27JAN01-50000.00).", evidence: "Flagged F5; Analysis O3", src: "Orderbook docs", effort: "Low", risk: "Low" },
+    { id: "S-05", title: "Liquidity gate before any trade", why: "Require resting size on both sides; the 4.80 gas rung is one-sided with large open interest.", evidence: "Flagged F6; Analysis O4", src: "Orderbook docs", effort: "Low", risk: "Low" },
+    { id: "S-06", title: "Full catalog crawl (all pages, all series) on a schedule", why: "The current site shows a sample. Cursor pagination is documented; a scheduled job can keep the table complete.", evidence: "Questions Q4", src: "https://docs.kalshi.com/getting_started/pagination", effort: "Medium", risk: "Low (rate limits: see docs)" },
+    { id: "S-07", title: "Authenticated backend proxy for seconds-level WebSocket data", why: "WebSocket streams need an authenticated handshake, which a static GitHub Pages site cannot hold safely. A small backend could keep the key server-side.", evidence: "Flagged F12", src: "https://docs.kalshi.com/getting_started/quick_start_websockets", effort: "High", risk: "Medium (key handling)" },
+    { id: "S-08", title: "Connect a demo API key (one-time user action) to unlock Portfolio and paper-trade tracking", why: "Portfolio, balance and order endpoints require a key. Without it, no trade execution or P&L can be verified.", evidence: "Portfolio page status BLOCKED", src: "https://docs.kalshi.com/getting_started/api_keys", effort: "Low (user action)", risk: "Medium (key secrecy)" },
+    { id: "S-09", title: "Decision journal: write the thesis before each trade", why: "Makes the strategy categories testable later (hypotheses H1–H5 on the Analysis page).", evidence: "Analysis §4", src: "Internal", effort: "Low", risk: "Low" },
+    { id: "S-10", title: "Position-size and loss limits (set by you)", why: "No risk limits exist yet. These must be your numbers; none have been assumed.", evidence: "Questions Q6", src: "Internal", effort: "Low", risk: "Low" },
+    { id: "S-11", title: "Fee-aware P&L using the series fee_type and the official fee schedule", why: "Series carry fee_type and fee_multiplier. The fee schedule PDF linked in the API docs has not been reviewed in this session.", evidence: "Questions Q10", src: "https://kalshi.com/docs/kalshi-fee-schedule.pdf (linked in Get Series List docs)", effort: "Medium", risk: "Medium" },
+    { id: "S-12", title: "Historical data for win-rate-by-price analysis", why: "Needed to test hypothesis H5. Historical endpoints exist; their use must be verified before building.", evidence: "Analysis H5", src: "https://docs.kalshi.com/getting_started/historical_data", effort: "Medium", risk: "Low" }
+  ];
+
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+  function save(d) { localStorage.setItem(KEY, JSON.stringify(d)); }
+
+  function render() {
+    var d = load();
+    document.getElementById("list").innerHTML = ITEMS.map(function (it) {
+      var cur = d[it.id] || "";
+      function opt(v, label) {
+        return '<label style="margin-right:12px"><input type="radio" name="' + it.id + '" value="' + v + '"' + (cur === v ? " checked" : "") + "> " + label + "</label>";
+      }
+      return '<div class="decision"><div style="flex:1">' +
+        '<div><span class="badge b-info">' + it.id + "</span> <strong>" + esc(it.title) + "</strong></div>" +
+        '<div class="small muted" style="margin-top:4px">' + esc(it.why) + "</div>" +
+        '<div class="small" style="margin-top:4px">Evidence: ' + esc(it.evidence) + " · Source: " + esc(it.src) +
+        " · Effort: " + esc(it.effort) + " · Risk: " + esc(it.risk) + "</div>" +
+        '<div style="margin-top:8px">' + opt("approve", "Approve") + opt("defer", "Defer") + opt("reject", "Reject") + "</div>" +
+        "</div></div>";
+    }).join("");
+    var counts = { approve: 0, defer: 0, reject: 0 };
+    Object.keys(d).forEach(function (k) { if (counts[d[k]] !== undefined) counts[d[k]]++; });
+    document.getElementById("tally").textContent = "Approved " + counts.approve + " · Deferred " + counts.defer + " · Rejected " + counts.reject + " · Undecided " + (ITEMS.length - counts.approve - counts.defer - counts.reject);
+  }
+
+  document.addEventListener("change", function (e) {
+    if (e.target && e.target.type === "radio") {
+      var d = load(); d[e.target.name] = e.target.value; save(d); render();
+    }
+  });
+  document.getElementById("reset").onclick = function () { if (confirm("Clear all decisions in this browser?")) { save({}); render(); } };
+  document.getElementById("export").onclick = function () {
+    var d = load();
+    var txt = ITEMS.map(function (it) { return it.id + " " + it.title + ": " + (d[it.id] || "undecided"); }).join("\n");
+    if (navigator.clipboard) navigator.clipboard.writeText(txt);
+    alert(txt);
+  };
+  render();
+})();
+</script>
+</body>
+</html>
