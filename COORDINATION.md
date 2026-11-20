@@ -828,7 +828,9 @@ landing page at.
 | D-5 | Consolidated desk dashboard: clean landing + one subpage per topic + trading/strategy page, all tables row-sourced | in progress | 220913cb | `desk/index.html`, `desk/categories/*.html`, `desk/trading.html`, `desk/assets/desk.css`, `desk/tools/build_desk.py` |
 | D-6 | CI: run the verification gate + jump detector on a schedule and commit the reports | in progress | 220913cb | `.github/workflows/desk-verify.yml` |
 | D-7 | End-of-session integration: nav entry, whole-site link check, PR → `main`, merge, Pages deploy confirmation, record | unclaimed | — | — |
-| D-8 | Offline browser-behaviour tests for the consolidated desk chart, jumps, order book, and API failure state | in progress | 220913cb | `desk/tests/desk.test.js` |
+| D-8 | Offline browser-behaviour tests for the consolidated desk chart, jumps, order book, and API failure state | done | 220913cb | `desk/tests/desk.test.js`, `package.json` |
+
+D-8 verification: `npm test` passes all 13 tests (5 new desk browser tests and 8 existing monitor tests); `npm run check`, `npm run build`, `python3 -m py_compile desk/tools/*.py`, `python3 tools/check.py`, and `python3 scripts/check_links.py` pass. The internal-link checker found 10,331 valid references across 126 HTML files (includes generated `dist/`). The desk tests use deterministic synthetic fixture responses only; they make no claim about current market values. Endpoint behaviour exercised is documented by Kalshi at [Get Market Candlesticks](https://docs.kalshi.com/api-reference/market/get-market-candlesticks), [Get Market Orderbook](https://docs.kalshi.com/api-reference/market/get-market-orderbook), and [Get Market](https://docs.kalshi.com/api-reference/market/get-market). No new irregularities found.
 
 ### Overlap notes for other sessions
 

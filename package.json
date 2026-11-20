@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node server/index.js",
     "dev": "node server/index.js",
-    "test": "node --test tests/app.test.js",
+    "test": "node --test tests/app.test.js desk/tests/desk.test.js",
     "check": "node scripts/check-site.mjs monitor",
     "build": "node scripts/build-site.mjs"
   },
