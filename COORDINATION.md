@@ -24,6 +24,13 @@ Last updated: 2026-11-20 (session e88eb254, after the merge with `fed802ba`'s wo
 | 19 | Line-by-line verification, sources, flagged, repo review | **done** | e88eb254 | `pages/{verification,sources,flagged,repo-review}.html` |
 | 20 | Integration: CI gate, link check, render test, PR, merge, deploy | **done** | e88eb254 | `.github/workflows/ci.yml`, `tools/check.py`, `tools/build_site.py`, `tools/build_content.py`, `README.md`, all pages |
 | 21 | Add demo API key secrets to enable portfolio + execution | **needs review (owner action)** | unclaimed | repository secrets only — see `pages/questions.html` Q4 |
+| 22 | K-1 Fix the broken data pipeline: bound published file sizes (GitHub 100 MB push limit) + pre-push size guard | **in progress** | 7085e643 | `tools/collector.py`, `tools/guard_sizes.py`, `.github/workflows/refresh-data.yml`, `.gitignore`, `session-7085e643/**` |
+| 23 | K-2 Live alert desk: two scrolling alert chats (all events / high-ROI screen), ≥$0.10 swing detection on browser-polled prices | **in progress** | 7085e643 | `assets/alerts.js`, `assets/site.js`, `assets/style.css`, `tools/build_site.py` (DASH_BODY/DASH_JS), generated `index.html` |
+| 24 | K-3 Automated simulated trade loop (strategies → ledger → page) run by the refresh workflow | **in progress** | 7085e643 | `tools/paper_trade.py`, `pages/paper-trading.html` (generated), `data/paper_ledger.json`, `session-7085e643/tests/**` |
+| 25 | K-4 Landing page + nav simplification (clean entry point, topics separated, registers grouped) | **in progress** | 7085e643 | `tools/build_site.py` (NAV, index body), `README.md`, generated `index.html` |
+| 26 | K-5 Registers: live re-verification rows, new flags, executive summary refresh | **in progress** | 7085e643 | `tools/build_content.py`, `pages/{verification,flagged,executive-summary,suggestions,questions}.html` (generated), `docs/*` |
+| 27 | K-6 Final integration: take over idle claims, triage the 4 stale conflicting PRs, PR → main, merge, Pages confirm, record | **unclaimed → mine on push** | 7085e643 | `COORDINATION.md`, shared `index.html`/nav, PR operations |
+| 28 | Consolidate the 8 duplicated subsites into one canonical site by deleting `desk/`-style parallel trees | **not started — needs owner decision** | unclaimed | other sessions' trees; see S5 / K-4 (documented as a register, not deleted) |
 
 Scope note: rows 12–20 re-own the filenames produced by `e3f65782` because a correctness defect was
 found in that output (order placement targeted an endpoint the official docs now return `410 Gone`
@@ -1078,3 +1085,56 @@ Actions (44753235358, exit 1) — reproduced offline: `GET /series/{ticker}` can
 dict records with a ticker and never lets one series kill the run (logged as an api_log note
 instead), `inventory` tolerates records without a ticker. Adversarial-shape regression case
 added to `session-eeb796d7/tools/test_collector_fix.py` (13/13 PASS).
+
+
+---
+
+## Session `7085e643` — claims and takeover record (2026-11-20, ~19:45 UTC)
+
+Session ID `7085e643`, branch `arena/7085e643-demo2`, base `e7fabd4` (`main`).
+
+**Takeover basis (per the 60-minute rule).** Every other session is idle: the newest activity
+anywhere on the board or on any branch is 2026-11-20 ~15:59 UTC (`main` tip `e7fabd4`), and the
+four open PRs (#34, #36, #40, #44) were last touched 13:33–14:16 UTC and are all
+`CONFLICTING`/`DIRTY`. Rows 12–20 (e88eb254), G-*/E-* (5330bffb, eeb796d7), J-* (3371a533),
+R-* (bdb4d2d0) are marked done or are closed out in their own sections. I therefore take the
+**final integration session** role (row 27, previously `unclaimed` in eeb796d7's E-4 row) and the
+shared outputs it owns: generated `index.html`/`pages/*`, `COORDINATION.md`, `data/`, `README.md`.
+No other session's subsite files are edited — they are preserved and described, not deleted.
+
+**Why this session exists — the pipeline is dead (verified, not inferred).** `Refresh Kalshi demo
+data` succeeded through 14:10 UTC and has failed every run since, including the scheduled run at
+19:15:21 UTC (run `44800417665`, job `136510796621`). The `Collect demo snapshot` step is green;
+the failure is the push. Job annotations (read via `GET
+/repos/karagemop466-tech/Demo2/check-runs/136510796621/annotations`) show, on all six attempts:
+
+```
+remote: error: File data/snapshot.json is 111.97 MB; this exceeds GitHub's file size limit of 100.00 MB
+remote: warning: File data/topic-elections.json is 52.01 MB; larger than GitHub's recommended maximum
+remote: pre-receive hook declined
+! [remote rejected] HEAD -> main (pre-receive hook declined)
+```
+
+The committed `data/snapshot.json` is 47.26 MB with `generated_at_utc 2026-11-20T14:10:44+00:00`
+(stale for 5 h+ at claim time). Byte accounting on that file: `markets` 20.23 MB **and**
+`by_topic` 20.23 MB — `by_topic` is a second full copy of the same rows — plus a third copy in
+`data/topic-elections.json` (22.22 MB). The rows themselves grew with the pre-midterm elections
+universe (10,241 in scope at 14:10, avg 1,973 bytes/row). eeb796d7's rules-head slimming is in the
+code (`tools/collector.py:362`) and helps, but the three-way duplication and the unbounded
+`data/history.json` (one point per market per run × 10k markets) mean a fresh run still exceeds
+100 MB. Fix = K-1: bound the *published* payload, keep the full universe out of git but in the run
+artifact, and make the workflow fail fast with a clear annotation instead of six doomed pushes.
+
+**Live-capability note for this session (recorded so nobody re-derives it).** The authoring
+sandbox has no egress to `*.demo.kalshi.co` (TLS handshake fails: `curl` exit 35), but page
+fetching works from here, so this session can read the official demo API and docs directly and is
+doing so (see K-5 rows for the exact requests + timestamps). Already confirmed from official docs
+in this session: `GET /markets` supports a `tickers=` filter (comma-separated) and `limit` max
+1000; the WebSocket handshake **requires** the `KALSHI-ACCESS-*` headers even for the public
+channels, so browser-side WS streaming is impossible without a private key (matches G-1/G-2) and
+the alert desk polls public REST instead.
+
+**File-scope discipline.** `session-7085e643/**` is mine alone. Everything else I touch is listed
+in the board rows above. If another session resumes and wants `tools/build_site.py`,
+`assets/*`, `index.html`, `pages/*`, `data/*` or `README.md`, it must log a request here first —
+they are shared outputs of the integration session (this rule already governs rows 12–20).
