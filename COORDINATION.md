@@ -1264,7 +1264,7 @@ live-API rows — nothing about live market values is asserted from memory.
   this workflow does not own). Self-healing (pages.yml refreshes them every 15 min) but wrong:
   both retry loops (`refresh-data.yml`, `paper-trade.yml`) now use `git reset --mixed origin/main`
   so the retry commit contains only each workflow's owned files.
-- **Follow-up record/fix PR:** this section's PR (see merge commit on `main` after `5c5fa40`).
+- **Follow-up record/fix PR:** https://github.com/karagemop466-tech/Demo2/pull/61 (this record + the --mixed-reset fix).
 
 Sources to verify against (official only): https://docs.kalshi.com/getting_started/demo_env,
 https://docs.kalshi.com/api-reference/market/get-markets,
