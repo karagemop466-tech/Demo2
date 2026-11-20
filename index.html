@@ -155,7 +155,10 @@ tables on the category, resolution and verification pages still work without it.
 <div class="notice info"><b>What "highest dollar amount" means here.</b> The Trade API has no
   single dollar-volume field. Every row therefore shows the raw official fields
   (<code>volume_fp</code>, <code>open_interest_fp</code>, <code>last_price_dollars</code>) and
-  one clearly-labelled <b>estimate</b>: <code>volume_fp × last_price_dollars</code>.
+  one clearly-labelled <b>estimate</b>: <code>volume_fp × last_price_dollars</code>. A second
+  estimate uses the official 24-hour volume instead of the lifetime one
+  (<code>volume_24h_fp × last_price_dollars</code>), which is the closer match to
+  &ldquo;currently active&rdquo; markets.
   Rows missing lifetime <code>volume_fp</code> (top-event lead markets) show a blank there and a
   labelled 24h estimate beside it. <b>Coverage:</b> the demo exchange returns far more open
   in-scope markets than GitHub accepts in one published file (hard limit 100 MB — a 111.97 MB
@@ -173,7 +176,8 @@ tables on the category, resolution and verification pages still work without it.
       <option value="golf">Golf</option></select></div>
   <div><label for="sortSel">Sort</label>
     <select id="sortSel">
-      <option value="est">est. dollar volume (desc)</option>
+      <option value="est24">est. 24h dollar volume (desc)</option>
+      <option value="est">est. lifetime dollar volume (desc)</option>
       <option value="volume">volume_fp (desc)</option>
       <option value="oi">open_interest_fp (desc)</option>
       <option value="close">close time (soonest)</option>
@@ -195,6 +199,9 @@ official <code>result</code> field (<code>yes</code>/<code>no</code>) moves the 
 <script>
 (async function(){
   const $ = id => document.getElementById(id);
+  /* One number parser for the whole page: a missing or non-numeric field counts
+     as 0 for sorting and renders as an em dash in the cell. */
+  const num = v => { const n = parseFloat(v); return isFinite(n) ? n : 0; };
   let state = { window: 3600, field: 'mid', ticker: null, snap:null, filtered:[], livePoints:[] };
 
   try{
@@ -223,8 +230,14 @@ official <code>result</code> field (<code>yes</code>/<code>no</code>) moves the 
         <div class="v ${(snap.exchange_status||{}).response && snap.exchange_status.response.exchange_active ? 'ok':'warn'}">${(snap.exchange_status||{}).response && snap.exchange_status.response.exchange_active ? 'active':'see log'}</div>
         <div class="s">demo /exchange/status</div></div>`;
 
-    // market select: ranked list
-    const rows = (snap.markets||[]).slice().sort((a,b)=>(b.est_dollar_volume||0)-(a.est_dollar_volume||0));
+    // market select: ranked list. Prefer the 24-hour dollar estimate when the
+    // snapshot carries it (it matches "currently active" markets better than a
+    // lifetime figure); fall back to the lifetime estimate otherwise.
+    const rows = (snap.markets||[]).slice().sort((a,b)=>
+      (num(b.est_dollar_volume_24h)||num(b.est_dollar_volume)) -
+      (num(a.est_dollar_volume_24h)||num(a.est_dollar_volume)));
+    const has24 = rows.some(m=>m.est_dollar_volume_24h);
+    if(has24) $('sortSel').value = 'est24';
     state.filtered = rows;
     $('mktSel').innerHTML = rows.slice(0,80).map(m=>{
       const t = m.market_title || m.market_ticker;
@@ -368,10 +381,11 @@ official <code>result</code> field (<code>yes</code>/<code>no</code>) moves the 
       (!q || (m.market_ticker+' '+(m.market_title||'')).toLowerCase().includes(q)));
     const s = $('sortSel').value;
     r.sort((a,b)=>{
-      if(s==='volume') return (parseFloat(b.volume_fp)||0)-(parseFloat(a.volume_fp)||0);
-      if(s==='oi') return (parseFloat(b.open_interest_fp)||0)-(parseFloat(a.open_interest_fp)||0);
+      if(s==='est24') return num(b.est_dollar_volume_24h)-num(a.est_dollar_volume_24h);
+      if(s==='volume') return num(b.volume_fp)-num(a.volume_fp);
+      if(s==='oi') return num(b.open_interest_fp)-num(a.open_interest_fp);
       if(s==='close') return String(a.close_time||'').localeCompare(String(b.close_time||''));
-      return (b.est_dollar_volume||0)-(a.est_dollar_volume||0);
+      return num(b.est_dollar_volume)-num(a.est_dollar_volume);
     });
     KR.renderTable($('mktTable'), [
       {label:'#', get:(m)=>rows.indexOf(m)+1, num:true},
@@ -382,6 +396,7 @@ official <code>result</code> field (<code>yes</code>/<code>no</code>) moves the 
       {label:'Yes ask', num:true, get:(m)=>KR.usd(m.yes_ask_dollars,2)},
       {label:'Volume', num:true, get:(m)=>KR.num(m.volume_fp,0)},
       {label:'Open int.', num:true, get:(m)=>KR.num(m.open_interest_fp,0)},
+      {label:'Est. $ vol (24h)', num:true, get:(m)=>`${KR.usd(m.est_dollar_volume_24h,0)} <span class="pill flag">est.</span>`},
       {label:'Est. $ volume', num:true, get:(m)=>`${KR.usd(m.est_dollar_volume,0)} <span class="pill flag">est.</span>`},
       {label:'Closes', get:(m)=>`<span class="small">${KR.when(m.close_time)}</span>`},
       {label:'Source', get:(m)=>KR.link(m.market_url,'Kalshi')+' · <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">API</a>'}

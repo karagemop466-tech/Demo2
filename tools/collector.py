@@ -424,6 +424,25 @@ def implied_dollar_volume(m: dict) -> float | None:
     return round(v * p, 2)
 
 
+def implied_dollar_volume_24h(m: dict) -> float | None:
+    """volume_24h_fp x last_price_dollars.
+
+    The 24-hour volume is an official field (`volume_24h_fp` in the Get Markets
+    response), so this estimate is measured over the last day rather than over
+    the life of the market. It is still an ESTIMATE of dollars: the API has no
+    dollar-volume field, so the contract count is multiplied by the last traded
+    price. Blank when the market has no 24-hour volume.
+    """
+    try:
+        v = float(m.get("volume_24h_fp") or "")
+        p = float(m.get("last_price_dollars") or "")
+    except (TypeError, ValueError):
+        return None
+    if not v:
+        return None
+    return round(v * p, 2)
+
+
 def select_published(rows: list[dict],
                      events_per_topic: int = PUBLISH_EVENTS_PER_TOPIC,
                      top_markets: int = PUBLISH_TOP_MARKETS_PER_TOPIC) -> tuple[list[dict], dict]:
@@ -701,9 +720,10 @@ def main() -> int:
     scope = collect_scope(signer)
     rows = scope["markets_in_scope"]
 
-    # enrich with the estimate, clearly named as such
+    # enrich with the estimates, clearly named as such
     for r in rows:
         r["est_dollar_volume"] = implied_dollar_volume(r)
+        r["est_dollar_volume_24h"] = implied_dollar_volume_24h(r)
 
     # Publish only the top events per topic (see select_published). The cap is
     # lowered automatically if the published rows would still be too big for
@@ -768,6 +788,12 @@ def main() -> int:
                 "Derived, not raw: (yes_bid_close + yes_ask_close) / 2 per candlestick. The "
                 "candlestick `price` object is the TRADED price and is empty in any period with "
                 "no trade, so this keeps the chart continuous without inventing a traded price."
+            ),
+            "est_dollar_volume_24h": (
+                "ESTIMATE = volume_24h_fp x last_price_dollars. volume_24h_fp is an official "
+                "field (contracts traded in the last 24 hours); the multiplication by the last "
+                "traded price is this collector's estimate, because the API exposes no "
+                "dollar-volume field."
             ),
         },
         "api_log": API_LOG,
