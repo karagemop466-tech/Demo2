@@ -836,3 +836,24 @@ Rules honored: news/event *causes* of jumps are not in the Kalshi API — left b
 - Site: 5 pages under `session-8b9a46b4/site/` incl. live browser chart (seconds/minutes/hours + orderbook depth) polling the demo API directly.
 - Verification: `python3 session-8b9a46b4/tools/jump_backtest.py` reproducible; `node --check live.js` OK; `python3 scripts/check_links.py` → 8,124 refs, all OK; `python3 tools/check.py` clean; local smoke 200s.
 - Tasks J-1…J-5: done (J-5 PR/merge record below).
+
+---
+
+## Session `arena-21eed9ff` — current-branch documentation audit (2026-11-20)
+
+**Branch:** `arena/21eed9ff-demo2` (the Arena-assigned active branch; branch name is fixed).
+**Scope claim:** independently audit executive-summary and verification documentation against
+current official Kalshi documentation and checked-in implementation. This task edits only
+`docs/EXECUTIVE_SUMMARY.md`, `docs/VERIFICATION.md`, and this coordination record.
+
+| ID | Task | Status | Owner | Files touched |
+|---|---|---|---|---|
+| A-1 | Claim & source-backed documentation audit | in progress | arena-21eed9ff | `COORDINATION.md`, `docs/EXECUTIVE_SUMMARY.md`, `docs/VERIFICATION.md` |
+| A-2 | Reconcile claims with current implementation; leave inaccessible or unverified values blank/flagged | in progress | arena-21eed9ff | `docs/EXECUTIVE_SUMMARY.md`, `docs/VERIFICATION.md` |
+| A-3 | Run existing site/data/link verification and report findings | in progress | arena-21eed9ff | `COORDINATION.md` |
+
+The preceding board entries are historical records of merged sessions, not active file locks.
+This audit intentionally does not change generated pages, dashboards, collectors, trade code,
+workflow files, or shared site navigation. No Kalshi credentials are available in this session.
+The coordination request to use a separate `session-<id>/<task>` branch conflicts with the
+Arena branch constraint; this work stays on the assigned branch.
