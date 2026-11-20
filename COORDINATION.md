@@ -1097,8 +1097,8 @@ No prior session's file is edited here; shared outputs change only via this inte
 | I-1 | Claim integration tasks + push claim immediately | **done** | b326b649 | `COORDINATION.md` (commit 731b626, pushed) |
 | I-2 | Re-verify a sample of combined table rows against official docs + live demo API | **done** | b326b649 | `data/snapshot.json` (read-only) + live fetches below |
 | I-3 | Confirm full build + internal+external link check pass; no broken links | **done** | b326b649 | `tools/check.py`, `scripts/check_links.py` |
-| I-4 | Trigger GitHub Pages deploy + confirm the live site | **in progress** | b326b649 | `.github/workflows/pages.yml` (workflow dispatch only) |
-| I-5 | PR `arena/b326b649-demo2` → `main`, merge without waiting, record PR link + merge result | unclaimed | b326b649 | `COORDINATION.md` |
+| I-4 | Trigger GitHub Pages deploy + confirm the live site | **done** | b326b649 | `.github/workflows/pages.yml` (workflow dispatch + push to main) |
+| I-5 | PR `arena/b326b649-demo2` → `main`, merge without waiting, record PR link + merge result | **done** | b326b649 | `COORDINATION.md` |
 
 ### Sources re-checked this session (official only, fetched 2026-11-20)
 
@@ -1130,14 +1130,24 @@ endpoint `GET /trade-api/v2/markets/{ticker}`. All matched exactly; nothing infe
 | Site pre-publish checks | `python3 tools/check.py` | links ok, nav ok, data ok, secrets ok, js ok; 17 HTML pages; one warning (11 snapshot API requests non-2xx — all documented 429 rate limits) |
 | Whole-site internal link check | `python3 scripts/check_links.py` | 9,290 references across 107 HTML files, all OK, 0 broken |
 
-## PR / deploy record (filled in after I-5)
+## PR / deploy record
 
-- PR: _to be created_
-- Merge result: _to be recorded_
-- Pages deploy: _to be recorded_
+- PR: https://github.com/karagemop466-tech/Demo2/pull/53 — **"Final integration: verified Kalshi demo dashboard, no broken links, ready for Pages deploy"** — **MERGED** into `main` as merge commit `8818f6bd` on 2026-11-20 (`gh pr merge 53 --merge`, no approval wait per instructions).
+- Merge result: state MERGED, PR URL above. Local `main` fast-forwards to `8818f6b` after `git fetch`.
+- Pages deploy: first attempt run 44804315877 failed at the `deploy` job (logs unreachable — results-receiver EOF, a known GitHub issue); rerun of failed jobs concluded **success** (same run id). GitHub Pages `status: built`, source `main /`, live at https://karagemop466-tech.github.io/Demo2/ .
+- Deployment confirmed via `gh api repos/.../pages` (status `built`) and the completed Actions run.
 
 ## Notes
 
 - Sandbox bash egress to `*.kalshi.co` is blocked (TLS handshake fails — flagged F1); live source
   checks above were done with the fetch tool, which can reach the demo host and docs. GitHub
   Actions runners have normal egress, so the collection workflows run there.
+
+### Integration complete (2026-11-20)
+
+All tasks I-1…I-5 done. The combined tree (canonical `pages/` site plus all preserved subsites)
+passes `tools/check.py` and `scripts/check_links.py` with zero broken links, three sample market
+rows were re-verified byte-for-byte against the live official demo API, PR #53 is merged to
+`main`, and GitHub Pages is live at https://karagemop466-tech.github.io/Demo2/ . Flagged
+irregularities (F1–F14) remain published on `pages/flagged.html` for review and do not block the
+merge, per policy.
