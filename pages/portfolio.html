@@ -5,7 +5,7 @@
 <meta name="description" content="Kalshi demo account balance, positions, fills and executions.">
 <link rel="stylesheet" href="../assets/style.css">
 </head><body>
-<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html" aria-current="page">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Start here</a><a href="../dashboard.html">Live dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/causes.html">Cause Channels</a><a href="../pages/portfolio.html" aria-current="page">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
 <div class="wrap">
 
 <h1>Portfolio - demo account</h1>
@@ -77,7 +77,11 @@ book side <code>bid</code> &equiv; yes, <code>ask</code> &equiv; no &mdash; <a h
       repository secrets. Balances, positions and fills are deliberately blank rather than zero,
       because "no key" and "empty account" are different facts.
       <br><span class="small muted">Requirement: <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API Keys</a></span></div>`;
-    $('kpis').innerHTML = '';
+    $('kpis').innerHTML = `
+      <div class="kpi-card"><div class="k">Balance</div><div class="v">—</div><div class="s">no demo key</div></div>
+      <div class="kpi-card"><div class="k">Positions</div><div class="v">—</div><div class="s">not read</div></div>
+      <div class="kpi-card"><div class="k">Fills</div><div class="v">—</div><div class="s">not read</div></div>
+      <div class="kpi-card"><div class="k">Why blank</div><div class="s" style="font-size:.8rem">“no key” ≠ “zero balance”</div></div>`;
     $('posTable').innerHTML = '<div class="empty">Blank - not connected.</div>';
     $('fillTable').innerHTML = '<div class="empty">Blank - not connected.</div>';
   } else {

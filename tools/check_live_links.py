@@ -20,10 +20,10 @@ SKIP_DIRS = {".git", "node_modules", "verified", "data"}
 HREF = re.compile(r'(?:href|src)\s*=\s*"([^"]+)"')
 # API path templates such as /markets/{ticker} are legitimate, so a brace
 # preceded by a slash or underscore is not treated as an unfinished placeholder.
-# Double braces {{...}} are the demo API's own title templating appearing verbatim
-# in copied data (e.g. "How {{high_low}} will Bitcoin get this year?") - data, not
-# our unfinished markup.
-PLACEHOLDER = re.compile(r"(?<![/_\{])\{[A-Za-z_]+\}|TODO|FIXME|Lorem ipsum|XXXX")
+PLACEHOLDER = re.compile(r"(?<![/_?=&])\{[A-Za-z_]+\}|TODO|FIXME|Lorem ipsum|XXXX")
+# A brace only survives in visible text (URL-pattern attributes are handled by
+# ATTR_VALUE below), so any remaining one is an unfinished placeholder.
+PLACEHOLDER_TEXT = re.compile(r"\{[A-Za-z_]+\}")
 # Bodies of <script>, <code> and <pre> are not markup: template literals and code
 # samples there would otherwise look like broken links or unfinished placeholders.
 # The opening <script src="..."> tag is kept so asset references are still checked.
@@ -31,8 +31,16 @@ CODE_BLOCK = re.compile(r"<code>.*?</code>|<pre>.*?</pre>", re.S)
 SCRIPT_BODY = re.compile(r"(<script\b[^>]*>).*?</script>", re.S)
 
 
+# An attribute value that contains a brace is an illustrative API URL pattern
+# (href=".../markets/{ticker}"), which is documentation, not stray build output.
+ATTR_VALUE = re.compile(r'(\b(?:href|src)\s*=\s*")([^"]*)(")')
+
+
 def strip_code(text: str) -> str:
-    return CODE_BLOCK.sub(" ", SCRIPT_BODY.sub(r"\1", text))
+    text = CODE_BLOCK.sub(" ", SCRIPT_BODY.sub(r"\1", text))
+    # Blank the brace-bearing attribute VALUE only, keeping the quotes so the href
+    # scanner still sees (and then ignores) the attribute instead of a broken token.
+    return ATTR_VALUE.sub(lambda m: m.group(1) + ("https://api-pattern.invalid" if "{" in m.group(2) else m.group(2)) + m.group(3), text)
 
 
 # A sentence that ends on a preposition ("listed on .") or an empty "()" is the
@@ -40,7 +48,9 @@ def strip_code(text: str) -> str:
 # and it is exactly the defect this checker missed on its first run.
 # Require whitespace *before* the full stop: "listed on ." is broken, while
 # "each value is filled in." is ordinary English.
-DANGLING = re.compile(r"\b(?:on|in|at|from|per|as|see|below|above)\s+\.(?![\w/])|<\s*\.|>\s*\(\s*\)")
+# "the files in .github/workflows." is a directory path ending a sentence, not a stripped
+# link. Require the full stop to stand alone (not part of a path or number).
+DANGLING = re.compile(r"\b(?:on|in|at|from|per|as|see|below|above)\s+\.(?!\w)|<\s*\.|>\s*\(\s*\)")
 
 
 def check_dangling(rel, scan, problems):
@@ -92,6 +102,10 @@ def main():
         m = PLACEHOLDER.search(scan)
         if m:
             problems.append(f"{rel}: unfinished placeholder {m.group(0)!r}")
+        else:
+            m2 = PLACEHOLDER_TEXT.search(scan)
+            if m2:
+                problems.append(f"{rel}: unfinished placeholder {m2.group(0)!r}")
 
         parser = IdCollector()
         parser.feed(text)

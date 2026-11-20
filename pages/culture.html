@@ -5,13 +5,17 @@
 <meta name="description" content="Culture markets on Kalshi demo, sourced from the official Trade API.">
 <link rel="stylesheet" href="../assets/style.css">
 </head><body data-topic="culture">
-<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html" aria-current="page">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Start here</a><a href="../dashboard.html">Live dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html" aria-current="page">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/causes.html">Cause Channels</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
 <div class="wrap">
 
 <h1>Culture</h1>
 <p class="lead">Culture and entertainment markets (awards, music, film, celebrity and similar). Official discovery category <code>Culture</code>.</p>
 <div id="metaBar"><div class="card tight"><div class="status" id="staleness">Loading snapshot…</div></div></div>
 <div class="kpis" id="kpis"></div>
+<h2>Topics at a glance</h2>
+<p class="muted">Five topics, kept separate. Each card is that topic's own page; the counts and the
+24-hour dollar figures come from the same snapshot as the tables below.</p>
+<div class="kpis" id="topicStrip"></div>
 <div class="card tight" style="margin-bottom:14px"><div class="status" id="catNote">Checking the series catalogue…</div></div>
 
 <h2>Live markets — highest estimated dollar volume first</h2>
@@ -55,10 +59,19 @@ their official contract-terms and product-certification links.</p>
     const withLive = (cat.series_with_live_markets || []).length;
     const catBox = $('catNote');
     if(catBox){
+      const read = cat.series_read, failed = cat.series_failed || 0;
       if(inCat === undefined){
         catBox.innerHTML = '<span class="muted">Series-catalogue counts are not in this snapshot yet.</span>';
+      } else if(failed){
+        catBox.innerHTML = '<span class="pill flag">partial</span> <b>' + KR.num(read,0) + '</b> of <b>' + KR.num(inCat,0) +
+          '</b> series were read; <b>' + KR.num(failed,0) + '</b> request(s) failed (rate limit or timeout). ' +
+          'A smaller number below can mean a failed request, not an empty topic — see <a href="verification.html">Verification</a>.';
       } else if(inCat === 0){
         catBox.innerHTML = '<span class="pill flag">no series</span> The API returned no series tagged or categorised for this topic.';
+      } else if(cat.cap_this_run && cat.series_read < inCat){
+        catBox.innerHTML = '<span class="pill flag">rotating sweep</span> <b>' + KR.num(cat.series_read,0) + '</b> of <b>' +
+          KR.num(inCat,0) + '</b> catalogued series were read this run (cap ' + KR.num(cat.cap_this_run,0) +
+          ' per topic, rotating). ' + (withLive ? '<b>' + withLive + '</b> have live markets.' : 'None of the series read has a live market right now.');
       } else if(withLive === 0){
         catBox.innerHTML = '<span class="pill flag">catalogue only</span> <b>' + inCat + '</b> series exist for this topic in Kalshi&#8217;s catalogue (' +
           (cat.series_tickers||[]).slice(0,6).map(t=>'<code>'+KR.esc(t)+'</code>').join(' ') +
@@ -93,7 +106,7 @@ their official contract-terms and product-certification links.</p>
       {label:'Open int.', num:true, get:m=>KR.num(m.open_interest_fp,0)},
       {label:'Est. $ vol', num:true, get:m=>`${KR.usd(m.est_dollar_volume,0)} <span class="pill flag">est.</span>`},
       {label:'Closes', get:m=>`<span class="small">${KR.when(m.close_time)}</span>`},
-      {label:'Rules', get:m=>m.rules_primary_head?`<span class="small" title="${KR.esc(m.rules_primary_head)}">${KR.esc(m.rules_primary_head.slice(0,90))}${m.rules_primary_head.length>90?'…':''}</span>`:'—'},
+      {label:'Rules', get:m=>m.rules_primary?`<span class="small" title="${KR.esc(m.rules_primary)}">${KR.esc(m.rules_primary.slice(0,90))}${m.rules_primary.length>90?'…':''}</span>`:'—'},
       {label:'Source', get:m=>KR.link(m.market_url,'Kalshi market')}
     ], highest, 'No live markets for this topic in the current snapshot.');
 
