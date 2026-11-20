@@ -290,7 +290,7 @@ and `Build and check the site` runs were in progress while this claim was writte
 | W-7 | Repo review: claim-by-claim against official docs | done | 64df4faa | `site/content/repo_review.json`, `site/repo-review.html` |
 | W-8 | Clean landing page indexing every dashboard in the repo | done | 64df4faa | `index.html` |
 | W-9 | Workflow: collect → validate → commit → link-check → deploy, every 15 min | done | 64df4faa | `.github/workflows/pages.yml` |
-| W-10 | Integration: re-verify rows, build, link check, PR to `main`, merge, deploy check | in progress | 64df4faa | all of the above |
+| W-10 | Integration: re-verify rows, build, link check, PR to `main`, merge, deploy check | **done** — PR #28 merged `46acd3e`; CI green on main at `64d0961`; site fetched live and checked | 64df4faa | all of the above |
 
 ### Environment facts verified by this session (not assumed)
 
