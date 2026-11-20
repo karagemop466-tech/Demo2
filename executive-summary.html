@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Executive summary of the Kalshi demo monitoring project, verified facts, and open decisions."><title>Executive summary · Kalshi Demo Monitor</title><link rel="stylesheet" href="./assets/css/styles.css"></head>
+<body>
+  <header class="site-header"><a class="brand" href="./index.html"><span class="brand-mark" aria-hidden="true">K</span><span><span class="brand-name">Kalshi monitor</span><span class="brand-subtitle">Demo · public data</span></span></a><nav class="primary-nav" aria-label="Main navigation"><a href="./index.html">Dashboard</a><a href="./categories/gas-prices.html">Gas</a><a href="./categories/elections.html">Elections</a><a href="./categories/culture.html">Culture</a><a href="./categories/crypto.html">Crypto</a><a href="./categories/golf.html">Golf</a><a href="./watchlist.html">Resolutions</a><a href="./portfolio.html">Portfolio</a><a href="./suggestions.html">Suggestions</a><a href="./review.html">Flagged review</a><a href="./executive-summary.html" aria-current="page">Brief</a></nav><div class="header-status"><span class="badge badge-muted">Research brief</span></div></header>
+  <main class="page-shell">
+    <section class="page-heading"><div><p class="eyebrow">Executive summary · source checked 2026-11-20</p><h1>Source-linked market monitor, not a trading bot</h1><p class="page-lede">This repository now contains a source-linked static dashboard for selected Kalshi demo markets, plus a requirements and decision register. The live market surface is public-data-only. Account portfolio access and order execution are deliberately not represented as available.</p></div><div class="header-actions"><a class="button button-primary" href="./index.html">Open dashboard</a><a class="button" href="./review.html">Review open items</a></div></section>
+
+    <section class="doc-section">
+      <h2>Executive readout</h2>
+      <div class="content-grid">
+        <article class="content-card"><p class="eyebrow">Implemented in code · runtime API check pending</p><h3>Public demo market monitor</h3><p>The dashboard is wired to request open events and binary markets from Kalshi’s recommended demo Trade API. Its client code filters for gas prices, elections, culture, crypto, and golf; ranks events by a documented calculation from visible YES/NO bid depth; displays per-price contract quantities; requests price-history charts; and provides a browser-local watchlist for following markets through settlement. The demo API’s live response and browser CORS behavior have not yet been confirmed from this workspace.</p><p><a href="./methodology.html">See the exact data rules ↗</a></p></article>
+        <article class="content-card"><p class="eyebrow">Unavailable in this build</p><h3>Portfolio connection and execution are not enabled</h3><p>No demo account credentials, API key, private signing key, portfolio history, or user authorization were available in the repository or task context. Therefore no portfolio numbers are shown, no trade was submitted, and no trade-performance result is claimed. The site does not ask for, store, or embed secrets.</p><p><a href="./portfolio.html">Review the account-data gap ↗</a></p></article>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <h2>Important verified facts</h2>
+      <div class="table-wrap doc-table"><table><thead><tr><th scope="col">Finding</th><th scope="col">Project implication</th><th scope="col">Official source</th></tr></thead><tbody>
+        <tr><td>Kalshi’s demo environment uses mock funds; demo prices and market behavior may not reflect real markets.</td><td>Every page is labeled demo-only. Demo observations must not be treated as production-market evidence.</td><td><a class="source-link" href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener noreferrer">Kalshi demo environment ↗</a></td></tr>
+        <tr><td>Recommended demo REST and WebSocket endpoints match the requested external-api hosts; shared demo hosts are also supported.</td><td>The monitor uses the recommended REST root: <span class="ticker">https://external-api.demo.kalshi.co/trade-api/v2</span>.</td><td><a class="source-link" href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener noreferrer">Kalshi API environments ↗</a></td></tr>
+        <tr><td>Events can include nested markets; cursor pagination and event/market status filters are documented.</td><td>Open events are paged through; only nested markets with API status <span class="ticker">active</span> and type <span class="ticker">binary</span> enter the leaderboard.</td><td><a class="source-link" href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener noreferrer">Get Events reference ↗</a></td></tr>
+        <tr><td>The public orderbook returns YES and NO bids with prices and quantities, not a full ask ladder; a binary bid on one side implies an ask on the other.</td><td>The interface shows visible bid levels and labels parity-derived asks. Quantities are contracts; displayed notional is calculated as price × contracts.</td><td><a class="source-link" href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener noreferrer">Get Market Orderbook reference ↗</a></td></tr>
+        <tr><td>Official market candles support 1-minute, 1-hour, and 1-day periods; WebSocket connections require an authenticated handshake, including for public market-data channels.</td><td>The chart uses REST candles for minute/hour windows and local 5-second polling for the seconds window. No unauthenticated WebSocket is attempted.</td><td><a class="source-link" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener noreferrer">Candlestick reference ↗</a> <a class="source-link" href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener noreferrer">WebSocket guide ↗</a></td></tr>
+        <tr><td>Market lifecycle distinguishes active, closed, determined, disputed, amended, and finalized. A known result may still be disputed before settlement is complete.</td><td>The watchlist shows the exact API status and raw result. It does not treat a result as finally settled unless the API reports <span class="ticker">finalized</span>.</td><td><a class="source-link" href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener noreferrer">Market lifecycle guide ↗</a></td></tr>
+        <tr><td>Kalshi requires signed API requests for account-specific portfolio data and order creation; the private key is held by the account owner.</td><td>Portfolio balances, positions, fills, settlements, and order submission remain unavailable until a secure backend and authorized demo credentials exist.</td><td><a class="source-link" href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener noreferrer">Kalshi API key guide ↗</a></td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="doc-section">
+      <h2>What “highest dollar amount” means here</h2>
+      <p>The current leaderboard sorts by <strong>displayed bid-side notional</strong>: across an event’s active binary markets, add each returned YES and NO bid price multiplied by the contracts resting at that price. The official book supplies price/quantity levels; the dollar amount is a transparent calculation. It is <strong>not</strong> a Kalshi-provided event-level traded-dollar-volume field, total trade turnover, expected payout, or guarantee that the displayed orders will remain available. The 24-hour volume column is labeled in contract counts and is not converted into dollars.</p>
+      <p>Before using the ranking as the primary “highest dollar amount” signal, decide whether the intended comparison is displayed book depth, executed dollar volume, open interest, or some other measure. That decision and its source limitations are recorded on <a href="./review.html">Flagged for Review</a>.</p>
+    </section>
+
+    <section class="doc-section">
+      <h2>Readiness and required next decisions</h2>
+      <div class="strategy-steps">
+        <article class="strategy-step"><h3>Market discovery</h3><p>Implemented on public demo data. Confirm the topic keywords and the desired ranking metric before relying on the list.</p></article>
+        <article class="strategy-step"><h3>Resolution tracking</h3><p>Implemented for tickers saved in this browser. Keep the watchlist page open for periodic checks; the static site does not run while closed.</p></article>
+        <article class="strategy-step"><h3>Portfolio and orders</h3><p>Not ready. No account data or trade action is enabled; credentials, secure server-side signing, permissions, and risk limits have not been supplied or approved.</p></article>
+      </div>
+      <p style="margin-top:14px"><a class="button button-primary" href="./requirements.html">Review the full requirements & questions</a> <a class="button" href="./suggestions.html">Review proposed improvements</a></p>
+    </section>
+
+    <footer class="footer"><span>Source review date: 2026-11-20. Dynamic API values are never bundled as verified snapshots.</span><nav class="footer-links"><a href="./sources.html">Official source index</a><a href="./requirements.html">Requirements & decisions</a><a href="./review.html">Flagged for review</a></nav></footer>
+  </main>
+</body></html>

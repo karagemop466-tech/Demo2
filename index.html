@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A source-linked, read-only monitor for selected Kalshi demo markets.">
+  <title>Kalshi Demo Monitor</title>
+  <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body data-view="dashboard" data-topic="all" data-root-prefix="./">
+  <header class="site-header">
+    <a class="brand" href="./index.html" aria-label="Kalshi demo monitor home">
+      <span class="brand-mark" aria-hidden="true">K</span>
+      <span><span class="brand-name">Kalshi monitor</span><span class="brand-subtitle">Demo · public data</span></span>
+    </a>
+    <nav class="primary-nav" aria-label="Main navigation">
+      <a href="./index.html" aria-current="page">Dashboard</a>
+      <a href="./categories/gas-prices.html">Gas</a>
+      <a href="./categories/elections.html">Elections</a>
+      <a href="./categories/culture.html">Culture</a>
+      <a href="./categories/crypto.html">Crypto</a>
+      <a href="./categories/golf.html">Golf</a>
+      <a href="./watchlist.html">Resolutions</a>
+      <a href="./portfolio.html">Portfolio</a>
+      <a href="./suggestions.html">Suggestions</a>
+      <a href="./review.html">Flagged review</a>
+      <a href="./executive-summary.html">Brief</a>
+    </nav>
+    <div class="header-status"><span class="status-dot" id="header-status-dot" aria-hidden="true"></span><span id="header-status-text">Connecting</span></div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-heading" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Kalshi demo exchange · selected topics only</p>
+        <h1 id="page-title">Market monitor</h1>
+        <p class="page-lede">Configured to load public open binary events across gas prices, elections, culture, crypto, and golf; live API/CORS connectivity is not verified here. Rank uses visible bid-side orderbook notional, not traded dollar volume.</p>
+      </div>
+      <div class="header-actions">
+        <a class="button" href="./executive-summary.html">Executive summary</a>
+        <button class="button button-primary" id="refresh-button" type="button">↻ Refresh data</button>
+      </div>
+    </section>
+
+    <aside class="alert" aria-label="Demo environment notice">
+      <span class="alert-icon" aria-hidden="true">!</span>
+      <p><strong>Demo data only.</strong> Kalshi states that demo uses mock funds and its market prices and behavior may not reflect real markets. This site reads public market data only; it has no account credentials and will not place trades. <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener noreferrer">Kalshi demo environment details ↗</a></p>
+    </aside>
+
+    <div class="status-banner" id="api-status" role="status" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span>Waiting for the Kalshi demo API. No sample market values are bundled.</span>
+      <span class="status-time" id="last-updated-text">Not updated</span>
+    </div>
+
+    <section class="stat-grid" aria-label="Live market summary">
+      <article class="stat-card"><span class="stat-label">Matching open events</span><strong class="stat-value" id="stat-events">—</strong><span class="stat-note">Open binary markets in selected topics</span></article>
+      <article class="stat-card"><span class="stat-label">Open markets</span><strong class="stat-value" id="stat-markets">—</strong><span class="stat-note">Market status must be active</span></article>
+      <article class="stat-card"><span class="stat-label">Highest displayed depth</span><strong class="stat-value" id="stat-depth">—</strong><span class="stat-note" id="stat-depth-label">Awaiting orderbook data</span></article>
+      <article class="stat-card"><span class="stat-label">Last refresh</span><strong class="stat-value" id="stat-updated">—</strong><span class="stat-note">Browser local time</span></article>
+    </section>
+
+    <nav class="topic-tabs" id="topic-tabs" aria-label="Filter by topic">
+      <a class="topic-tab is-active" href="./index.html">All topics</a>
+      <a class="topic-tab" href="./categories/gas-prices.html">Gas prices</a>
+      <a class="topic-tab" href="./categories/elections.html">Elections</a>
+      <a class="topic-tab" href="./categories/culture.html">Culture</a>
+      <a class="topic-tab" href="./categories/crypto.html">Crypto</a>
+      <a class="topic-tab" href="./categories/golf.html">Golf</a>
+    </nav>
+
+    <section class="panel" aria-labelledby="events-heading">
+      <div class="panel-header">
+        <div class="panel-title-group">
+          <span class="panel-icon" aria-hidden="true">↗</span>
+          <div><h2 id="events-heading">Open event leaderboard</h2><p>Sorted by summed displayed YES and NO bid-level notional across each event’s active binary markets.</p></div>
+        </div>
+        <div class="panel-actions"><a class="button button-small" href="./methodology.html">How ranking works</a></div>
+      </div>
+      <div class="table-wrap">
+        <table id="events-table">
+          <thead><tr><th scope="col">Rank</th><th scope="col">Event</th><th scope="col">Topic</th><th scope="col">Markets</th><th scope="col" class="table-number">Displayed bid depth</th><th scope="col" class="table-number">24h volume</th><th scope="col">Official source / track</th></tr></thead>
+          <tbody id="events-table-body"><tr><td class="empty-cell" colspan="7"><strong>Loading live demo API data…</strong>No prices, volumes, or liquidity are filled in from examples. <a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener noreferrer">Official events API documentation ↗</a></td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel-footer">Dollar ranking is a transparent calculation from the returned orderbook levels (price × available contracts). Kalshi’s market volume fields are contract counts; they are not labeled as dollar turnover here. Source links appear on each loaded event row.</div>
+    </section>
+
+    <section class="detail-grid" aria-label="Selected market details">
+      <article class="panel" aria-labelledby="chart-heading">
+        <div class="panel-header">
+          <div class="panel-title-group"><span class="panel-icon" aria-hidden="true">⌁</span><div><h2 id="chart-heading">Price movement</h2><p>YES contract price in dollars · time on the horizontal axis</p></div></div>
+          <div class="select-wrap"><label for="market-select">Market</label><select id="market-select" aria-label="Choose a market"><option value="">Waiting for open markets…</option></select></div>
+        </div>
+        <div class="panel-body">
+          <div class="market-summary">
+            <div><h3 id="selected-market-title">Select an open market</h3><p><span class="ticker" id="selected-market-ticker">No market selected</span> · Status: <span id="selected-market-status">—</span></p><p>YES bid <strong id="selected-market-bid">—</strong> · YES ask <strong id="selected-market-ask">—</strong></p></div>
+            <div class="market-price"><strong id="selected-market-price">—</strong><span id="selected-market-price-label">No price observation</span></div>
+          </div>
+          <div class="chart-toolbar">
+            <div class="range-buttons" role="group" aria-label="Chart time range">
+              <button class="range-button" type="button" data-range="30s">30s</button>
+              <button class="range-button" type="button" data-range="5m">5m</button>
+              <button class="range-button" type="button" data-range="15m">15m</button>
+              <button class="range-button is-active" type="button" data-range="1h">1h</button>
+              <button class="range-button" type="button" data-range="6h">6h</button>
+              <button class="range-button" type="button" data-range="24h">24h</button>
+            </div>
+            <div class="chart-meta"><span class="chart-legend"><span class="chart-legend-mark"></span>YES last price</span><span>USD / contract</span></div>
+          </div>
+          <div class="chart-container" id="price-chart"><div class="chart-empty"><div><strong>Waiting for market data.</strong>The chart will use API observations only.</div></div></div>
+          <p class="chart-caption" id="chart-caption">Historical windows use Kalshi candlesticks. The seconds view uses local snapshots while this browser page is open.</p>
+        </div>
+      </article>
+
+      <article class="panel" aria-labelledby="book-heading">
+        <div class="panel-header">
+          <div class="panel-title-group"><span class="panel-icon" aria-hidden="true">▤</span><div><h2 id="book-heading">Visible orderbook</h2><p>Contract quantity available at each displayed price</p></div></div>
+          <a class="source-link" href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener noreferrer">Orderbook docs ↗</a>
+        </div>
+        <div class="panel-body">
+          <div class="callout"><strong>Book interpretation.</strong> Kalshi’s binary-market REST book returns YES and NO bids only. The displayed asks are parity-derived from the opposite-side bids, with the same contract quantity; the API does not return an ask ladder or order counts. <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener noreferrer">See official explanation ↗</a></div>
+          <div class="book-rows" style="margin-top:12px">
+            <table aria-label="Selected market orderbook levels">
+              <thead><tr><th scope="col">Side</th><th scope="col" class="table-number">Price</th><th scope="col" class="table-number">Contracts</th><th scope="col" class="table-number">Notional*</th><th scope="col">Official source</th></tr></thead>
+              <tbody id="orderbook-body"><tr><td class="empty-cell" colspan="5"><strong>Waiting for book.</strong>Values remain blank until returned by Kalshi. <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener noreferrer">Official orderbook API documentation ↗</a></td></tr></tbody>
+            </table>
+          </div>
+          <p class="chart-caption">* Notional is calculated as price × contracts. Implied asks and notional are derived values, not separate API fields.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="content-grid" style="margin-top:16px" aria-label="More dashboard sections">
+      <article class="content-card">
+        <p class="eyebrow">Keep tracking</p>
+        <h2>Follow a market until it resolves</h2>
+        <p>Use <strong>Track</strong> on an event row to save its market tickers in this browser. The resolutions page checks those tickers against Kalshi’s live market endpoint and falls back to its historical market endpoint when a market has moved to the archive.</p>
+        <a href="./watchlist.html">Open resolution watchlist ↗</a>
+      </article>
+      <article class="content-card">
+        <p class="eyebrow">Account data & trading</p>
+        <h2>No account connection or orders are active</h2>
+        <p>Portfolio and trading endpoints require signed API credentials. A GitHub Pages site is static, so this dashboard does not collect or embed private keys and does not submit orders.</p>
+        <a href="./portfolio.html">Review portfolio limitations ↗</a> · <a href="./review.html">See flagged items ↗</a>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <span>Kalshi Demo Monitor · Public demo data · No financial advice or automatic trading</span>
+      <nav class="footer-links" aria-label="Footer links"><a href="./methodology.html">Methodology</a><a href="./requirements.html">Requirements</a><a href="./sources.html">Official sources</a><a href="./review.html">Flagged for review</a></nav>
+    </footer>
+  </main>
+  <script type="module" src="./assets/js/app.js"></script>
+</body>
+</html>
