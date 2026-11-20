@@ -1398,12 +1398,31 @@ Gate results at this commit: `tools/test_collector.py` 43/43 · `tools/test_publ
 `scripts/check_links.py` 10,735 references / 121 HTML files, all OK · `scripts/render_check.mjs` 14/14
 with real data (alerts chats render 65 real ≥$0.10 moves from collector history).
 
-## K-5 — PR, merge, deploy, live data (record filled after the merge)
+## K-5 — PR, merge, deploy, live data (DONE, 2026-11-20 21:2x UTC)
 
-- PR: _to be recorded_
-- Merge result: _to be recorded_
-- Pages deploy: _to be recorded_
-- First data refresh after the fix: _to be recorded_
+- **PR:** [#60](https://github.com/karagemop466-tech/Demo2/pull/60) "Final integration: unblock the
+  frozen data pipeline, take over 3 stale sessions, add Live Alerts chats, verify line by line"
+  (`arena/b7bc848c-demo2` → `main`). Includes the reconciliation merge with session a984e8f4's PR #58
+  line (see the reconciliation section above).
+- **Merge result:** merged 2026-11-20 **21:21:29 UTC** with `gh pr merge 60 --merge` (merge commit
+  `4bfecc7`). Post-merge "Build and check the site" on `main` = **success** (the site was never merged
+  broken; the generator-diff gate, tools/check.py, scripts/check_links.py, desk audit and
+  scripts/render_check.mjs were all green at the merge commit).
+- **Pages deploy:** "pages build and deployment" success + "Deploy GitHub Pages" (pages.yml) ran on the
+  merge push; the live site https://karagemop466-tech.github.io/Demo2/ was re-fetched after deploy and
+  serves the merged content (including the preserved-variant cross-links in the "All sections" line).
+- **First data refresh after the fix:** dispatched `Refresh Kalshi demo data` on `main` → run
+  `44819771880` **success in 2m9s**; the loop had already been proven by session a984e8f4's dispatch
+  `44814366733` (success, 15m54s) and the scheduled/push runs. Committed snapshots land continuously
+  (`data: refresh Kalshi demo snapshot 2026-11-20T21:24Z`, commit `bd3a3f8`). The live site banner reads
+  "Snapshot 2026-11-20 21:24:28 UTC (3 min ago)" with 27,440 in-scope markets (gas 3 · elections 26,077
+  · crypto 1,065 · golf 295), `counts.markets_published` 2,563 with `markets_trimmed_per_topic` honestly
+  recorded. **The 6-hour data freeze is over; the pipeline pushes fresh data and Pages serves it.**
+- Open at the time of writing (not mine to merge; owners active): PR **#61** (session a984e8f4 —
+  retry-loop `--mixed reset` fix; note their retry soft-reset briefly deleted
+  `data/paper_portfolio.json` at 20:53 — restored in this branch's merge and re-published), PR
+  **#59** (session 441151f5 — live alert feeds; opened 20:43Z, not yet stale, left to its owner per
+  the claim rules).
 
 ## New flags raised this session (published on pages/flagged.html after regen where applicable)
 
