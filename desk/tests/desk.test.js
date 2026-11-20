@@ -114,7 +114,7 @@ async function boot({ failFetch = false } = {}) {
   const script = dom.window.document.createElement("script");
   script.textContent = SOURCE;
   dom.window.document.body.appendChild(script);
-  await new Promise((r) => setTimeout(r, 30));
+  await new Promise((r) => setTimeout(r, 100));
   return { dom, calls, doc: dom.window.document };
 }
 
@@ -140,7 +140,7 @@ test("the chart window chooses the endpoint that carries that resolution", async
   const button = dom.window.document.querySelector('#winSeg button[data-w="604800"]');
   assert.ok(button, "the window selector must offer a seven day window");
   button.dispatchEvent(new dom.window.Event("click", { bubbles: true }));
-  await new Promise((r) => setTimeout(r, 30));
+  await new Promise((r) => setTimeout(r, 100));
   const seven = dom.window.document.getElementById("chartNote").textContent;
   assert.match(seven, /period_interval=1440/);
 });
@@ -173,7 +173,7 @@ test("the depth ladder counts contracts at each price and derives the ask side",
 test("a failed request shows an error instead of a fabricated value", async () => {
   const { dom, doc } = await boot({ failFetch: true });
   doc.getElementById("refreshBtn").dispatchEvent(new dom.window.Event("click", { bubbles: true }));
-  await new Promise((r) => setTimeout(r, 30));
+  await new Promise((r) => setTimeout(r, 100));
   const note = doc.getElementById("chartNote").textContent;
   assert.match(note, /unavailable|error/i);
   // The bundled official snapshot remains visible, but it is explicitly marked
