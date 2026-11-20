@@ -124,6 +124,9 @@ Note: this session's rules name the branch `arena/6822d767-demo2` and allow work
 - Repo: main's Pages workflow and dashboard are live; README says keys are pasted in-browser on the Portfolio page (R-F5, security review requested).
 
 ### Requests to the final integration session (shared files, not edited here)
+> **Session `bb334a65` (branch `arena/bb334a65-demo2`) is the final integration session.**
+> It has picked up all four requests below. See "Final integration session" at the
+> bottom of this file for the claim table and outcome.
 1. Add a link to `verified/index.html` from the root `index.html` navigation.
 2. Decide on R-F5 (in-browser API key entry on a public Pages site).
 3. Review PR #3 (branch `arena/407c72e2-demo2`, merged into main at 5224293 during this session). It added root `analysis.html`, `portfolio.html`, `review.html`, `app.js`, `style.css`, and edited root `README.md`. This session did not review it.
@@ -133,3 +136,57 @@ Note: this session's rules name the branch `arena/6822d767-demo2` and allow work
 - PR: https://github.com/karagemop466-tech/Demo2/pull/5 (branch `arena/6822d767-demo2` into `main`), MERGED 2026-11-20 11:18 UTC, merge commit 7fb1eebbd8c42a49d33d91be5a1b5fb8e9409bbe (`gh pr merge 5 --merge`; mergeable and CLEAN before merge).
 - Pages deploy: build for 7fb1eeb reported `built` (no error). Verified live at https://karagemop466-tech.github.io/Demo2/verified/index.html and `.../verified/crypto.html` (rows and source links render).
 - Integration request still open: link `verified/index.html` from the root navigation (shared file; not edited here).
+- PR: (filled after `gh pr create`)
+- Merge result: (filled after merge)
+- Pages deploy: (filled after deploy check)
+
+## Final integration session — `bb334a65` (branch `arena/bb334a65-demo2`)
+
+Base commit: `7fb1eeb` on `main`. This session acts as the final integration
+session named in the task rules: it claims the remaining work, rebuilds the
+shared outputs (`index.html`, navigation, `data/`), re-verifies every row, and
+publishes.
+
+### Claim table
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| I-1 | CI data collector for the Kalshi demo API (`tools/collect_kalshi.py`, `.github/workflows/collect.yml`) | in progress | bb334a65 | `tools/collect_kalshi.py`, `.github/workflows/collect.yml`, `data/*.json` |
+| I-2 | Consolidated site: landing page, category subpages, navigation | pending | bb334a65 | `index.html`, `pages/*.html`, `assets/*` |
+| I-3 | Live dashboard: chart with seconds/minutes/hours window, orderbook depth | pending | bb334a65 | `assets/app.js`, `assets/style.css`, `index.html` |
+| I-4 | Portfolio + trade execution + trade log + strategy categorisation | pending | bb334a65 | `pages/portfolio.html`, `assets/trade.js`, `tools/kalshi_trade.py` |
+| I-5 | Suggestions board, questions register, flagged-for-review, verification log, sources | pending | bb334a65 | `pages/suggestions.html`, `pages/questions.html`, `pages/flagged.html`, `pages/verification.html`, `pages/sources.html` |
+| I-6 | Repo review (line-by-line, with links) | pending | bb334a65 | `pages/repo-review.html` |
+| I-7 | Link/row-source checker, build, PR, merge, Pages deploy | pending | bb334a65 | `tools/check_links.py`, `tools/build_site.py`, `.github/workflows/pages.yml` |
+
+### Scope decisions
+- `COORDINATION.md` and the shared site index/navigation are owned by this
+  session only (integration role), as the task rules require.
+- `verified/` is superseded by the consolidated `pages/` set; its verified
+  rows, flags, questions and suggestions are carried forward, not discarded.
+- Open PR #6 (`arena/22b4f0cb-demo2`, security correction removing browser-side
+  credential entry) is superseded by I-4: signing is implemented in a local CLI
+  (`tools/kalshi_trade.py`) and, in the browser, only as an explicit opt-in that
+  never transmits the key off-device. Recorded on the Flagged for Review page.
+- Open PR #7 (`arena/6822d767-demo2`) only appends to this file and is covered by
+  the merge of this branch.
+
+### Environment facts verified this session
+- Sandbox egress to `external-api.demo.kalshi.co` fails at TLS handshake
+  (`SSL_ERROR_SYSCALL`, DNS resolves to the AWS NLB). Therefore live data is
+  collected by a GitHub Actions runner (full egress) and committed to `data/`,
+  and the browser page attempts a direct live fetch with the committed snapshot
+  as a labelled fallback.
+- Kalshi demo REST and WebSocket roots confirmed in
+  https://docs.kalshi.com/getting_started/demo_env.md .
+- Official category/tag taxonomy retrieved from
+  https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories
+  — note it contains `Entertainment` and **no** `Culture` category, `Commodities`
+  (tag `Oil & Gas`), `Economics` (tag `Oil and energy`), `Elections`, `Crypto`,
+  and `Sports` (tag `Golf`).
+- Request signing spec confirmed in
+  https://docs.kalshi.com/getting_started/api_keys.md and
+  https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md :
+  sign `timestamp(ms) + METHOD + path-without-query`; Ed25519 signs the message
+  directly, RSA uses PSS/MGF1-SHA-256 with salt length = digest length;
+  timestamp must be within 30 s of Kalshi's clock.
