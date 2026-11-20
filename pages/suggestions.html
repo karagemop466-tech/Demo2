@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Suggestions — Review & Choose</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a><a href="../verified/index.html">Verified Tables</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a></nav></header><div class="wrap"><h1>Suggestions — Review & Choose</h1>
-<p>Review each suggestion, then mark <b>Choose</b> (best path) or <b>Defer</b>. Choices persist in your browser only and do not change code until you approve. Nothing here is implemented automatically.</p>
-<div id="sugList"></div>
-<script>
-const SUGS=[
- {id:"s1",t:"Add series-ticker allowlist",d:"Replace keyword matching with explicit series_ticker filters per topic (e.g. gas series) for exact scoping. Needs series discovery via Get Series.",s:"https://docs.kalshi.com/getting_started/quick_start_market_data"},
- {id:"s2",t:"WebSocket-first streaming (needs a proxy)",d:"Verified 2026-11-20: the WS handshake requires signed KALSHI-ACCESS-* headers, so a browser cannot stream directly (see Flagged G-1). To stream, add a tiny backend proxy that holds a key and re-broadcasts; otherwise keep the current REST polling + 2h snapshot refresh.",s:"https://docs.kalshi.com/getting_started/quick_start_websockets"},
- {id:"s3",t:"Server-side proxy for CORS",d:"If browser CORS blocks the API, add a small proxy that forwards demo REST/WS. Requires hosting decision.",s:"https://docs.kalshi.com/getting_started/demo_env"},
- {id:"s4",t:"Paper-trade simulator",d:"Clearly-labeled simulator when no API keys exist, so analysis UI can be tested without claiming real trades.",s:"https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"},
- {id:"s5",t:"Resolution alerts",d:"Notify when a tracked market settles and record yes/no outcome automatically.",s:"https://docs.kalshi.com/api-reference/market/get-markets"},
- {id:"s6",t:"Export CSV of fills + outcomes",d:"One-click export for offline review; no new data collection.",s:"https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"},
- {id:"s7",t:"Data freshness SLA + retention",d:"Choose how stale each view may be (dashboard polls 15s; CI snapshot refreshes every 2h; REST itself is cached several seconds) and how long dated snapshots/audit logs are kept. Timestamps are already shown everywhere.",s:"https://docs.kalshi.com/api-reference/market/get-markets"},
- {id:"s8",t:"Consolidate the four site trees",d:"Keep one tree (e.g. pages/) and move the verified tables and static dashboard into it, redirecting old URLs; or keep all trees as archives with the current cross-links. Nothing is removed until you choose.",s:"https://docs.kalshi.com/welcome"}
-];
-const saved=JSON.parse(localStorage.getItem("sugVotes")||"{}");
-document.getElementById("sugList").innerHTML=SUGS.map(s=>"<div class='card' style='margin-bottom:10px'><h3>"+s.t+"</h3><p>"+s.d+"</p><p class='muted'>Source: <a href='"+s.s+"'>"+s.s+"</a></p><div class='row'><button data-id='"+s.id+"' data-v='choose'>Choose as best path</button><button class='secondary' data-id='"+s.id+"' data-v='defer'>Defer</button><span>"+(saved[s.id]||"No decision yet")+"</span></div></div>").join("");
-document.querySelectorAll("button[data-id]").forEach(b=>b.onclick=()=>{saved[b.dataset.id]=b.dataset.v;localStorage.setItem("sugVotes",JSON.stringify(saved));location.reload();});
-=======
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -24,7 +5,7 @@ document.querySelectorAll("button[data-id]").forEach(b=>b.onclick=()=>{saved[b.d
 <meta name="description" content="Eight reviewed improvement proposals with options, trade-offs and official sources.">
 <link rel="stylesheet" href="../assets/style.css">
 </head><body>
-<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../rankings.html">Dollar Rankings</a><a href="../live/index.html">Live Console</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html" aria-current="page">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../live/index.html">Live Console</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html" aria-current="page">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
 <div class="wrap">
 
 <h1>Suggestions — review before anything changes</h1>
@@ -213,8 +194,17 @@ knowledge. No decision is transmitted anywhere.</div>
   document.getElementById('clearBtn').addEventListener('click',()=>{ localStorage.removeItem(KEY); location.reload(); });
   paint();
 })();
->>>>>>> origin/main
 </script>
+
+<h2>Integration additions (session 5330bffb, 2026-11-20)</h2>
+<p class="lead">Review board only &mdash; nothing here is implemented by default.</p>
+<div class="tablewrap"><table><thead><tr><th>#</th><th>Suggestion</th><th>Reviewer choice</th></tr></thead><tbody>
+<tr><td>S7</td><td><b>Topic allowlist</b>: add <code>KXCABALLOTMEASURES</code>-style state/measure markets to Elections via an explicit ticker-pattern allowlist, with its settlement sources listed.</td><td>Keep excluded &nbsp;/&nbsp; Include with source list</td></tr>
+<tr><td>S8</td><td><b>Fixed-point utility</b>: accept human decimals in the CLI and convert internally; display values read as numbers with units (&ldquo;$43.92&rdquo;), never raw <code>"43.92"</code> without a unit.</td><td>Keep explicit &nbsp;/&nbsp; Accept decimals + show units</td></tr>
+</tbody></table></div>
+<p class="lead">Status updates: S2 (browser WebSocket live streaming) &mdash; a proxy is now the only
+option, since direct WS is impossible from a browser (G-1); CORS for REST was confirmed
+(G-2, closed). The dashboard already provides the 15-second poll as the interim path.</p>
 
 </div>
 <footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a> · <a href="../monitor/index.html">Read-only Monitor</a></div></div></footer>

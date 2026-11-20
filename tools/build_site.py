@@ -28,6 +28,8 @@ NAV = [
     ("pages/crypto.html", "Crypto", "crypto"),
     ("pages/golf.html", "Golf", "golf"),
     ("verified/index.html", "Verified Data", "verified"),
+    ("dashboard/index.html", "Static Dashboard", "static"),
+    ("review.html", "Decision Register", "decide"),
     ("rankings.html", "Dollar Rankings", "rank"),
     ("live/index.html", "Live Console", "live"),
     ("pages/resolutions.html", "Resolutions", "res"),
