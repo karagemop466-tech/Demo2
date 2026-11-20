@@ -821,16 +821,20 @@ landing page at.
 
 | # | Task | Status | Owner | Files touched |
 |---|------|--------|-------|---------------|
-| D-1 | Requirements register: every requirement from the brief → status → where it is implemented → official evidence link | in progress | 220913cb | `desk/data/requirements.json`, `desk/requirements.html` |
+| D-1 | Requirements register: every requirement from the brief → status → where it is implemented → official evidence link | done | 220913cb | `desk/data/requirements.json`, `desk/requirements.html` |
 | D-2 | Verification gate: every data row in the repo must carry an official Kalshi source URL; re-verify rows against the live official demo API; write a machine-checked report | in progress | 220913cb | `desk/tools/verify.py`, `desk/data/audit_report.json`, `desk/verification.html` |
-| D-3 | Repo irregularity register: claim-by-claim repo review, defects and duplications, with evidence links | in progress | 220913cb | `desk/data/irregularities.json`, `desk/irregularities.html` |
+| D-3 | Repo irregularity register: claim-by-claim repo review, defects and duplications, with evidence links | done | 220913cb | `desk/data/irregularities.json`, `desk/irregularities.html` |
 | D-4 | Sharp-jump monitor: detect moves ≥ $0.10 in either direction from official candlesticks/trades, with the official source for every jump and an explicit "cause not published by Kalshi" column | in progress | 220913cb | `desk/tools/jump_detect.py`, `desk/data/jumps.json`, `desk/jumps.html` |
-| D-5 | Consolidated desk dashboard: clean landing + one subpage per topic + trading/strategy page, all tables row-sourced | in progress | 220913cb | `desk/index.html`, `desk/categories/*.html`, `desk/trading.html`, `desk/assets/desk.css`, `desk/tools/build_desk.py` |
-| D-6 | CI: run the verification gate + jump detector on a schedule and commit the reports | in progress | 220913cb | `.github/workflows/desk-verify.yml` |
-| D-7 | End-of-session integration: nav entry, whole-site link check, PR → `main`, merge, Pages deploy confirmation, record | unclaimed | — | — |
-| D-8 | Offline browser-behaviour tests for the consolidated desk chart, jumps, order book, and API failure state | in progress | 220913cb | `desk/tests/desk.test.js`, `package.json`, `package-lock.json` |
+| D-5 | Consolidated desk dashboard: clean landing + one subpage per topic + trading/strategy page, all tables row-sourced | done | 220913cb | `desk/index.html`, `desk/categories/*.html`, `desk/trading.html`, `desk/assets/desk.css`, `desk/tools/build_desk.py` |
+| D-6 | CI: run the verification gate + jump detector on a schedule and commit the reports | done | 220913cb | `.github/workflows/desk-verify.yml` |
+| D-7 | End-of-session integration: nav entry, whole-site link check, PR → `main`, merge, Pages deploy confirmation, record | in progress | 220913cb | `COORDINATION.md`, `tools/build_site.py`, `tools/build_content.py`, generated `index.html`/`pages/*.html`, `instrument-panel/tools/site_build_core.py`, `instrument-panel/tools/build_dashboard_site.py`, generated `instrument-panel/site/*.html` |
+| D-8 | Offline browser-behaviour tests for the consolidated desk chart, jumps, order book, and API failure state | done | 220913cb | `desk/tests/desk.test.js`, `package.json`, `package-lock.json` |
 
-D-8 verification: the five browser tests cover snapshot quotes, chart-window resolution, ≥$0.10 jump/source rendering, order-book contract depth, and API failure fallback. Tests use deterministic synthetic fixtures and assert no current market values. The first Node 20 CI run exposed a dependency-engine incompatibility: [jsdom 31.0.1](https://www.npmjs.com/package/jsdom/v/31.0.1) declares Node `^22.22.2 || ^24.15.0 || >=26.0.0`, but the repository workflow uses Node 20. Replaced it with [jsdom 26.1.0](https://www.npmjs.com/package/jsdom/v/26.1.0), which declares Node `>=18`; all 13 tests pass locally under Node 20. Remaining final verification: rerun CI on the updated dependency lock. Endpoint behaviour tested is documented by Kalshi at [Get Market Candlesticks](https://docs.kalshi.com/api-reference/market/get-market-candlesticks), [Get Market Orderbook](https://docs.kalshi.com/api-reference/market/get-market-orderbook), and [Get Market](https://docs.kalshi.com/api-reference/market/get-market).
+D-1, D-3, D-5 and D-6 completion record: all 18 brief requirements, the 14-finding review register, the consolidated dashboard and its scheduled/manual/PR verification workflow are implemented at the table's listed paths. After merging current main, `python3 desk/tools/verify.py --offline` checked 6,980 rows across 33 data files: all 6,980 carry an official Kalshi source, with zero violations. The live 24-market recheck is deliberately not claimed from the sandbox; the updated GitHub desk-verification run must complete before D-2 and D-4 are marked done. Data values remain sourced to Kalshi API/official docs as listed in this session's source register.
+
+D-8 verification: five browser tests cover snapshot quotes, chart-window resolution, ≥$0.10 jump/source rendering, order-book contract depth, and API failure fallback. Tests use deterministic synthetic fixtures and assert no current market values. The first Node 20 CI run exposed a dependency-engine incompatibility: [jsdom 31.0.1](https://www.npmjs.com/package/jsdom/v/31.0.1) declares Node `^22.22.2 || ^24.15.0 || >=26.0.0`, but the repository workflow uses Node 20. Replaced it with [jsdom 26.1.0](https://www.npmjs.com/package/jsdom/v/26.1.0), which declares Node `>=18`; all 13 tests now pass under Node 20 and the Node 20 GitHub Actions monitor workflow is green. `npm run check`, `npm run build`, `python3 -m py_compile desk/tools/*.py`, `python3 tools/check.py`, and `python3 scripts/check_links.py` pass; the latter found 10,517 valid references across 131 HTML files after the latest main integration. The separate external-URL probe workflow is still pending and is not the internal-link gate. Endpoint behaviour tested is documented by Kalshi at [Get Market Candlesticks](https://docs.kalshi.com/api-reference/market/get-market-candlesticks), [Get Market Orderbook](https://docs.kalshi.com/api-reference/market/get-market-orderbook), and [Get Market](https://docs.kalshi.com/api-reference/market/get-market).
+
+Integration merge note (2026-11-20): merged current `origin/main` (including PRs #32, #37, #39 and scheduled demo-data refreshes) into this branch after GitHub reported PR #36 as dirty. Resolved conflicts in this append-only board by retaining both the 220913cb desk record and the incoming PR #27 / 8b9a46b4 records; combined generator source-cell handling so pipe-delimited and tuple source lists both render; regenerated generated pages instead of hand-merging them. All incoming data and dashboard changes were retained. The external-link workflow on pre-merge SHA `04016da` found four unique 404 targets: the API root URL, a `{ticker}` endpoint template, and two malformed official contract-terms URLs; correcting the generated anchors to documentation/real endpoint URLs or leaving missing terms blank and flagged. Full post-merge checks are recorded above; final PR checks/deployment still to be recorded.
 
 ### Overlap notes for other sessions
 
@@ -856,3 +860,42 @@ D-8 verification: the five browser tests cover snapshot quotes, chart-window res
 `api-reference/portfolio/get-fills`, `api-reference/orders/create-order-v2`;
 plus the live demo API itself (`external-api.demo.kalshi.co/trade-api/v2/...`), which is the source
 of record for every market, series, order-book, candlestick, trade and settlement value.
+
+# Final record — PR #27 (session 5330bffb)
+
+- **PR:** https://github.com/karagemop466-tech/Demo2/pull/27 — "Final integration: verified data
+  pipeline, live dashboard, trade CLI, consolidated registers" — **MERGED** into `main` as
+  merge commit `9319862` on 2026-11-20 (~13:05 UTC).
+- **Pre-merge checks (all green):** ci.yml "Build and check the site" (generator-determinism,
+  Python compile, analysis fixture, links/nav/data/secrets/JS), verify-monitor "Test and build
+  monitor subsite" (8 tests + 15-page build), linkcheck (external host rejections like
+  WSJ/Reuters 401, CoinDesk 429, DPWorldTour timeout now classified as anti-bot warnings —
+  dead links 404/410/DNS still fail).
+- **PR #6:** closed as superseded (content integrated at 296ad33; explanation comment posted).
+- **PR #15:** found already merged by another session; its monitor/ tree was also integrated via
+  merge 0680686 — nothing lost.
+- **Deploy:** GitHub Pages deploy workflow `pages.yml` triggered on `main` at 9319862; result
+  recorded by the next session entry in this file and visible at
+  https://github.com/karagemop466-tech/Demo2/actions/workflows/pages.yml.
+- Collector (`collect.yml`) continues refreshing `data/` on this branch and on main's data
+  pipelines; the site falls back to committed snapshots when the API is unreachable.
+## Session `arena-8b9a46b4` — branch `arena/8b9a46b4-demo2` (added 2026-11-20)
+
+**Scope (non-overlapping, new folder only):** `session-8b9a46b4/` — sharp-jump (≥$0.10) detector + simulated-strategy backtest on already-collected demo data + executive-summary/suggestions pages. No edits to `pages/`, `tools/`, `data/`, `instrument-panel/`, `intelligence/`, `dashboard/`, `site/`, `verified/`, `live/`, `server/`, root HTML.
+
+| ID | Task | Status | Files touched |
+|----|------|--------|---------------|
+| J-1 | Claim scope, push claim | in progress | `COORDINATION.md` |
+| J-2 | Jump detector (≥$0.10 consecutive trade prints) over `data/dashboard_instrument.json` trades | unclaimed | `session-8b9a46b4/tools/jump_backtest.py`, `session-8b9a46b4/data/jumps.json` |
+| J-3 | Simulated strategy backtest on resolved traded markets (volume>0), by topic | unclaimed | same script, `session-8b9a46b4/data/backtest.json` |
+| J-4 | Site: executive summary, jumps, strategies, flagged, verification pages | unclaimed | `session-8b9a46b4/site/*.html` |
+| J-5 | Link/JS checks, PR → main, merge, Pages verify | unclaimed | this section |
+
+Rules honored: news/event *causes* of jumps are not in the Kalshi API — left blank and flagged, never inferred. Backtest is labeled SIMULATED (historical demo prints), not live demo-account execution (requires user keys; existing gated executor in `tools/execute_strategy.py` untouched).
+
+### Results (session arena-8b9a46b4)
+- Jump detector over 2,479 trade prints / 12 markets: **39 jumps ≥ $0.10** → `session-8b9a46b4/data/jumps.json` (each row source-linked; cause/news blank = J-F1).
+- Simulated backtest on 317 traded resolved markets (of 1,601): always-NO mean +$0.60/contract reflects calibration (73.8% resolved NO), NOT a tradable edge — labeled SIMULATED with lookahead caveat (J-F2). Gas/culture: no traded resolved markets → blank (J-F3).
+- Site: 5 pages under `session-8b9a46b4/site/` incl. live browser chart (seconds/minutes/hours + orderbook depth) polling the demo API directly.
+- Verification: `python3 session-8b9a46b4/tools/jump_backtest.py` reproducible; `node --check live.js` OK; `python3 scripts/check_links.py` → 8,124 refs, all OK; `python3 tools/check.py` clean; local smoke 200s.
+- Tasks J-1…J-5: done (J-5 PR/merge record below).

@@ -676,8 +676,8 @@ knowledge. No decision is transmitted anywhere.</div>
 <h2>Integration additions (session 5330bffb, 2026-11-20)</h2>
 <p class="lead">Review board only &mdash; nothing here is implemented by default.</p>
 <div class="tablewrap"><table><thead><tr><th>#</th><th>Suggestion</th><th>Reviewer choice</th></tr></thead><tbody>
-<tr><td>S7</td><td><b>Topic allowlist</b>: add <code>KXCABALLOTMEASURES</code>-style state/measure markets to Elections via an explicit ticker-pattern allowlist, with its settlement sources listed.</td><td>Keep excluded &nbsp;/&nbsp; Include with source list</td></tr>
-<tr><td>S8</td><td><b>Fixed-point utility</b>: accept human decimals in the CLI and convert internally; display values read as numbers with units (&ldquo;$43.92&rdquo;), never raw <code>"43.92"</code> without a unit.</td><td>Keep explicit &nbsp;/&nbsp; Accept decimals + show units</td></tr>
+<tr><td>S10</td><td><b>Topic allowlist</b>: add <code>KXCABALLOTMEASURES</code>-style state/measure markets to Elections via an explicit ticker-pattern allowlist, with its settlement sources listed.</td><td>Keep excluded &nbsp;/&nbsp; Include with source list</td></tr>
+<tr><td>S11</td><td><b>Fixed-point utility</b>: accept human decimals in the CLI and convert internally; display values read as numbers with units (&ldquo;$43.92&rdquo;), never raw <code>"43.92"</code> without a unit.</td><td>Keep explicit &nbsp;/&nbsp; Accept decimals + show units</td></tr>
 </tbody></table></div>
 <p class="lead">Status updates: S2 (browser WebSocket live streaming) &mdash; a proxy is now the only
 option, since direct WS is impossible from a browser (G-1); CORS for REST was confirmed
@@ -920,11 +920,20 @@ VERIFIED = [
  ("Portfolio / order endpoints require signed keys",
   "GET /portfolio/balance and GET /portfolio/positions return 401 without signed headers; no demo credentials exist in this workspace, so all portfolio/trade rows stay blank and flagged",
   "api-reference/portfolio/get-balance", "read on page (security scheme kalshiAccessKey) + unauthenticated request fails", "Verified"),
+ ("Sharp-jump price-move detection (\u2265 $0.10)",
+  "Chart detects moves of $0.10 or more between consecutive price points and marks them with red vertical markers; the table below the chart lists each jump with a link to the market on Kalshi. The cause of each jump is not derivable from the Kalshi API (no news/event field in price responses) and is flagged cause unverified.",
+  ("api-reference/market/get-market-candlesticks", "api-reference/market/get-trades"),
+  "implemented in assets/site.js (KR.detectJumps) + chart markers in KR.drawChart; table renders on index.html", "By design"),
 ]
 
 
 def build_verification() -> None:
-    rows = [[c, v, src_cell(p), how,
+
+    def source_cell(p):
+        if isinstance(p, (list, tuple)):
+            return srcs(*p)
+        return src_cell(p)
+    rows = [[c, v, source_cell(p), how,
              '<span class="pill ok">Verified</span>' if st == "Verified"
              else '<span class="pill flag">By design</span>']
             for c, v, p, how, st in VERIFIED]
@@ -1097,7 +1106,12 @@ FLAGGED = [
 
 
 def build_flagged() -> None:
-    rows = [[f[0], f"<b>{f[1]}</b><br>{f[2]}", f[3], f[4], src_cell(f[5]),
+
+    def source_cell(p):
+        if isinstance(p, (list, tuple)):
+            return srcs(*p)
+        return src_cell(p)
+    rows = [[f[0], f"<b>{f[1]}</b><br>{f[2]}", f[3], f[4], source_cell(f[5]),
              '<span class="pill flag">open for review</span>'] for f in FLAGGED]
     body = """
 <h1>Flagged for review</h1>
