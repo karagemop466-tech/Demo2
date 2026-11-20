@@ -569,7 +569,7 @@ def page_verification():
     err_html = "".join(f'<tr><td class="small">{ext(e.get("url"), e.get("url"))}</td><td class="num">{e.get("status")}</td><td class="small">{E(str(e.get("detail"))[:200])}</td></tr>' for e in errs)
 
     checks = [
-        ("Every table row links to the Kalshi API response it came from", "Enforced by tools/validate_data.py on every deploy; a row without a source_url fails the build."),
+        ("Market, resolution, and series rows link to Kalshi API data", "The validator requires a source_url on every market, resolution, and series record. Series inventory tables link to the exact discovery query that returned each series; market/resolution tables link to their API request."),
         ("No number is inferred", "Prices, volumes and results are copied as strings from the JSON. Dollar figures are contracts × last price and are labelled."),
         ("Blank means the API returned nothing", "Missing fields stay null and render as an em dash. Nothing is imputed or carried over from another field."),
         ("Demo data is labelled as demo", "The demo banner appears on every page; Kalshi's caveat is quoted verbatim."),

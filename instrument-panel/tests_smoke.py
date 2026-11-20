@@ -55,6 +55,12 @@ check("culture category matches Culture",
 check("Entertainment is not Culture",
       not kc.series_matches(cult, {"categories": ["Entertainment"], "category": "Entertainment"}))
 
+print("series provenance")
+series = kc.slim_series({"ticker": "KXTEST", "_source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&limit=200",
+                         "contract_terms_url": "https://assets.kalshi.com/contract_terms/.pdf"}, "crypto")
+check("series keeps its exact official discovery URL", series["source_url"].endswith("series?category=Crypto&limit=200"))
+check("malformed terms URL is left blank and flagged", series["contract_terms_url"] is None and series["contract_terms_url_unverified"].endswith("/.pdf"))
+
 print("url building")
 check("series query encodes category", "category=Crypto" in kc.ENDPOINTS["series_by_category"].format(category="Crypto"))
 check("market query keeps mve_filter",

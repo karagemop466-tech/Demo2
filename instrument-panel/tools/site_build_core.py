@@ -99,8 +99,18 @@ def count(v, dash="—"):
 
 def ext(url, label=None):
     if not url:
-        return ""
-    return f'<a href="{E(url, quote=True)}" target="_blank" rel="noopener">{E(label or url)}</a>'
+        return '<span class="blank">—</span>'
+    value = str(url)
+    # Endpoint patterns are documentation, not clickable resources: braces are
+    # placeholders, and the REST root itself is not an HTTP page. Rendering them
+    # as code avoids sending a link checker (or reader) to a guaranteed 400/404.
+    if "{" in value or "}" in value or value.rstrip("/").endswith("/trade-api/v2"):
+        return f'<code>{E(value)}</code>'
+    # Kalshi may return a terms URL with no filename. Do not publish a dead link.
+    # The collector/validator records this as unverified and flags it for review.
+    if value.rstrip("/").endswith("/contract_terms/.pdf"):
+        return '<span class="blank" title="URL missing filename; unverified">— (unverified)</span>'
+    return f'<a href="{E(value, quote=True)}" target="_blank" rel="noopener">{E(label or value)}</a>'
 
 
 def liquidity(m):
@@ -144,7 +154,7 @@ def top_nav_html(active=None):
 def demo_banner():
     return ('<div class="notice warn"><h4>Demo environment data — not real markets</h4>'
             'Every price, volume and resolution below comes from Kalshi\'s <b>demo</b> exchange '
-            '(<a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co</a>). '
+            '(<code>https://external-api.demo.kalshi.co/trade-api/v2</code>). '
             'Kalshi states that demo prices and behaviour “may not be reflective of those in real markets”. '
             'See <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a>. '
             'No real money is involved anywhere on this site.</div>')
@@ -256,7 +266,7 @@ def market_table(rows, show_topic=False, id_prefix="t"):
 def series_table(rows, show_topic=False):
     if not rows:
         return '<p class="empty">No series returned.</p>'
-    head = "<tr><th>Series</th><th>Title</th><th>Frequency</th><th>Tags</th><th>Fee type</th><th>Settlement source(s)</th><th>Contract terms</th></tr>"
+    head = "<tr><th>Series</th><th>Title</th><th>Frequency</th><th>Tags</th><th>Fee type</th><th>Settlement source(s)</th><th>Contract terms</th><th>Kalshi API source</th></tr>"
     out = []
     for s in rows:
         ss = s.get("settlement_sources") or []
@@ -272,6 +282,7 @@ def series_table(rows, show_topic=False):
             f'<td class="small">{E(str(s.get("fee_type") or ""))} ×{E(str(s.get("fee_multiplier")))}</td>'
             f'<td class="small">{ss_html or "<span class=blank>—</span>"}</td>'
             f'<td class="small">{ext(s.get("contract_terms_url"), "terms")}</td>'
+            f'<td class="small">{ext(s.get("source_url"), "series API response")}</td>'
             "</tr>"
         )
     return '<div class="tablewrap"><table><thead>' + head + "</thead><tbody>" + "".join(out) + "</tbody></table></div>"

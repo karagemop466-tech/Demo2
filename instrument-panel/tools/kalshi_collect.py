@@ -295,9 +295,11 @@ def discover_series():
             kind, _, val = q.partition(":")
             src = by_category(val) if kind == "category" else by_tags(val)
             queries.setdefault(topic["id"], []).append(cache.get(val + ":url") or cache.get("tags:" + val + ":url"))
+            source_url = cache.get(val + ":url") or cache.get("tags:" + val + ":url")
             for s in src:
                 if topic["id"] == "golf" or series_matches(topic, s):
-                    rows.append(s)
+                    # Keep the exact discovery request that returned this series.
+                    rows.append({**s, "_source_url": source_url})
         # de-duplicate by ticker
         seen, uniq = set(), []
         for s in rows:
@@ -307,9 +309,8 @@ def discover_series():
                 uniq.append(s)
         found[topic["id"]] = uniq
 
-    adj = []
-    for s in by_category("Entertainment"):
-        adj.append(s)
+    adj_url = cache.get("Entertainment:url")
+    adj = [{**s, "_source_url": adj_url} for s in by_category("Entertainment")]
     return found, adj, queries, cache
 
 
@@ -330,8 +331,12 @@ def select_series(all_series, limit):
 
 
 def slim_series(s, topic_id):
+    raw_terms_url = s.get("contract_terms_url")
+    invalid_terms_url = bool(raw_terms_url and str(raw_terms_url).rstrip("/").endswith("/contract_terms/.pdf"))
     return {
         "topic": topic_id,
+        "source_url": s.get("_source_url"),
+        "contract_terms_url_unverified": raw_terms_url if invalid_terms_url else None,
         "ticker": s.get("ticker"),
         "title": s.get("title"),
         "frequency": s.get("frequency"),
@@ -340,7 +345,7 @@ def slim_series(s, topic_id):
         "tags": s.get("tags"),
         "fee_type": s.get("fee_type"),
         "fee_multiplier": s.get("fee_multiplier"),
-        "contract_terms_url": s.get("contract_terms_url"),
+        "contract_terms_url": None if invalid_terms_url else raw_terms_url,
         "contract_url": s.get("contract_url"),
         "settlement_sources": [
             {"name": x.get("name"), "url": x.get("url")} for x in (s.get("settlement_sources") or [])

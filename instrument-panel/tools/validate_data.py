@@ -77,8 +77,13 @@ def main():
         checked += 1
         if not s.get("ticker"):
             errors.append("series row without ticker")
+        if not str(s.get("source_url") or "").startswith(API_PREFIX):
+            errors.append(f"series/{s.get('ticker')}: missing Kalshi API source_url")
         if not (s.get("settlement_sources") or []):
             warnings.append(f"series {s.get('ticker')}: no settlement source returned by API")
+        invalid_terms = s.get("contract_terms_url_unverified")
+        if invalid_terms:
+            warnings.append(f"series {s.get('ticker')}: invalid contract-terms URL left blank: {invalid_terms}")
 
     for t, ob in (d.get("orderbooks") or {}).items():
         for side in ("yes_dollars", "no_dollars"):
