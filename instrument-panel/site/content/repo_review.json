@@ -1,0 +1,134 @@
+{
+ "intro": "A line-by-line review of what is already in this repository against the official Kalshi documentation. Each item states what the file claims, what the official source says, and whether the two agree. Where a documentation URL was checked, the outcome of that check is recorded.",
+ "repo_findings": [
+  {
+   "area": "Demo endpoints",
+   "file": "assets/app.js, verified/assets/live.js, README.md, pages/sources.html",
+   "claim": "REST base https://external-api.demo.kalshi.co/trade-api/v2 and WebSocket wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2",
+   "official": "The demo environment page lists exactly these two as the recommended endpoints and lists https://demo-api.kalshi.co and wss://demo-api.kalshi.co/trade-api/ws/v2 as also supported.",
+   "verdict": "MATCH",
+   "sources": [{"name": "docs.kalshi.com/getting_started/demo_env", "url": "https://docs.kalshi.com/getting_started/demo_env"}]
+  },
+  {
+   "area": "Authentication headers",
+   "file": "assets/app.js (signedFetch, before PR #6)",
+   "claim": "KALSHI-ACCESS-KEY, KALSHI-ACCESS-TIMESTAMP and KALSHI-ACCESS-SIGNATURE with a signature over timestamp + method + path, base64-encoded, RSA-PSS/SHA-256 or Ed25519",
+   "official": "The authenticated-requests quick start documents the same three headers, the same signed string (timestamp + method + path, with the /trade-api/v2 prefix), a millisecond timestamp and a base64 signature. API keys docs confirm RSA-PSS and Ed25519 support.",
+   "verdict": "MATCH (implementation removed by PR #6, which is still open)",
+   "sources": [
+    {"name": "Authenticated requests", "url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"},
+    {"name": "API keys", "url": "https://docs.kalshi.com/getting_started/api_keys"}
+   ]
+  },
+  {
+   "area": "Orderbook shape",
+   "file": "assets/app.js (loadOrderbook), verified/assets/live.js (renderBook), pages/verification.html",
+   "claim": "orderbook_fp.yes_dollars and orderbook_fp.no_dollars hold [price, count] levels, best level last",
+   "official": "The orderbook reference states the response is wrapped in orderbook_fp with yes_dollars and no_dollars arrays of [price_dollars, count_fp], sorted ascending, best bid last, bids only, with implied asks at 1 − price.",
+   "verdict": "MATCH",
+   "sources": [{"name": "Orderbook Responses", "url": "https://docs.kalshi.com/getting_started/orderbook_responses"}]
+  },
+  {
+   "area": "Dollar ranking",
+   "file": "index.html, assets/app.js (notional)",
+   "claim": "volume_fp × last_price_dollars is used as a 'notional' proxy for 'highest dollar amount'",
+   "official": "Get Markets defines volume_fp as contracts. There is no dollar-volume field. The multiplication is therefore a derived figure, which the file does label, but the label 'notional' is the implementer's word, not Kalshi's.",
+   "verdict": "CONSISTENT BUT DEFINITION OPEN — needs a decision (Suggestion S2)",
+   "sources": [{"name": "Get Markets", "url": "https://docs.kalshi.com/api-reference/market/get-markets"}]
+  },
+  {
+   "area": "Topic filtering",
+   "file": "assets/app.js (TOPICS, topicOf)",
+   "claim": "Topics are decided by keyword matching on title, subtitle, ticker and event ticker",
+   "official": "Kalshi assigns topic at series level: a primary category, a discovery categories list, and tags. Events carry only a deprecated category; markets carry no category at all. Keyword matching is not an authorised classification.",
+   "verdict": "IRREGULARITY — replaced in the new site by series-level category/tag queries (the old code is unchanged on the root page)",
+   "sources": [
+    {"name": "Get Series List", "url": "https://docs.kalshi.com/api-reference/market/get-series-list"},
+    {"name": "Get Events (category deprecated)", "url": "https://docs.kalshi.com/api-reference/events/get-events"}
+   ]
+  },
+  {
+   "area": "Settlement / resolution",
+   "file": "index.html (resolvedTable), verified/live-dashboard.html",
+   "claim": "Settled markets expose result = yes/no and a settlement figure",
+   "official": "Market.result enumerates yes, no, scalar and empty. Settlement pays $1 per winning contract. No separate 'settlement price' field exists in the Market object reviewed; the winning side is the result.",
+   "verdict": "PARTIAL — result is correct; a 'settlement $' column is only defensible as derived from result, and the new site therefore shows result and final traded price separately",
+   "sources": [
+    {"name": "Get Markets (result enum)", "url": "https://docs.kalshi.com/api-reference/market/get-markets"},
+    {"name": "Market settlement", "url": "https://docs.kalshi.com/getting_started/market_settlement"}
+   ]
+  },
+  {
+   "area": "Price chart windows",
+   "file": "index.html (windowSel: 60, 300, 3600 seconds), verified/live-dashboard.html",
+   "claim": "A price chart with 60-second, 5-minute and 1-hour windows built from repeated REST reads",
+   "official": "Candlesticks support 1, 60 and 1440 minutes only. Sub-minute charts must come from polling or the WebSocket. Get Markets responses are cached for a short time and can lag the exchange by seconds.",
+   "verdict": "CONSISTENT, with a caveat that is easy to miss: a 60-second window shows the dashboard's own sampled points, not an exchange series",
+   "sources": [
+    {"name": "Get Market Candlesticks", "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks"},
+    {"name": "Get Markets (caching note)", "url": "https://docs.kalshi.com/api-reference/market/get-markets"}
+   ]
+  },
+  {
+   "area": "Money units",
+   "file": "pages/portfolio.html, root portfolio.html",
+   "claim": "Balance is in cents and must be divided by 100",
+   "official": "The API migrated monetary fields to fixed-point strings: prices in dollars (_dollars) and counts in fixed-point (_fp). A cents-integer balance is the pre-migration shape. The current balance response was not read (it requires authentication), so the cents assumption is UNVERIFIED.",
+   "verdict": "UNVERIFIED — flagged, not asserted; the new site shows no balance rather than a possibly mis-scaled one",
+   "sources": [
+    {"name": "Fixed-point representation", "url": "https://docs.kalshi.com/getting_started/fixed_point_migration"},
+    {"name": "Get Balance", "url": "https://docs.kalshi.com/api-reference/portfolio/get-balance"}
+   ]
+  },
+  {
+   "area": "Documentation links",
+   "file": "root review.html, root analysis.html, root portfolio.html",
+   "claim": "References to /api-reference/markets/get-market, /api-reference/portfolio/get-positions, /api-reference/portfolio/get-fills",
+   "official": "The working path for a single market is /api-reference/market/get-market (singular 'market'); the plural 'markets' path returned no page during this review. The portfolio endpoints resolve under /api-reference/portfolio/.",
+   "verdict": "BROKEN LINK — recorded, not edited (belongs to an earlier session's files)",
+   "sources": [{"name": "Get Market (working path)", "url": "https://docs.kalshi.com/api-reference/market/get-market"}]
+  },
+  {
+   "area": "Workflow permissions",
+   "file": ".github/workflows/pages.yml (previous version)",
+   "claim": "Deploy-only workflow with contents: read",
+   "official": "GitHub Pages custom workflows require pages: write and id-token: write; the previous file had both. Publishing the repository root also publishes tools/ and data/.",
+   "verdict": "CORRECT PERMISSIONS, broader publication than necessary",
+   "sources": [{"name": "GitHub Pages custom workflows", "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site"}]
+  },
+  {
+   "area": "Coordination log",
+   "file": "COORDINATION.md",
+   "claim": "Tasks 1–10 done, task 11 'in progress'; the PR/deploy record is empty for the last section",
+   "official": "Not a Kalshi claim. Checked against GitHub: PRs #1–#5 and #7 are merged, #6 is open, and the Pages site is built. The log's PR records match PR numbers 1–5 and 7.",
+   "verdict": "CONSISTENT with GitHub; the empty 'PR / deploy record' block is a template that was never filled in, and is filled in by this session",
+   "sources": [{"name": "Pull requests", "url": "https://github.com/karagemop466-tech/Demo2/pulls"}]
+  }
+ ],
+ "link_checks": [
+  {"url": "https://docs.kalshi.com/getting_started/demo_env", "result": "FETCHED — contains the demo endpoint table"},
+  {"url": "https://docs.kalshi.com/getting_started/quick_start_market_data", "result": "REFERENCED by existing pages; public market data needs no authentication"},
+  {"url": "https://docs.kalshi.com/getting_started/orderbook_responses", "result": "FETCHED — bids only, implied asks at 1 − price"},
+  {"url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook", "result": "FETCHED — orderbook_fp schema, depth 0-100"},
+  {"url": "https://docs.kalshi.com/api-reference/market/get-markets", "result": "FETCHED — Market object and result enum"},
+  {"url": "https://docs.kalshi.com/api-reference/market/get-market", "result": "REFERENCED by this site for single-market links"},
+  {"url": "https://docs.kalshi.com/api-reference/market/get-series-list", "result": "FETCHED — category, categories, tags, fee_type"},
+  {"url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks", "result": "FETCHED — 1/60/1440 minute intervals, 5,000-period cap"},
+  {"url": "https://docs.kalshi.com/api-reference/market/get-trades", "result": "FETCHED — trade fields incl. taker_outcome_side"},
+  {"url": "https://docs.kalshi.com/api-reference/events/get-events", "result": "FETCHED — event fields, deprecated category"},
+  {"url": "https://docs.kalshi.com/getting_started/market_settlement", "result": "FETCHED — $1 per winning contract"},
+  {"url": "https://docs.kalshi.com/getting_started/historical_data", "result": "FETCHED — cutoffs and archival rules"},
+  {"url": "https://docs.kalshi.com/getting_started/rate_limits", "result": "FETCHED — token buckets; unauthenticated limits unpublished"},
+  {"url": "https://docs.kalshi.com/getting_started/fixed_point_migration", "result": "REFERENCED — _fp counts, _dollars prices"},
+  {"url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests", "result": "REFERENCED — signature scheme"},
+  {"url": "https://docs.kalshi.com/api-reference/portfolio/get-balance", "result": "REFERENCED — balance shape could not be verified without a key"},
+  {"url": "https://kalshi.com/docs/kalshi-fee-schedule.pdf", "result": "REFERENCED by Get Series List for fee_type semantics; PDF not parsed here"}
+ ],
+ "irregularities_summary": [
+  "Topic classification by keyword (assets/app.js) is not how Kalshi classifies; replaced in the new site.",
+  "Balance-in-cents assumption is a pre-migration shape and is unverified.",
+  "At least one documentation path in the root pages is wrong (plural /markets/).",
+  "Three overlapping dashboard implementations exist in one repository.",
+  "An open PR (#6) aims to remove a credential form that main may still contain."
+ ]
+}

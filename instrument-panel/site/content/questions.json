@@ -1,0 +1,298 @@
+{
+ "intro": "These are the questions that must be answered before any decision can reasonably be made. Each entry states the question, what the verified sources already establish, what is still missing, and the concrete step that would discover the missing information. Nothing on this page is a guess: where an answer is unknown it is marked UNKNOWN and left unanswered rather than filled in.",
+ "legend": {
+  "ANSWERED": "Confirmed from an official Kalshi page or from the API responses cited. The source is linked.",
+  "PARTIAL": "Part of the answer is confirmed and the remainder is explicitly marked.",
+  "UNKNOWN": "Not answerable from anything available to this project. A discovery step is given.",
+  "BLOCKED": "Can only be answered by a human with a Kalshi login. Cannot be automated from this repository."
+ },
+ "groups": [
+  {
+   "id": "A",
+   "title": "A. Scope — which contracts belong in gas, elections, culture, crypto and golf",
+   "items": [
+    {
+     "id": "Q1",
+     "q": "Where does Kalshi assign the topic of a market — on the series, the event or the market?",
+     "status": "ANSWERED",
+     "answer": "On the series. Get Series List returns a single primary <code>category</code>, a discovery list <code>categories</code>, and a <code>tags</code> array. Events carry a deprecated category field. The docs tell you to use the series-level category.",
+     "implication": "Topic membership is decided by series discovery queries, not by matching words in market titles.",
+     "sources": [
+      {"name": "Get Series List (category / categories / tags fields)", "url": "https://docs.kalshi.com/api-reference/market/get-series-list"},
+      {"name": "Get Events (category marked deprecated)", "url": "https://docs.kalshi.com/api-reference/events/get-events"}
+     ],
+     "discover": "Already done: the collector queries series by category and by tag and records the exact query for every topic (see Verification page)."
+    },
+    {
+     "id": "Q2",
+     "q": "Is there a Kalshi category literally called Culture, and how large is it?",
+     "status": "ANSWERED",
+     "answer": "<code>/series?category=Culture</code> returns exactly 2 series in the demo API: <code>KXXBANNEDGROK</code> (“Will Grok be banned this year”) and <code>KXXBANNEDMURRAYHILLGUY1</code> (“Will @MurrayHillGuy1 get banned from X this year?”). “Culture” is not listed as a category in <code>search/tags_by_categories</code>, whose categories are AI, Business, Climate and Weather, Commodities, Companies, Crypto, Economics, Elections, Entertainment, Financials, Health, Mentions, Politics, Science and Technology, Social, Sports, Test, World, harrison-test.",
+     "implication": "A pure “Culture” filter produces a two-row dashboard. Entertainment (music, awards, TV, movies, video games) is where most culture contracts actually sit.",
+     "sources": [
+      {"name": "API response: series?category=Culture", "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&limit=1"},
+      {"name": "API response: search/tags_by_categories", "url": "https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories"}
+     ],
+     "discover": "Done. The Culture page shows the two true Culture series and a separately labelled Entertainment table, so nothing is silently reclassified."
+    },
+    {
+     "id": "Q3",
+     "q": "Is Golf its own category?",
+     "status": "ANSWERED",
+     "answer": "No. Golf appears only as a tag inside the Sports category in <code>search/tags_by_categories</code>. The collector therefore uses <code>/series?tags=Golf</code>.",
+     "implication": "Golf must be queried by tag; a category query would return nothing.",
+     "sources": [
+      {"name": "API response: search/tags_by_categories (Sports → Golf)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories"},
+      {"name": "Get Series List (tags parameter)", "url": "https://docs.kalshi.com/api-reference/market/get-series-list"}
+     ],
+     "discover": "Done."
+    },
+    {
+     "id": "Q4",
+     "q": "Which gas-price contracts exist, and are they city, state or national?",
+     "status": "ANSWERED",
+     "answer": "The demo API returns daily AAA state-level series (for example Oklahoma <code>KXAAAGASCDOK</code> and Tennessee <code>KXAAAGASDTN</code>), both tagged Oil and energy, both with settlement source AAA. Contract terms are at assets.kalshi.com/contract_terms/AAAGAS*.pdf.",
+     "implication": "Gas rows are state averages published by AAA, not national retail averages, and they settle daily.",
+     "sources": [
+      {"name": "API response: series?category=Economics", "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Economics&limit=200"},
+      {"name": "Get Series (settlement_sources field)", "url": "https://docs.kalshi.com/api-reference/market/get-series"}
+     ],
+     "discover": "Done; the full series list is rendered on the Gas page with each contract's terms link."
+    },
+    {
+     "id": "Q5",
+     "q": "Does “highest dollar amount” mean dollar turnover, notional, or open interest in dollars?",
+     "status": "PARTIAL",
+     "answer": "Kalshi publishes no single dollar-turnover field. The market object exposes <code>volume_fp</code> (contracts), <code>volume_24h_fp</code> (contracts), <code>open_interest_fp</code> (contracts) and <code>last_price_dollars</code>. Dollar figures are therefore computed as contracts × last price and are labelled as such everywhere.",
+     "missing": "Which of the three is the ranking the business actually wants. Also unconfirmed: whether Kalshi sells a historical aggregate-volume product that would give true dollar turnover.",
+     "implication": "The dashboard ranks by open-interest dollars by default and shows all three measures in every table, so a reviewer can re-sort without a rebuild.",
+     "sources": [
+      {"name": "Get Markets (volume_fp, open_interest_fp, last_price_dollars)", "url": "https://docs.kalshi.com/api-reference/market/get-markets"},
+      {"name": "Fixed-point representation", "url": "https://docs.kalshi.com/getting_started/fixed_point_migration"}
+     ],
+     "discover": "Decide the metric (Suggestion S2). If true dollar turnover is required, request historical trades via /markets/trades and aggregate count_fp × yes_price_dollars — that is a query cost decision, not an unknown."
+    },
+    {
+     "id": "Q6",
+     "q": "Are there in-scope markets whose series metadata is missing, so they cannot be classified?",
+     "status": "PARTIAL",
+     "answer": "The collector records every series it saw and flags any with no settlement source. Markets whose series is not in the collected set are never shown as in-scope.",
+     "missing": "A market could exist under a series outside our five discovery queries and therefore be silently out of scope. This is bounded by construction but not provably complete.",
+     "implication": "Scope completeness is a known limitation, not a data error.",
+     "sources": [{"name": "Get Series List", "url": "https://docs.kalshi.com/api-reference/market/get-series-list"}],
+     "discover": "Routine audit: list all series with /series?limit=200 across the 19 categories and diff against the collector's scope queries. Cheap to automate; listed as Suggestion S8."
+    }
+   ]
+  },
+  {
+   "id": "B",
+   "title": "B. Live tracking and resolution",
+   "items": [
+    {
+     "id": "Q7",
+     "q": "How is a market's outcome recorded, and is it authoritative?",
+     "status": "ANSWERED",
+     "answer": "The Market object has a <code>result</code> field with enum <code>yes</code>, <code>no</code>, <code>scalar</code> or empty. Settlement pays $1 per contract to the winning side. The collector copies <code>result</code> verbatim from settled-market responses and never derives it.",
+     "implication": "Resolution tracking is a direct read of an official field, including the timestamped response URL for each row.",
+     "sources": [
+      {"name": "Get Markets (result enum)", "url": "https://docs.kalshi.com/api-reference/market/get-markets"},
+      {"name": "Market settlement ($1 per winning contract)", "url": "https://docs.kalshi.com/getting_started/market_settlement"}
+     ],
+     "discover": "Done."
+    },
+    {
+     "id": "Q8",
+     "q": "How long do settled markets stay in the live endpoint?",
+     "status": "PARTIAL",
+     "answer": "Kalshi partitions data: markets that settled before the <code>market_settled_ts</code> cutoff are only available through <code>GET /historical/markets</code>. The cutoff is published by <code>GET /historical/cutoff</code>.",
+     "missing": "The current cutoff value for the demo environment was not read in this pass, so the collector cannot say whether any given settled row is near archival.",
+     "implication": "Historical rows may disappear from the live endpoint. The dashboard stores every resolved row it has ever seen in data/history so a resolution is not lost when a market is archived.",
+     "sources": [{"name": "Historical Data (cutoffs and archival)", "url": "https://docs.kalshi.com/getting_started/historical_data"}],
+     "discover": "Suggestion S9: add GET /historical/cutoff to the collector and display the three cutoffs on the Verification page."
+    },
+    {
+     "id": "Q9",
+     "q": "Does the demo exchange trade, or is it a mock?",
+     "status": "ANSWERED",
+     "answer": "<code>GET /exchange/status</code> returned <code>exchange_active: true</code> and <code>trading_active: true</code> for four exchange indices at collection time. Real order flow exists; the money is mock.",
+     "implication": "Prices move because other demo participants trade, but Kalshi warns demo prices may not reflect real markets.",
+     "sources": [
+      {"name": "API response: exchange/status", "url": "https://external-api.demo.kalshi.co/trade-api/v2/exchange/status"},
+      {"name": "Demo environment caveat", "url": "https://docs.kalshi.com/getting_started/demo_env"}
+     ],
+     "discover": "Done; the collection time and result are shown on the Overview and Verification pages."
+    },
+    {
+     "id": "Q10",
+     "q": "Why do some demo markets carry a 2099 close date or a 'demo strike'?",
+     "status": "PARTIAL",
+     "answer": "Observed in the demo data: events such as KXNEXTNATOSECGEN-99 and KXELONMARS-99 carry close_time in 2099, and some markets carry <code>custom_strike</code> reading “demo strike”. Kalshi's demo page states prices and behaviour may not reflect real markets but does not document these placeholders.",
+     "missing": "Kalshi's own explanation of what these placeholder strikes mean for settlement.",
+     "implication": "These rows are displayed as returned and flagged; they are never treated as a real-market signal.",
+     "sources": [
+      {"name": "Demo environment caveat", "url": "https://docs.kalshi.com/getting_started/demo_env"},
+      {"name": "API response: events?status=open", "url": "https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=200"}
+     ],
+     "discover": "Ask Kalshi support, or compare the same series on the production API in a read-only call, to see whether the placeholder is demo-only."
+    }
+   ]
+  },
+  {
+   "id": "C",
+   "title": "C. Liquidity and price history",
+   "items": [
+    {
+     "id": "Q11",
+     "q": "Does the orderbook give asks, and how do I read 'how many contracts are available at a price'?",
+     "status": "ANSWERED",
+     "answer": "No asks are returned. The book lists YES bids and NO bids as [price, count] levels, ascending, best bid last. A YES bid at X is equivalent to a NO ask at 1−X, and a NO bid at Y is a YES ask at 1−Y. Counts are contracts, not dollars.",
+     "implication": "Availability at a price is answered by reading the level arrays directly and by the implied ask, both computed by plain arithmetic from the returned levels.",
+     "sources": [{"name": "Orderbook Responses", "url": "https://docs.kalshi.com/getting_started/orderbook_responses"}],
+     "discover": "Done; the Live page renders every level with a depth bar and shows cumulated contracts."
+    },
+    {
+     "id": "Q12",
+     "q": "Can I draw a price chart with seconds/minutes/hours windows from the API alone?",
+     "status": "PARTIAL",
+     "answer": "Candlesticks exist at 1-minute, 1-hour and 1-day intervals only — there is no seconds interval. A seconds-granularity chart is only possible by polling the market or orderbook endpoint and storing each tick; the REST cache holds prices for about one second, and the docs recommend the WebSocket for current state.",
+     "missing": "WebSocket price streaming from a static GitHub Pages origin has not been verified end to end.",
+     "implication": "The chart offers 60 seconds / 5 minutes / 15 minutes / 1 hour / 6 hours. Second-level points come from live polling in the visitor's browser plus the collector's 15-minute snapshots; minute and hour points come from the official candlestick endpoint. The two sources are labelled separately on the chart.",
+     "sources": [
+      {"name": "Get Market Candlesticks (1/60/1440 minutes only)", "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks"},
+      {"name": "Get Markets (responses cached, can lag seconds)", "url": "https://docs.kalshi.com/api-reference/market/get-markets"},
+      {"name": "WebSocket quick start", "url": "https://docs.kalshi.com/getting_started/quick_start_websockets"}
+     ],
+     "discover": "Suggestion S4: verify the WebSocket API in a browser from the Pages origin and, if it works, add a streaming toggle; until then the chart is explicitly poll-based."
+    },
+    {
+     "id": "Q13",
+     "q": "What is the price-history retention limit?",
+     "status": "ANSWERED",
+     "answer": "One candlestick request may span at most 5,000 periods; 1-minute candles are therefore limited to about 3.5 days per request. Markets settled before the historical cutoff need the /historical/markets variant.",
+     "implication": "Any multi-week minute-level chart must be assembled from several requests.",
+     "sources": [{"name": "Get Market Candlesticks (5,000 period limit)", "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks"}],
+     "discover": "Done; the collector and chart stay inside these limits."
+    },
+    {
+     "id": "Q14",
+     "q": "What are the rate limits, and do they permit a browser-left-open dashboard?",
+     "status": "PARTIAL",
+     "answer": "Authenticated calls are token-metered by tier. Unauthenticated public calls are subject to separate limits that Kalshi explicitly does not publish. Responses expose X-RateLimit-* headers only for metered buckets.",
+     "missing": "The numeric unauthenticated limit for the demo host.",
+     "implication": "The dashboard polls conservatively (one market plus one orderbook per refresh, default 15 s) and backs off on HTTP 429, but the safe ceiling is unknown.",
+     "sources": [{"name": "Rate Limits and Tiers", "url": "https://docs.kalshi.com/getting_started/rate_limits"}],
+     "discover": "Read the X-RateLimit headers returned on a burst of public calls and record the tightest observed value; or ask Kalshi. Logged as flag F-11."
+    }
+   ]
+  },
+  {
+   "id": "D",
+   "title": "D. Portfolio, trades and strategy",
+   "items": [
+    {
+     "id": "Q15",
+     "q": "What exactly is needed to read a portfolio or place an order?",
+     "status": "ANSWERED",
+     "answer": "An API key ID and a private key (RSA-PSS/SHA-256 or Ed25519). Each request is signed over timestamp + method + path using a millisecond timestamp, and the signature is sent in KALSHI-ACCESS-SIGNATURE alongside KALSHI-ACCESS-KEY and KALSHI-ACCESS-TIMESTAMP. Credentials are separate between demo and production.",
+     "implication": "Portfolio and trading are impossible without account credentials. They cannot be included in a public static site.",
+     "sources": [
+      {"name": "API Keys", "url": "https://docs.kalshi.com/getting_started/api_keys"},
+      {"name": "Authenticated requests", "url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"},
+      {"name": "Create your first order", "url": "https://docs.kalshi.com/getting_started/quick_start_create_order"}
+     ],
+     "discover": "Done — see the decision below (D1 on Suggestions)."
+    },
+    {
+     "id": "Q16",
+     "q": "Can the demo account be created, and trades placed, without a human login?",
+     "status": "BLOCKED",
+     "answer": "No. Creating a demo account requires a Kalshi sign-up and login in a browser; API keys are generated from that logged-in account. No automated path exists and no credentials exist in this repository — by design.",
+     "missing": "The account itself, and the API key ID + private key that only Kalshi's dashboard can issue.",
+     "implication": "Until a key exists, portfolio metrics, order execution and per-trade performance are unavailable, and the dashboard says so rather than showing zeros or sample numbers.",
+     "sources": [
+      {"name": "Kalshi help: creating and using a demo account", "url": "https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account"},
+      {"name": "API Keys", "url": "https://docs.kalshi.com/getting_started/api_keys"}
+     ],
+     "discover": "Either (a) a human creates the demo account and supplies a key to a private backend, or (b) accept that portfolio pages stay disabled. This is a decision for the owner, not something a session can work around."
+    },
+    {
+     "id": "Q17",
+     "q": "Where would a private key have to live for trading to be safe?",
+     "status": "ANSWERED",
+     "answer": "Not in the browser and not in this repository. Any key placed in a GitHub Pages site is delivered to every visitor; a key pasted into a page is exposed to any script on that origin. Signing must happen server-side, in a component the public cannot read.",
+     "implication": "Trading requires a backend holding the secret (for example a GitHub Actions job with the key in an encrypted repository secret, or a small server) — a real architecture change, not a front-end tweak.",
+     "sources": [
+      {"name": "API Keys (keep private key secret)", "url": "https://docs.kalshi.com/getting_started/api_keys"},
+      {"name": "GitHub: encrypted secrets", "url": "https://docs.github.com/en/actions/security-guides/encrypted-secrets"}
+     ],
+     "discover": "Decide between the Actions-based approach (Suggestion S1) and a hosted backend (Suggestion S5)."
+    },
+    {
+     "id": "Q18",
+     "q": "What does a trade record contain, so performance can be computed honestly?",
+     "status": "ANSWERED",
+     "answer": "A trade has trade_id, ticker, count_fp, yes_price_dollars, no_price_dollars, taker_outcome_side, taker_book_side, created_time and is_block_trade. Fills and positions are portfolio-scoped endpoints requiring authentication. Fees come from the series fee_type and fee_multiplier using Kalshi's published fee schedule.",
+     "implication": "P&L must subtract fees using the documented fee type per series; a naive price difference would overstate performance.",
+     "sources": [
+      {"name": "Get Trades (trade fields)", "url": "https://docs.kalshi.com/api-reference/market/get-trades"},
+      {"name": "Get Series List (fee_type, fee_multiplier)", "url": "https://docs.kalshi.com/api-reference/market/get-series-list"},
+      {"name": "Kalshi fee schedule", "url": "https://kalshi.com/docs/kalshi-fee-schedule.pdf"}
+     ],
+     "discover": "Implemented in the portfolio tabulator; it runs only when authenticated fills exist."
+    },
+    {
+     "id": "Q19",
+     "q": "Can a strategy be recommended from the data we have now?",
+     "status": "UNKNOWN",
+     "answer": "Not from demo portfolio data, because there is no demo portfolio. What can be measured without an account is market-level calibration: whether contracts in a given price band resolved YES at the rate the price implied. That is computed on the Analysis page from resolved in-scope markets.",
+     "missing": "Executed trades, fees actually paid, slippage observed, and a period long enough for the calibration sample to be statistically meaningful.",
+     "implication": "The dashboard distinguishes a market-level observation from a trading recommendation and never presents the first as the second.",
+     "sources": [
+      {"name": "Market settlement", "url": "https://docs.kalshi.com/getting_started/market_settlement"},
+      {"name": "Demo caveat", "url": "https://docs.kalshi.com/getting_started/demo_env"}
+     ],
+     "discover": "Sample size and confidence intervals are shown with every calibration band; the decision threshold is a suggestion for review (S3), not a recommendation."
+    }
+   ]
+  },
+  {
+   "id": "E",
+   "title": "E. Publishing, reproducibility and review",
+   "items": [
+    {
+     "id": "Q20",
+     "q": "Can a browser on the GitHub Pages origin actually call the Kalshi demo API?",
+     "status": "ANSWERED",
+     "answer": "Yes. A request to /exchange/status carrying Origin: https://karagemop466-tech.github.io returned HTTP 200 with <code>access-control-allow-origin: https://karagemop466-tech.github.io</code>, so CORS is reflective and the static site can read public market data directly.",
+     "implication": "No proxy is needed for public data; the live tables and chart work from the browser.",
+     "sources": [
+      {"name": "API response headers (recorded with Origin header)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/exchange/status"},
+      {"name": "Market data quick start (no authentication required)", "url": "https://docs.kalshi.com/getting_started/quick_start_market_data"}
+     ],
+     "discover": "Done, and re-checked on every collection run; the result is printed on the Verification page."
+    },
+    {
+     "id": "Q21",
+     "q": "How fresh can the published snapshot be, and how do we prove it is not stale?",
+     "status": "ANSWERED",
+     "answer": "A GitHub Actions workflow collects every 15 minutes, validates the file, and commits it. The validator refuses to publish a snapshot older than six hours. Every page prints the snapshot time and every row links to its API response.",
+     "implication": "Freshness is enforced by the build, not promised in prose.",
+     "sources": [
+      {"name": "Workflow definition", "url": "https://github.com/karagemop466-tech/Demo2/blob/main/.github/workflows/pages.yml"},
+      {"name": "GitHub Actions schedule docs", "url": "https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule"}
+     ],
+     "discover": "Done; the timestamp is on every page."
+    },
+    {
+     "id": "Q22",
+     "q": "Which values on this site are not confirmable from an official source?",
+     "status": "ANSWERED",
+     "answer": "The Flagged for Review page lists every one, with the reason and the source used. Blank cells in any table mean the API returned nothing for that field — they are never estimated.",
+     "implication": "A reviewer can tell at a glance which cells to distrust.",
+     "sources": [{"name": "Flagged for Review page", "url": "https://karagemop466-tech.github.io/Demo2/site/flagged.html"}],
+     "discover": "Done."
+    }
+   ]
+  }
+ ]
+}

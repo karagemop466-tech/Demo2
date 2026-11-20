@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio &amp;amp; Trades · Kalshi Demo Dashboard</title>
+<meta name="description" content="Live Kalshi demo-market dashboard for gas prices, elections, culture, crypto and golf, with sourced data, verification and a flagged-for-review register.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <div class="brand"><a href="index.html">Kalshi <span>Demo</span> Dashboard</a></div>
+    <span class="tagline">gas · elections · culture · crypto · golf — live demo market data</span>
+    <span class="pill-demo">DEMO DATA</span>
+    <span class="spacer"></span>
+    <span class="tagline">snapshot 2026-11-20T12:40:03Z</span>
+  </div>
+  <nav class="nav"><a href="index.html">Overview</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live.html">Live &amp; Liquidity</a><a href="resolved.html">Resolutions</a><a href="portfolio.html" class="active">Portfolio &amp; Trades</a><a href="analysis.html">Analysis</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="verification.html">Verification</a><a href="repo-review.html">Repo Review</a><a href="flagged.html">Flagged for Review</a></nav>
+</header>
+<main>
+
+
+<h1>Portfolio &amp; trades</h1>
+<p class="lede">This page will show balance, positions, executed trades and per-trade P&amp;L for a Kalshi <b>demo</b> account — once one exists. It shows no numbers today because there is no demo account and no API key in this project, and inventing sample figures would be worse than showing none.</p>
+
+<div class="notice bad"><h4>Why there is no data here</h4>
+Portfolio endpoints require a signed request: an API key ID plus a private key, with each call signed over timestamp + method + path
+(<a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">authenticated requests</a>, <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a>).
+A private key cannot be shipped to a browser: anything in this public site is delivered to every visitor. So the honest options are a server-side signer (recommended) or no portfolio page at all. Both are laid out on <a href="suggestions.html#S1">Suggestion S1</a>, and the blocking questions are <a href="questions.html#Q16">Q16</a> and <a href="questions.html#Q17">Q17</a>.</div>
+
+<h2>What is already built and waiting for a key</h2>
+<div class="grid c2">
+  <div class="card">
+    <h3>Trade classifier &amp; P&amp;L tabulator</h3>
+    <p class="small">Paste an exported fills JSON file below to see how each trade is categorised and what the fee-aware result would be. It runs entirely in your browser, sends nothing anywhere, and needs no key — it is the analysis engine the live page will use.</p>
+    <div class="controls"><input type="file" id="fillsFile" accept=".json,application/json"><button class="ghost" id="demoShape">Show expected shape</button></div>
+    <div id="fillsOut"><p class="empty">No file loaded.</p></div>
+  </div>
+  <div class="card">
+    <h3>Categories the classifier uses</h3>
+    <table><tbody>
+      <tr><td><b>Direction</b></td><td class="small">YES vs NO, from <code>taker_outcome_side</code> / position side</td></tr>
+      <tr><td><b>Price band</b></td><td class="small">entry price bucketed 0.00–0.19 … 0.80–1.00 — where a trade sits on the probability curve</td></tr>
+      <tr><td><b>Horizon</b></td><td class="small">time from fill to close: intraday, days, weeks+</td></tr>
+      <tr><td><b>Topic</b></td><td class="small">the series category of the traded ticker</td></tr>
+      <tr><td><b>Mode</b></td><td class="small">single-market vs multi-leg (MVE tickers), from the API's own fields</td></tr>
+    </tbody></table>
+    <p class="small muted">Categories are derived from documented trade fields only (<a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a>). Fees use the series <code>fee_type</code>/<code>fee_multiplier</code> (<a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a>) and Kalshi's published schedule.</p>
+  </div>
+</div>
+
+<h2>Trade execution</h2>
+<div class="notice warn"><h4>Not available on this site, by design</h4>
+Order placement needs the same signed requests as the portfolio. The previous implementation asked you to paste a private key into the page; that code is removed from the new site and flagged (<a href="flagged.html">F-08</a>). To enable execution, choose an option on <a href="suggestions.html#S1">S1</a> first — the recommendation is a GitHub Actions job holding the key as an encrypted repository secret, which keeps the site read-only and leaves the order history in the commit log.</div>
+
+<h2>What performance analysis will look like</h2>
+<p class="small">Once fills exist, this page will report, per category: number of trades, win rate, average entry price, total fees, realised P&amp;L and average holding time — each recomputable from the fill records and each carrying its source. Until then, the only analysis that can be defended is market-level calibration, which is on the <a href="analysis.html">Analysis</a> page.</p>
+
+</main>
+<footer class="site">
+  <p><b>Sources.</b> Kalshi demo Trade API snapshot collected by <code>tools/kalshi_collect.py</code>; each table row links to the exact API response it was copied from.
+  Definitions: <a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">fixed-point fields</a> ·
+  <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">orderbook</a> ·
+  <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement</a>.</p>
+  <p><b>Not financial advice.</b> Demo environment only; Kalshi states demo prices may not reflect real markets.
+  Anything that could not be confirmed from an official source is left blank and listed on the
+  <a href="flagged.html">Flagged for Review</a> page. Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a></p>
+</footer>
+<script src="assets/portfolio.js"></script>
+</body>
+</html>

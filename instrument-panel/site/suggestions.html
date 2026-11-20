@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suggestions · Kalshi Demo Dashboard</title>
+<meta name="description" content="Live Kalshi demo-market dashboard for gas prices, elections, culture, crypto and golf, with sourced data, verification and a flagged-for-review register.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <div class="brand"><a href="index.html">Kalshi <span>Demo</span> Dashboard</a></div>
+    <span class="tagline">gas · elections · culture · crypto · golf — live demo market data</span>
+    <span class="pill-demo">DEMO DATA</span>
+    <span class="spacer"></span>
+    <span class="tagline">snapshot 2026-11-20T12:40:03Z</span>
+  </div>
+  <nav class="nav"><a href="index.html">Overview</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live.html">Live &amp; Liquidity</a><a href="resolved.html">Resolutions</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="analysis.html">Analysis</a><a href="questions.html">Questions</a><a href="suggestions.html" class="active">Suggestions</a><a href="verification.html">Verification</a><a href="repo-review.html">Repo Review</a><a href="flagged.html">Flagged for Review</a></nav>
+</header>
+<main>
+
+
+<h1>Suggestions — review, then choose</h1>
+<p class="lede">Each suggestion is a decision waiting to be made, not a change that has been made. Read the trade-off, record a lean, and only then implement. The board stores your selection in this browser only (localStorage); it is not sent anywhere, and no suggestion is applied by this site.</p>
+<div class="notice"><h4>Decision gate — apply to every card</h4><ol class="small" style="margin:6px 0 0;padding-left:20px"><li>Is the missing information identified on the card actually missing, or is it already answered on the Questions page?</li><li>Does the suggestion change what a reader would decide, or only how it looks?</li><li>What is the cost of being wrong (wrong data shown as verified, credential exposure, misleading P&amp;L)?</li><li>Can it be verified from an official Kalshi source, and is that source linked?</li><li>Is it reversible in one commit?</li></ol></div>
+<div class="notice warn"><h4>Nothing here has been implemented</h4>These are proposals. Your selections are saved in this browser only (localStorage) so you can come back to them; nothing is transmitted, and no suggestion changes the live pages until someone implements it deliberately.</div>
+<div class="controls"><button id="exportPicks" class="ghost">Download my choices as JSON</button><span class="small muted" id="pickStatus"></span></div>
+<div class="grid c2"><div class="sug" id="S1">
+<h4>S1 · Run demo trade execution from a GitHub Actions job, not the browser</h4>
+<div class="meta"><span class="b warn">needs your decision</span><span class="b info">nothing implemented yet</span></div>
+<p class="small"><b>Problem.</b> Trading needs a private key. A private key cannot live in a public static site, so today&#x27;s public site can neither read the portfolio nor place orders.</p>
+<div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S1" value="A"><span><b>Actions-based trader</b><span class="b yes">recommended</span><div class="small">Store the demo key pair as encrypted repository secrets. A scheduled workflow (or a manual workflow_dispatch with typed parameters) signs orders server-side and commits fills and positions to data/. The site stays read-only and shows results on the next build.</div><div class="small muted">Trade-off: Automated orders still trade mock money; a bug in the strategy spends the demo balance. Secrets are protected by GitHub, not by the site.</div></span></label></div><div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S1" value="B"><span><b>Small authenticated backend</b><div class="small">A separate service (for example a Cloudflare Worker or a small VPS) holds the key, exposes only read endpoints plus an order endpoint protected by a login you control.</div><div class="small muted">Trade-off: New infrastructure to own and patch; still no real money, so the value may not justify the effort.</div></span></label></div><div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S1" value="C"><span><b>Keep trading out of scope</b><div class="small">Leave portfolio and trading disabled and say so plainly, as the site does now.</div><div class="small muted">Trade-off: The original brief asked for execution and performance tracking, so this leaves part of the brief unmet.</div></span></label></div>
+<p class="small" style="margin-top:10px"><b>Recommendation.</b> A<br><span class="muted">It is the smallest change that satisfies the brief without exposing a key: secrets stay in GitHub, the audit trail is the commit history, and the site remains static and safe. B is the right answer only if orders must be placed interactively within seconds.</span></p>
+<p class="small"><b>Unlocks.</b></p><ul class="small"><li>Portfolio balance and positions</li><li>Executed trades</li><li>Per-trade P&amp;L with fees</li><li>Strategy categories grounded in real fills</li></ul>
+<div class="decision" id="dec-S1">Your lean: <b>not recorded</b></div>
+</div><div class="sug" id="S2">
+<h4>S2 · Fix the definition of &#x27;highest dollar amount&#x27;</h4>
+<div class="meta"><span class="b warn">needs your decision</span><span class="b info">nothing implemented yet</span></div>
+<p class="small"><b>Problem.</b> Kalshi exposes volume in contracts, not dollars. Three different rankings are defensible and they disagree: lifetime notional (volume × last price), 24-hour notional, and open interest in dollars.</p>
+<div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S2" value="A"><span><b>Default to open-interest dollars</b><div class="small">Ranks by the money currently at risk in the market rather than by turnover that may be years old.</div><div class="small muted">Trade-off: Quiet but large markets outrank busy ones.</div></span></label></div><div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S2" value="B"><span><b>Default to 24-hour notional</b><div class="small">Ranks by recent activity, which matches an intuitive reading of &#x27;live events with the most money moving&#x27;.</div><div class="small muted">Trade-off: Volatile; a new market can top the list on a handful of trades.</div></span></label></div><div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S2" value="C"><span><b>Compute true dollar turnover from trades</b><div class="small">Aggregate count_fp × yes_price_dollars over /markets/trades for the in-scope tickers.</div><div class="small muted">Trade-off: Hundreds of paginated requests per run on an unpublished unauthenticated rate limit.</div></span></label></div>
+<p class="small" style="margin-top:10px"><b>Recommendation.</b> A as the default, with all three visible and sortable<br><span class="muted">It is the only measure that is stable between refreshes and cannot be inflated by a single trade. Showing all three costs nothing and removes the ambiguity from the reader&#x27;s path.</span></p>
+
+<div class="decision" id="dec-S2">Your lean: <b>not recorded</b></div>
+</div><div class="sug" id="S3">
+<h4>S3 · Publish a calibration table before publishing any &#x27;strategy&#x27;</h4>
+<div class="meta"><span class="b warn">needs your decision</span><span class="b info">nothing implemented yet</span></div>
+<p class="small"><b>Problem.</b> There is no demo portfolio, so no recommendation can be backed by executed trades. What the data can support is whether price bands resolve as their prices imply.</p>
+<div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S3" value="A"><span><b>Calibration only, with sample sizes</b><span class="b yes">recommended</span><div class="small">For each 10-cent price band, show n, mean implied probability and realised YES rate. Recommend nothing until n is large enough in the band of interest.</div><div class="small muted">Trade-off: Small n makes the table look more conclusive than it is if a reader ignores the counts.</div></span></label></div><div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S3" value="B"><span><b>Calibration plus a written strategy per topic</b><div class="small">Add prose strategies derived from the calibration bands.</div><div class="small muted">Trade-off: Turns an observation into advice on demo data that Kalshi itself says may not reflect real markets.</div></span></label></div>
+<p class="small" style="margin-top:10px"><b>Recommendation.</b> A<br><span class="muted">It keeps the site honest. Strategies belong on top of a portfolio with real fills (S1), where P&amp;L can contradict them.</span></p>
+
+<div class="decision" id="dec-S3">Your lean: <b>not recorded</b></div>
+</div><div class="sug" id="S4">
+<h4>S4 · Verify and optionally add WebSocket streaming for the price chart</h4>
+<div class="meta"><span class="b warn">needs your decision</span><span class="b info">nothing implemented yet</span></div>
+<p class="small"><b>Problem.</b> Seconds-level history cannot come from candlesticks (1-minute minimum) and polling costs a request per tick. The docs recommend the WebSocket for current state, but streaming from a Pages origin is unverified.</p>
+<div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S4" value="A"><span><b>Keep polling, label it clearly</b><div class="small">Current behaviour: poll one market every 15 s, keep second-level points in the browser, and label every point as polled rather than streamed.</div><div class="small muted">Trade-off: A quiet market looks flat between ticks.</div></span></label></div><div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S4" value="B"><span><b>Add an opt-in WebSocket toggle</b><div class="small">Connect to wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2 on demand, subscribe to ticker and orderbook_delta, and merge into the chart.</div><div class="small muted">Trade-off: Unverified from the Pages origin; connection limits are undocumented for anonymous clients.</div></span></label></div>
+<p class="small" style="margin-top:10px"><b>Recommendation.</b> A now, B after a browser test<br><span class="muted">Do not ship an unverified connection path. The chart already separates polled points from candlestick points so a reader knows what they are looking at.</span></p>
+
+<div class="decision" id="dec-S4">Your lean: <b>not recorded</b></div>
+</div><div class="sug" id="S5">
+<h4>S5 · Split &#x27;read-only public data&#x27; from &#x27;account data&#x27; at the architecture level</h4>
+<div class="meta"><span class="b warn">needs your decision</span><span class="b info">nothing implemented yet</span></div>
+<p class="small"><b>Problem.</b> One static site is currently asked to do both a public market dashboard and a private account dashboard. That mixing is what makes the key-handling question reappear.</p>
+<div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S5" value="A"><span><b>Two surfaces</b><span class="b yes">recommended</span><div class="small">This public site stays read-only market data. A separate private tool (Actions or backend) owns credentials and performance.</div><div class="small muted">Trade-off: Two places to check.</div></span></label></div><div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S5" value="B"><span><b>One site with a login</b><div class="small">Add authentication to the site so account pages are gated.</div><div class="small muted">Trade-off: GitHub Pages cannot authenticate users; this forces a backend anyway and adds a login surface to protect.</div></span></label></div>
+<p class="small" style="margin-top:10px"><b>Recommendation.</b> A<br><span class="muted">It removes a whole class of security questions from the public site instead of answering them carefully.</span></p>
+
+<div class="decision" id="dec-S5">Your lean: <b>not recorded</b></div>
+</div><div class="sug" id="S6">
+<h4>S6 · Add per-row data lineage to every table</h4>
+<div class="meta"><span class="b warn">needs your decision</span><span class="b info">nothing implemented yet</span></div>
+<p class="small"><b>Problem.</b> A reviewer should not have to trust the collector. They should be able to click through to the exact API response.</p>
+<div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S6" value="A"><span><b>Link each row to its response URL</b><div class="small">Already implemented: every row links to the market endpoint and the list query that produced it.</div><div class="small muted">Trade-off: A response changes over time, so the link proves provenance, not the historical value.</div></span></label></div><div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S6" value="B"><span><b>Also archive the raw response</b><div class="small">Commit the compressed raw JSON per run so the exact bytes behind each row are preserved.</div><div class="small muted">Trade-off: Repository growth; needs a retention policy.</div></span></label></div>
+<p class="small" style="margin-top:10px"><b>Recommendation.</b> B, with 7-day retention<br><span class="muted">Links prove where a number came from; an archive proves what it was. The cost is a small daily artefact with a short retention.</span></p>
+
+<div class="decision" id="dec-S6">Your lean: <b>not recorded</b></div>
+</div><div class="sug" id="S7">
+<h4>S7 · Show liquidity, not just price, beside every ranking</h4>
+<div class="meta"><span class="b warn">needs your decision</span><span class="b info">nothing implemented yet</span></div>
+<p class="small"><b>Problem.</b> A market can rank first by notional while having one contract available at the touch, so a reader who tries to act on the ranking would move the price.</p>
+<div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S7" value="A"><span><b>Add best-bid size columns</b><div class="small">yes_bid_size_fp and yes_ask_size_fp are already in the market object; surface them next to the price in every table.</div><div class="small muted">Trade-off: Sizes are stale by up to a cache interval.</div></span></label></div><div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S7" value="B"><span><b>Add a depth summary per market</b><div class="small">Pull depth=20 for the top markets and show total contracts within 5 cents of the touch.</div><div class="small muted">Trade-off: More requests per run.</div></span></label></div>
+<p class="small" style="margin-top:10px"><b>Recommendation.</b> A plus B for the top 10 per topic<br><span class="muted">Best-bid size is nearly free and answers the question a reader actually has; depth summarises the rest without doubling the request count.</span></p>
+
+<div class="decision" id="dec-S7">Your lean: <b>not recorded</b></div>
+</div><div class="sug" id="S8">
+<h4>S8 · Audit scope completeness automatically</h4>
+<div class="meta"><span class="b warn">needs your decision</span><span class="b info">nothing implemented yet</span></div>
+<p class="small"><b>Problem.</b> The five topic queries are a construction, not a proof that every in-scope contract was found.</p>
+<div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S8" value="A"><span><b>Diff all series against the scope queries</b><div class="small">Pull /series across all 19 categories each run and list any series that looks in-scope by title but was not matched by a scope query.</div><div class="small muted">Trade-off: A longer run and a review queue that needs a human.</div></span></label></div><div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S8" value="B"><span><b>Leave scope as documented</b><div class="small">State the query for each topic and accept that completeness is bounded by it.</div><div class="small muted">Trade-off: A genuinely in-scope market can be missed silently.</div></span></label></div>
+<p class="small" style="margin-top:10px"><b>Recommendation.</b> A, as a nightly audit rather than every 15 minutes<br><span class="muted">Completeness is exactly the kind of claim that should be measured rather than asserted, but it does not need to run on the live cadence.</span></p>
+
+<div class="decision" id="dec-S8">Your lean: <b>not recorded</b></div>
+</div><div class="sug" id="S9">
+<h4>S9 · Surface the historical cutoffs and archive resolved markets</h4>
+<div class="meta"><span class="b warn">needs your decision</span><span class="b info">nothing implemented yet</span></div>
+<p class="small"><b>Problem.</b> Settled markets move to /historical/markets after a cutoff, so a resolution can vanish from the live endpoint the dashboard reads.</p>
+<div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S9" value="A"><span><b>Store every resolved row seen</b><div class="small">The collector already appends resolved rows it observes; extend that to a durable per-topic archive keyed by ticker and result.</div><div class="small muted">Trade-off: Storage growth.</div></span></label></div><div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S9" value="B"><span><b>Read /historical/cutoff and query both tiers</b><div class="small">Display the three cutoff timestamps and query the historical endpoint for anything older.</div><div class="small muted">Trade-off: More requests and more code paths.</div></span></label></div>
+<p class="small" style="margin-top:10px"><b>Recommendation.</b> A now, B when the first market is archived<br><span class="muted">The archive makes resolutions durable with almost no extra requests; the cutoff display becomes necessary only once a market actually crosses it.</span></p>
+
+<div class="decision" id="dec-S9">Your lean: <b>not recorded</b></div>
+</div><div class="sug" id="S10">
+<h4>S10 · Add a confidence band to every number, not just a source link</h4>
+<div class="meta"><span class="b warn">needs your decision</span><span class="b info">nothing implemented yet</span></div>
+<p class="small"><b>Problem.</b> A source link says where a value came from; it does not say how much that value can be trusted.</p>
+<div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S10" value="A"><span><b>Three-state trust badge</b><div class="small">Verified (copied from an API response in this run), Stale (from an earlier run), Unverified (could not be confirmed) — applied to every cell.</div><div class="small muted">Trade-off: More visual noise.</div></span></label></div><div style="margin:8px 0"><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="pick-S10" value="B"><span><b>Keep the current blank/flag convention</b><div class="small">Blank means the API returned nothing; flags live on one page.</div><div class="small muted">Trade-off: A reader has to know the convention.</div></span></label></div>
+<p class="small" style="margin-top:10px"><b>Recommendation.</b> A for the tables that drive decisions<br><span class="muted">It makes the verification work visible at the point of use instead of one click away.</span></p>
+
+<div class="decision" id="dec-S10">Your lean: <b>not recorded</b></div>
+</div></div>
+<h2>How a chosen suggestion becomes a change</h2>
+<table><tbody>
+<tr><td>1</td><td class="small">Record the choice here (it is stored in your browser, under this site's origin).</td></tr>
+<tr><td>2</td><td class="small">Download the JSON and attach it to an issue so the decision is on the record with the reasoning.</td></tr>
+<tr><td>3</td><td class="small">Implement behind a small commit; the build validates data and links, so a broken choice fails the deploy.</td></tr>
+<tr><td>4</td><td class="small">Anything still unconfirmed goes on <a href="flagged.html">Flagged for Review</a> rather than being asserted.</td></tr>
+</tbody></table>
+
+</main>
+<footer class="site">
+  <p><b>Sources.</b> Kalshi demo Trade API snapshot collected by <code>tools/kalshi_collect.py</code>; each table row links to the exact API response it was copied from.
+  Definitions: <a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">fixed-point fields</a> ·
+  <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">orderbook</a> ·
+  <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement</a>.</p>
+  <p><b>Not financial advice.</b> Demo environment only; Kalshi states demo prices may not reflect real markets.
+  Anything that could not be confirmed from an official source is left blank and listed on the
+  <a href="flagged.html">Flagged for Review</a> page. Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a></p>
+</footer>
+<script src="assets/suggestions.js"></script>
+</body>
+</html>
