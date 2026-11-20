@@ -138,6 +138,39 @@ check(len(grows) == 3 and all(r["topic"] == "golf" for r in grows),
 check(all(r["series_category"] == "Sports" for r in grows),
       "golf rows carry series_category from the KXPGAFUTURE series record")
 
+# --- 5c: adversarial /series/{ticker} shapes must never crash the collector
+#        (live regression 2026-11-20 14:31Z: run 44753235358 exited 1 because
+#        GET /series/{t} can return {"series": [...]} -> AttributeError in
+#        series_topic; reproduced offline before the hardening) ----------------
+weird = {
+    "KXLIST": ["not-a-dict"],
+    "KXSTRPM": {"ticker": "KXSTRPM", "product_metadata": "oops", "tags": [], "categories": []},
+    "KXLISTPM": {"ticker": "KXLISTPM", "product_metadata": ["oops"], "tags": [], "categories": []},
+    "KXNOTICK": {"product_metadata": {"scope": "Gasoline"}},
+    "KXOK": {"ticker": "KXOK", "product_metadata": {"scope": "Gasoline"}, "tags": [], "categories": []},
+}
+
+
+def weird_get_json(url, signer=None, retries=3):
+    for k, v in weird.items():
+        if url.endswith("/series/" + k):
+            return {"series": v}, 200
+    if url.rstrip("/").endswith("/series"):
+        return {"series": [{"ticker": k} for k in weird]}, 200
+    if "/events" in url:
+        return {"cursor": "", "events": [
+            {"event_ticker": f"{k}-26NOV21", "series_ticker": k, "title": "t",
+             "settlement_sources": [], "markets": [{"ticker": f"{k}-26NOV21-1", "title": "m"}]}
+            for k in weird]}, 200
+    return None, 404
+
+
+collector.get_json = weird_get_json  # type: ignore[assignment]
+wscope = collector.collect_scope(None)
+wrows = wscope["markets_in_scope"]
+check(all(r["market_ticker"].startswith("KXOK") for r in wrows) and len(wrows) == 1,
+      "adversarial /series/{t} shapes never crash; only the well-formed gas record maps")
+
 # --- 6: the zero-row path is still clean -------------------------------------
 def empty_get_json(url, signer=None, retries=3):
     return None, 0

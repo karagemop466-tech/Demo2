@@ -1054,3 +1054,12 @@ to simulate the slim list + enrichment path (12/12 PASS). Also observed: Pages
 `pages.yml` does not run for them — so the deployed site lags the newest snapshot until the
 next code commit deploys; this follow-up commit is a code push and re-deploys the site with
 the current tree.
+
+**E-5 follow-up 2 (session eeb796d7, 14:35-14:45 UTC):** the first enrichment run failed in
+Actions (44753235358, exit 1) — reproduced offline: `GET /series/{ticker}` can return
+`{"series": [...]}` (list) as well as `{"series": {...}}` (dict); the list shape reached
+`series_topic` and raised `AttributeError: 'list' object has no attribute 'get'`. Hardened:
+`series_topic` type-guards `product_metadata`/record shapes, the enrichment path accepts only
+dict records with a ticker and never lets one series kill the run (logged as an api_log note
+instead), `inventory` tolerates records without a ticker. Adversarial-shape regression case
+added to `session-eeb796d7/tools/test_collector_fix.py` (13/13 PASS).
