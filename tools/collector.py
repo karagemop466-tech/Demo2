@@ -47,6 +47,27 @@ PROD_REST = "https://external-api.kalshi.com/trade-api/v2"
 # `series.category` / series ticker, not on free-text guesses — see TOPIC_RULES.
 TOPICS = ["gas", "elections", "culture", "crypto", "golf"]
 
+# --- deterministic output-size bounds -----------------------------------------
+# Why these exist (verified incident, 2026-11-20): GitHub rejects a push containing
+# any file over 100 MB ("pre-receive declined"), and data/snapshot.json reached
+# 112 MB (mostly duplicated rows + legal rules text). Every `Refresh Kalshi demo
+# data` run then failed at the commit step for hours (runs 44728913873 … 44800417665)
+# and the published data went stale. The collector therefore (a) publishes only the
+# TOP_N rows per topic by estimated dollar volume — which is exactly the product
+# focus ("highest dollar amount live events") — (b) never stores the same market row
+# twice, (c) writes compact JSON, and (d) refuses to write any file over
+# FILE_LIMIT_BYTES so the failure mode is a loud, immediate collector error instead
+# of an opaque push rejection. Nothing is invented when trimming: dropped rows are
+# counted in `counts.markets_trimmed_per_topic` and the full in-scope count is kept
+# in `counts.markets_in_scope`.
+PUBLISH_PER_TOPIC = 1200
+HISTORY_TICKERS_MAX = 600      # tick history is kept for the largest markets only
+HISTORY_POINTS_MAX = 288       # per ticker (288 x 10-min runs = 48 h)
+FILE_LIMIT_BYTES = 90_000_000  # hard tripwire; GitHub's push limit is 100 MB/file
+
+# Fields that tools/check.py requires on every market row, even when null.
+ROW_REQUIRED_KEYS = ("topic", "market_ticker", "yes_bid_dollars", "yes_ask_dollars", "volume_fp")
+
 # API request log: (url, http_status, ok, note). Written to data/api_log.json so the
 # site can prove which request produced which rows.
 API_LOG: list[dict[str, Any]] = []
@@ -551,11 +572,56 @@ def exchange_status(signer: Signer | None) -> dict:
 
 
 # --------------------------------------------------------------------------- main
-def write_json(name: str, payload: Any) -> None:
+def write_json(name: str, payload: Any, compact: bool = False) -> None:
     DATA.mkdir(exist_ok=True)
     p = DATA / name
-    p.write_text(json.dumps(payload, indent=1, sort_keys=False) + "\n")
-    print(f"wrote {p.relative_to(ROOT)} ({p.stat().st_size} bytes)")
+    if compact:
+        text = json.dumps(payload, separators=(",", ":"), sort_keys=False) + "\n"
+    else:
+        text = json.dumps(payload, indent=1, sort_keys=False) + "\n"
+    if len(text.encode("utf-8")) > FILE_LIMIT_BYTES:
+        # Fail here, loudly, instead of letting GitHub reject the push later
+        # (GitHub's pre-receive hook refuses any file over 100 MB — the incident
+        # documented at the FILE_LIMIT_BYTES constant above).
+        print(f"::error::data/{name} would be {len(text)} bytes > {FILE_LIMIT_BYTES} "
+              f"- refusing to write (tighten PUBLISH_PER_TOPIC bounds, do not push)")
+        raise SystemExit(2)
+    p.write_text(text)
+    try:
+        shown = p.relative_to(ROOT)
+    except ValueError:  # tests redirect DATA outside the repo; keep the message useful
+        shown = p
+    print(f"wrote {shown} ({p.stat().st_size} bytes)")
+
+
+def slim_row(r: dict) -> dict:
+    """Drop null fields, keeping the check.py-required keys on every row.
+
+    Applied only at write time: collect_scope still builds full rows, so offline
+    tests that inspect its return value are unaffected. Nothing is rewritten or
+    inferred — nulls are simply omitted and the site renders an em dash for a
+    missing field (the pages already handle absent keys).
+    """
+    return {k: v for k, v in r.items() if v is not None or k in ROW_REQUIRED_KEYS}
+
+
+def select_published(rows: list[dict]) -> tuple[list[dict], dict[str, int]]:
+    """Top PUBLISH_PER_TOPIC rows per topic by estimated dollar volume.
+
+    Returns (published_rows, trimmed_per_topic). The product scope is the
+    "highest dollar amount live events"; trimming is recorded in `counts` and
+    never silent. Rows with no estimate sort last but are still eligible.
+    """
+    published: list[dict] = []
+    trimmed: dict[str, int] = {}
+    for t in TOPICS:
+        tr = [r for r in rows if r["topic"] == t]
+        tr.sort(key=lambda r: (r.get("est_dollar_volume") is not None,
+                               r.get("est_dollar_volume") or -1), reverse=True)
+        keep, drop = tr[:PUBLISH_PER_TOPIC], tr[PUBLISH_PER_TOPIC:]
+        published.extend(keep)
+        trimmed[t] = len(drop)
+    return published, trimmed
 
 
 def main() -> int:
@@ -578,9 +644,18 @@ def main() -> int:
     candles = {} if args.scope_only else collect_candles(rows, signer)
     resolutions = collect_resolutions(signer)
 
-    by_topic = {t: [r for r in rows if r["topic"] == t] for t in TOPICS}
+    # Publish the largest markets per topic (product scope: "highest dollar amount
+    # live events"). Full in-scope counts are kept; trimmed counts are recorded.
+    by_topic_full = {t: [r for r in rows if r["topic"] == t] for t in TOPICS}
     for t in TOPICS:
-        by_topic[t].sort(key=lambda r: (r.get("est_dollar_volume") or -1), reverse=True)
+        by_topic_full[t].sort(key=lambda r: (r.get("est_dollar_volume") is not None,
+                                             r.get("est_dollar_volume") or -1), reverse=True)
+    published, trimmed = select_published(rows)
+    pub_by_topic = {t: [r for r in published if r["topic"] == t] for t in TOPICS}
+    # by_topic holds market tickers only — the full rows are published exactly once
+    # (in `markets` and in data/topic-<t>.json). The previous full-row duplication
+    # here doubled snapshot.json and fed the 100 MB push failure (see write_json).
+    by_topic = {t: [r["market_ticker"] for r in pub_by_topic[t]] for t in TOPICS}
 
     finished = dt.datetime.now(dt.timezone.utc)
     snapshot = {
@@ -597,12 +672,14 @@ def main() -> int:
             "series_index": scope["series_index_size"],
             "events_scanned": scope["events_scanned"],
             "markets_in_scope": len(rows),
-            "per_topic": {t: len(by_topic[t]) for t in TOPICS},
+            "per_topic": {t: len(by_topic_full[t]) for t in TOPICS},
+            "markets_published": len(published),
+            "markets_trimmed_per_topic": trimmed,
             "resolved_in_scope": len(resolutions),
             "orderbooks": len(books),
             "candle_sets": len(candles),
         },
-        "markets": rows,
+        "markets": [slim_row(r) for r in published],
         "by_topic": by_topic,
         "orderbooks": books,
         "candles": candles,
@@ -622,33 +699,53 @@ def main() -> int:
                 "candlestick `price` object is the TRADED price and is empty in any period with "
                 "no trade, so this keeps the chart continuous without inventing a traded price."
             ),
+            "published_rows": (
+                "markets holds the top rows per topic by est_dollar_volume (see "
+                "PUBLISH_PER_TOPIC in tools/collector.py); by_topic holds those rows' "
+                "market_ticker values only. counts.markets_in_scope is the full count; "
+                "counts.markets_trimmed_per_topic records what was left out and why."
+            ),
         },
         "api_log": API_LOG,
     }
-    write_json("snapshot.json", snapshot)
+    write_json("snapshot.json", snapshot, compact=True)
 
-    # compact per-topic files keep each page payload small
+    # per-topic files keep each category page payload small (slim rows, compact JSON)
     for t in TOPICS:
         write_json(
             f"topic-{t}.json",
             {
                 "generated_at_utc": snapshot["generated_at_utc"],
                 "topic": t,
-                "count": len(by_topic[t]),
-                "markets": by_topic[t],
+                "count": len(pub_by_topic[t]),
+                "count_in_scope": len(by_topic_full[t]),
+                "trimmed_by_volume": trimmed[t],
+                "markets": [slim_row(r) for r in pub_by_topic[t]],
                 "resolutions": [r for r in resolutions if r["topic"] == t],
             },
+            compact=True,
         )
 
     write_json("resolutions.json", {"generated_at_utc": snapshot["generated_at_utc"],
                                     "count": len(resolutions), "resolutions": resolutions})
 
-    # history ledger: append one compact point per market per run (for the price chart)
+    # history ledger: append one compact point per market per run (for the price chart).
+    # Bounded on purpose: only the HISTORY_TICKERS_MAX largest published markets keep a
+    # tick history, capped at HISTORY_POINTS_MAX points each, so history.json can never
+    # grow toward GitHub's per-file push limit as runs accumulate (it would otherwise
+    # gain points for every market on every run, forever).
     hist_path = DATA / "history.json"
     hist = json.loads(hist_path.read_text()) if hist_path.exists() else {"points": {}}
     pts = hist.setdefault("points", {})
-    for r in rows:
+    ranked = sorted(published, key=lambda r: (r.get("est_dollar_volume") is not None,
+                                              r.get("est_dollar_volume") or -1), reverse=True)
+    hist_keep = {r["market_ticker"] for r in ranked[:HISTORY_TICKERS_MAX]}
+    for stale in [k for k in pts if k not in hist_keep]:
+        del pts[stale]
+    for r in published:
         t = r["market_ticker"]
+        if t not in hist_keep:
+            continue
         lp = r.get("last_price_dollars")
         yb = r.get("yes_bid_dollars")
         if lp in (None, ""):
@@ -657,11 +754,19 @@ def main() -> int:
             {"t": int(finished.timestamp()), "last": lp, "yes_bid": yb,
              "yes_ask": r.get("yes_ask_dollars")}
         )
-        pts[t] = pts[t][-288:]
+        pts[t] = pts[t][-HISTORY_POINTS_MAX:]
     hist["updated_at_utc"] = snapshot["generated_at_utc"]
-    write_json("history.json", hist)
+    hist["definitions"] = {
+        "points": (
+            f"tick samples taken by each collector run (10-min cadence); kept for the "
+            f"top {HISTORY_TICKERS_MAX} markets by est_dollar_volume, max "
+            f"{HISTORY_POINTS_MAX} points each"
+        ),
+    }
+    write_json("history.json", hist, compact=True)
 
-    print(f"OK  in-scope markets={len(rows)}  resolved={len(resolutions)}  "
+    print(f"OK  in-scope markets={len(rows)}  published={len(published)}  "
+          f"trimmed={trimmed}  resolved={len(resolutions)}  "
           f"books={len(books)}  auth={signer is not None}")
     if not rows:
         print("WARNING: zero in-scope markets returned — scope filter or API issue.", file=sys.stderr)

@@ -73,13 +73,32 @@ jobs:
               sys.exit(1)
           PY
 
+      - name: Fail if any data file exceeds the push tripwire
+        # GitHub's pre-receive hook rejects any push containing a file over 100 MB.
+        # The collector enforces this too (FILE_LIMIT_BYTES); this step is the
+        # workflow-level tripwire so the failure names the offending file instead of
+        # surfacing as an opaque push rejection (incident documented in tools/collector.py).
+        run: |
+          oversize=$(find data -type f -size +90M -print)
+          if [ -n "$oversize" ]; then
+            echo "::error::data file(s) over the 90MB tripwire (GitHub rejects >100MB per file): $oversize"
+            ls -lh data/ | head -30
+            exit 1
+          fi
+          echo "tripwire OK: no data file over 90MB"
+          ls -lh data/ | head -30
+
       - name: Commit snapshot
         run: |
           set +e
           exec 2>&1
           git config user.name  "kalshi-demo-bot"
           git config user.email "kalshi-demo-bot@users.noreply.github.com"
-          git add data/
+          # Stage ONLY the collector's own outputs. Other pipelines also write into
+          # data/ (dashboard_instrument.json, history_instrument, jumps — F17); a
+          # blanket `git add data/` would revert THEIR newer files on the push-retry
+          # soft-reset path below. Pure outputs, newest wins, no cross-clobbering.
+          git add data/snapshot.json data/topic-*.json data/resolutions.json data/history.json
           if git diff --cached --quiet; then
             echo "no data changes"
             exit 0
@@ -107,7 +126,7 @@ jobs:
             echo "::warning::push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -25 | tr '\n' '|' | cut -c1-3500)"
             git fetch origin main 2>&1 | tail -1
             git reset --soft origin/main
-            git add data/
+            git add data/snapshot.json data/topic-*.json data/resolutions.json data/history.json
             git commit --allow-empty -m "$MSG"
             sleep $((attempt * 5))
           done
