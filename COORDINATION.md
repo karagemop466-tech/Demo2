@@ -114,3 +114,11 @@ Note: this session's rules name the branch `arena/6822d767-demo2` and allow work
 - PR: https://github.com/karagemop466-tech/Demo2/pull/5 (branch `arena/6822d767-demo2` into `main`), MERGED 2026-11-20 11:18 UTC, merge commit 7fb1eebbd8c42a49d33d91be5a1b5fb8e9409bbe (`gh pr merge 5 --merge`; mergeable and CLEAN before merge).
 - Pages deploy: build for 7fb1eeb reported `built` (no error). Verified live at https://karagemop466-tech.github.io/Demo2/verified/index.html and `.../verified/crypto.html` (rows and source links render).
 - Integration request still open: link `verified/index.html` from the root navigation (shared file; not edited here).
+
+## Session ba6fce13 — final integration pass (branch `arena/ba6fce13-demo2`)
+
+| Task | Status | Owner | Files touched |
+|------|--------|-------|---------------|
+| I-1 Integrate verified research pages into primary navigation; run final build, link, security, and deployment checks | in progress | ba6fce13 | `index.html`, `COORDINATION.md` |
+
+Claim scope is limited to the root landing page and this board. Existing category/research content is retained as-is; no independent data values are added. Existing demo account limitations and non-verified ranking metric will remain explicitly flagged.
