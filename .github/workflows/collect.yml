@@ -19,9 +19,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: collect-kalshi
-  # Do not cancel a collection that is already running: two sessions may ask
-  # for a snapshot at the same time, and the second run can simply redo it.
+  # One collection per branch, and never cancel a run that is already working:
+  # two sessions may ask for a snapshot at the same time.
+  group: collect-kalshi-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
