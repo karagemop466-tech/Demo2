@@ -1,85 +1,180 @@
-# Kalshi Demo Dashboard
+A live, sourced dashboard for Kalshi **demo** markets in five topics only — **gas prices,
+elections, culture, crypto, golf**. It ranks the highest-dollar live events, charts contract price
+against time with selectable windows, shows how many contracts are available at each price, tracks
+every event until it resolves **yes** or **no**, reports demo-account performance, categorises
+trades and proposes strategies only when the evidence supports them.
 
-A dashboard for Kalshi's **demo** exchange covering five topics only: gas prices,
-elections, culture, crypto and golf. Every value is copied from an official Kalshi API
-response or is plain arithmetic over copied values; every table row links to the response
-it came from; anything that could not be confirmed is left blank and listed for review.
+
+---
+
+## Instrument panel (this session's dashboard)
+
+A second, fully source-linked dashboard lives at [instrument-panel/site/index.html](instrument-panel/site/index.html).
+It is additive: the dashboards above are untouched.
 
 | Page | What it is |
 |------|------------|
-| [index.html](index.html) | Landing page indexing every dashboard in the repository |
-| [site/index.html`](instrument-panel/site/index.html) | **Current dashboard** — live totals per topic |
-| [site/live.html`](instrument-panel/site/live.html) | Price chart (60 s → 6 h) and full orderbook depth |
-| [site/resolved.html`](instrument-panel/site/resolved.html) | Settled markets with the recorded YES/NO outcome |
-| [site/portfolio.html`](instrument-panel/site/portfolio.html) | Why portfolio/trading needs a backend, plus a key-free trade classifier |
-| [site/analysis.html`](instrument-panel/site/analysis.html) | Calibration of resolved contracts; what cannot be concluded |
-| [site/questions.html`](instrument-panel/site/questions.html) | 22 questions: known, missing, and how to find out |
-| [site/suggestions.html`](instrument-panel/site/suggestions.html) | 10 decisions with options, trade-offs and a recommendation |
-| [site/verification.html`](instrument-panel/site/verification.html) | Endpoints, scope queries, CORS probe, what is **not** verified |
-| [site/repo-review.html`](instrument-panel/site/repo-review.html) | Claim-by-claim check of this repo against official docs |
-| [site/flagged.html`](instrument-panel/site/flagged.html) | Every irregularity, with evidence links |
+| [Overview](instrument-panel/site/index.html) | Live totals per topic and the highest open-interest markets |
+| [Live & liquidity](instrument-panel/site/live.html) | Price chart (60 s → 6 h) and full orderbook depth |
+| [Resolutions](instrument-panel/site/resolved.html) | Settled markets with the recorded YES/NO outcome |
+| [Portfolio & trades](instrument-panel/site/portfolio.html) | Why trading needs a backend, plus a key-free trade classifier |
+| [Analysis](instrument-panel/site/analysis.html) | Calibration of traded, resolved contracts and what cannot be concluded |
+| [Questions](instrument-panel/site/questions.html) | 22 questions: known, missing, how to find out |
+| [Suggestions](instrument-panel/site/suggestions.html) | 10 decisions with options and trade-offs; nothing implemented |
+| [Verification](instrument-panel/site/verification.html) | Endpoints, scope queries, CORS probe, rate-limit evidence, what is **not** verified |
+| [Repo review](instrument-panel/site/repo-review.html) | Claim-by-claim check against official docs |
+| [Flagged for Review](instrument-panel/site/flagged.html) | Every irregularity, with evidence links |
 
-The dashboard is generated: `instrument-panel/tools/kalshi_collect.py` calls the public demo API, `instrument-panel/tools/validate_data.py`
-refuses to publish anything unsourced or stale, `instrument-panel/tools/build_dashboard_site.py` writes `site/`, and
-`instrument-panel/tools/check_site.py` verifies every internal link before deploy. `.github/workflows/pages.yml` runs that
-chain every 15 minutes. Your browser also polls the API directly for live prices; the API's CORS policy
-allows this site's origin (verified on every run and shown on the Verification page).
+Pipeline: `instrument-panel/tools/kalshi_collect.py` → `validate_data.py` → `build_dashboard_site.py` → `check_site.py`,
+run by `.github/workflows/pages.yml` every 15 minutes. `instrument-panel/tests_smoke.py` runs offline first.
 
-**Honest limits.** Demo data only — Kalshi states demo prices may not reflect real markets. No portfolio
-or trading: both need a private key, which cannot be shipped to a browser (see `site/suggestions.html#S1`).
-No dollar-volume field exists on the API, so dollar figures are `contracts × last price` and labelled.
-Seconds are not exchange history — candlesticks are 1-minute, 1-hour and 1-day only.
+Two findings worth knowing before reading that dashboard:
+
+- **Most resolved demo markets never traded.** 1,331 of 1,601 have `volume_fp = 0` and return
+  `last_price_dollars = 0.0000`, which is a default rather than a price. Calibrating those would report a
+  fake +19-point edge. The analysis page calibrates only the 270 that traded and says so.
+- **Open interest is not liquidity.** 20 of 48 snapshot orderbooks are completely empty — the largest markets
+  by open interest are often the least quoted.
+
+**Site:** https://karagemop466-tech.github.io/Demo2/
+
+Demo environment only. Mock funds. Not investment advice.
+
+## Pages
+
+| Page | What it answers |
+|------|-----------------|
+| `index.html` — Dashboard | Ranked in-scope markets, price-vs-time chart (60 s → 7 d), order-book depth, recent resolutions |
+| `intelligence/` | session `arena-ddc587ae` | Source-linked subsite (dashboard, resolutions, portfolio analysis, trading request-builder, review queue, 17 flags) with per-row source data |
+| `pages/executive-summary.html` | The whole build in one screen, plus what is still open |
+| `pages/gas.html` … `golf.html` | One page per topic: live markets, resolved outcomes, series in scope |
+| `pages/resolutions.html` | Everything settled, with the official yes/no result |
+| `pages/portfolio.html` | Demo balance, positions, fills, executions |
+| `pages/analysis.html` | Cost/payout/realised P&L per fill, five categorisations, strategy candidates |
+| `pages/suggestions.html` | Eight proposals to review and choose between before anything changes |
+| `pages/questions.html` | Eleven questions, what is known, what is missing, how to find it |
+| `pages/api-reference.html` | Every endpoint used, verified line by line against official docs |
+| `pages/verification.html` | Claim → official source → how it was checked → status, plus the live API log |
+| `pages/flagged.html` | Irregularities and judgement calls, with mitigations |
+| `pages/repo-review.html` | What was wrong in the repo before and what changed |
+| `pages/sources.html` | All official sources |
+
+## How the data flows
+
+```
+GitHub Actions (every 10 min)            static site (GitHub Pages)
+tools/collector.py  ──► data/*.json ──►  pages read the snapshot
+   │  official demo Trade API            no secrets in the browser
+   └─ writes an HTTP log per request      missing values render as "—"
+```
+
+The authoring sandbox cannot reach `external-api.demo.kalshi.co` (TLS handshake fails), so
+collection runs where egress works and every snapshot carries the status code of every request.
+Nothing is hard-coded into the HTML.
+
+## Trade execution
+
+Read-only by default. Three independent gates must all be open before a demo order is sent:
+
+1. repository secrets `KALSHI_DEMO_API_KEY_ID` and `KALSHI_DEMO_PRIVATE_KEY`;
+2. repository variable `KALSHI_TRADING_ENABLED=1`;
+3. the order passes the executor's checks — ticker in the collector's in-scope set, no duplicate
+   tickers, and inside the per-run notional cap (default $25).
+
+Orders use `POST /portfolio/events/orders` with the documented V2 body. The legacy
+`POST /portfolio/orders` is **not** used: it returns `410 Gone`
+([Create Order (V2)](https://docs.kalshi.com/api-reference/orders/create-order-v2)).
+
+## Other material in this repository
+
+Two earlier/parallel sessions produced their own separate subsites. They are preserved
+rather than deleted, because they contain independently verified research:
+
+| Path | Origin | Why it is still here |
+|------|--------|----------------------|
+| `dashboard/`, `verified/`, `dashboard/data/snapshot.json`, `data/kalshi_snapshot.json` | session `fed802ba` | Independently collected demo data and a per-topic research write-up; regenerable with `tools/build_site_parallel.py`, `tools/collect_kalshi.py` |
+| `analysis.html`, `portfolio.html`, `review.html`, `app.js`, `style.css` (root) | session `fed802ba` | Earlier standalone pages |
+| `site/` | session `406a2f21` | Its own live dashboard, market, portfolio, trades and strategies pages |
+| `pages/executive-summary.html` … `pages/sources.html` | session `e3f65782` | Superseded by the pages generated from `tools/build_site.py` + `tools/build_content.py` |
+
+The canonical, CI-checked site is `index.html` plus `pages/`, generated from `tools/`.
+
+## Publishing
+
+GitHub Pages serves `main` from the repository root (build type: legacy). Every workflow in this
+repository commits to `main` and rebases before pushing, so a data refresh and a page change cannot
+clobber each other:
+
+- `Refresh Kalshi demo data` — every 10 minutes, commits `data/`
+- `Demo portfolio, analysis and (optional) execution` — hourly, commits reporting artefacts
+- `Build and check the site` — on every push and PR; fails on a broken link, an out-of-date page,
+  a bad snapshot, a leaked key or a JS syntax error
+- `Deploy GitHub Pages` — publishes the repository as-is when Pages is set to the GitHub Actions
+  source; with the current legacy source GitHub's own build publishes `main` instead
+
+A `.nojekyll` file is present so no asset is filtered out by Jekyll processing.
+
+## Local development
+
+```bash
+cd tools && python3 build_site.py && python3 build_content.py && cd ..
+python3 tools/check.py          # links, nav, data, secrets, inline JS
+python3 -m http.server 8000     # then open http://localhost:8000/
+```
+
+Regenerate the pages after editing anything in `tools/`; CI fails if the generated HTML and the
+generator disagree.
+
+## Verification policy
+
+Every table row links an official source. If a value cannot be confirmed from an official Kalshi
+source it is left blank and flagged rather than inferred. Open items live on
+`pages/flagged.html` and `pages/questions.html`.
 
 ---
 
-# Kalshi Demo Dashboard
+## Kalshi Demo Intelligence (`intelligence/` — session arena-ddc587ae)
 
-Live client-side dashboard and supporting research pages for Kalshi **demo** markets in gas prices, elections, culture, crypto, and golf. The original category-specific site lives at `index.html` and `pages/`. Additional verification, limitations, and decision-register materials are at `analysis.html`, `portfolio.html`, and `review.html`.
+A self-contained, source-linked subsite added by session `arena-ddc587ae` (PR #16), living entirely under `intelligence/` so the sites above are untouched:
 
-## Run locally
+- **Pages:** landing, executive summary (API surfaces + verified endpoints), live dashboard (top-dollar event ranking for gas/elections/culture/crypto/golf, price chart with Seconds/Minutes/Hours/Days, order-book depth ladder), events & resolutions (YES/NO settlement evidence), portfolio analysis + strategy templates, trading, suggestions (review -> decide -> implement workflow), Q&A, and Flagged for Review (17 flags).
+- **Data:** `intelligence/data/watchlist.json` (official series queries with enumeration-completeness flags) and `intelligence/data/snapshot.json` (events, markets, resolutions, orderbooks, candlesticks, trade ticks) — every record embeds the exact official source URL.
+- **Verification:** `node intelligence/scripts/linkcheck.mjs` -> internal links + per-row source fields must pass (it does).
+- **Trading is security-aligned (F-17/D-05):** the page builds the official Create Order (V2) body and a signed curl export with environment placeholders — it accepts **no credentials**, consistent with the safety notice above and PR #6. Execution happens through the `server/` backend, the Actions-based executor, or the official docs playground.
+- **Live data:** dashboard polls the public demo REST API from the visitor browser (60 s, batched) with an explicit LIVE/SNAPSHOT mode badge and bundled verified snapshots as fallback.
 
-Open `index.html` in a browser or serve this repository with `python3 -m http.server 8000`. Public market data is requested client-side from Kalshi's demo API; availability and browser CORS/network restrictions can affect live results.
-
-## Verified subsite (`verified/`)
-
-Generated by `python3 tools/build_site.py` from `data/kalshi_snapshot.json`, `data/api_market_samples.json`, and related files. Check it with `python3 tools/check_links.py` (internal links, anchors, and that every row has a source; external links are not fetched).
-
-- Landing page, five category pages, Market Samples (open markets and liquidity), Resolutions (settled markets with YES/NO), Questions, Suggestions, Flagged for Review, Live Dashboard (browser polls the demo API).
-- Rules: every row links to an official source. A value that was not verified is left blank and flagged. Nothing is inferred. Flagged items do not block merge.
-- Settlement-source links: only links opened and confirmed are kept. The others are blanked and flagged (F-14).
-- Portfolio, trade execution, and per-trade performance are blocked until a Kalshi demo account and API key exist. No keys are stored in this repository.
-
-Data files: `data/kalshi_snapshot.json` (table rows and flags), `data/api_reverification.json` (endpoint-derived values per ticker), `data/api_settlement_sources.json` (settlement-source names and URL status), `data/api_market_samples.json` (open and settled market samples).
-
-## Important safety and verification notes
-
-The root-level monitor sorts only documented contract volume, not dollar turnover; its chart is local YES-bid REST snapshots rather than a historical series; topic matching is heuristic. `portfolio.html` deliberately leaves private account values blank and does not execute trades. Do not place private signing keys in a public static site. Review `review.html` for open questions and `pages/flagged.html` for the main site's existing review list.
-
-The other branch's original implementation and research materials are retained. Its original README described browser-side private-key signing and trade execution; that approach requires a security review before use. Do not enter credentials in a public GitHub Pages application.
-
-## Official references
-
-- [Kalshi market data quick start](https://docs.kalshi.com/getting_started/quick_start_market_data)
-- [Kalshi orderbook schema](https://docs.kalshi.com/getting_started/orderbook_responses)
-- [Kalshi authenticated order guide](https://docs.kalshi.com/getting_started/quick_start_create_order)
-- [Kalshi WebSocket guide](https://docs.kalshi.com/getting_started/quick_start_websockets)
-- [Kalshi events endpoint](https://docs.kalshi.com/api-reference/events/get-events)
-- [Kalshi API changelog](https://docs.kalshi.com/changelog)
-- [GitHub Pages documentation](https://docs.github.com/en/pages)
-
-See [COORDINATION.md](COORDINATION.md) for history and verification notes.
-
+Serve locally with `python3 -m http.server 8000` and open `/intelligence/`.
 
 ---
 
-## Dashboard added by session arena-3420a90d (`dashboard/`)
+## `live/` — interactive console, trading and trade analysis
 
-A separate dashboard lives in `dashboard/` (published by the same Pages workflow): https://karagemop466-tech.github.io/Demo2/dashboard/index.html
+Additive subsection (does not modify the dashboard, `pages/`, `verified/`, `dashboard/` or `site/`):
 
-- `dashboard/markets.html`: markets and series by category, each row linked to its Kalshi API response
-- `dashboard/resolutions.html`: settled markets with YES/NO results
-- `dashboard/live.html`: candlestick chart, live tape (timestamped polling) and orderbook liquidity, public endpoints only
-- `dashboard/portfolio.html`: BLOCKED until a Kalshi demo API key is supplied; no trades placed
-- `dashboard/analysis.html`, `suggestions.html` (decision-first), `questions.html`, `flagged.html`
+- **`live/index.html`** — interactive console: five-topic market table, price chart with 60 s / 5 m / 15 m / 1 h / 6 h
+  windows on a fixed $0–$1 axis, full order-book depth (contracts resting at each price, cumulative depth, dollar value
+  per level, best bid, implied ask and spread), resolved feed and a markets-tracked-until-YES/NO list.
+- **`live/trading.html`** — paper-trade simulator needing no key, plus real demo-account reads and signed V2 demo
+  orders (`POST /portfolio/events/orders`) for anyone who supplies their own demo key.
+- **`live/trading-analysis.html`** — trades bucketed by topic, side, entry-price band and topic × side; a bucket needs
+  10 trades before a pattern is described.
 
-Data: `dashboard/data/snapshot.json`. Verified values only; blanks are marked UNVERIFIED. See `COORDINATION.md` for sources and irregularities.
+Verified in a jsdom harness with fixtures modelled on the documented response shapes: market filtering (including
+exclusion of an out-of-scope market), order-book best bid / implied ask / spread / cumulative-depth arithmetic, chart
+windows, offline error state with no fabricated values, paper-trade validation, and analysis withholding below
+threshold.
+
+### Fixed here: broken `verified/` links
+
+Navigation links to the `verified/` subsite were pointing one directory too high
+(`pages/*.html` → `../../verified/index.html`, which resolves outside the repository root, and the root page →
+`../verified/index.html`). On the deployed Pages site every one of those links 404s. All 17 were corrected to
+`../verified/index.html` (pages) and `verified/index.html` (root). `tools/check_live_links.py` is the checker that
+found it and will catch any recurrence.
+
+### Checkers
+
+```bash
+python3 tools/check_links.py        # verified/ subsite + sourced data rows (pre-existing)
+python3 tools/check_live_links.py   # every HTML file: internal links, duplicate ids, stray placeholders
+```

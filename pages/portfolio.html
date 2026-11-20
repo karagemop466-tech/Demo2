@@ -1,7 +1,124 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Portfolio & Trading</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../verified/index.html">Verified Data</a><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Portfolio & Trading</h1>
-<p>Portfolio and order placement use <b>your</b> demo API keys, signed in-browser (RSA-PSS/SHA-256 or Ed25519, ms timestamp, 30s tolerance) per <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Authenticated Requests</a> and <a href="https://docs.kalshi.com/getting_started/api_keys">API Keys</a>. Keys are stored only in this browser (localStorage) and sent only to <code>external-api.demo.kalshi.co</code>. Create keys at <a href="https://demo.kalshi.co/">demo.kalshi.co</a> → Account &amp; security → API Keys.</p>
-<div class="card"><label>Demo API Key ID</label><input id="apiKeyId" placeholder="e.g. a952bcbe-…"><label>Demo Private Key (PEM)</label><textarea id="apiPrivateKey" rows="6" placeholder="-----BEGIN PRIVATE KEY----- …"></textarea><div class="row" style="margin-top:8px"><button id="loadPortBtn">Load balance / positions / fills</button></div><div id="portfolioBox" style="margin-top:10px">No keys entered — portfolio stays blank (by design, no fabricated balances).</div></div>
-<div class="card" style="margin-top:14px"><h3>Place demo limit order</h3><label>Ticker</label><input id="orderTicker" placeholder="e.g. KX…"><div class="row"><div style="flex:1"><label>Side</label><select id="orderSide"><option value="yes">yes</option><option value="no">no</option></select></div><div style="flex:1"><label>Count</label><input id="orderCount" type="number" value="1"></div><div style="flex:1"><label>Price ($)</label><input id="orderPrice" type="number" step="0.01" value="0.50"></div></div><button id="placeOrderBtn" style="margin-top:10px">Place order (demo)</button><div id="orderResult" style="margin-top:8px"></div></div>
-<p class="muted">Endpoints: <code>GET /portfolio/balance</code>, <code>GET /portfolio/positions</code>, <code>GET /portfolio/fills</code>, <code>POST /portfolio/orders</code> — see <a href="https://docs.kalshi.com/getting_started/api_environments">API Environments</a> for base URLs.</p>
-<script src="../assets/app.js"></script>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portfolio · Kalshi Demo Dashboard</title>
+<meta name="description" content="Kalshi demo account balance, positions, fills and executions.">
+<link rel="stylesheet" href="../assets/style.css">
+</head><body>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../rankings.html">Dollar Rankings</a><a href="../live/index.html">Live Console</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html" aria-current="page">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<div class="wrap">
+
+<h1>Portfolio - demo account</h1>
+<p class="lead">Balance, open positions and fills for the Kalshi <b>demo</b> account, read with a
+signed request. Signing rules, headers and the pre-sign string are exactly as documented in
+<a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">Quick Start: Authenticated Requests</a>.</p>
+
+<div id="authState"></div>
+<div class="kpis" id="kpis"></div>
+
+<h2>Positions</h2>
+<p class="muted">From <code>GET /portfolio/positions?settlement_status=all</code>. Field meanings are
+listed under the table so no number is ambiguous.</p>
+<div id="posTable"></div>
+
+<h2>Fills - the raw trade record</h2>
+<p class="muted">From <code>GET /portfolio/fills</code>. Every fill shows the official
+<code>outcome_side</code>, <code>book_side</code>, price on both legs, fee and whether it was taker
+or maker.</p>
+<div id="fillTable"></div>
+
+<h2>Executions - what the executor did</h2>
+<p class="muted">From <code>data/executions.json</code>, written by
+<code>tools/execute_strategy.py</code>. Dry-run entries were validated but never sent. Only
+entries with an HTTP status were actually transmitted.</p>
+<div id="execTable"></div>
+
+<h2>Placing a demo order by hand is not required</h2>
+<p class="muted">Execution is driven by <code>data/strategy_plan.json</code> plus the
+<code>trade.yml</code> workflow and three explicit switches - <code>KALSHI_TRADING_ENABLED=1</code>,
+a demo key pair, and a per-run notional cap (default $25). The executor refuses any ticker that is
+not in the collector&#8217;s in-scope set, refuses duplicates in one run, and always uses
+<code>immediate_or_cancel</code> so no order is left resting unattended. Rationale and the exact
+request shape are on <a href="api-reference.html">API reference</a>.</p>
+
+<h2>Field glossary (official meanings)</h2>
+<div class="tablewrap "><table><thead><tr><th>Field</th><th>Meaning</th><th>Source</th></tr></thead><tbody><tr><td><code>balance</code> / <code>balance_dollars</code></td><td>Available balance in cents / fixed-point dollars</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">Get Balance</a></td></tr><tr><td><code>portfolio_value</code></td><td>Portfolio value in cents</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">Get Balance</a></td></tr><tr><td><code>position_fp</code></td><td>Signed net contracts: positive = YES, negative = NO</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">Get Positions</a></td></tr><tr><td><code>market_exposure_dollars</code></td><td>Cost basis of the remaining position, excluding fees - not market value</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">Get Positions</a></td></tr><tr><td><code>realized_pnl_dollars</code></td><td>Locked-in profit and loss</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">Get Positions</a></td></tr><tr><td><code>total_traded_dollars</code></td><td>Total ever spent trading that market, including past trades</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">Get Positions</a></td></tr><tr><td><code>count_fp</code></td><td>Contracts in the fill, fixed-point string, min granularity 0.01</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Get Fills</a></td></tr><tr><td><code>is_taker</code></td><td>True if the fill removed liquidity</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Get Fills</a></td></tr></tbody></table></div></div>
+</div>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a></div></div></footer>
+<script src="../assets/site.js"></script>
+
+<script>
+(async function(){
+  const $ = id=>document.getElementById(id);
+  let p;
+  try{ p = await KR.portfolio(); }catch(e){
+    $('authState').innerHTML = `<div class="notice bad">data/portfolio.json is missing or unreadable (${KR.esc(e.message)}).
+      The portfolio workflow has not produced a snapshot yet.</div>`;
+    return;
+  }
+  if(!p.authenticated){
+    $('authState').innerHTML = `<div class="notice"><b>Portfolio not configured - no demo API key in this repository.</b>
+      <br>${KR.esc(p.reason||'')}
+      <br class="small">The collector runs with public endpoints only until a demo key pair is added as
+      repository secrets. Balances, positions and fills are deliberately blank rather than zero,
+      because "no key" and "empty account" are different facts.
+      <br><span class="small muted">Requirement: <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API Keys</a></span></div>`;
+    $('kpis').innerHTML = '';
+    $('posTable').innerHTML = '<div class="empty">Blank - not connected.</div>';
+    $('fillTable').innerHTML = '<div class="empty">Blank - not connected.</div>';
+  } else {
+    const b = p.balance||{};
+    const pos = p.positions||[], fills = p.fills||[];
+    const realized = pos.reduce((s,x)=>s+(parseFloat(x.realized_pnl_dollars)||0),0);
+    const fees = pos.reduce((s,x)=>s+(parseFloat(x.fees_paid_dollars)||0),0);
+    const exposure = pos.reduce((s,x)=>s+(parseFloat(x.market_exposure_dollars)||0),0);
+    $('authState').innerHTML = `<div class="notice info">Connected · fetched ${KR.when(p.fetched_at_utc)} ·
+      balance endpoint HTTP ${KR.esc(p.balance_http_status)}</div>`;
+    $('kpis').innerHTML = `
+      <div class="kpi-card"><div class="k">Cash balance</div><div class="v">${KR.usd(b.balance_dollars,2)}</div><div class="s">official <code>balance_dollars</code></div></div>
+      <div class="kpi-card"><div class="k">Portfolio value</div><div class="v">${KR.usd((b.portfolio_value||0)/100,2)}</div><div class="s">official <code>portfolio_value</code> (cents)</div></div>
+      <div class="kpi-card"><div class="k">Realized P&amp;L</div><div class="v ${realized>=0?'ok':'bad'}">${KR.usd(realized,2)}</div><div class="s">sum of <code>realized_pnl_dollars</code></div></div>
+      <div class="kpi-card"><div class="k">Open exposure</div><div class="v">${KR.usd(exposure,2)}</div><div class="s">cost basis, excl. fees</div></div>
+      <div class="kpi-card"><div class="k">Fees paid</div><div class="v">${KR.usd(fees,2)}</div><div class="s">official <code>fees_paid_dollars</code></div></div>
+      <div class="kpi-card"><div class="k">Fills</div><div class="v">${fills.length}</div><div class="s">trades recorded</div></div>`;
+    KR.renderTable($('posTable'), [
+      {label:'Market', get:x=>`<code>${KR.esc(x.ticker)}</code>`},
+      {label:'Net contracts', num:true, get:x=>KR.num(x.position_fp,2)},
+      {label:'Cost basis', num:true, get:x=>KR.usd(x.market_exposure_dollars,2)},
+      {label:'Realized P&amp;L', num:true, get:x=>KR.usd(x.realized_pnl_dollars,2)},
+      {label:'Fees', num:true, get:x=>KR.usd(x.fees_paid_dollars,2)},
+      {label:'Total traded', num:true, get:x=>KR.usd(x.total_traded_dollars,2)},
+      {label:'Updated', get:x=>`<span class="small">${KR.when(x.last_updated_ts)}</span>`}
+    ], pos, 'No positions returned.');
+    KR.renderTable($('fillTable'), [
+      {label:'Time', get:x=>`<span class="small">${KR.when(x.created_time)}</span>`},
+      {label:'Market', get:x=>`<code>${KR.esc(x.ticker||x.market_ticker)}</code>`},
+      {label:'Outcome', get:x=>`<span class="pill ${KR.esc(x.outcome_side)}">${KR.esc(x.outcome_side)}</span>`},
+      {label:'Book side', get:x=>KR.esc(x.book_side)},
+      {label:'Contracts', num:true, get:x=>KR.num(x.count_fp,2)},
+      {label:'YES px', num:true, get:x=>KR.usd(x.yes_price_dollars,3)},
+      {label:'NO px', num:true, get:x=>KR.usd(x.no_price_dollars,3)},
+      {label:'Fee', num:true, get:x=>KR.usd(x.fee_cost,3)},
+      {label:'Role', get:x=>x.is_taker?'<span class="pill flag">taker</span>':'<span class="pill">maker</span>'}
+    ], fills, 'No fills returned.');
+  }
+  try{
+    const ex = await KR.executions();
+    $('execTable').innerHTML = `<p class="small muted">Mode: <b>${KR.esc(ex.mode)}</b> · endpoint <code>${KR.esc(ex.endpoint||'')}</code> · run cap $${KR.esc(ex.run_notional_cap_usd||'')}</p>`;
+    KR.renderTable($('execOut'), [], []);
+    const wrap = document.createElement('div');
+    $('execTable').insertAdjacentHTML('beforeend','<div id="execOut2"></div>');
+    KR.renderTable($('execOut2'), [
+      {label:'Ticker', get:r=>`<code>${KR.esc(r.ticker)}</code>`},
+      {label:'Side', get:r=>KR.esc(r.side)},
+      {label:'Contracts', num:true, get:r=>KR.num(r.count,2)},
+      {label:'Result', get:r=>r.skipped?`<span class="pill flag">skipped</span><br><span class="small muted">${KR.esc(r.skipped)}</span>`
+        : r.http_status?`<span class="pill ${r.ok?'ok':'err'}">HTTP ${r.http_status}</span>`
+        : `<span class="pill">${KR.esc(r.note||'validated, not sent')}</span>`}
+    ], ex.results||[], 'No executions recorded yet.');
+  }catch(e){
+    $('execTable').innerHTML = '<div class="empty">No data/executions.json yet - the trade workflow has not run.</div>';
+  }
+})();
+</script>
+</body></html>

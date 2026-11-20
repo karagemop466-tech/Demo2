@@ -110,12 +110,10 @@ def main():
     for href in c.links:
         if href.endswith(".html") and not href.startswith(("http", "/")):
             linked.add(os.path.normpath(os.path.join(ROOT, href)))
-    for must in ("index.html", "questions.html", "suggestions.html", "flagged.html",
-                 "verification.html", "live.html", "resolved.html", "portfolio.html",
-                 "analysis.html", "gas.html", "elections.html", "culture.html",
-                 "crypto.html", "golf.html", "repo-review.html"):
-        if os.path.normpath(os.path.join(ROOT, "instrument-panel", "site", must)) not in linked:
-            blocking.append(f"index.html: does not link to instrument-panel/site/{must}")
+    entry = os.path.normpath(os.path.join(ROOT, "instrument-panel", "site", "index.html"))
+    if entry not in linked:
+        blocking.append("index.html: does not link to instrument-panel/site/index.html "
+                        "(the dashboard is unreachable from the landing page)")
 
     # every generated site page must be reachable from index.html or the site nav
     site_dir = os.path.join(ROOT, "instrument-panel", "site")

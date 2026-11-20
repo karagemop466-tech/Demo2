@@ -1,0 +1,13 @@
+{
+ "fetched_at": "2026-11-20T12:12:42Z",
+ "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
+ "runtime_seconds": 38.8,
+ "topics": [
+  "gas prices",
+  "elections",
+  "culture",
+  "crypto",
+  "golf"
+ ],
+ "docs_demo_env": "https://docs.kalshi.com/getting_started/demo_env"
+}

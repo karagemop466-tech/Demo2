@@ -1,10 +1,110 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trade Analysis & Strategies</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../verified/index.html">Verified Data</a><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Trade Analysis & Strategies</h1>
-<p>Analysis is computed <b>only</b> from your demo fills (Portfolio page → Load). Categories: topic (gas/elections/culture/crypto/golf/other), side (yes/no), and outcome once settled (win/loss vs <code>result</code>). Strategies are generated from observed patterns only; with no fills the correct output is “no strategy”.</p>
-<table><tr><th>Analysis</th><th>Method</th><th>Source</th></tr>
-<tr><td>Fill count by topic</td><td>Keyword map on fill ticker/title</td><td>Your fills via <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">portfolio/fills</a></td></tr>
-<tr><td>Win rate by topic/side</td><td>Join fills to settled <code>result</code></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets (settled)</a></td></tr>
-<tr><td>P&amp;L</td><td>Settlement value − entry price × count</td><td>Your fills + settled markets</td></tr>
-<tr><td>Strategy candidates</td><td>Only if ≥5 fills in a category; else “insufficient data”</td><td>Derived — no external source</td></tr>
-</table>
-<p class="muted">No backtest or strategy is shown until real demo fills exist. See <a href="questions.html">Questions</a> for what data is still missing.</p>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Analysis · Kalshi Demo Dashboard</title>
+<meta name="description" content="Demo-account trade analysis, categorisation and evidence-gated strategy candidates.">
+<link rel="stylesheet" href="../assets/style.css">
+</head><body>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../rankings.html">Dollar Rankings</a><a href="../live/index.html">Live Console</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html" aria-current="page">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<div class="wrap">
+
+<h1>Trade analysis and strategies</h1>
+<p class="lead">Performance of the demo account, categorised five ways, with strategy candidates
+that are only stated when the evidence clears a threshold. P&amp;L is computed from official
+fields; the arithmetic is written out so it can be checked.</p>
+<div id="state"></div>
+<div class="kpis" id="kpis"></div>
+
+<h2>Categorisation</h2>
+<div class="grid two">
+<div class="card"><h3>By topic</h3><p class="small muted">Trade category from the official series mapping.</p><div id="catTopic"></div></div>
+<div class="card"><h3>By side</h3><p class="small muted">From <code>outcome_side</code>.</p><div id="catSide"></div></div>
+<div class="card"><h3>By role at execution</h3><p class="small muted">From <code>is_taker</code>.</p><div id="catRole"></div></div>
+<div class="card"><h3>By entry price band</h3><p class="small muted">Price paid on the held side.</p><div id="catBand"></div></div>
+<div class="card"><h3>By eventual outcome</h3><p class="small muted">Open vs resolved yes/no.</p><div id="catOutcome"></div></div>
+<div class="card"><h3>Method</h3>
+<dl class="kv">
+<dt>Cost</dt><dd>contracts × price paid on the held side</dd>
+<dt>Payout</dt><dd>contracts × $1.00 when the held side equals the official <code>result</code>, else $0</dd>
+<dt>Realized P&amp;L</dt><dd>payout − cost − <code>fee_cost</code></dd>
+<dt>Open trades</dt><dd>cost and fees counted, realized deliberately left blank</dd>
+</dl>
+<p class="small muted">No value is estimated in this table. The only estimate anywhere on the site
+is the dashboard&#8217;s dollar-volume proxy, which is labelled.</p>
+</div>
+</div>
+
+<h2>Strategy candidates</h2>
+<div id="strat"></div>
+
+<h2>Trade-by-trade record</h2>
+<div id="tradeTable"></div>
+
+</div>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a></div></div></footer>
+<script src="../assets/site.js"></script>
+
+<script>
+(async function(){
+  const $=id=>document.getElementById(id);
+  let a;
+  try{ a = await KR.analysis(); }catch(e){
+    $('state').innerHTML = `<div class="notice bad">data/analysis.json missing (${KR.esc(e.message)}).</div>`; return;
+  }
+  const t=a.totals||{};
+  $('state').innerHTML = a.authenticated
+    ? `<div class="notice info">Computed from the authenticated demo account · generated ${KR.when(a.generated_at_utc)} · verdict <b>${KR.esc(a.verdict)}</b>: ${KR.esc(a.verdict_explanation||'')}</div>`
+    : `<div class="notice"><b>No demo API key configured</b>, so there is nothing to analyse yet. This is not a zero - it is an absence of data. Verdict: <b>${KR.esc(a.verdict)}</b>.</div>`;
+  $('kpis').innerHTML = `
+    <div class="kpi-card"><div class="k">Fills</div><div class="v">${t.fills||0}</div><div class="s">${t.resolved_fills||0} resolved · ${t.open_fills||0} open</div></div>
+    <div class="kpi-card"><div class="k">Invested</div><div class="v">${KR.usd(t.cost_dollars,2)}</div><div class="s">cost across fills</div></div>
+    <div class="kpi-card"><div class="k">Realized P&amp;L</div><div class="v ${(t.realized_pnl_dollars||0)>=0?'ok':'bad'}">${KR.usd(t.realized_pnl_dollars,2)}</div><div class="s">net of fees</div></div>
+    <div class="kpi-card"><div class="k">Hit rate</div><div class="v">${t.hit_rate===null||t.hit_rate===undefined?'—':KR.pct(t.hit_rate)}</div><div class="s">${t.wins||0}W / ${t.losses||0}L resolved</div></div>
+    <div class="kpi-card"><div class="k">Fees</div><div class="v">${KR.usd(t.fees_dollars,2)}</div><div class="s">official <code>fee_cost</code> sum</div></div>`;
+
+  const c=a.categories||{};
+  function catTable(el, key, label){
+    const g=c[key]||{};
+    const rows=Object.entries(g).map(([k,v])=>({k,v}));
+    KR.renderTable($(el), [
+      {label:label, get:r=>KR.esc(r.k)},
+      {label:'Fills', num:true, get:r=>r.v.n},
+      {label:'Resolved', num:true, get:r=>r.v.resolved_n},
+      {label:'Cost', num:true, get:r=>KR.usd(r.v.cost,2)},
+      {label:'Realized', num:true, get:r=>`<span class="${r.v.realized>=0?'ok':'bad'}">${KR.usd(r.v.realized,2)}</span>`},
+      {label:'Hit rate', num:true, get:r=>r.v.hit_rate===null?'—':KR.pct(r.v.hit_rate)},
+      {label:'Fees', num:true, get:r=>KR.usd(r.v.fees,2)}
+    ], rows, 'No fills in this category yet.');
+  }
+  catTable('catTopic','by_topic','Topic'); catTable('catSide','by_side','Side');
+  catTable('catRole','by_role','Role'); catTable('catBand','by_price_band','Price band');
+  catTable('catOutcome','by_outcome','Outcome');
+
+  const s=a.strategies||[];
+  if(!s.length){
+    $('strat').innerHTML = `<div class="empty"><b>No strategy is asserted.</b><br>
+      ${KR.esc(a.verdict_explanation||'')}<br>
+      <span class="small">A rule is only emitted when a category has at least 5 resolved fills and
+      positive realized P&amp;L. Below that threshold the honest answer is "not enough evidence",
+      and that is what this page shows.</span></div>`;
+  } else {
+    $('strat').innerHTML = s.map(x=>`<div class="card" style="margin-bottom:10px">
+      <h3>${KR.esc(x.id)} <span class="pill ${x.confidence==='medium'?'ok':'flag'}">${KR.esc(x.confidence)} confidence</span></h3>
+      <p>${KR.esc(x.rule)}</p>
+      <p class="small muted">Caveat: ${KR.esc(x.caveat)}</p></div>`).join('');
+  }
+  KR.renderTable($('tradeTable'), [
+    {label:'Time', get:t=>`<span class="small">${KR.when(t.created_time)}</span>`},
+    {label:'Topic', get:t=>KR.topicPill(t.topic)},
+    {label:'Market', get:t=>`<code>${KR.esc(t.ticker)}</code><br><span class="muted small">${KR.esc((t.title||'').slice(0,60))}</span>`},
+    {label:'Side', get:t=>`<span class="pill ${KR.esc(t.side)}">${KR.esc(t.side)}</span>`},
+    {label:'Contracts', num:true, get:t=>KR.num(t.count_fp,2)},
+    {label:'Price paid', num:true, get:t=>KR.usd(t.price_paid_dollars,3)},
+    {label:'Cost', num:true, get:t=>KR.usd(t.cost_dollars,2)},
+    {label:'Fee', num:true, get:t=>KR.usd(t.fee_dollars,3)},
+    {label:'Result', get:t=>KR.resultPill(t.market_result)},
+    {label:'Realized', num:true, get:t=>t.realized_pnl_dollars===null?'<span class="muted">open</span>':`<span class="${t.realized_pnl_dollars>=0?'ok':'bad'}">${KR.usd(t.realized_pnl_dollars,2)}</span>`}
+  ], a.trades||[], 'No trades recorded.');
+})();
+</script>
+</body></html>

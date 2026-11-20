@@ -1,0 +1,21 @@
+{
+ "fetched_at": "2026-11-20T12:12:40Z",
+ "probe_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=1",
+ "origin_sent": "https://karagemop466-tech.github.io",
+ "http_status": 200,
+ "observed_headers": {
+  "access-control-allow-origin": "https://karagemop466-tech.github.io",
+  "access-control-allow-headers": "",
+  "access-control-allow-methods": "",
+  "access-control-allow-credentials": "true",
+  "access-control-expose-headers": "X-Csrf-Token,X-Ratelimit-Limit,X-Ratelimit-Remaining,X-Ratelimit-Reset,X-Ratelimit-Cost",
+  "vary": "Origin, Accept-Encoding, Accept-Language",
+  "x-ratelimit-limit": "",
+  "x-ratelimit-remaining": "",
+  "x-ratelimit-reset": "",
+  "x-ratelimit-cost": ""
+ },
+ "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=1",
+ "docs": "https://docs.kalshi.com/getting_started/quick_start_market_data",
+ "note": "Observed response headers for an Origin-initiated request. If access-control-allow-origin is empty, browsers cannot fetch the API directly from a page origin and the site falls back to these snapshots."
+}

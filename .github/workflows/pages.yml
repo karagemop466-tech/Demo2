@@ -11,7 +11,7 @@ name: Deploy GitHub Pages
 #
 # The site is static. The browser also polls the Kalshi demo API directly for live prices;
 # that is allowed by the API's CORS policy (checked on every run and printed on
-# site/verification.html).
+# instrument-panel/site/verification.html).
 on:
   push:
     branches: [main]
@@ -75,14 +75,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main   # pick up the snapshot committed by the collect job
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Validate the data snapshot
+      - name: Verify internal links (site must not deploy broken)
+        run: python3 scripts/check_links.py
+      - name: Validate the instrument-panel snapshot
         run: python instrument-panel/tools/validate_data.py
-      - name: Check every internal link and anchor
+      - name: Check instrument-panel links and anchors
         run: python instrument-panel/tools/check_site.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

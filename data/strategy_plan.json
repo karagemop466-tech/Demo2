@@ -1,0 +1,15 @@
+{
+  "_comment": [
+    "Machine-readable trade intents. tools/execute_strategy.py validates every entry and",
+    "only sends anything when KALSHI_TRADING_ENABLED=1, a demo API key is configured, and",
+    "the run limits below are respected. With no orders listed nothing is ever sent.",
+    "side is from the buyer's point of view: yes or no. price is the YES price; a NO bet is",
+    "sent as book_side ask (sell YES) at 1 - price, per the documented book_side semantics."
+  ],
+  "run_limits": {
+    "max_notional_usd": 25,
+    "max_orders_per_run": 3,
+    "require_in_scope": true
+  },
+  "orders": []
+}

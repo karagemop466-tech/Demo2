@@ -1,108 +1,272 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kalshi Demo Dashboard · gas, elections, culture, crypto, golf</title>
-<meta name="description" content="Kalshi demo-market dashboard for gas prices, elections, culture, crypto and golf. Sourced data, resolution tracking, liquidity, verification, questions and a decision register.">
-<link rel="stylesheet" href="instrument-panel/site/assets/style.css">
-</head>
-<body>
-<header class="top">
-  <div class="bar">
-    <div class="brand">Kalshi <span>Demo</span> Dashboard</div>
-    <span class="tagline">gas · elections · culture · crypto · golf</span>
-    <span class="pill-demo">DEMO DATA</span>
-  </div>
-  <nav class="nav">
-    <a href="instrument-panel/site/index.html" class="active">Dashboard</a>
-    <a href="instrument-panel/site/live.html">Live &amp; liquidity</a>
-    <a href="instrument-panel/site/questions.html">Questions</a>
-    <a href="instrument-panel/site/suggestions.html">Suggestions</a>
-    <a href="instrument-panel/site/flagged.html">Flagged</a>
-    <a href="instrument-panel/site/verification.html">Verification</a>
-  </nav>
-</header>
-<main>
-<h1>Kalshi demo market dashboard</h1>
-<p class="lede">A dashboard for Kalshi's <b>demo</b> exchange covering five topics only — gas prices, elections, culture, crypto and golf. Every price, volume and resolution is copied from an official Kalshi API response, every table row links back to the response it came from, and anything that could not be confirmed is left blank and listed for review.</p>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live dashboard · Kalshi Demo Dashboard</title>
+<meta name="description" content="Live Kalshi demo markets for gas prices, elections, culture, crypto and golf with price charts, liquidity and resolution tracking.">
+<link rel="stylesheet" href="assets/style.css">
+</head><body>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="index.html" aria-current="page">Dashboard</a><a href="pages/executive-summary.html">Executive Summary</a><a href="pages/gas.html">Gas</a><a href="pages/elections.html">Elections</a><a href="pages/culture.html">Culture</a><a href="pages/crypto.html">Crypto</a><a href="pages/golf.html">Golf</a><a href="verified/index.html">Verified Data</a><a href="instrument-panel/site/index.html">Instrument Panel</a><a href="rankings.html">Dollar Rankings</a><a href="live/index.html">Live Console</a><a href="pages/resolutions.html">Resolutions</a><a href="pages/portfolio.html">Portfolio</a><a href="pages/analysis.html">Analysis</a><a href="pages/suggestions.html">Suggestions</a><a href="pages/questions.html">Questions</a><a href="pages/api-reference.html">API Reference</a><a href="pages/verification.html">Verification</a><a href="pages/flagged.html">Flagged</a><a href="pages/repo-review.html">Repo Review</a><a href="pages/sources.html">Sources</a></nav></div></header>
+<div class="wrap">
+<div class="card tight"><div class="row" style="justify-content:space-between"><div class="status" id="staleness">Snapshot <span class="muted">none yet</span></div><div class="status muted">0 in-scope markets · API key configured: no · source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a></div></div></div>
+<h1>Highest-dollar live markets in scope</h1>
+<p class="lead">Live Kalshi <b>demo</b> markets for five topics only — <b>gas prices,
+elections, culture, crypto, golf</b>. Ranked by <i>estimated</i> dollar volume, charted by
+contract price over time, with order-book liquidity at each price, tracked until the market
+resolves <b>yes</b> or <b>no</b>.</p>
+<p class="lead" style="font-size:.95em">All sections: <a href="rankings.html">Dollar Rankings</a> ·
+<a href="verified/index.html">Verified rows</a> · <a href="dashboard/index.html">Dashboard</a> ·
+<a href="site/index.html">Site</a> · <a href="intelligence/index.html">Intelligence</a> ·
+<a href="analysis.html">Analysis (root)</a> · <a href="portfolio.html">Portfolio status (root)</a> ·
+<a href="review.html">Review (root)</a></p>
+<div id="metaBar"></div>
+<noscript><div class="notice">JavaScript is required for the live panels. The static
+tables on the category, resolution and verification pages still work without it.</div></noscript>
 
-<div class="notice warn"><h4>This is the demo environment</h4>
-Data comes from <a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co</a>. Kalshi states that demo prices and behaviour “may not be reflective of those in real markets”. No real money is involved. Not financial advice.</div>
+<div class="kpis" id="kpis"></div>
 
-<div class="grid c3">
+<div class="grid two" style="margin-top:6px">
   <div class="card">
-    <h3><a href="instrument-panel/site/index.html">Overview →</a></h3>
-    <p class="small">Live totals, the highest open-interest in-scope markets, and a plain statement of what the dashboard can and cannot do.</p>
-    <p class="small muted">Snapshot in scope: <b>5 topics · 5 series queries · 2 sources per row</b></p>
+    <h3>Price movement <span class="muted">— X: time, Y: contract price ($)</span></h3>
+    <div class="row" style="margin-bottom:8px">
+      <div><label for="mktSel">Market</label>
+        <select id="mktSel" style="min-width:280px"></select></div>
+    </div>
+    <div class="row" style="margin-bottom:8px">
+      <label class="small" style="margin:0">Window</label>
+      <div class="seg" id="winSeg" role="group" aria-label="Chart window">
+        <button data-w="60" aria-pressed="false">60 s</button>
+        <button data-w="300" aria-pressed="false">5 min</button>
+        <button data-w="3600" aria-pressed="true">1 h</button>
+        <button data-w="21600" aria-pressed="false">6 h</button>
+        <button data-w="86400" aria-pressed="false">24 h</button>
+        <button data-w="604800" aria-pressed="false">7 d</button>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:8px">
+      <label class="small" style="margin:0">Series</label>
+      <div class="seg" id="fieldSeg" role="group" aria-label="Series to plot">
+        <button data-f="mid" aria-pressed="true">Quoted mid <span class="small">(derived)</span></button>
+        <button data-f="close" aria-pressed="false">Last trade</button>
+        <button data-f="yes_bid_close" aria-pressed="false">Yes bid</button>
+        <button data-f="yes_ask_close" aria-pressed="false">Yes ask</button>
+      </div>
+    </div>
+    <div class="chartwrap"><canvas id="chart" class="chart"></canvas></div>
+    <div class="legend">
+      <span><span class="swatch" style="background:#00c389"></span>contract price, USD per $1 contract (0.00 - 1.00)</span>
+      <span id="chartNote" class="muted"></span>
+    </div>
+    <p class="small muted" style="margin-top:6px">Long windows use official candlesticks
+      (<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">Get Market Candlesticks</a>,
+      period 1 min / 1 h / 1 day, max 5,000 periods per request). Short windows use the
+      collector's own tick history, which is sampled every 10 minutes — a 60-second window
+      will legitimately be empty. Nothing is interpolated.</p>
   </div>
+
   <div class="card">
-    <h3><a href="instrument-panel/site/live.html">Live &amp; liquidity →</a></h3>
-    <p class="small">Contract price against time in 60-second to 6-hour windows, and the full orderbook showing how many contracts sit at each price.</p>
-  </div>
-  <div class="card">
-    <h3><a href="instrument-panel/site/resolved.html">Resolutions →</a></h3>
-    <p class="small">Every settled in-scope market with the YES/NO outcome Kalshi recorded. Tracked until the market resolves.</p>
+    <h3>Liquidity <span class="muted">— contracts available at each price</span></h3>
+    <p class="small muted" style="margin-top:0">Raw bids from
+      <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook">Get Market Orderbook</a>.
+      Kalshi returns <b>yes bids and no bids only</b>; a NO bid at price <i>p</i> is the same
+      as a YES ask at <i>1 − p</i>, so the ask side here is <b>derived</b> and labelled
+      as such.</p>
+    <div id="liqSummary" class="kpis" style="margin:10px 0 4px"></div>
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
+      <div><h3 class="small">YES bids</h3><div id="liqBid"></div></div>
+      <div><h3 class="small">YES asks <span class="muted">(derived)</span></h3><div id="liqAsk"></div></div>
+    </div>
+    <p class="small muted" id="liqNote"></p>
   </div>
 </div>
-<div class="grid c3" style="margin-top:14px">
-  <div class="card">
-    <h3><a href="instrument-panel/site/portfolio.html">Portfolio &amp; trades →</a></h3>
-    <p class="small">Portfolio and order execution need a private key, which cannot live in a public site. This page explains the options and runs a trade classifier that needs no key.</p>
-  </div>
-  <div class="card">
-    <h3><a href="instrument-panel/site/questions.html">Questions →</a></h3>
-    <p class="small">Every question that must be answered before a decision: what is known, what is missing, and the concrete step that would discover it.</p>
-  </div>
-  <div class="card">
-    <h3><a href="instrument-panel/site/suggestions.html">Suggestions →</a></h3>
-    <p class="small">Ten decisions with options, trade-offs and a recommendation. Nothing is implemented until you choose.</p>
-  </div>
+
+<h2>Markets ranked by estimated dollar volume</h2>
+<div class="notice info"><b>What "highest dollar amount" means here.</b> The Trade API has no
+  single dollar-volume field. Every row therefore shows the raw official fields
+  (<code>volume_fp</code>, <code>open_interest_fp</code>, <code>last_price_dollars</code>) and
+  one clearly-labelled <b>estimate</b>: <code>volume_fp × last_price_dollars</code>. See
+  <a href="pages/flagged.html">Flagged F2</a> and <a href="pages/questions.html">Q1</a>.</div>
+<div class="row" style="margin:10px 0">
+  <div><label for="topicFilter">Topic</label>
+    <select id="topicFilter"><option value="">All in-scope</option>
+      <option value="gas">Gas</option><option value="elections">Elections</option>
+      <option value="culture">Culture</option><option value="crypto">Crypto</option>
+      <option value="golf">Golf</option></select></div>
+  <div><label for="sortSel">Sort</label>
+    <select id="sortSel">
+      <option value="est">est. dollar volume (desc)</option>
+      <option value="volume">volume_fp (desc)</option>
+      <option value="oi">open_interest_fp (desc)</option>
+      <option value="close">close time (soonest)</option>
+    </select></div>
+  <div><label for="qBox">Filter text</label><input id="qBox" placeholder="ticker or title"></div>
 </div>
+<div id="mktTable"></div>
 
-<h2>Topics in scope</h2>
-<div class="tablewrap"><table>
-<thead><tr><th>Topic</th><th>How membership is decided (Kalshi's own fields)</th><th>Page</th></tr></thead>
-<tbody>
-<tr><td><span class="b gas">Gas prices</span></td><td class="small">Series tagged <b>Oil and energy</b> under Economics, plus Economics series naming gas, gasoline or diesel. Daily AAA state averages.</td><td><a href="instrument-panel/site/gas.html">Gas →</a></td></tr>
-<tr><td><span class="b elections">Elections</span></td><td class="small">Series whose discovery categories include <b>Elections</b>.</td><td><a href="instrument-panel/site/elections.html">Elections →</a></td></tr>
-<tr><td><span class="b culture">Culture</span></td><td class="small">Series in the <b>Culture</b> category. Entertainment contracts (music, awards, TV, movies, games) are shown separately and never mixed in.</td><td><a href="instrument-panel/site/culture.html">Culture →</a></td></tr>
-<tr><td><span class="b crypto">Crypto</span></td><td class="small">Series whose discovery categories include <b>Crypto</b>.</td><td><a href="instrument-panel/site/crypto.html">Crypto →</a></td></tr>
-<tr><td><span class="b golf">Golf</span></td><td class="small">Series carrying the <b>Golf</b> tag — Golf is a tag under Sports, not a category of its own.</td><td><a href="instrument-panel/site/golf.html">Golf →</a></td></tr>
-</tbody></table></div>
+<h2>Tracked until resolution</h2>
+<p class="lead">Live rows stay on this page until Kalshi settles the market, at which point the
+official <code>result</code> field (<code>yes</code>/<code>no</code>) moves the row to
+<a href="pages/resolutions.html">Resolutions</a>. Recently settled in-scope markets:</p>
+<div id="resolvedMini"></div>
 
-<h2>Trust, review and decisions</h2>
-<div class="tablewrap"><table>
-<thead><tr><th>Page</th><th>What it answers</th></tr></thead>
-<tbody>
-<tr><td><a href="instrument-panel/site/verification.html">Verification</a></td><td class="small">Every endpoint called, the exact scope query per topic, the CORS probe result, the automated checks, and an explicit list of what is <b>not</b> verified.</td></tr>
-<tr><td><a href="instrument-panel/site/repo-review.html">Repo review</a></td><td class="small">A claim-by-claim check of what this repository asserts against official Kalshi documentation, with a verdict and source link for each.</td></tr>
-<tr><td><a href="instrument-panel/site/flagged.html">Flagged for Review</a></td><td class="small">Every irregularity — in Kalshi's demo data and in this repository's history — with evidence links. Nothing here blocks the site; it blocks certainty.</td></tr>
-<tr><td><a href="instrument-panel/site/analysis.html">Analysis</a></td><td class="small">Calibration of resolved contracts against their own prices, liquidity concentration, and what cannot be concluded.</td></tr>
-</tbody></table></div>
+</div>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="pages/sources.html">Sources</a> · <a href="pages/verification.html">Verification</a> · <a href="pages/flagged.html">Flagged for Review</a> · <a href="pages/repo-review.html">Repo Review</a></div></div></footer>
+<script src="assets/site.js"></script>
 
-<h2>How the data gets here</h2>
-<p class="small">A GitHub Actions workflow calls the public Kalshi demo API every 15 minutes, checks the result (a source link on every row, prices inside $0.00–$1.00, derived dollar values reconciling with their inputs, snapshot younger than six hours) and commits the snapshot. Your browser also polls the same API directly for live prices; a probe with <code>Origin: karagemop466-tech.github.io</code> returned that origin in <code>access-control-allow-origin</code>, so no proxy is needed for public data. Details and sources: <a href="instrument-panel/site/verification.html">Verification</a>.</p>
+<script>
+(async function(){
+  const $ = id => document.getElementById(id);
+  let state = { window: 3600, field: 'mid', ticker: null, snap:null, filtered:[] };
 
-<h2>Other dashboards in this repository</h2>
-<p class="small muted">Earlier sessions published three more dashboards before this one existed. They are kept in place rather than deleted, because they are other sessions' work and some contain material not yet re-verified here:</p>
-<div class="tablewrap"><table>
-<thead><tr><th>Path</th><th>Owner session</th><th>Note</th></tr></thead>
-<tbody>
-<tr><td><a href="dashboard/index.html">dashboard/</a></td><td class="small">arena-3420a90d</td><td class="small">Nine pages, own snapshot. Different scope model; see its own flag list.</td></tr>
-<tr><td><a href="verified/index.html">verified/</a></td><td class="small">6822d767 and f1751c8f</td><td class="small">Row-level sourced tables and a live dashboard.</td></tr>
-<tr><td><a href="pages/executive-summary.html">pages/</a> + root monitor</td><td class="small">e3f65782</td><td class="small">First dashboard, dark theme, live browser fetch. It contains a credential-entry form that a later PR removed on a branch that was never merged — see <a href="instrument-panel/site/flagged.html">F-08</a> before using it.</td></tr>
-<tr><td><a href="analysis.html">analysis.html</a>, <a href="portfolio.html">portfolio.html</a>, <a href="review.html">review.html</a></td><td class="small">407c72e2</td><td class="small">Light-theme notes pages, no shared navigation.</td></tr>
-</tbody></table></div>
+  try{
+    const snap = await KR.snapshot();
+    state.snap = snap;
+    KR.staleness($('staleness'), snap.generated_at_utc);
+    $('metaBar').innerHTML = '';
+    const c = snap.counts || {};
+    const pt = c.per_topic || {};
+    $('kpis').innerHTML = `
+      <div class="kpi-card"><div class="k">In-scope live markets</div>
+        <div class="v">${KR.num(c.markets_in_scope,0)}</div>
+        <div class="s">gas ${pt.gas||0} · elections ${pt.elections||0} · culture ${pt.culture||0} · crypto ${pt.crypto||0} · golf ${pt.golf||0}</div></div>
+      <div class="kpi-card"><div class="k">Resolved (tracked) </div>
+        <div class="v">${KR.num(c.resolved_in_scope,0)}</div>
+        <div class="s">official yes/no outcomes</div></div>
+      <div class="kpi-card"><div class="k">Series mapped</div>
+        <div class="v">${KR.num(c.series_index,0)}</div>
+        <div class="s">via official tags + categories</div></div>
+      <div class="kpi-card"><div class="k">Order books pulled</div>
+        <div class="v">${KR.num(c.orderbooks,0)}</div>
+        <div class="s">top markets by est. volume</div></div>
+      <div class="kpi-card"><div class="k">Exchange</div>
+        <div class="v ${(snap.exchange_status||{}).response && snap.exchange_status.response.exchange_active ? 'ok':'warn'}">${(snap.exchange_status||{}).response && snap.exchange_status.response.exchange_active ? 'active':'see log'}</div>
+        <div class="s">demo /exchange/status</div></div>`;
 
-<h2>Repository docs</h2>
-<p class="small"><a href="README.md">README</a> · <a href="COORDINATION.md">COORDINATION.md</a> (session log, claims, verification record, PR history) · <a href="instrument-panel/tools/kalshi_collect.py">collector</a> · <a href="instrument-panel/tools/validate_data.py">validator</a> · <a href="instrument-panel/tools/build_dashboard_site.py">site builder</a> · <a href="instrument-panel/tools/check_site.py">link checker</a></p>
-</main>
-<footer class="site">
-  <p><b>Sources.</b> Kalshi demo Trade API · <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment</a> ·
-  <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> ·
-  <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement</a>.</p>
-  <p><b>Demo data only.</b> Not financial advice. Unconfirmed values are blank and flagged. Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">github.com/karagemop466-tech/Demo2</a></p>
-</footer>
-</body>
-</html>
+    // market select: ranked list
+    const rows = (snap.markets||[]).slice().sort((a,b)=>(b.est_dollar_volume||0)-(a.est_dollar_volume||0));
+    state.filtered = rows;
+    $('mktSel').innerHTML = rows.slice(0,80).map(m=>{
+      const t = m.market_title || m.market_ticker;
+      const short = t.length>70 ? t.slice(0,68)+'…' : t;
+      return `<option value="${KR.esc(m.market_ticker)}">[${KR.esc(m.topic)}] ${KR.esc(short)}</option>`;
+    }).join('');
+    state.ticker = rows.length ? rows[0].market_ticker : null;
+    if(state.ticker) $('mktSel').value = state.ticker;
+
+    renderTable(rows);
+    await drawChart();
+    await renderLiquidity();
+    renderResolved(snap.resolutions||[]);
+  }catch(e){
+    $('kpis').innerHTML = `<div class="notice bad">Data snapshot could not be loaded: ${KR.esc(e.message)}.
+      The snapshot is produced by <code>.github/workflows/refresh-data.yml</code>; if this is the first
+      run, wait for the workflow (Actions → “Refresh Kalshi demo data”). No values are invented.</div>`;
+  }
+
+  function renderTable(rows){
+    const topic = $('topicFilter').value, q = $('qBox').value.trim().toLowerCase();
+    let r = rows.filter(m=>(!topic||m.topic===topic) &&
+      (!q || (m.market_ticker+' '+(m.market_title||'')).toLowerCase().includes(q)));
+    const s = $('sortSel').value;
+    r.sort((a,b)=>{
+      if(s==='volume') return (parseFloat(b.volume_fp)||0)-(parseFloat(a.volume_fp)||0);
+      if(s==='oi') return (parseFloat(b.open_interest_fp)||0)-(parseFloat(a.open_interest_fp)||0);
+      if(s==='close') return String(a.close_time||'').localeCompare(String(b.close_time||''));
+      return (b.est_dollar_volume||0)-(a.est_dollar_volume||0);
+    });
+    KR.renderTable($('mktTable'), [
+      {label:'#', get:(m)=>rows.indexOf(m)+1, num:true},
+      {label:'Topic', get:(m)=>KR.topicPill(m.topic)},
+      {label:'Market', get:(m)=>`<b>${KR.esc(m.market_title||m.market_ticker)}</b><br><span class="muted small">${KR.esc(m.market_ticker)}</span>`},
+      {label:'Last $', num:true, get:(m)=>KR.usd(m.last_price_dollars,2)},
+      {label:'Yes bid', num:true, get:(m)=>KR.usd(m.yes_bid_dollars,2)},
+      {label:'Yes ask', num:true, get:(m)=>KR.usd(m.yes_ask_dollars,2)},
+      {label:'Volume', num:true, get:(m)=>KR.num(m.volume_fp,0)},
+      {label:'Open int.', num:true, get:(m)=>KR.num(m.open_interest_fp,0)},
+      {label:'Est. $ volume', num:true, get:(m)=>`${KR.usd(m.est_dollar_volume,0)} <span class="pill flag">est.</span>`},
+      {label:'Closes', get:(m)=>`<span class="small">${KR.when(m.close_time)}</span>`},
+      {label:'Source', get:(m)=>KR.link(m.market_url,'Kalshi')+' · <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">API</a>'}
+    ], r.slice(0,200), 'No markets match this filter in the current snapshot.');
+  }
+
+  async function drawChart(){
+    if(!state.ticker) return;
+    const snap = state.snap;
+    const per = (snap.candles||{})[state.ticker] || {};
+    let intervalKey = '1m';
+    if(state.window > 3600) intervalKey = '1h';
+    if(state.window > 86400) intervalKey = '1d';
+    // pick the candle set whose period best matches the window
+    if(state.window <= 3600) intervalKey='1m'; else if(state.window<=86400) intervalKey='1h'; else intervalKey='1d';
+    const cset = (per[intervalKey]||{}).candles || [];
+    let hist = [];
+    try{ const h = await KR.history(); hist = ((h.points||{})[state.ticker]||[]); }catch(e){}
+    const fieldMap = {mid:'derived_mid', close:'close_dollars', yes_bid_close:'yes_bid_close', yes_ask_close:'yes_ask_close'};
+    const candles = cset.map(c=>({ts:c.ts, close_dollars:c.close, yes_bid_close:c.yes_bid_close,
+                                  yes_ask_close:c.yes_ask_close, derived_mid:c.derived_mid}));
+    const series = KR.buildSeries(candles, hist, fieldMap[state.field])
+      .filter(p=>p.t >= Date.now()-state.window*1000 && p.t <= Date.now()+60000);
+    KR.drawChart(document.getElementById('chart'), series, {
+      spanSeconds: state.window,
+      emptyMessage: state.window<=300
+        ? 'No ticks inside this window yet. The collector samples every 10 minutes, so a 60-second or 5-minute window only fills when a run has just completed.'
+        : 'No price points in this window. Candlestick price objects are empty in periods with no trade - try the quoted-mid series or a longer window.'
+    });
+    const srcCount = series.filter(p=>p.src==='candle').length, tickCount = series.length-srcCount;
+    const label = state.field==='mid' ? 'quoted mid (derived from official bid/ask closes)'
+      : state.field==='close' ? 'last traded price - empty in periods with no trade'
+      : state.field==='yes_bid_close' ? 'yes bid close' : 'yes ask close';
+    $('chartNote').innerHTML = `${series.length} points · ${tickCount} collector ticks + ${srcCount} candlesticks `
+      + `(period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`;
+  }
+
+  async function renderLiquidity(){
+    const snap = state.snap, ob = (snap.orderbooks||{})[state.ticker];
+    if(!ob || ob.error){ $('liqSummary').innerHTML=''; $('liqBid').innerHTML='<div class="empty">No order book in this snapshot.</div>'; $('liqAsk').innerHTML=''; $('liqNote').textContent = ob&&ob.error?('Order book request failed: '+ob.error):''; return; }
+    $('liqSummary').innerHTML = `
+      <div class="kpi-card"><div class="k">Best yes bid</div><div class="v">${KR.usd(ob.best_yes_bid,2)}</div><div class="s">raw field</div></div>
+      <div class="kpi-card"><div class="k">Best yes ask</div><div class="v">${KR.usd(ob.best_yes_ask_derived,2)}</div><div class="s">derived from no bids</div></div>
+      <div class="kpi-card"><div class="k">Spread</div><div class="v">${KR.usd(ob.spread_derived,3)}</div><div class="s">ask − bid</div></div>`;
+    const fmt = a => KR.renderTable(null, [], []) || '';
+    KR.renderTable($('liqBid'), [
+      {label:'Price', num:true, get:r=>KR.usd(r[0],2)},
+      {label:'Contracts', num:true, get:r=>KR.num(r[1],2)}
+    ], (ob.yes_bids||[]).slice(0,12).map(r=>({0:r[0],1:r[1],_r:r})).map(x=>({...x, 0:x[0],1:x[1]})), 'No bids.');
+    // simple manual render to keep array access obvious
+    $('liqBid').innerHTML = tableOf('Yes bid', ob.yes_bids||[], 'No bids resting.');
+    $('liqAsk').innerHTML = tableOf('Yes ask (derived)', ob.derived_yes_asks||[], 'No asks (no NO bids resting).');
+    $('liqNote').innerHTML = `Total resting: <b>${KR.num(ob.yes_bid_contracts,2)}</b> contracts bid · <b>${KR.num(ob.derived_ask_contracts,2)}</b> offered. Request: <code>${KR.esc(ob.raw_request||'')}</code>`;
+  }
+  function tableOf(label, arr, empty){
+    if(!arr.length) return `<div class="empty">${empty}</div>`;
+    return '<div class="tablewrap"><table><thead><tr><th>Price</th><th class="num">Contracts</th></tr></thead><tbody>'+
+      arr.slice(0,12).map(r=>`<tr><td>${KR.usd(r[0],2)}</td><td class="num">${KR.num(r[1],2)}</td></tr>`).join('')+
+      '</tbody></table></div>';
+  }
+
+  function renderResolved(rows){
+    const r = rows.slice().sort((a,b)=>String(b.settlement_ts||'').localeCompare(String(a.settlement_ts||''))).slice(0,12);
+    KR.renderTable($('resolvedMini'), [
+      {label:'Topic', get:m=>KR.topicPill(m.topic)},
+      {label:'Market', get:m=>`<b>${KR.esc(m.title||m.market_ticker)}</b><br><span class="muted small">${KR.esc(m.market_ticker)}</span>`},
+      {label:'Result', get:m=>KR.resultPill(m.result)},
+      {label:'Settlement $', num:true, get:m=>KR.usd(m.settlement_value_dollars,2)},
+      {label:'Settled (UTC)', get:m=>`<span class="small">${KR.when(m.settlement_ts)}</span>`},
+      {label:'Source', get:m=>`<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>`}
+    ], r, 'No resolved in-scope markets in the current snapshot yet.');
+  }
+
+  // events
+  $('mktSel').addEventListener('change', async e=>{ state.ticker=e.target.value; await drawChart(); await renderLiquidity(); });
+  document.querySelectorAll('#winSeg button').forEach(b=>b.addEventListener('click', async ()=>{
+    document.querySelectorAll('#winSeg button').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); state.window=parseInt(b.dataset.w,10); await drawChart();
+  }));
+  document.querySelectorAll('#fieldSeg button').forEach(b=>b.addEventListener('click', async ()=>{
+    document.querySelectorAll('#fieldSeg button').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); state.field=b.dataset.f; await drawChart();
+  }));
+  ['topicFilter','sortSel','qBox'].forEach(id=>$(id).addEventListener('input', ()=>renderTable(state.filtered)));
+  window.addEventListener('resize', ()=>{ KR.drawChart(document.getElementById('chart'), [], {}); drawChart(); });
+})();
+</script>
+
+</body></html>
