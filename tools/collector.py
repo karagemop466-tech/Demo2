@@ -39,6 +39,10 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 
+# The ROI model lives next to the collector so both write the same numbers.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import roi_model  # noqa: E402
+
 # --- endpoints (verified: docs.kalshi.com/getting_started/api_environments.md) ----
 DEMO_REST = "https://external-api.demo.kalshi.co/trade-api/v2"
 PROD_REST = "https://external-api.kalshi.com/trade-api/v2"
@@ -46,6 +50,11 @@ PROD_REST = "https://external-api.kalshi.com/trade-api/v2"
 # In-scope topics only (user requirement). Matching is done on the OFFICIAL Kalshi
 # `series.category` / series ticker, not on free-text guesses — see TOPIC_RULES.
 TOPICS = ["gas", "elections", "culture", "crypto", "golf"]
+
+# Size caps for the committed tick history. Without them the ledger grows without
+# bound (10,241 markets x 288 points) and every scheduled run pushes megabytes.
+HISTORY_MARKETS = 400
+HISTORY_POINTS = 72
 
 # API request log: (url, http_status, ok, note). Written to data/api_log.json so the
 # site can prove which request produced which rows.
@@ -296,6 +305,7 @@ def collect_scope(signer: Signer | None) -> dict:
     rows: list[dict] = []
     unmapped_series: dict[str, int] = {}
     enriched: set[str] = set()
+    events_meta: dict[str, dict] = {}
     for ev in events:
         st = ev.get("series_ticker") or ""
         topic = topic_cache.get(st)
@@ -327,6 +337,31 @@ def collect_scope(signer: Signer | None) -> dict:
         # series metadata for the row below (was missing: NameError `series` crashed the
         # collector on the first in-scope market — see session eeb796d7 E-5 in COORDINATION.md)
         series = series_idx.get(st) or {}
+        ev_ticker = ev.get("event_ticker")
+        if ev_ticker and ev_ticker not in events_meta:
+            # Event-level metadata, stored once instead of on every market row.
+            # `settlement_sources` is an official field of the EVENT object
+            # (https://docs.kalshi.com/api-reference/events/get-events) - verified live
+            # on GET /events/{event_ticker} in the demo environment.
+            events_meta[ev_ticker] = {
+                "event_ticker": ev_ticker,
+                "topic": topic,
+                "series_ticker": st,
+                "title": ev.get("title"),
+                "sub_title": ev.get("sub_title"),
+                "category": ev.get("category"),
+                "mutually_exclusive": ev.get("mutually_exclusive"),
+                "settlement_sources": [
+                    {"name": s.get("name"), "url": s.get("url")}
+                    for s in (ev.get("settlement_sources") or [])
+                ],
+                "series_category": series.get("category"),
+                "series_categories": series.get("categories"),
+                "contract_terms_url": series.get("contract_terms_url"),
+                "contract_url": series.get("contract_url"),
+                "event_url": f"{DEMO_REST}/events/{ev_ticker}",
+                "market_count": len(ev.get("markets") or []),
+            }
         for m in ev.get("markets") or []:
             rows.append(
                 {
@@ -361,15 +396,16 @@ def collect_scope(signer: Signer | None) -> dict:
                     # official `market_url`. Nothing inferred or rewritten.
                     "rules_primary_head": (m.get("rules_primary") or "")[:160] or None,
                     "exchange_index": m.get("exchange_index"),
-                    "settlement_sources": ev.get("settlement_sources"),
+                    # `settlement_sources` and the series-level contract URLs are the
+                    # same for every market of an event/series, so they are stored once
+                    # per event in data/events.json instead of on every market row.
+                    # `settlement_source_count` keeps the count visible on the row.
+                    "settlement_source_count": len(ev.get("settlement_sources") or []),
                     "series_category": series.get("category"),
                     "series_categories": series.get("categories"),
-                    "contract_terms_url": series.get("contract_terms_url"),
-                    "contract_url": series.get("contract_url"),
                     # Verifiable official link only: the exact API endpoint that produced
                     # this row. A human web-UI market URL could not be confirmed from an
                     # official source, so it is not invented (blank + flagged on the site).
-                    "event_url": f"{DEMO_REST}/events/{ev.get('event_ticker')}",
                     "market_url": f"{DEMO_REST}/markets/{m.get('ticker')}",
                 }
             )
@@ -390,6 +426,7 @@ def collect_scope(signer: Signer | None) -> dict:
         "topic_catalog": catalog,
         "events_scanned": len(events),
         "markets_in_scope": rows,
+        "events_meta": events_meta,
         "unmapped_series": dict(sorted(unmapped_series.items(), key=lambda kv: -kv[1])[:50]),
         "series_inventory": inventory(series_idx),
         "source_requests": ["GET /series", "GET /events?status=open&with_nested_markets=true"],
@@ -530,6 +567,13 @@ def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list
                 "expiration_value": m.get("expiration_value"),
                 "volume_fp": m.get("volume_fp"),
                 "open_interest_fp": m.get("open_interest_fp"),
+                # Kept so the simulated-strategy backtest can price an entry and score
+                # the same market with the same model (tools/roi_model.py).
+                "last_price_dollars": m.get("last_price_dollars"),
+                "yes_bid_dollars": m.get("yes_bid_dollars"),
+                "yes_ask_dollars": m.get("yes_ask_dollars"),
+                "yes_bid_size_fp": m.get("yes_bid_size_fp"),
+                "yes_ask_size_fp": m.get("yes_ask_size_fp"),
                 "rules_primary_head": (m.get("rules_primary") or "")[:160] or None,
                 "market_url": f"{DEMO_REST}/markets/{m.get('ticker')}" if m.get("ticker") else None,
             }
@@ -545,17 +589,177 @@ def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list
     return out
 
 
+def collect_trades(rows: list[dict], signer: Signer | None, pages: int = 3) -> list[dict]:
+    """GET /markets/trades - every completed transaction on the demo exchange.
+
+    Docs: https://docs.kalshi.com/api-reference/market/get-trades
+      limit    0..1000 (default 100)
+      cursor   pagination cursor
+      min_ts   only items after this unix timestamp
+      max_ts   only items before this unix timestamp
+
+    The endpoint returns trades for ALL markets, so the rows are filtered to the
+    in-scope topics. The prints are the rawest live signal the API gives us and are
+    what the two chat feeds on the site are built from.
+    """
+    scope_tickers = {r["market_ticker"] for r in rows if r.get("market_ticker")}
+    topic_of = {r["market_ticker"]: r.get("topic") for r in rows if r.get("market_ticker")}
+    title_of = {r["market_ticker"]: (r.get("market_title") or r.get("event_title")) for r in rows}
+    out: list[dict] = []
+    cursor = ""
+    for _ in range(max(1, pages)):
+        url = DEMO_REST + "/markets/trades?limit=1000"
+        if cursor:
+            url += "&cursor=" + urllib.parse.quote(cursor)
+        j, status = get_json(url, signer)
+        if not j:
+            break
+        batch = j.get("trades") or []
+        for t in batch:
+            tk = t.get("ticker")
+            if tk not in scope_tickers:
+                continue
+            out.append(
+                {
+                    "trade_id": t.get("trade_id"),
+                    "ticker": tk,
+                    "topic": topic_of.get(tk),
+                    "title": title_of.get(tk),
+                    "count_fp": t.get("count_fp"),
+                    "yes_price_dollars": t.get("yes_price_dollars"),
+                    "no_price_dollars": t.get("no_price_dollars"),
+                    "taker_side": t.get("taker_side"),
+                    "taker_book_side": t.get("taker_book_side"),
+                    "is_block_trade": t.get("is_block_trade"),
+                    "created_time": t.get("created_time"),
+                }
+            )
+        cursor = j.get("cursor") or ""
+        if not cursor or not batch:
+            break
+    out.sort(key=lambda t: str(t.get("created_time") or ""), reverse=True)
+    return out
+
+
+def detect_jumps(trades: list[dict], threshold: float = 0.10) -> list[dict]:
+    """Price moves of at least `threshold` dollars between consecutive prints.
+
+    Only consecutive prints of the SAME market are compared, and only prints that
+    carry a yes price. The cause of a move is not in the API, so no cause is recorded
+    here - the site links the market and flags the cause as unverified.
+    """
+    by_ticker: dict[str, list[dict]] = {}
+    for t in trades:
+        p = t.get("yes_price_dollars")
+        if p in (None, ""):
+            continue
+        try:
+            price = float(p)
+        except (TypeError, ValueError):
+            continue
+        by_ticker.setdefault(t["ticker"], []).append(
+            {
+                "t": t.get("created_time"),
+                "price": price,
+                "count_fp": t.get("count_fp"),
+                "trade_id": t.get("trade_id"),
+            }
+        )
+    jumps: list[dict] = []
+    for ticker, pts in by_ticker.items():
+        pts.sort(key=lambda x: str(x["t"] or ""))
+        for a, b in zip(pts, pts[1:]):
+            change = b["price"] - a["price"]
+            if abs(change) >= threshold:
+                jumps.append(
+                    {
+                        "ticker": ticker,
+                        "topic": next((t.get("topic") for t in trades if t["ticker"] == ticker), None),
+                        "from_time": a["t"],
+                        "to_time": b["t"],
+                        "from_price": a["price"],
+                        "to_price": b["price"],
+                        "change": round(change, 4),
+                        "direction": "up" if change > 0 else "down",
+                        "to_count_fp": b.get("count_fp"),
+                        "to_trade_id": b.get("trade_id"),
+                        "cause": None,
+                        "cause_status": "unverified - not derivable from the Kalshi API",
+                        "source": f"{DEMO_REST}/markets/trades?limit=1000",
+                    }
+                )
+    jumps.sort(key=lambda j: str(j.get("to_time") or ""), reverse=True)
+    return jumps
+
+
+def write_csv(rows: list[dict], name: str, columns: list[str]) -> None:
+    """Write the complete in-scope market list as a plain CSV table."""
+    import csv
+
+    DATA.mkdir(exist_ok=True)
+    p = DATA / name
+    with p.open("w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(columns)
+        for r in rows:
+            w.writerow(["" if r.get(c) is None else r.get(c) for c in columns])
+    try:
+        shown = p.relative_to(ROOT)
+    except ValueError:
+        shown = p
+    print(f"wrote {shown} ({p.stat().st_size:,} bytes)")
+
+
+def build_ticker_index(rows: list[dict]) -> dict:
+    """Compact ticker -> summary map used by the live feeds in the browser."""
+    idx: dict[str, list] = {}
+    for r in rows:
+        tk = r.get("market_ticker")
+        if not tk:
+            continue
+        idx[tk] = [
+            r.get("topic"),
+            r.get("roi_score"),
+            r.get("last_price_dollars"),
+            r.get("yes_bid_dollars"),
+            r.get("yes_ask_dollars"),
+            r.get("volume_fp"),
+            r.get("open_interest_fp"),
+            r.get("close_time"),
+            (r.get("market_title") or "")[:90],
+        ]
+    return idx
+
+
 def exchange_status(signer: Signer | None) -> dict:
     j, status = get_json(DEMO_REST + "/exchange/status", signer)
     return {"http_status": status, "response": j}
 
 
 # --------------------------------------------------------------------------- main
-def write_json(name: str, payload: Any) -> None:
+def write_json(name: str, payload: Any, pretty: bool = False) -> None:
+    """Write one data file.
+
+    The large files are written WITHOUT indentation on purpose. The snapshot used to
+    be written with indent=1, which inflates the JSON by ~3.4x; the market list was
+    then stored twice (as `markets` and again as `by_topic`). Together those two
+    things made data/snapshot.json 47 MB, so every scheduled run had to push tens of
+    megabytes to `main` and the refresh workflow started failing at the push step.
+    Compact JSON plus a single copy of each row is ~10x smaller and is still plain
+    JSON that any tool can read.
+    """
     DATA.mkdir(exist_ok=True)
     p = DATA / name
-    p.write_text(json.dumps(payload, indent=1, sort_keys=False) + "\n")
-    print(f"wrote {p.relative_to(ROOT)} ({p.stat().st_size} bytes)")
+    if pretty:
+        text = json.dumps(payload, indent=1, sort_keys=False)
+    else:
+        text = json.dumps(payload, separators=(",", ":"), sort_keys=False)
+    p.write_text(text + "\n")
+    try:
+        shown = p.relative_to(ROOT)
+    except ValueError:
+        shown = p
+    print(f"wrote {shown} ({p.stat().st_size:,} bytes)")
 
 
 def main() -> int:
@@ -574,15 +778,21 @@ def main() -> int:
     for r in rows:
         r["est_dollar_volume"] = implied_dollar_volume(r)
 
+    # transparent, published high-ROI score (tools/roi_model.py)
+    rows = roi_model.score_rows(rows)
+
     books = {} if args.scope_only else collect_orderbooks(rows, signer)
     candles = {} if args.scope_only else collect_candles(rows, signer)
     resolutions = collect_resolutions(signer)
+    trades = [] if args.scope_only else collect_trades(rows, signer)
+    jumps = detect_jumps(trades) if trades else []
 
     by_topic = {t: [r for r in rows if r["topic"] == t] for t in TOPICS}
     for t in TOPICS:
         by_topic[t].sort(key=lambda r: (r.get("est_dollar_volume") or -1), reverse=True)
 
     finished = dt.datetime.now(dt.timezone.utc)
+    ranked = sorted(rows, key=lambda r: (r.get("est_dollar_volume") or -1), reverse=True)
     snapshot = {
         "generated_at_utc": finished.isoformat(timespec="seconds"),
         "started_at_utc": started.isoformat(timespec="seconds"),
@@ -601,9 +811,16 @@ def main() -> int:
             "resolved_in_scope": len(resolutions),
             "orderbooks": len(books),
             "candle_sets": len(candles),
+            "trades_collected": len(trades),
+            "jumps_ge_0_10": len(jumps),
+            "high_roi_markets": sum(1 for r in rows if r.get("roi_high")),
+            "events_in_scope": len(scope["events_meta"]),
         },
-        "markets": rows,
-        "by_topic": by_topic,
+        # The full market list lives in the per-topic files and in data/markets.csv.
+        # It used to be stored twice here (`markets` AND `by_topic`), which is what
+        # made this file 47 MB. `top_markets` is the ranked head the landing page
+        # uses; the topic pages read their own file.
+        "top_markets": ranked[:400],
         "orderbooks": books,
         "candles": candles,
         "resolutions": resolutions,
@@ -621,6 +838,16 @@ def main() -> int:
                 "Derived, not raw: (yes_bid_close + yes_ask_close) / 2 per candlestick. The "
                 "candlestick `price` object is the TRADED price and is empty in any period with "
                 "no trade, so this keeps the chart continuous without inventing a traded price."
+            ),
+            "roi_score": (
+                "Model score from tools/roi_model.py (published weights in "
+                "data/roi_model.json). A ranking heuristic over official fields only; "
+                "it is not a prediction of the outcome and not investment advice."
+            ),
+            "jump": (
+                "A price move of at least $0.10 between two consecutive trade prints of "
+                "the same market (GET /markets/trades). The cause of a move is not in the "
+                "API, so the cause column is left blank and flagged unverified."
             ),
         },
         "api_log": API_LOG,
@@ -640,14 +867,80 @@ def main() -> int:
             },
         )
 
+    # event-level metadata (settlement sources, contract terms) stored once per event
+    write_json(
+        "events.json",
+        {
+            "generated_at_utc": snapshot["generated_at_utc"],
+            "count": len(scope["events_meta"]),
+            "events": scope["events_meta"],
+        },
+    )
+
     write_json("resolutions.json", {"generated_at_utc": snapshot["generated_at_utc"],
                                     "count": len(resolutions), "resolutions": resolutions})
 
+    # recent prints + the jumps they imply
+    write_json(
+        "trades.json",
+        {
+            "generated_at_utc": snapshot["generated_at_utc"],
+            "count": len(trades),
+            "source": f"{DEMO_REST}/markets/trades?limit=1000",
+            "docs": "https://docs.kalshi.com/api-reference/market/get-trades",
+            "trades": trades[:2000],
+        },
+    )
+    write_json(
+        "jumps.json",
+        {
+            "generated_at_utc": snapshot["generated_at_utc"],
+            "threshold_dollars": 0.10,
+            "count": len(jumps),
+            "source": f"{DEMO_REST}/markets/trades?limit=1000",
+            "docs": "https://docs.kalshi.com/api-reference/market/get-trades",
+            "note": (
+                "Cause of a move is not derivable from the Kalshi API. The cause field "
+                "is empty on every row and flagged unverified."
+            ),
+            "jumps": jumps[:500],
+        },
+    )
+
+    # compact ticker -> summary map used by the live chat feeds
+    write_json(
+        "ticker_index.json",
+        {
+            "generated_at_utc": snapshot["generated_at_utc"],
+            "rest_base": DEMO_REST,
+            "count": len(rows),
+            "columns": ["topic", "roi_score", "last_price_dollars", "yes_bid_dollars",
+                        "yes_ask_dollars", "volume_fp", "open_interest_fp", "close_time",
+                        "title"],
+            "index": build_ticker_index(rows),
+        },
+    )
+
+    # the complete in-scope table as a plain CSV
+    write_csv(
+        ranked,
+        "markets.csv",
+        ["market_ticker", "topic", "event_ticker", "series_ticker", "market_title",
+         "yes_sub_title", "status", "result", "yes_bid_dollars", "yes_ask_dollars",
+         "last_price_dollars", "yes_bid_size_fp", "yes_ask_size_fp", "volume_fp",
+         "volume_24h_fp", "open_interest_fp", "est_dollar_volume", "roi_score",
+         "roi_gates_passed", "close_time", "market_url"],
+    )
+
     # history ledger: append one compact point per market per run (for the price chart)
+    # CAPPED on purpose. The old code appended a point for EVERY in-scope market and
+    # kept 288 of them, which grows past 250 MB in under two days at a 10-minute
+    # cadence. Only the markets a reader can actually chart are kept.
     hist_path = DATA / "history.json"
     hist = json.loads(hist_path.read_text()) if hist_path.exists() else {"points": {}}
     pts = hist.setdefault("points", {})
-    for r in rows:
+    keep = {r["market_ticker"] for r in ranked[:HISTORY_MARKETS]}
+    for r in ranked[:HISTORY_MARKETS]:
         t = r["market_ticker"]
         lp = r.get("last_price_dollars")
         yb = r.get("yes_bid_dollars")
@@ -657,8 +950,15 @@ def main() -> int:
             {"t": int(finished.timestamp()), "last": lp, "yes_bid": yb,
              "yes_ask": r.get("yes_ask_dollars")}
         )
-        pts[t] = pts[t][-288:]
+        pts[t] = pts[t][-HISTORY_POINTS:]
+    for stale in [t for t in pts if t not in keep]:
+        del pts[stale]
     hist["updated_at_utc"] = snapshot["generated_at_utc"]
+    hist["note"] = (
+        f"Collector tick history for the top {HISTORY_MARKETS} markets by estimated "
+        f"dollar volume, last {HISTORY_POINTS} points each. Capped so the committed "
+        "file stays a reasonable size."
+    )
     write_json("history.json", hist)
 
     print(f"OK  in-scope markets={len(rows)}  resolved={len(resolutions)}  "

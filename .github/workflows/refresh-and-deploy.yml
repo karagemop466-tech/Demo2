@@ -1,0 +1,220 @@
+name: Refresh Kalshi demo data and deploy
+
+# ONE writer for the site's data, ONE writer for the deploy.
+#
+# Why this file exists (and why it replaced four others):
+#   Before this, five separate workflows all pushed to `main`:
+#     refresh-data.yml   -> `git add data/`   (every file under data/)
+#     pages.yml          -> `git add data/dashboard_instrument.json ...`
+#     collect.yml        -> `git add data`
+#     data-refresh.yml   -> `git add data/`
+#     trade.yml          -> `git add data/portfolio.json ...`
+#   They overlapped on the same paths, so each one could overwrite the other's
+#   files and each push could be rejected as a non-fast-forward. The scheduled
+#   refresh then failed at the `Commit snapshot` step on eleven consecutive runs
+#   and the deployed site froze on the 15:59Z snapshot.
+#
+#   This workflow is the single writer for data/ and for the deploy. The push
+#   filter below excludes `data/**`, so the data commit this workflow makes can
+#   never re-trigger it (no loop).
+
+on:
+  schedule:
+    # every 10 minutes (GitHub cron is best-effort and may run late)
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "tools/**"
+      - "assets/**"
+      - "pages/**"
+      - "scripts/**"
+      - "index.html"
+      - ".github/workflows/refresh-and-deploy.yml"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: refresh-and-deploy
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          # A full history keeps `git push` and `git rebase` reliable. With a shallow
+          # clone the push was rejected often enough to break the refresh.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install --quiet cryptography
+
+      - name: Offline pipeline tests (no network needed)
+        run: python tools/test_pipeline.py
+
+      - name: Collect demo snapshot
+        env:
+          # Optional. Without keys the collector still works: every market-data
+          # endpoint used here is public. Keys only add portfolio/trading coverage.
+          KALSHI_DEMO_API_KEY_ID: ${{ secrets.KALSHI_DEMO_API_KEY_ID }}
+          KALSHI_DEMO_PRIVATE_KEY: ${{ secrets.KALSHI_DEMO_PRIVATE_KEY }}
+        run: python tools/collector.py
+
+      - name: Show result summary
+        run: |
+          python - <<'PY'
+          import json
+          s = json.load(open("data/snapshot.json"))
+          print("generated:", s["generated_at_utc"])
+          print("authenticated:", s["authenticated"])
+          print("counts:", json.dumps(s["counts"], indent=2))
+          bad = [r for r in s["api_log"] if not r["ok"]]
+          print(f"api calls logged: {len(s['api_log'])}, failed: {len(bad)}")
+          for r in bad[:10]:
+              print("  FAIL", r["http_status"], r["url"][:120], r["note"][:120])
+          PY
+
+      - name: Fail loudly if no in-scope data (never publish an empty snapshot silently)
+        run: |
+          python - <<'PY'
+          import json, sys
+          s = json.load(open("data/snapshot.json"))
+          n = s["counts"]["markets_in_scope"]
+          print("markets_in_scope:", n)
+          if n == 0:
+              print("::error::Collector returned zero in-scope markets; keeping previous data.")
+              sys.exit(1)
+          PY
+
+      - name: Rebuild the generated pages from the new snapshot
+        run: |
+          python tools/build_site.py
+          python tools/build_content.py
+
+      - name: Rebuild the ROI model file (weights + simulated backtest)
+        run: python tools/roi_model.py
+
+      - name: Link, nav, data, secret and script checks
+        run: python tools/check.py
+
+      - name: Internal link check
+        run: python scripts/check_links.py
+
+      - name: Guard the committed data size
+        # A snapshot that grows without bound is what broke the refresh before.
+        run: |
+          python - <<'PY'
+          import pathlib, sys
+          root = pathlib.Path("data")
+          total = sum(p.stat().st_size for p in root.rglob("*") if p.is_file())
+          biggest = sorted(((p.stat().st_size, str(p)) for p in root.rglob("*") if p.is_file()), reverse=True)[:6]
+          print(f"data/ total: {total/1e6:.1f} MB")
+          for size, name in biggest:
+              print(f"  {size/1e6:8.2f} MB  {name}")
+          if total > 40_000_000:
+              print("::error::data/ is larger than 40 MB; the refresh will not keep up with itself.")
+              sys.exit(1)
+          PY
+
+      - name: Commit the snapshot and the regenerated pages
+        run: |
+          set +e
+          exec 2>&1
+          git config user.name  "kalshi-demo-bot"
+          git config user.email "kalshi-demo-bot@users.noreply.github.com"
+          # Explicit paths only. `git add data/` would stage files this workflow does
+          # not own and would clobber the portfolio artefacts written by trade.yml.
+          git add \
+            data/snapshot.json \
+            data/topic-gas.json data/topic-elections.json data/topic-culture.json \
+            data/topic-crypto.json data/topic-golf.json \
+            data/events.json data/resolutions.json data/trades.json data/jumps.json \
+            data/ticker_index.json data/markets.csv data/history.json data/roi_model.json \
+            index.html pages assets
+          if git diff --cached --quiet; then
+            echo "no data changes"
+            exit 0
+          fi
+          MSG="data: Kalshi demo snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+          git commit -m "$MSG"
+          rc=$?
+          if [ $rc -ne 0 ]; then
+            echo "::error::git commit failed rc=$rc"
+            exit 1
+          fi
+          {
+            echo "=== push attempts ==="
+            for attempt in 1 2 3 4 5 6; do
+              echo "--- attempt $attempt ---"
+              git push origin HEAD:main
+              rc=$?
+              echo "push rc=$rc"
+              if [ $rc -eq 0 ]; then
+                echo "snapshot pushed on attempt $attempt"
+                exit 0
+              fi
+              # Another writer (trade.yml) may have moved main. Re-base our commit on
+              # the new tip and push again. No history is discarded: we rebase, we
+              # never force-push.
+              git fetch origin main
+              git rebase origin/main || {
+                echo "::error::rebase onto origin/main failed"
+                git rebase --abort
+                exit 1
+              }
+              sleep $((attempt * 5))
+            done
+            echo "::error::could not push snapshot after 6 attempts"
+            exit 1
+          } 2>&1 | tee push-log.txt
+
+      - name: Upload the refresh log (so a failure can be read without log access)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: refresh-log
+          path: |
+            push-log.txt
+            data/snapshot.json
+          retention-days: 7
+          if-no-files-found: warn
+
+  deploy:
+    needs: refresh
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Verify internal links (site must not deploy broken)
+        run: python3 scripts/check_links.py
+
+      - name: Re-run the site checks against the published tree
+        run: python3 tools/check.py
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+      - id: deployment
+        uses: actions/deploy-pages@v4
