@@ -101,7 +101,7 @@
       <label for="apiKeyId">Demo API Key ID</label>
       <input id="apiKeyId" placeholder="a952bcbe-ec3b-4b5b-b8f9-11dae589608c" autocomplete="off" spellcheck="false">
       <label for="apiPrivateKey">Demo private key (PEM)</label>
-      <textarea id="apiPrivateKey" rows="6" placeholder="-----BEGIN PRIVATE KEY-----" autocomplete="off" spellcheck="false"></textarea>
+      <textarea id="apiPrivateKey" rows="6" placeholder="Paste your demo private key here (PEM text, including the BEGIN and END lines)" autocomplete="off" spellcheck="false"></textarea>
       <div class="row" style="margin-top:12px">
         <button class="primary" id="loadPortBtn" onclick="KD.loadPortfolio()">Load account</button>
         <button class="ghost" onclick="document.getElementById('apiPrivateKey').value='';sessionStorage.clear();location.reload()">Forget key</button>
