@@ -46,7 +46,7 @@ L = 'target="_blank" rel="noopener"'
 API_ROWS = [
     # surface, method+path, what it returns, official source, verified how
     ("REST base", "demo", "<code>https://external-api.demo.kalshi.co/trade-api/v2</code>",
-     "Recommended demo Trade API root", "demo_env", "Read on official page + live 200 response"),
+     "Recommended demo Trade API root", "getting_started/demo_env", "Read on official page + live 200 response"),
     ("REST base", "demo (alternate)", "<code>https://demo-api.kalshi.co/trade-api/v2</code>",
      "Also supported demo root", "getting_started/api_environments", "Read on official page"),
     ("REST base", "production", "<code>https://external-api.kalshi.com/trade-api/v2</code>",

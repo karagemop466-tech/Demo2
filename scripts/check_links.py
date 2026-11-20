@@ -14,6 +14,7 @@ Modes:
 
 Exit code 0 = all links OK, 1 = problems found (printed line by line).
 """
+import html
 import os
 import re
 import sys
@@ -99,25 +100,32 @@ def main():
     if EXTERNAL:
         print(f"external: probing {len(external_urls)} unique URLs")
         for url in sorted(external_urls):
+            # href values are HTML-escaped in source (&amp;); the browser decodes
+            # them before requesting, so decode before probing too.
+            url = html.unescape(url)
             ok = False
             last = ""
-            for method in ("HEAD", "GET"):
+            try:
+                req = urllib.request.Request(url, method="HEAD",
+                                             headers={"User-Agent": "Demo2-link-check/1.0"})
+                with urllib.request.urlopen(req, timeout=20) as resp:
+                    ok = 200 <= resp.status < 400
+                    last = f"HEAD {resp.status}"
+            except Exception as e:  # noqa: BLE001 — fall back to GET
+                last = f"HEAD failed ({e})"
+            if not ok:
+                # Some servers reject HEAD (404/405/403) but serve GET fine.
                 try:
-                    req = urllib.request.Request(url, method=method,
+                    req = urllib.request.Request(url, method="GET",
                                                  headers={"User-Agent": "Demo2-link-check/1.0"})
                     with urllib.request.urlopen(req, timeout=20) as resp:
                         ok = 200 <= resp.status < 400
-                        last = f"HTTP {resp.status}"
-                        break
+                        last = f"GET {resp.status}"
                 except urllib.error.HTTPError as e:
-                    last = f"HTTP {e.code}"
-                    if e.code in (403, 405) and method == "HEAD":
-                        continue  # some servers reject HEAD; retry as GET
                     ok = 200 <= e.code < 400
-                    break
+                    last = f"GET {e.code}"
                 except Exception as e:  # noqa: BLE001
-                    last = str(e)
-                    break
+                    last = f"GET failed ({e})"
             if not ok:
                 problems.append(f"external link failed: {url} ({last})")
 
