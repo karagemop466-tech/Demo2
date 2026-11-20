@@ -35,7 +35,7 @@
     <b>Why paper trading ships first.</b> A static site cannot hold a private signing key safely — anyone who can load
     the page can read it. So the default mode is a local simulator that behaves like the real thing for analysis, and
     the signed mode only runs if you choose to paste a <i>demo</i> key into your own browser. That trade-off is
-    recorded as decision <b>Q-2</b> on .
+    recorded as decision <b>Q-2</b> on <a href="../pages/questions.html">Questions</a>.
   </div>
 
   <h2 style="margin:22px 0 10px">Mode A · Paper trading (no key)</h2>
@@ -194,13 +194,13 @@
     <p class="xs faint" style="margin:10px 0 0">A <code>201</code> means <i>accepted</i>, not resting — always read
       <code>remaining_count</code> in the response. Every order sends a fresh <code>client_order_id</code> (UUID v4) so a
       retried request cannot double-fill. Cancel and amend are not wired to buttons yet; see
-      .</p>
+      <a href="../pages/api-reference.html">API Reference</a> for the documented endpoints.</p>
   </section>
 
   <div class="notice" style="margin-top:14px">
     <b>Performance is only meaningful once trades settle.</b> The outcome view that joins fills to
     <code>result</code> lives on <a href="trading-analysis.html">Trade analysis</a>; the resolution tracker is on
-    .
+    <a href="index.html">the live console</a>.
   </div>
 
 </main>
@@ -208,7 +208,7 @@
   <div class="bar">
     <span>Kalshi <b>demo</b> only — mock funds, not investment advice. Prices come live from
       <a href="https://docs.kalshi.com/getting_started/demo_env">external-api.demo.kalshi.co</a>.</span>
-    <span>Every claim is sourced on .</span>
+    <span>Every claim is sourced on <a href="../pages/sources.html">Sources</a>, with the wording checked on <a href="../pages/verification.html">Verification</a>.</span>
   </div>
 </footer>
 <script src="assets/app.js"></script>
