@@ -288,6 +288,25 @@ or maker.</p>
 entries with an HTTP status were actually transmitted.</p>
 <div id="execTable"></div>
 
+<h2>Simulated strategy lab <span class="muted">— automated paper trading, no keys, nothing sent</span></h2>
+<p class="muted">From <code>data/paper_portfolio.json</code>, written hourly by
+<code>tools/paper_trade.py</code> (workflow <code>paper-trade.yml</code>). Four documented
+strategies — momentum, mean-reversion, longshot, favorite — trade the collected snapshot
+deterministically, trades are categorised by topic / price band / strategy, and open positions
+are settled on the official <code>result</code> (yes/no). This is a <b>SIMULATED</b> ledger:
+fees are not modeled and fills are assumed at the quoted ask (flagged
+<a href="flagged.html">F23</a>). Blank prices are skipped, never guessed.</p>
+<div id="paperState"></div>
+<div class="kpis" id="paperKpis"></div>
+<h3 class="small">Open positions</h3>
+<div id="paperPos"></div>
+<h3 class="small">Settled — tracked until resolution</h3>
+<div id="paperSettled"></div>
+<h3 class="small">Strategy performance by trade type</h3>
+<div id="paperStrats"></div>
+<h3 class="small">Trade log</h3>
+<div id="paperTrades"></div>
+
 <h2>Placing a demo order by hand is not required</h2>
 <p class="muted">Execution is driven by <code>data/strategy_plan.json</code> plus the
 <code>trade.yml</code> workflow and three explicit switches - <code>KALSHI_TRADING_ENABLED=1</code>,
@@ -380,6 +399,68 @@ request shape are on <a href="api-reference.html">API reference</a>.</p>
   }catch(e){
     $('execTable').innerHTML = '<div class="empty">No data/executions.json yet - the trade workflow has not run.</div>';
   }
+})();
+</script>
+<script>
+(async function(){
+  const $ = id=>document.getElementById(id);
+  let pp;
+  try{ pp = await KR.getJSON('data/paper_portfolio.json'); }catch(e){
+    $('paperState').innerHTML = '<div class="empty">No data/paper_portfolio.json yet — the paper-trade workflow has not run. It commits after its first run (Actions → “Paper trading simulation”).</div>';
+    return;
+  }
+  const t = pp.totals||{};
+  $('paperState').innerHTML = `<div class="notice info"><b>SIMULATED</b> — generated ${KR.when(pp.generated_at_utc)} · source snapshot ${KR.esc(pp.source_snapshot_generated_at||'—')} · no orders sent, no API key used · fees not modeled (F23).</div>`;
+  $('paperKpis').innerHTML = `
+    <div class="kpi-card"><div class="k">Equity (simulated)</div><div class="v">${KR.usd(t.equity_dollars,2)}</div><div class="s">cash + mark-to-market</div></div>
+    <div class="kpi-card"><div class="k">Cash</div><div class="v">${KR.usd(t.cash_dollars,2)}</div><div class="s">start $100.00</div></div>
+    <div class="kpi-card"><div class="k">Realized P&amp;L</div><div class="v">${KR.usd(t.realized_pnl_dollars,2)}</div><div class="s">on settlement</div></div>
+    <div class="kpi-card"><div class="k">Unrealized P&amp;L</div><div class="v">${KR.usd(t.unrealized_pnl_dollars,2)}</div><div class="s">mark at quoted bid</div></div>
+    <div class="kpi-card"><div class="k">Trades</div><div class="v">${KR.num(t.trades_total,0)}</div><div class="s">${KR.num(t.open_positions,0)} open · ${KR.num(t.settled_positions,0)} settled (yes ${KR.num((t.resolution_counts||{}).yes,0)} / no ${KR.num((t.resolution_counts||{}).no,0)})</div></div>`;
+  KR.renderTable($('paperPos'), [
+    {label:'Topic', get:p=>KR.topicPill(p.topic)},
+    {label:'Market', get:p=>`<b>${KR.esc(p.title||p.ticker)}</b><br><span class="muted small">${KR.esc(p.ticker)}</span>`},
+    {label:'Side', get:p=>KR.esc(p.side)},
+    {label:'Entry $', num:true, get:p=>KR.usd(p.entry_price_dollars,4)},
+    {label:'Mark $', num:true, get:p=>KR.usd(p.mark_price_dollars,4)+(p.mark_note?' <span class="pill flag">mark blank</span>':'')},
+    {label:'Count', num:true, get:p=>KR.num(p.count,0)},
+    {label:'Unrealized P&L', num:true, get:p=>KR.usd(p.unrealized_pnl_dollars,2)},
+    {label:'Strategy', get:p=>KR.esc(p.strategy)},
+    {label:'Source', get:p=>KR.link(p.source_url,'API row')}
+  ], pp.positions||[], 'No open simulated positions.');
+  KR.renderTable($('paperSettled'), [
+    {label:'Topic', get:p=>KR.topicPill(p.topic)},
+    {label:'Market', get:p=>`<b>${KR.esc(p.title||p.ticker)}</b><br><span class="muted small">${KR.esc(p.ticker)}</span>`},
+    {label:'Side', get:p=>KR.esc(p.side)},
+    {label:'Result', get:p=>KR.resultPill(p.result)},
+    {label:'Payout $', num:true, get:p=>KR.usd(p.payout_dollars,2)},
+    {label:'Realized P&L', num:true, get:p=>KR.usd(p.realized_pnl_dollars,2)},
+    {label:'Settled', get:p=>`<span class="small">${KR.when(p.settled_at_utc)}</span>`},
+    {label:'Settlement rule', get:p=>KR.link(p.settlement_source,'market settlement')}
+  ], pp.settled||[], 'Nothing has resolved yet — positions are tracked until yes/no.');
+  const stats = pp.strategy_stats||{};
+  KR.renderTable($('paperStrats'), [
+    {label:'Strategy', get:r=>`<b>${KR.esc(r.name)}</b><br><span class="muted small">${KR.esc((pp.definitions||{}).strategies ? ((pp.definitions.strategies[r.name])||'') : '')}</span>`},
+    {label:'Trades', num:true, get:r=>KR.num(r.s.trades,0)},
+    {label:'Open', num:true, get:r=>KR.num(r.s.open_positions,0)},
+    {label:'Settled', num:true, get:r=>KR.num(r.s.settled,0)},
+    {label:'Wins', num:true, get:r=>KR.num(r.s.wins,0)},
+    {label:'Losses', num:true, get:r=>KR.num(r.s.losses,0)},
+    {label:'Realized P&L', num:true, get:r=>KR.usd(r.s.realized_pnl_dollars,2)},
+    {label:'Cost deployed', num:true, get:r=>KR.usd(r.s.cost_dollars,2)}
+  ], Object.keys(stats).map(name=>({name, s:stats[name]})), 'No strategy trades yet.');
+  KR.renderTable($('paperTrades'), [
+    {label:'When', get:x=>`<span class="small">${KR.when(x.ts)}</span>`},
+    {label:'Topic', get:x=>KR.topicPill(x.topic)},
+    {label:'Market', get:x=>`<b>${KR.esc(x.title||x.ticker)}</b><br><span class="muted small">${KR.esc(x.ticker)}</span>`},
+    {label:'Side', get:x=>KR.esc(x.side)},
+    {label:'Price $', num:true, get:x=>KR.usd(x.price_dollars,4)},
+    {label:'Count', num:true, get:x=>KR.num(x.count,0)},
+    {label:'Cost $', num:true, get:x=>KR.usd(x.cost_dollars,2)},
+    {label:'Category', get:x=>`${KR.esc((x.category||{}).band||'')} / ${KR.esc((x.category||{}).strategy||x.strategy)}`},
+    {label:'Why', get:x=>`<span class="small">${KR.esc(x.reason||'')}</span>`},
+    {label:'Source', get:x=>KR.link(x.source_url,'API row')}
+  ], (pp.trades||[]).slice().reverse(), 'No simulated trades yet.');
 })();
 </script>"""
     body += """
@@ -940,6 +1021,13 @@ VERIFIED = [
   "which is what failed every Refresh Kalshi demo data run on 2026-11-20 (COORDINATION.md A-1)",
   "https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github",
   "regression-tested offline in tests/test_collector_output.py (52 assertions); workflow tripwire step added", "By design"),
+ ("Automated simulated trades (paper portfolio)",
+  "tools/paper_trade.py runs hourly with no credentials: four deterministic strategies "
+  "(momentum / mean-revert / longshot / favorite) over the snapshot; trades categorised by topic, "
+  "price band and strategy; positions settled on the official yes/no result; blanks skipped, "
+  "never guessed. SIMULATED: fees and slippage not modeled (F23).",
+  "api-reference/market/get-markets|getting_started/market_settlement",
+  "regression-tested offline in tests/test_paper_trade.py (20 assertions); ledger published at data/paper_portfolio.json", "By design"),
 ]
 
 
@@ -1155,6 +1243,18 @@ FLAGGED = [
   "table, and the page states plainly that it is not financial advice and makes no outcome prediction. "
   "Nothing is inferred from outside the API; detections themselves use only official prices.",
   "api-reference/market/get-markets"),
+ ("F23", "The paper-trading simulator does not model fees or slippage",
+  "tools/paper_trade.py runs four deterministic strategies over the collected snapshot and "
+  "settles positions on the official result field. Fills are assumed at the quoted ask with no "
+  "slippage, no partial fills and <b>zero fees</b>. The real Kalshi fee schedule is documented "
+  "but was not verified line by line in this workspace, so it is left unmodeled rather than guessed.",
+  "Simulated results overstate real achievable performance; the demo environment itself warns "
+  "that its prices may not reflect real markets.",
+  "Every page that shows the ledger says SIMULATED in the banner, the definitions block inside "
+  "data/paper_portfolio.json repeats the limits, strategy statistics are shown by trade type so "
+  "the assumption is auditable, and the live demo-account path (trade.yml + tools/execute_strategy.py) "
+  "records real fees once keys are configured.",
+  "getting_started/market_settlement|https://docs.kalshi.com/getting_started/demo_env"),
 ]
 
 

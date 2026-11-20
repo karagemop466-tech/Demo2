@@ -1,0 +1,77 @@
+name: Paper trading simulation
+
+# Automated simulated trades over the collected snapshot — NO credentials, no
+# orders sent anywhere (tools/paper_trade.py). Tests four documented strategies,
+# settles open positions on the official result field, and commits the ledger to
+# data/paper_portfolio.json, which pages/portfolio.html renders client-side.
+# Live demo-account execution is a different, gated path (trade.yml + task 21).
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "45 * * * *"   # hourly, off the top of the hour
+  push:
+    branches: [main]
+    paths:
+      - "tools/paper_trade.py"
+      - ".github/workflows/paper-trade.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-trade
+  cancel-in-progress: false
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Offline regression tests (no network)
+        run: python3 tests/test_paper_trade.py
+
+      - name: Run the simulation on the committed snapshot
+        run: python3 tools/paper_trade.py
+
+      - name: Commit the paper ledger
+        run: |
+          set +e
+          exec 2>&1
+          git config user.name "kalshi-demo-bot"
+          git config user.email "kalshi-demo-bot@users.noreply.github.com"
+          git add data/paper_portfolio.json
+          if git diff --cached --quiet; then
+            echo "no ledger changes"
+            exit 0
+          fi
+          MSG="data: paper-trading simulation $(date -u +%Y-%m-%dT%H:%MZ)"
+          git commit -m "$MSG"
+          rc=$?
+          if [ $rc -ne 0 ]; then
+            echo "::error::git commit failed rc=$rc"
+            exit 1
+          fi
+          for attempt in 1 2 3 4 5 6; do
+            out=$(git push origin HEAD:main 2>&1)
+            rc=$?
+            if [ $rc -eq 0 ]; then
+              echo "ledger pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "::warning::push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -10 | tr '\n' '|' | cut -c1-1500)"
+            git fetch origin main 2>&1 | tail -1
+            git reset --soft origin/main
+            git add data/paper_portfolio.json
+            git commit --allow-empty -m "$MSG"
+            sleep $((attempt * 5))
+          done
+          echo "::error::could not push the paper ledger after 6 attempts"
+          exit 1

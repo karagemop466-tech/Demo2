@@ -73,6 +73,17 @@ jobs:
               sys.exit(1)
           PY
 
+      - name: Rebuild generated pages from the new snapshot
+        # tools/build_site.py embeds snapshot meta (generated_at_utc, counts) in
+        # index.html/alerts.html at build time. If pages are not regenerated with
+        # each snapshot commit, CI's "Fail if regenerating produced a diff" gate
+        # goes red on the next push (observed at 9319862). Rebuild + check here so
+        # data and pages always move together and the gate stays green.
+        run: |
+          python3 tools/build_site.py
+          python3 tools/build_content.py
+          python3 tools/check.py
+
       - name: Fail if any data file exceeds the push tripwire
         # GitHub's pre-receive hook rejects any push containing a file over 100 MB.
         # The collector enforces this too (FILE_LIMIT_BYTES); this step is the
@@ -94,11 +105,11 @@ jobs:
           exec 2>&1
           git config user.name  "kalshi-demo-bot"
           git config user.email "kalshi-demo-bot@users.noreply.github.com"
-          # Stage ONLY the collector's own outputs. Other pipelines also write into
-          # data/ (dashboard_instrument.json, history_instrument, jumps — F17); a
-          # blanket `git add data/` would revert THEIR newer files on the push-retry
-          # soft-reset path below. Pure outputs, newest wins, no cross-clobbering.
-          git add data/snapshot.json data/topic-*.json data/resolutions.json data/history.json
+          # Stage ONLY the collector's own outputs + the regenerated pages. Other
+          # pipelines also write into data/ (dashboard_instrument.json, history_instrument,
+          # jumps — F17); a blanket `git add data/` would revert THEIR newer files on the
+          # push-retry soft-reset path below. Pure outputs, newest wins, no cross-clobbering.
+          git add data/snapshot.json data/topic-*.json data/resolutions.json data/history.json index.html alerts.html pages/
           if git diff --cached --quiet; then
             echo "no data changes"
             exit 0
@@ -126,7 +137,7 @@ jobs:
             echo "::warning::push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -25 | tr '\n' '|' | cut -c1-3500)"
             git fetch origin main 2>&1 | tail -1
             git reset --soft origin/main
-            git add data/snapshot.json data/topic-*.json data/resolutions.json data/history.json
+            git add data/snapshot.json data/topic-*.json data/resolutions.json data/history.json index.html alerts.html pages/
             git commit --allow-empty -m "$MSG"
             sleep $((attempt * 5))
           done

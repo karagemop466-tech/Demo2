@@ -11,6 +11,7 @@ Machine-written JSON. Do not edit by hand.
 | `portfolio.json` | `tools/portfolio.py` (signed) | Balance, positions, fills - or an explicit "not configured" record |
 | `analysis.json` | `tools/analyze.py` | Per-fill cost/payout/realised P&L, five categorisations, gated strategies |
 | `executions.json` | `tools/execute_strategy.py` | Every order attempt with its HTTP status, including dry runs |
+| `paper_portfolio.json` | `tools/paper_trade.py` (Actions, hourly, **no keys**) | SIMULATED paper-trading ledger: four deterministic strategies over the snapshot, categorised trades, positions settled on the official yes/no result. Fees/slippage not modeled (flag F23) |
 | `strategy_plan.json` | **human** | Trade intents and run limits. Empty by default: nothing is traded. |
 
 Provenance rule: any figure on the site must be traceable to a request listed in
