@@ -150,3 +150,97 @@ empty candlestick trade prices; Gas topic catalogue-only in demo.
   untouched. There are now three subsites in the repository: `/` (canonical, CI-checked),
   `/dashboard/` and `/verified/` (other sessions). This is a duplicated-content irregularity
   and is flagged for the owner as Q12.
+## Session arena-406a2f21-demo2 — branch `arena/406a2f21-demo2` (added 2026-11-20)
+
+Session owner: `arena-406a2f21-demo2`. This session built an additional **Node
+backend + static dashboard** in `server/`, `site/`, `docs/`, and `scripts/`,
+scoped to non-overlapping files. The merge from `origin/main` preserved all
+prior sessions' files (`pages/`, `verified/`, `dashboard/`, `tools/`, `data/`,
+root `index.html`/`app.js`, `.github/workflows/*`). No prior session's work was
+discarded. Shared root files (`COORDINATION.md`, `README.md`, `.github/workflows/pages.yml`,
+`.gitignore`) were resolved by keeping `origin/main`'s content and appending this
+section (and a README addendum), matching the established append-only pattern.
+
+**Overlap note.** `main` already contains a multi-page client-side dashboard
+(`pages/`, `verified/`, `dashboard/`). This session added a complementary
+dashboard under `site/` plus a Node backend (`server/`) for authenticated
+portfolio/trade execution, live REST/WS polling, and a persisted tracking store.
+Both sets of pages are published by the root-deploying `pages.yml` workflow.
+
+| Task | Status | Owner | Files touched |
+|---|---|---|---|
+| T1 Research & verify Kalshi API from official sources | done | arena-406a2f21-demo2 | `docs/`, sources below |
+| T2 Executive summary | done | arena-406a2f21-demo2 | `docs/EXECUTIVE_SUMMARY.md` |
+| T3 Backend (REST/WS client, signing, tracking, trades, portfolio, strategies) | done | arena-406a2f21-demo2 | `server/*`, `package.json` |
+| T4 Frontend (events, price chart, liquidity, portfolio, trades, strategies, suggestions, flagged) | done | arena-406a2f21-demo2 | `site/*` |
+| T5 Questions / information / answers + suggestions | done | arena-406a2f21-demo2 | `docs/QUESTIONS_AND_ANSWERS.md`, `docs/SUGGESTIONS.md` |
+| T6 GitHub Pages landing + category subpages | done | arena-406a2f21-demo2 | `site/*`, `.github/workflows/pages.yml` |
+| T7 Verification pass (line-by-line, sources per row) | done | arena-406a2f21-demo2 | `docs/VERIFICATION.md` |
+| T8 Integration: merge, verify build, deploy | done | arena-406a2f21-demo2 | whole repo |
+| T9 PR to main + merge + record | done | arena-406a2f21-demo2 | this file |
+
+### Sources (official Kalshi docs, read 2026-11-20)
+- https://docs.kalshi.com/llms.txt
+- https://docs.kalshi.com/getting_started/demo_env
+- https://docs.kalshi.com/getting_started/api_keys
+- https://docs.kalshi.com/getting_started/quick_start_market_data
+- https://docs.kalshi.com/api-reference/events/get-events
+- https://docs.kalshi.com/api-reference/market/get-markets
+- https://docs.kalshi.com/api-reference/market/get-market-orderbook
+- https://docs.kalshi.com/api-reference/market/get-market-candlesticks
+- https://docs.kalshi.com/websockets/websocket-connection
+- https://docs.kalshi.com/api-reference/orders/create-order-v2
+
+### Verification performed
+- All endpoint paths, parameters, and response shapes read directly from official
+  docs.kalshi.com (no third-party/inferred sources).
+- Sandbox egress to `external-api.demo.kalshi.co` fails at TLS handshake
+  (`SSL_ERROR_SYSCALL`); live data is implemented in the backend and, on a static
+  host, requested client-side from Kalshi's public demo endpoints. No market values
+  are hard-coded.
+- Backend: `node --check` on all `server/` modules passed; server boots and serves
+  the static site + JSON API; `/api/status`, `/api/health`, `/api/suggestions`,
+  `/api/flagged` respond correctly; `/api/events` and `/api/portfolio` degrade
+  gracefully to an `unverified` error state when Kalshi is unreachable.
+- Frontend: `node --check site/js/app.js` passed; jsdom smoke test loaded all 13
+  `site/` pages against the live backend with 0 runtime errors; Suggestions renders
+  12 rows, Flagged renders 5 rows; all pages/assets return HTTP 200.
+
+### Irregularities (non-blocking; mirrored on `site/flagged.html`)
+- FLAG-01 sandbox cannot reach `*.kalshi.co` (egress allowlist).
+- FLAG-02 no Kalshi demo API key present (portfolio/trades need a demo key pair, never committed).
+- FLAG-03 GitHub Pages is a static host; authenticated portfolio/trade features require the backend.
+- FLAG-04 category-to-topic mapping unverified (uses a reviewable keyword mapping).
+- FLAG-05 settled-outcome payload field names unverified; outcome cells marked unverified.
+
+### Merge conflict resolution (this session)
+- Merging `origin/main` (which advanced with PRs #1–#12 from prior sessions) into
+  `arena/406a2f21-demo2` produced conflicts in `.github/workflows/pages.yml`,
+  `.gitignore`, `COORDINATION.md`, and `README.md`. Resolved by keeping
+  `origin/main`'s versions of the shared files and appending this session's section
+  to `COORDINATION.md` and `README.md`; `.gitignore` was combined to cover both Node
+  and Python artifacts; `pages.yml` kept the proven root-deploying config so both
+  the existing dashboards and this session's `site/` are published. No prior
+  session's work was discarded.
+
+### PR / deploy record (this session)
+- PR #13: https://github.com/karagemop466-tech/Demo2/pull/13 — **MERGED** on
+  2026-11-20T11:34:08Z, merge commit `e3a6f5faa8e27ebc787df0b55a2ebb83151e3d3e`
+  (`gh pr merge 13 --merge`). Merge-commit parent chain includes `340e7ae`
+  (this session's merge of `origin/main`) on top of `6cf2ef3`.
+- Merge conflict resolution: merging `origin/main` (advanced by prior sessions'
+  PRs #1–#12) into `arena/406a2f21-demo2` conflicted in `pages.yml`, `.gitignore`,
+  `COORDINATION.md`, `README.md`; resolved additively (kept `origin/main` content,
+  appended this session's sections). A subsequent `git pull --rebase` entered a
+  conflicted state while rebasing a merge commit and was aborted
+  (`git rebase --abort`); the clean merge commit `340e7ae` was restored and pushed.
+- GitHub Pages deploy: workflow run
+  https://github.com/karagemop466-tech/Demo2/actions/runs/44728671259 — **success**.
+  Pages status `built`; site live at https://karagemop466-tech.github.io/Demo2/ .
+  Both the existing root dashboard and this session's `site/` dashboard are served:
+  - Root: https://karagemop466-tech.github.io/Demo2/
+  - This session: https://karagemop466-tech.github.io/Demo2/site/index.html
+- Link check: 14 HTML pages in `site/`, 18 internal link targets, 0 broken links.
+- Combined-data re-verification: all `site/` table rows carry source links to
+  official Kalshi pages; unverified items are flagged on `site/flagged.html` and
+  documented in `docs/VERIFICATION.md`. Flagged items do not block the merge.
