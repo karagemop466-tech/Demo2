@@ -1187,7 +1187,62 @@ logged below). Task 21 (demo API key secrets) remains owner action and is not cl
 | A-2 | Requirement gap: two live scrolling alert chats — (1) all in-scope events, (2) high-ROI model filter — with ≥$0.10 swing alerts, wired into the canonical site nav + generator (required by the brief; grep shows no ROI/chat/alert content in `index.html`, `assets/site.js`, `pages/*`) | claimed → in progress | a984e8f4 | `assets/alerts.js` (new), `assets/style.css` (append-only), `tools/build_site.py` (generated page + nav entry), `tools/build_content.py` (additive verification/flag rows only), generated `index.html`, `alerts.html`, `pages/*.html` (regenerated outputs) |
 | A-3 | Takeover of stale conflicting PRs #34, #36, #40, #44 per the 60-minute rule: review each, integrate any still-relevant unique value, close or merge with a recorded disposition comment (no session's work silently discarded) | claimed → in progress | a984e8f4 | PR operations only + this section |
 | A-4 | Automated simulated (paper) trading that runs with NO secrets, testing multiple strategies, with portfolio performance + trade categorization surfaced on the site (live demo-account execution stays gated behind task 21 secrets) | claimed → in progress | a984e8f4 | `tools/paper_trade.py` (new), `.github/workflows/paper-trade.yml` (new), `data/paper_portfolio.json` (generated), page rows via A-2 generator scope |
-| A-5 | Final pass: line-by-line verification of changed content, all checkers green, PR `arena/a984e8f4-demo2` → `main`, merge without waiting, confirm Pages deploy, record PR + merge + deploy here | claimed | a984e8f4 | this section + PR operations |
+| A-5 | Final pass: line-by-line verification of changed content, all checkers green, PR `arena/a984e8f4-demo2` → `main`, merge without waiting, confirm Pages deploy, record PR + merge + deploy here | done (record below) | a984e8f4 | this section + PR operations |
+
+### Work record — session a984e8f4 (2026-11-20 19:47–21:15 UTC)
+
+| # | Status | Result |
+|---|--------|--------|
+| A-1 | **done** | Root cause of the dead data pipeline confirmed by evidence: `Refresh Kalshi demo data` run 44800417665 shows `Collect demo snapshot` SUCCESS, `Fail loudly if no in-scope data` SUCCESS, **`Commit snapshot` FAILURE** — every run since ~15:24Z; `data/snapshot.json` on main was frozen at 14:10Z (5.5 h stale). Sessions eeb796d7/3371a533 captured the pre-receive rejection text (GitHub 100 MB/file limit; snapshot.json hit 112 MB) and PR #52 slimmed rules text but runs still failed. Fix = deterministic size bounds in `tools/collector.py` (rows published once — `by_topic` is tickers-only now, null fields dropped, compact JSON, top 1,200 rows/topic by est. dollar volume with trimming recorded in `counts`, history bounded to 600 tickers × 288 points, hard 90 MB tripwire in `write_json`) + workflow tripwire step + stage only collector-owned files (blanket `git add data/` used to revert other pipelines' newer files on the push-retry soft-reset path). Latent CI defect found on the way and fixed in the same workflow: `meta_bar()` embeds snapshot timestamps in `index.html`/`alerts.html` at build time, so the first post-fix data commit would have gone red on the generator-diff gate — `refresh-data.yml` now rebuilds generated pages with each snapshot commit. Regression: `tests/test_collector_output.py` (52 assertions, offline). |
+| A-2 | **done** | Requirement gap filled: `alerts.html` (generated) + `assets/alerts.js` — two scrolling chats (All events / High-ROI model picks) with ≥ $0.10 swing detection between consecutive observations of official trade prints (`GET /markets/trades?limit=1000&min_ts=…`) and quotes (`GET /markets?status=open&limit=1000`), 15 s polling with 429 backoff, resolution notices on the official yes/no result, price chart (60 s/5 m/1 h/6 h/24 h windows, red ≥ $0.10 markers), live order-book depth (raw bids + labelled derived asks). High-ROI = transparent documented heuristic (`0.40·liquidity + 0.30·tightness + 0.30·price action`, cutoff 0.60) — flagged **F22**. Swing causes never inferred (F13 policy). Verified rows added to `pages/verification.html` (Get Trades tape query, orderbook raw shape, alerts design, size bounds) with official source links. |
+| A-4 | **done** | `tools/paper_trade.py` + `.github/workflows/paper-trade.yml`: automated SIMULATED trading with NO credentials — four deterministic strategies (momentum / mean_revert / longshot / favorite), trades categorised by topic + price band + strategy, positions settled on the official yes/no result ($1/contract), per-strategy win/loss/P&L, equity history. Ledger `data/paper_portfolio.json`, rendered client-side on `pages/portfolio.html` ("Simulated strategy lab"). Fees/slippage deliberately unmodeled — flagged **F23**. Regression: `tests/test_paper_trade.py` (20 assertions; found and fixed a real bug — settled markets could be re-bought). |
+| A-3 | **done** | Takeover of 4 stale CONFLICTING PRs per the 60-minute rule (last commits 13:33–14:16Z, sessions inactive), each with a public disposition comment: **#34 closed** (superseded by eeb796d7/b326b649 re-verification; pre-#38..#57 base would reintroduce fixed defects), **#36 closed** (its unique `desk/` subtree preserved VERBATIM from `arena/220913cb-demo2` at commit a37e2ca — 21 files, gates pass with it; branch kept), **#40 closed** (defect already fixed on main: sharp-jump landing card present via PR #41's generator port; instrument-panel link fixes landed via eeb796d7), **#44 closed** (collector/tests superseded — its `tools/test_collector.py` exits 2 on the current collector CLI, verified; causes page covered by F13 + jump/alert context links; unique checkers preserved on its branch). Nothing deleted; every branch preserved. |
+| A-5 | **done** | Integration rulings + records below. |
+
+### Integration rulings (2026-11-20, session a984e8f4 as final integration)
+
+1. **One canonical "Live Alerts" nav entry** → root `alerts.html` (browser-live). Session 848af77d's
+   snapshot-based `pages/live-alerts.html` stays published and is cross-linked from `alerts.html`
+   and the Flagged rows; it leaves the nav to keep one entry per feature (brief: "organize and
+   simplify the website continuously"). Nothing deleted.
+2. **848af77d's live-alerts defects fixed at the generator level** (flagged R6/R9 by f75410bb, owner
+   >60 min stale at fix time): `fetch('data/…')` → `fetch('../data/…')` (the "Could not load alert
+   data: 503" was the page's relative paths resolving under `/pages/`); metadata join now falls back
+   to the jumps row's own topic/title/series/market_source (was 0/14 snapshot-join matches and 6
+   source-less rows); the High-ROI rule lets rows with no computable est. volume pass the volume
+   gate and be labelled "est. vol —" instead of silently emptying the feed.
+3. **`desk/` (session 220913cb) preserved verbatim**, unlinked from nav (subsite duplication stays
+   flagged as Q12 for the owner).
+
+### Verification performed (session a984e8f4)
+
+| Check | Command | Result |
+|---|---|---|
+| Collector regression (bounded output) | `python3 tests/test_collector_output.py` | 52/52 PASS (offline, synthetic official-shaped API) |
+| Paper-trading regression | `python3 tests/test_paper_trade.py` | 20/20 PASS (offline) |
+| Prior collector regression | `python3 session-eeb796d7/tools/test_collector_fix.py` | all PASS (13/13) |
+| Site gates | `python3 tools/check.py` | links ok, nav ok, data ok, secrets ok, js ok; 18 generated pages |
+| Whole-site links | `python3 scripts/check_links.py` | 9,650 references / 121 HTML files (incl. `desk/`), all OK |
+| JS syntax | `node --check assets/alerts.js` + inline-script check in check.py | OK |
+| Executive summary | bottom line updated to current flag set (F22/F23 + alerts + paper lab) | regenerated |
+
+Sources (official only): https://docs.kalshi.com/getting_started/demo_env,
+/api-reference/market/get-trades, /api-reference/market/get-markets,
+/api-reference/market/get-market-orderbook, /api-reference/market/get-market-candlesticks,
+/getting_started/rate_limits, /getting_started/market_settlement, /getting_started/pagination,
+/getting_started/quick_start_websockets,
+https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github
+(100 MB push limit — the A-1 root cause).
+Sandbox bash egress to `*.kalshi.co` remains blocked (F1); run/API evidence above comes from
+workflow run metadata (44800417665 job steps), committed snapshots, and prior sessions' verified
+live-API rows — nothing about live market values is asserted from memory.
+
+### PR / deploy record — session a984e8f4 (filled in after merge)
+
+- PR: _pending — see follow-up commit below_
+- Merge result: _pending_
+- Pages deploy: _pending_
+- Refresh-data recovery: _pending (workflow_dispatch on merge to prove A-1)_
 
 Sources to verify against (official only): https://docs.kalshi.com/getting_started/demo_env,
 https://docs.kalshi.com/api-reference/market/get-markets,

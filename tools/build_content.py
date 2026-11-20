@@ -252,7 +252,10 @@ data (<a href="flagged.html">F20</a>). The gas topic includes solar, electricity
 (<a href="flagged.html">F14</a>). The jump page cannot name a cause, because no official source links a price
 move to news (<a href="flagged.html">F18</a>), and snapshots are too coarse for intraday moves
 (<a href="flagged.html">F17</a>). A public page takes a demo private key as input
-(<a href="flagged.html">F21</a>).</p>
+(<a href="flagged.html">F21</a>). The live alert chats (<a href="../alerts.html">Live Alerts</a>) now run in the
+browser against the demo API and the simulated strategy lab runs without keys, but the high-ROI filter
+is a labelled local heuristic (<a href="flagged.html">F22</a>) and the simulation does not model fees
+or slippage (<a href="flagged.html">F23</a>).</p>
 <p>What remains open is definition and access: what &#8220;highest dollar amount&#8221; means, how fresh the data
 must be, whether a demo key will be supplied, and how much evidence is enough before a strategy is trusted.
 Those are listed, with the exact information needed to close them, on <a href="questions.html">Questions</a>.</p>
