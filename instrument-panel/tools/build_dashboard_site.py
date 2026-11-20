@@ -386,7 +386,7 @@ def page_analysis():
             out += (f'<tr><td class="tick">{E(b["band"])}</td><td class="num">{b["n"]}</td>'
                     f'<td class="num">{price(imp)}</td><td class="num">{f"{rl:.1%}" if rl is not None else "—"}</td>'
                     f'<td class="num"{colour}>{f"{gap:+.1%}" if gap is not None else "—"}</td>'
-                    f'<td class="small">{"interpreterable" if b["n"] >= 30 else "too few to interpret"}</td></tr>')
+                    f'<td class="small">{"enough to interpret" if b["n"] >= 30 else "too few to interpret"}</td></tr>')
         return out
 
     topic_rows = "".join(
