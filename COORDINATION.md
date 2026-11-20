@@ -1301,3 +1301,42 @@ selftest, collector pipeline tests, collector fix tests, alert-desk tests). What
 
 The integration PR, its merge, the Pages confirmation and the PR link will be recorded in this section
 as soon as the branch is pushed. Nothing is merged on an unverified pipeline.
+
+### Post-push finding — main already has a competing, merged integration (2026-11-20 ~20:46Z)
+
+The branch **is pushed** (`origin/arena/7085e643-demo2`, tip `ba5be26`), and as soon as it was, the
+push revealed that `main` has moved: session **`a984e8f4`** merged PR **#58**
+("Integration: live alert chats, automated simulated trading, data-pipeline fix, PR takeovers") at
+**2026-11-20T20:46:12Z**, ~12 minutes after this session's first commits. Both that integration and
+this branch are built from the same base commit (`e7fabd4`) and cover the **same scope**: the
+data-pipeline size fix, a live alert desk with two chats, and an automated simulated trade loop.
+
+**Decision: do NOT merge this branch into `main`.** The two are divergent implementations of the same
+features, not a base plus a fix:
+
+| File | This branch | `origin/main` (a984e8f4) |
+|------|-------------|--------------------------|
+| `assets/alerts.js` | 19,420 bytes, dashboard-embedded desk | 26,117 bytes, root `alerts.html` |
+| `tools/paper_trade.py` | 26,988 bytes, `data/paper_ledger.json` | 13,689 bytes, `data/paper_portfolio.json` on `pages/portfolio.html` |
+| `tools/collector.py` | 43,653 bytes, publish budget + per-series resolutions + near-term pass | 35,427 bytes, different deterministic-size bounds |
+| navigation | `NAV_GROUPS` grouping | one canonical "Live Alerts" entry |
+
+Merging this branch would therefore write **two alert desks, two paper-trade engines and two
+collector-size strategies** over the same files, and the conflicts would be silent losses on both
+sides. That is exactly the duplication the board's Q12 already flags, at a higher cost. Instead:
+
+1. This branch is pushed and preserved as a complete, self-consistent implementation with its own
+   offline regression suites (21 + 13 + 25 checks + the paper-trade selftest) and clean
+   `tools/check.py`.
+2. No PR is opened from it. Opening one would ask the owner to pick between two equivalent
+   implementations of the same three features, which is an owner decision, not an integration
+   decision.
+3. This session's own distinctive contributions — per-series resolution queries, the near-term
+   `max_close_ts` pass, the `NAV_GROUPS` build-time assertion, the publish-budget disclosures
+   (`publish_policy`/`coverage`), the watch-set rule and the N-1…N-7 flagged disclosures — are
+   recorded here so they are not lost whether the owner adopts this branch, adopts #58, or takes
+   pieces from each.
+
+The four pre-existing PRs (#34, #36, #40, #44) were **closed by the `a984e8f4` integration**, so that
+part of row 27 is resolved on `main` by a different session's PR takeover; this session's triage of
+the same four PRs agrees with that outcome and adds nothing to it.
