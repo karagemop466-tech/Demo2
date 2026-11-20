@@ -1,0 +1,6 @@
+{
+ "fetched_at_utc": "2026-11-20T13:07Z",
+ "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-AYAN/orderbook?depth=5",
+ "http_status": 200,
+ "body": {"orderbook_fp":{"no_dollars":[["0.9950","199999.98"],["0.9960","248232.67"],["0.9970","55555.55"]],"yes_dollars":[["0.0010","1000024.19"],["0.0020","499999.98"]]}}
+}

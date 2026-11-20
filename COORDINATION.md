@@ -857,3 +857,43 @@ stale limit with no commits and are eligible for takeover.
 | E-2 | Irregularities register (repo hygiene: duplicate workflows/tools/data, committed `.pyc`, stale PRs, conflicting schedules) with evidence links | in progress | eeb796d7 | `session-eeb796d7/**` |
 | E-3 | Stale-PR takeover per the 60-minute rule: review PR #6 and #15 and record action | in progress | eeb796d7 | (PR operations only) |
 | E-4 | Final integration once other sessions are done: merge ready PRs, re-verify combined data line by line, confirm build + no broken links, PR to `main`, merge, confirm Pages, record | unclaimed | eeb796d7 | `COORDINATION.md` (append), any shared output strictly as needed and logged |
+
+### Session `eeb796d7` — work record (2026-11-20 13:00-14:10 UTC)
+
+| # | Task | Status | Evidence |
+|---|------|--------|----------|
+| E-1 | Line-by-line verification pass vs live official API + docs | **done** | `session-eeb796d7/index.html` (16 rows, per-row source links), `session-eeb796d7/data/verification.json`, raw bodies in `session-eeb796d7/data/raw/` |
+| E-2 | Irregularities register | **done** | R-1…R-7 on `session-eeb796d7/index.html` |
+| E-3 | Stale-PR takeover per the 60-minute rule | **done (not needed)** | PR #6 closed 13:02:42Z as superseded (PR #27 rewrote `assets/app.js`), PR #15 merged 13:02:26Z inside PR #27 — both by session d0bea7de before takeover was required. No action taken here. |
+| E-5 | Collector defect found during E-1: `data/snapshot.json` never published; root dashboard showed 0 markets | **done** | `tools/collector.py` fix + `session-eeb796d7/tools/test_collector_fix.py` (11/11 PASS; pre-fix code reproduces `NameError: name 'series' is not defined` = the exact failure of Actions runs 44728913873 / 44744689706) |
+
+**E-5 detail (three defects in `tools/collector.py`, all fixed and regression-tested):**
+1. `collect_scope()` referenced an undefined `series` variable while building market rows —
+   `NameError` on the first in-scope market. Offline runs with zero rows never fired it,
+   which is why the failure only appeared in Actions. The root dashboard therefore sat on
+   `data/snapshot.json` -> 404 ("0 in-scope markets") on the deployed site.
+2. Topic classifier missed the AAA gasoline family: `KXAAAGASD/M/…` carry tags
+   `["Oil & Gas", "Oil and energy", "Econ Daily"]` and are classified via
+   `product_metadata.scope == "Gasoline"` (verified live: `GET /series/KXAAAGASD`).
+   The bare `Oil & Gas` tag is deliberately NOT mapped — it also covers WTI crude
+   (KXWTI…), natural gas (KXNATGASMON) and TTF (verified live:
+   `GET /series?tags=Oil%20%26%20Gas`). Before this fix the gas topic would still have
+   been empty after (1) was fixed, contradicting `rankings.html` which shows the AAA rows.
+3. `market_url`/`event_url` used the SERIES ticker on `kalshi.com/markets/…`; now they are
+   the exact official API endpoints with the market ticker (the per-row source link
+   policy). A human web-UI URL pattern for demo markets could not be confirmed from an
+   official source and was left blank + flagged (verification row V15), not invented.
+
+**Cross-session notes (not edited, logged per the rules):**
+- The sharp-jump landing card/chart wiring that `027edfe` dropped is restored by PR #40
+  (session d0bea7de, byte-identical to `9319862`) — tracked to merge at integration (R-3).
+- R-5 (five parallel dashboard trees, duplicated tools, 7 workflows with competing
+  schedules and observed 429 storms) and R-6 (committed `scripts/__pycache__/*.pyc`)
+  remain flagged for review; consolidation is suggestion S5.
+- Earlier revision of this branch contained a duplicate generator port (sharp-jump);
+  dropped on re-read of the board after main's `027edfe`/`ae1e150` landed the same fix —
+  no duplicate work is carried into the merge.
+
+Verification performed for E-5: `python3 session-eeb796d7/tools/test_collector_fix.py`
+(11/11), `python3 -m py_compile tools/collector.py`, `python3 tools/check.py` (clean),
+`python3 scripts/check_links.py` (all links OK).

@@ -226,6 +226,13 @@ def series_topic(series: dict) -> str | None:
     """
     if not series:
         return None
+    # 0) official product scope (verified live 2026-11-20 on GET /series/KXAAAGASD:
+    #    product_metadata.scope == "Gasoline" for the AAA gasoline family). The bare
+    #    "Oil & Gas" tag is deliberately NOT mapped here: it also covers crude oil
+    #    (KXWTI), natural gas and TTF series, which are not "gas prices".
+    scope = str(((series.get("product_metadata") or {}).get("scope")) or "").strip().lower()
+    if scope == "gasoline":
+        return "gas"
     tags = [str(t).strip().lower() for t in (series.get("tags") or []) if t]
     cats = [str(c).strip().lower() for c in (series.get("categories") or []) if c]
     primary = str(series.get("category") or "").strip().lower()
@@ -297,6 +304,9 @@ def collect_scope(signer: Signer | None) -> dict:
             continue
         if topic not in TOPICS:
             continue
+        # series metadata for the row below (was missing: NameError `series` crashed the
+        # collector on the first in-scope market — see session eeb796d7 E-5 in COORDINATION.md)
+        series = series_idx.get(st) or {}
         for m in ev.get("markets") or []:
             rows.append(
                 {
@@ -331,8 +341,11 @@ def collect_scope(signer: Signer | None) -> dict:
                     "series_categories": series.get("categories"),
                     "contract_terms_url": series.get("contract_terms_url"),
                     "contract_url": series.get("contract_url"),
-                    "event_url": f"https://kalshi.com/events/{ev.get('event_ticker')}",
-                    "market_url": f"https://kalshi.com/markets/{st.lower()}",
+                    # Verifiable official link only: the exact API endpoint that produced
+                    # this row. A human web-UI market URL could not be confirmed from an
+                    # official source, so it is not invented (blank + flagged on the site).
+                    "event_url": f"{DEMO_REST}/events/{ev.get('event_ticker')}",
+                    "market_url": f"{DEMO_REST}/markets/{m.get('ticker')}",
                 }
             )
     # A series can exist in the catalogue with no live events at all (verified live for
@@ -493,7 +506,7 @@ def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list
                 "volume_fp": m.get("volume_fp"),
                 "open_interest_fp": m.get("open_interest_fp"),
                 "rules_primary": m.get("rules_primary"),
-                "market_url": f"https://kalshi.com/markets/{st.lower()}" if st else None,
+                "market_url": f"{DEMO_REST}/markets/{m.get('ticker')}" if m.get("ticker") else None,
             }
         )
         if len(rows) >= limit_markets:
