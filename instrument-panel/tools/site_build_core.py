@@ -100,6 +100,11 @@ def count(v, dash="—"):
 def ext(url, label=None):
     if not url:
         return ""
+    # URL *patterns* contain {placeholders}; they are documentation, not reachable
+    # links. Rendering them as anchors produced broken "{ticker}" hrefs (found by
+    # tools/check_live_links.py at integration, session bdb4d2d0). Show them as code.
+    if "{" in url:
+        return f'<code>{E(label or url)}</code>'
     return f'<a href="{E(url, quote=True)}" target="_blank" rel="noopener">{E(label or url)}</a>'
 
 
