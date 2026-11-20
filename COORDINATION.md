@@ -401,3 +401,19 @@ recording so another session does not repeat them:
 
 In both cases the Pages deploy itself was fine; only the consistency job was red. The site was never
 broken, and it is worth distinguishing the two when reading Actions.
+
+---
+
+## Session `arena-8b9a46b4` — branch `arena/8b9a46b4-demo2` (added 2026-11-20)
+
+**Scope (non-overlapping, new folder only):** `session-8b9a46b4/` — sharp-jump (≥$0.10) detector + simulated-strategy backtest on already-collected demo data + executive-summary/suggestions pages. No edits to `pages/`, `tools/`, `data/`, `instrument-panel/`, `intelligence/`, `dashboard/`, `site/`, `verified/`, `live/`, `server/`, root HTML.
+
+| ID | Task | Status | Files touched |
+|----|------|--------|---------------|
+| J-1 | Claim scope, push claim | in progress | `COORDINATION.md` |
+| J-2 | Jump detector (≥$0.10 consecutive trade prints) over `data/dashboard_instrument.json` trades | unclaimed | `session-8b9a46b4/tools/jump_backtest.py`, `session-8b9a46b4/data/jumps.json` |
+| J-3 | Simulated strategy backtest on resolved traded markets (volume>0), by topic | unclaimed | same script, `session-8b9a46b4/data/backtest.json` |
+| J-4 | Site: executive summary, jumps, strategies, flagged, verification pages | unclaimed | `session-8b9a46b4/site/*.html` |
+| J-5 | Link/JS checks, PR → main, merge, Pages verify | unclaimed | this section |
+
+Rules honored: news/event *causes* of jumps are not in the Kalshi API — left blank and flagged, never inferred. Backtest is labeled SIMULATED (historical demo prints), not live demo-account execution (requires user keys; existing gated executor in `tools/execute_strategy.py` untouched).
