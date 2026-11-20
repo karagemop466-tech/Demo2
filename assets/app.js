@@ -97,57 +97,7 @@ async function loadOrderbook(){
     box.innerHTML="<h4>YES bids (price → contracts)</h4><table><tr><th>Price</th><th>Contracts</th></tr>"+yes.slice(-10).reverse().map(r=>"<tr><td>$"+r[0]+"</td><td>"+r[1]+"</td></tr>").join("")+"</table><h4>NO bids</h4><table><tr><th>Price</th><th>Contracts</th></tr>"+no.slice(-10).reverse().map(r=>"<tr><td>$"+r[0]+"</td><td>"+r[1]+"</td></tr>").join("")+"</table>";
   }catch(e){ box.innerHTML="<span class='bad'>Orderbook failed:</span> "+e.message; }
 }
-/* ---- auth (WebCrypto) ---- */
-function b64ToBytes(b64){ const bin=atob(b64.replace(/\s/g,"")); const a=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i); return a; }
-function bytesToB64(buf){ let s=""; const a=new Uint8Array(buf); a.forEach(b=>s+=String.fromCharCode(b)); return btoa(s); }
-async function importKey(pem){
-  const der = b64ToBytes(pem.replace(/-----BEGIN [^-]+-----/g,"").replace(/-----END [^-]+-----/g,""));
-  try{ return {key: await crypto.subtle.importKey("pkcs8",der,{name:"Ed25519"},false,["sign"]), alg:"Ed25519"}; }
-  catch(e){ return {key: await crypto.subtle.importKey("pkcs8",der,{name:"RSA-PSS",hash:"SHA-256"},false,["sign"]), alg:"RSA-PSS"}; }
-}
-async function signedFetch(path, method, body){
-  const keyId=document.getElementById("apiKeyId").value.trim();
-  const pem=document.getElementById("apiPrivateKey").value;
-  if(!keyId||!pem) throw new Error("Enter demo API Key ID + private key (stored only in this browser).");
-  const {key,alg}=await importKey(pem);
-  const ts=String(Date.now());
-  const signPath="/trade-api/v2"+path.split("?")[0];
-  const msg=new TextEncoder().encode(ts+method+signPath);
-  const sig = alg==="Ed25519" ? await crypto.subtle.sign("Ed25519",key,msg) : await crypto.subtle.sign({name:"RSA-PSS",saltLength:32},key,msg);
-  const r=await fetch(DEMO_REST+path,{method,headers:{"KALSHI-ACCESS-KEY":keyId,"KALSHI-ACCESS-TIMESTAMP":ts,"KALSHI-ACCESS-SIGNATURE":bytesToB64(sig),"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
-  const j=await r.json().catch(()=>({}));
-  if(!r.ok) throw new Error("HTTP "+r.status+": "+JSON.stringify(j));
-  return j;
-}
-async function loadPortfolio(){
-  const box=document.getElementById("portfolioBox"); if(!box) return;
-  try{
-    const bal=await signedFetch("/portfolio/balance","GET");
-    const pos=await signedFetch("/portfolio/positions?limit=100","GET");
-    const fills=await signedFetch("/portfolio/fills?limit=100","GET");
-    box.innerHTML="<p>Balance (cents): "+bal.balance+" → $"+(bal.balance/100).toFixed(2)+"</p><p>Positions: "+(pos.market_positions||[]).length+" · Fills: "+(fills.fills||[]).length+"</p>"+analyzeFills(fills.fills||[]);
-    window._fills=fills.fills||[];
-  }catch(e){ box.innerHTML="<span class='warn'>Portfolio unavailable:</span> "+e.message; }
-}
-function analyzeFills(fills){
-  if(!fills.length) return "<p class='muted'>No fills yet. Place a demo order to generate data.</p>";
-  const byTopic={}, bySide={yes:0,no:0};
-  fills.forEach(f=>{ const k=topicOf({title:f.ticker||"",ticker:f.ticker||""})||"other"; byTopic[k]=(byTopic[k]||0)+1; if(f.side) bySide[f.side]=(bySide[f.side]||0)+1; });
-  return "<table><tr><th>Category</th><th>Count</th></tr>"+Object.entries(byTopic).map(([k,v])=>"<tr><td>"+k+"</td><td>"+v+"</td></tr>").join("")+"</table><p>Side split: YES "+(bySide.yes||0)+" · NO "+(bySide.no||0)+"</p><p class='muted'>Strategies are derived only from observed fills — see Analysis page. No strategy is recommended without data.</p>";
-}
-async function placeOrder(){
-  const out=document.getElementById("orderResult");
-  try{
-    const ticker=document.getElementById("orderTicker").value.trim();
-    const side=document.getElementById("orderSide").value;
-    const count=parseInt(document.getElementById("orderCount").value,10);
-    const price=parseFloat(document.getElementById("orderPrice").value);
-    if(!ticker||!count||!price) throw new Error("Fill ticker, count, and price.");
-    const j=await signedFetch("/portfolio/orders","POST",{ticker,side,count,yes_price:Math.round(price*100),type:"limit",time_in_force:"gtc"});
-    out.innerHTML="<span class='ok'>Order accepted:</span> "+JSON.stringify(j).slice(0,500);
-    loadPortfolio();
-  }catch(e){ out.innerHTML="<span class='bad'>Order failed:</span> "+e.message; }
-}
+/* Authenticated account access and order submission are intentionally omitted from this public static client. */
 async function loadResolved(){
   const tb=document.querySelector("#resolvedTable tbody"); if(!tb) return;
   try{
