@@ -569,6 +569,16 @@ def page_verification():
 <p class="small muted">{META.get("https_requests", 0)} requests issued · throttle events (HTTP 429) observed: <b>{META.get("throttle_events_429", 0)}</b> · final spacing between request starts: {META.get("final_request_interval_s", "—")} s.</p>
 <p class="small muted">Kalshi does not publish the size of the unauthenticated budget. It documents that public endpoints “charge your IP address’s budget first”, that a 429 carries <b>no</b> X-RateLimit headers when the response is publicly cacheable (which market data is), and that a 429 has no penalty or cooldown. The collector therefore spaces requests adaptively: it widens the gap on every 429 and narrows it slowly as calls succeed. The number above is the observed consequence, not a setting.</p>
 
+<h2>How a settled market is attributed to a topic</h2>
+<div class="notice"><h4>One documented approximation, stated plainly</h4>
+Open markets are queried per series (<code>/markets?series_ticker=…</code>), so their series is exact.
+Settled markets are queried once per run with <code>/markets?status=settled</code>, which returns no
+series field; each settled market is attributed to the series whose ticker matches its
+<code>event_ticker</code> prefix (the event ticker is <code>SERIES-EVENT</code> by Kalshi's own naming).
+A settled market whose prefix matches no collected series is <b>dropped rather than guessed</b>, so the
+resolved count is a lower bound. Row-level source links still point at the exact market and the query
+that returned it.</div>
+
 <h2>Series breadth actually collected</h2>
 <p class="small muted">Each topic is capped at {META.get("limits", {}).get("max_series_per_topic", 40)} series per run so the job finishes inside a scheduled slot. Where a topic has more series than that, the number skipped is listed here — it is never silently dropped.</p>
 <div class="tablewrap"><table><thead><tr><th>Topic</th><th class="num">Series skipped</th></tr></thead><tbody>

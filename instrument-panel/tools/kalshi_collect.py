@@ -107,11 +107,11 @@ ADJACENT = {
 }
 
 MAX_MARKETS_PER_TOPIC = 400          # metadata copies, per topic
-MAX_ORDERBOOKS_PER_TOPIC = 30        # live depth snapshots, per topic
-MAX_TRADE_MARKETS_PER_TOPIC = 5      # trade-history pulls, per topic (largest markets)
-MAX_RESOLVED_PER_SERIES = 8          # settled markets copied per series
+MAX_ORDERBOOKS_PER_TOPIC = 12        # live depth snapshots, per topic
+MAX_TRADE_MARKETS_PER_TOPIC = 3      # trade-history pulls, per topic (largest markets)
+MAX_RESOLVED_PER_TOPIC = 400         # settled markets copied per topic
 REQUEST_PAUSE = 0.0                  # spacing is handled by the adaptive limiter below
-MAX_SERIES_PER_TOPIC = int(os.environ.get('KALSHI_MAX_SERIES', '120'))  # series breadth per topic
+MAX_SERIES_PER_TOPIC = int(os.environ.get('KALSHI_MAX_SERIES', '300'))  # series breadth per topic
 SERIES_WORKERS = int(os.environ.get('KALSHI_WORKERS', '4'))  # concurrent per-series fetches (throttled globally)
 
 MARKET_FIELDS = [
@@ -366,6 +366,20 @@ def collect_markets(series_ticker, status):
     return j.get("markets", []) or [], url
 
 
+def collect_markets_paged(first_url, max_pages=4):
+    """Follow the cursor for a markets query. Returns (rows, url_of_first_page)."""
+    rows, url, pages = [], first_url, 0
+    while url and pages < max_pages:
+        j, st, _ = _req(url)
+        if st != 200 or not j:
+            break
+        rows.extend(j.get("markets") or [])
+        cur = j.get("cursor") or ""
+        url = f"{first_url}&cursor={urllib.parse.quote(cur)}" if cur else ""
+        pages += 1
+    return rows, first_url
+
+
 def collect_orderbook(ticker, depth=20):
     url = ENDPOINTS["orderbook"].format(ticker=urllib.parse.quote(ticker), depth=depth)
     j, st, _ = _req(url)
@@ -454,6 +468,7 @@ def main():
     trade_history = {}
     event_titles = {}
     truncated = {}
+    series_by_ticker = {}
 
     for topic in SCOPE:
         tid = topic["id"]
@@ -462,12 +477,11 @@ def main():
         truncated[tid] = max(0, len(found.get(tid, [])) - len(series_list))
 
         def fetch_series(s):
-            """(series, open markets, settled markets, events, urls) for one series."""
+            """(series, open markets, events, urls) for one series."""
             st = s.get("ticker")
             evs, ev_url = collect_events(st, "open")
             om, om_url = collect_markets(st, "open")
-            sm, sm_url = collect_markets(st, "settled")
-            return s, om, sm, evs, om_url, sm_url, ev_url
+            return s, om, evs, om_url, ev_url
 
         results = []
         with ThreadPoolExecutor(max_workers=SERIES_WORKERS) as pool:
@@ -480,7 +494,7 @@ def main():
                                     "detail": f"{type(e).__name__}: {e}"})
 
         results.sort(key=lambda r: str(r[0].get("ticker")))
-        for s, om, sm, evs, om_url, sm_url, ev_url in results:
+        for s, om, evs, om_url, ev_url in results:
             st_ticker = s.get("ticker")
             series_rows.append(slim_series(s, tid))
             for e in evs:
@@ -495,20 +509,36 @@ def main():
                 m["_source_markets_url"] = om_url
                 m["_series"] = s
                 mkts.append(m)
-            for m in sm[:MAX_RESOLVED_PER_SERIES]:
-                row = {k: m.get(k) for k in MARKET_FIELDS}
-                row.update(
-                    {
-                        "topic": tid,
-                        "series_ticker": st_ticker,
-                        "series_title": s.get("title"),
-                        "event_title": (event_titles.get(m.get("event_ticker")) or {}).get("title"),
-                        "source_url": sm_url,
-                        "source_market_url": ENDPOINTS["market"].format(ticker=urllib.parse.quote(str(m.get("ticker")))),
-                    }
-                )
-                row.update(derive(m))
-                resolved_rows.append(row)
+            series_by_ticker[st_ticker] = s
+
+        # resolved markets: ONE paginated query per topic, not one per series
+        settled_url = f"{API}/markets?status=settled&limit=1000&mve_filter=exclude"
+        settled, settled_url = collect_markets_paged(settled_url, max_pages=4)
+        in_scope_series = {s.get("ticker") for s in series_list}
+        added = 0
+        for m in settled:
+            ev = str(m.get("event_ticker") or "")
+            st_guess = ev.rsplit("-", 1)[0] if "-" in ev else ev
+            s_obj = series_by_ticker.get(st_guess)
+            if s_obj is None:
+                continue          # cannot attribute it to an in-scope series -> not shown as in scope
+            if added >= MAX_RESOLVED_PER_TOPIC:
+                break
+            row = {k: m.get(k) for k in MARKET_FIELDS}
+            row.update(
+                {
+                    "topic": tid,
+                    "series_ticker": s_obj.get("ticker"),
+                    "series_title": s_obj.get("title"),
+                    "event_title": (event_titles.get(m.get("event_ticker")) or {}).get("title"),
+                    "source_url": settled_url,
+                    "source_market_url": ENDPOINTS["market"].format(ticker=urllib.parse.quote(str(m.get("ticker")))),
+                    "series_attribution": "event_ticker prefix match (see note on Verification)",
+                }
+            )
+            row.update(derive(m))
+            resolved_rows.append(row)
+            added += 1
 
         mkts.sort(key=lambda m: (derive(m)["open_interest_usd"] or -1), reverse=True)
         mkts = mkts[:MAX_MARKETS_PER_TOPIC]
@@ -620,7 +650,7 @@ def main():
             "limits": {"max_series_per_topic": MAX_SERIES_PER_TOPIC, "max_markets_per_topic": MAX_MARKETS_PER_TOPIC,
                     "max_orderbooks_per_topic": MAX_ORDERBOOKS_PER_TOPIC,
                     "max_trade_markets_per_topic": MAX_TRADE_MARKETS_PER_TOPIC,
-                    "max_resolved_per_series": MAX_RESOLVED_PER_SERIES},
+                    "max_resolved_per_topic": MAX_RESOLVED_PER_TOPIC},
             "note": ("All values are copied from Kalshi DEMO Trade API responses or are arithmetic over copied "
                      "values. Kalshi states demo prices may not be reflective of real markets."),
         },
