@@ -1141,3 +1141,49 @@ endpoint `GET /trade-api/v2/markets/{ticker}`. All matched exactly; nothing infe
 - Sandbox bash egress to `*.kalshi.co` is blocked (TLS handshake fails — flagged F1); live source
   checks above were done with the fetch tool, which can reach the demo host and docs. GitHub
   Actions runners have normal egress, so the collection workflows run there.
+
+---
+
+# Session `arena/fb22fbb1-demo2` — live alerts + ROI model + simulated trades (2026-11-20)
+
+Branch: `arena/fb22fbb1-demo2`, branched from `8818f6b` on `main`. Session ID: `fb22fbb1`.
+This session works additively under `alerts/` + `tools/roi_model.py` + `tools/simulate_trades.py`
++ `data/alerts.json` + `data/roi.json` + `data/simulated_trades.json` + `data/strategy_results.json`.
+Shared outputs (`index.html`, `pages/*`, `assets/*`, `tools/build_site.py`) are NOT edited by this
+session except via the final-integration step logged below. Prior sessions' subsites
+(`verified/`, `dashboard/`, `site/`, `intelligence/`, `live/`, `monitor/`, `jumps/`,
+`instrument-panel/`) are preserved untouched.
+
+| # | Task | Status | Owner | Files (exclusive scope) |
+|---|------|--------|-------|--------------------------|
+| F-1 | Claim tasks + push claim immediately | **in progress** | fb22fbb1 | `COORDINATION.md` (this section) |
+| F-2 | Re-verify API surface line by line vs official docs (demo_env, api_environments, get-markets, get-orderbook, get-candlesticks, get-trades, create-order-v2, api_keys, quick_start_market_data, quick_start_websockets) | unclaimed | fb22fbb1 | `alerts/verification.html`, `alerts/data/` notes |
+| F-3 | Executive summary (API surfaces + what was built + risks) | unclaimed | fb22fbb1 | `alerts/executive-summary.html`, `docs/EXECUTIVE_SUMMARY.md` (append only) |
+| F-4 | Live alerting: two scrolling chats (all events + high-ROI filter), >=$0.10 moves, live chart (seconds/minutes/hours), liquidity ladder | unclaimed | fb22fbb1 | `alerts/index.html`, `alerts/assets/*`, `data/alerts.json`, `data/roi.json` |
+| F-5 | ROI model (transparent heuristic from official fields only) + simulated trades automation (momentum / mean-reversion / value) + portfolio performance | unclaimed | fb22fbb1 | `tools/roi_model.py`, `tools/simulate_trades.py`, `data/simulated_trades.json`, `data/strategy_results.json`, `alerts/simulated.html`, `alerts/portfolio.html` |
+| F-6 | Resolutions tracking (yes/no), suggestions board, flagged-for-review, sources | unclaimed | fb22fbb1 | `alerts/resolutions.html`, `alerts/suggestions.html`, `alerts/flagged.html`, `alerts/sources.html` |
+| F-7 | Checks (links, nav, data, secrets, JS), local preview, commit/push, PR to main, merge, confirm Pages, record | unclaimed | fb22fbb1 | `COORDINATION.md` (append), CI workflows (no edits unless broken) |
+
+Scope note: `alerts/` is a new additive subsite so existing CI (`tools/check.py` covers only
+`index.html` + `pages/*.html`) is unaffected. `data/*.json` additions are new files; no existing
+snapshot is overwritten. If a task requires changing a file owned by another session, log the
+request here instead of editing it.
+
+## Sources to verify (official only)
+
+- https://docs.kalshi.com/getting_started/demo_env
+- https://docs.kalshi.com/getting_started/api_environments
+- https://docs.kalshi.com/getting_started/api_keys
+- https://docs.kalshi.com/getting_started/quick_start_market_data
+- https://docs.kalshi.com/getting_started/quick_start_websockets
+- https://docs.kalshi.com/api-reference/market/get-markets
+- https://docs.kalshi.com/api-reference/market/get-market-orderbook
+- https://docs.kalshi.com/api-reference/market/get-market-candlesticks
+- https://docs.kalshi.com/api-reference/market/get-trades
+- https://docs.kalshi.com/api-reference/orders/create-order-v2
+- https://docs.kalshi.com/api-reference/exchange/get-exchange-status
+- Live demo API: https://external-api.demo.kalshi.co/trade-api/v2 (also https://demo-api.kalshi.co/trade-api/v2)
+
+## Work record (filled as tasks complete)
+
+- F-1: claim written, committing + pushing now.
