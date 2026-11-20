@@ -247,12 +247,12 @@ depth, yes/no resolution tracking, trade categorisation, a strategy engine that 
 gate for suggestions, and a price-jump page for moves of $0.10 or more between official trade prints
 (<a href="../jumps/index.html">Price Jumps</a>, added in this review).</p>
 <p><b>Not done, and why.</b> Demo-account portfolio tracking and order execution need a Kalshi demo API key,
-and this workspace has none (<a href="flagged.html">F18</a>). Culture has no open markets in the collected
-data (<a href="flagged.html">F19</a>). The gas topic includes solar, electricity and refinery markets
-(<a href="flagged.html">F13</a>). The jump page cannot name a cause, because no official source links a price
-move to news (<a href="flagged.html">F17</a>), and snapshots are too coarse for intraday moves
-(<a href="flagged.html">F16</a>). A public page takes a demo private key as input
-(<a href="flagged.html">F20</a>).</p>
+and this workspace has none (<a href="flagged.html">F19</a>). Culture has no open markets in the collected
+data (<a href="flagged.html">F20</a>). The gas topic includes solar, electricity and refinery markets
+(<a href="flagged.html">F14</a>). The jump page cannot name a cause, because no official source links a price
+move to news (<a href="flagged.html">F18</a>), and snapshots are too coarse for intraday moves
+(<a href="flagged.html">F17</a>). A public page takes a demo private key as input
+(<a href="flagged.html">F21</a>).</p>
 <p>What remains open is definition and access: what &#8220;highest dollar amount&#8221; means, how fresh the data
 must be, whether a demo key will be supplied, and how much evidence is enough before a strategy is trusted.
 Those are listed, with the exact information needed to close them, on <a href="questions.html">Questions</a>.</p>
@@ -578,6 +578,15 @@ SUGGESTIONS = [
          effort="Low", impact="Medium", risk="None.",
          source=DOCS + "/getting_started/pagination",
          recommended="Implemented \u2014 see the API log section on Verification."),
+    dict(id="S9", title="Mark sharp price jumps (\u2265 $0.10) on the live chart",
+         problem="A sharp price move has no visible marker on the chart, so a trader can miss a significant move.",
+         options=["Mark jumps \u2265 $0.10 with red vertical markers + a table below the chart (implemented)",
+                  "No markers, keep chart clean (rejected)",
+                  "Add news/event links for each jump (not possible from the API \u2014 cause unverified)"],
+         effort="Low", impact="High",
+         risk="A reader could mistake a jump marker for a confirmed causal event \u2014 mitigated by the unverified flag and the F13 flag.",
+         source=DOCS + "/api-reference/market/get-market-candlesticks",
+         recommended="Implemented \u2014 see the \"Sharp price moves\" card on the Dashboard. Each jump is flagged <span class=\"pill flag\">cause unverified</span> because the Trade API returns price and volume only."),
 ]
 
 
@@ -625,7 +634,7 @@ knowledge. No decision is transmitted anywhere.</div>
   const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
   function paint(){{
     const d=load(); let n=0;
-    ['S1','S2','S3','S4','S5','S6','S7','S8'].forEach(id=>{{
+    ['S1','S2','S3','S4','S5','S6','S7','S8','S9'].forEach(id=>{{
       const el=document.getElementById('dec-'+id); if(!el) return;
       const rec=d[id];
       if(rec){{ n++; el.innerHTML='<span class="pill '+(rec.decision==='choose'?'ok':rec.decision==='reject'?'err':'flag')+'">'+rec.decision+'</span> <span class="small muted">'+new Date(rec.at).toLocaleString()+'</span>'; }}
@@ -633,7 +642,7 @@ knowledge. No decision is transmitted anywhere.</div>
       const note=document.getElementById('note-'+id);
       if(note && rec && rec.note && !note.value) note.value=rec.note;
     }});
-    document.getElementById('decSummary').textContent=n+' of 8 decided';
+    document.getElementById('decSummary').textContent=n+' of 9 decided';
   }}
   document.querySelectorAll('button[data-decide]').forEach(b=>b.addEventListener('click',()=>{{
     const d=load(), id=b.dataset.id;
@@ -896,11 +905,19 @@ VERIFIED = [
  ("Portfolio / order endpoints require signed keys",
   "GET /portfolio/balance and GET /portfolio/positions return 401 without signed headers; no demo credentials exist in this workspace, so all portfolio/trade rows stay blank and flagged",
   "api-reference/portfolio/get-balance", "read on page (security scheme kalshiAccessKey) + unauthenticated request fails", "Verified"),
+ ("Sharp-jump price-move detection (\u2265 $0.10)",
+  "Chart detects moves of $0.10 or more between consecutive price points and marks them with red vertical markers; the table below the chart lists each jump with a link to the market on Kalshi. The cause of each jump is not derivable from the Kalshi API (no news/event field in price responses) and is flagged cause unverified.",
+  ("api-reference/market/get-market-candlesticks", "api-reference/market/get-trades"),
+  "implemented in assets/site.js (KR.detectJumps) + chart markers in KR.drawChart; table renders on index.html", "By design"),
 ]
 
 
 def build_verification() -> None:
-    rows = [[c, v, src(p, p.rsplit("/", 1)[-1]), how,
+    def vsrc(p):
+        if isinstance(p, (list, tuple)):
+            return ", ".join(src(x, x.rsplit("/", 1)[-1]) for x in p)
+        return src(p, p.rsplit("/", 1)[-1])
+    rows = [[c, v, vsrc(p), how,
              '<span class="pill ok">Verified</span>' if st == "Verified"
              else '<span class="pill flag">By design</span>']
             for c, v, p, how, st in VERIFIED]
@@ -1060,7 +1077,16 @@ FLAGGED = [
   "topic, and the Gas page states &#8220;catalogue only &#8212; 2 series exist, none has a live market&#8221;. "
   "Gas stays in scope and populates automatically when the demo exchange lists those markets.",
   "api-reference/market/get-series-list"),
- ("F13", "The Gas prices topic includes markets that are not gas prices",
+ ("F13", "Sharp-jump cause cannot be determined from the API",
+  "The dashboard now marks price moves \u2265 $0.10 between consecutive points on the live chart and "
+  "links each to the market's page on Kalshi. But the Trade API returns price and volume only \u2014 no "
+  "news, no event, no explanation for why a contract moved.",
+  "A reader could mistake a jump marker for a confirmed causal event.",
+  "Each jump row links to the market on Kalshi (where traders can see discussion) and is tagged "
+  "<span class=\"pill flag\">cause unverified</span>. Nothing is inferred. Raised as verification row "
+  "on pages/verification.html and as suggestion S9 on pages/suggestions.html.",
+  ("api-reference/market/get-markets", "api-reference/market/get-trades")),
+ ("F14", "The Gas prices topic includes markets that are not gas prices",
   "The gas scope accepts every series tagged <code>Oil and energy</code> under Economics, plus any title "
   "containing gas, gasoline or diesel. The collected <code>gas</code> topic holds 189 markets, 18 of which are not "
   "gas prices: solar capacity (<code>KXSOLAR</code>, 5), electricity price (<code>KXPOWERKWH</code>, 7), refinery "
@@ -1069,42 +1095,42 @@ FLAGGED = [
   "The Gas page and the gas ranking mix in non-price markets, so a \u201ctop gas market\u201d can be a solar contract.",
   "Not changed in this session: the scope is the owner\u2019s decision. The rows are listed here by series ticker.",
   "api-reference/market/get-series-list"),
- ("F14", "Elections coverage is capped: 2,409 series were dropped",
+ ("F15", "Elections coverage is capped: 2,409 series were dropped",
   "The collector queries at most 300 series per topic. It sorts discovered series by the API\u2019s <code>frequency</code> field, then by ticker, and drops the rest. "
   "The snapshot records 2,409 elections series dropped (and 20 crypto series). The dropped series are the one-off tail.",
   "The elections \u201chighest dollar amount\u201d ranking covers only the kept series, so a large one-off election market can be missing.",
   "The number dropped is published per topic in <code>data/dashboard_instrument.json</code> (<code>series_truncated_per_topic</code>) and on the Verification page. The cap is set by <code>KALSHI_MAX_SERIES</code>.",
   "api-reference/market/get-series-list"),
- ("F15", "Trade history is one page per market, and only 600 prints are kept",
+ ("F16", "Trade history is one page per market, and only 600 prints are kept",
   "<code>collect_trades()</code> requests one page (<code>limit=1000</code>) and never follows the <code>cursor</code>. "
   "The snapshot keeps the first 600 prints per market. The docs define <code>limit</code> as a page size with a maximum of 1000, and <code>cursor</code> as the way to get the next page.",
   "Moves older than the kept prints are not visible, and the jump detector cannot prove it has seen every move.",
   "The Price Jumps page states the prints analysed per market and their first and latest times, so the window is visible. Following the cursor is listed as a fix.",
   "https://docs.kalshi.com/api-reference/market/get-trades"),
- ("F16", "Snapshots are too coarse to find intraday moves of $0.10",
+ ("F17", "Snapshots are too coarse to find intraday moves of $0.10",
   "The jump page compared 733 consecutive snapshot price pairs across 7 snapshots. The gaps between snapshots run from 2.2 to 47.2 minutes, and no pair moved $0.10 or more.",
   "A move that starts and reverts between two snapshots is invisible, so \u201cno snapshot moves\u201d means only \u201cnone visible at this resolution\u201d.",
-  "Trade prints are used for the move list, and snapshot results are shown separately with their gaps. A WebSocket <code>trade</code> channel is the real fix. Its handshake requires API-key headers, so it depends on F18 too.",
+  "Trade prints are used for the move list, and snapshot results are shown separately with their gaps. A WebSocket <code>trade</code> channel is the real fix. Its handshake requires API-key headers, so it depends on F19 too.",
   "https://docs.kalshi.com/getting_started/quick_start_websockets"),
- ("F17", "No official source ties a price move to a cause",
+ ("F18", "No official source ties a price move to a cause",
   "The brief asks for events and website links that may have caused a jump of $0.10 or more. The Kalshi APIs return prices, trades and market metadata, and no field records news or a cause.",
   "Attributing a move to a news item would be inference. Any link we added would be a guess.",
   "The cause column on the Price Jumps page is blank and marked unverified. A reviewer can add a dated link with its own source; nothing is added automatically.",
   "https://docs.kalshi.com/api-reference/market/get-trades"),
- ("F18", "Demo-account portfolio and order execution cannot run from this workspace",
+ ("F19", "Demo-account portfolio and order execution cannot run from this workspace",
   "This workspace holds no Kalshi demo API key. The repository secrets <code>KALSHI_DEMO_API_KEY_ID</code> and <code>KALSHI_DEMO_PRIVATE_KEY</code> could not be read: "
   "<code>gh secret list</code> returned HTTP 403 (Resource not accessible by integration). The portfolio endpoints need signed requests (docs: get-balance).",
   "The brief asks for trades on the demo account and portfolio tracking from it. None of those rows can be verified or filled in here.",
   "Trade execution is dry-run by default (<code>KALSHI_DRY_RUN=1</code>) and disabled unless <code>KALSHI_TRADING_ENABLED=1</code>. Portfolio rows stay blank. The owner must create a demo key (official tutorial: help.kalshi.com, article 13823775) and add the two secrets.",
   "https://docs.kalshi.com/getting_started/api_keys"),
- ("F19", "Culture has no open markets",
+ ("F20", "Culture has no open markets",
   "The collected snapshot has 0 open culture markets. The official API lists 2 culture series (<code>KXXBANNEDMURRAYHILLGUY1</code> and <code>KXXBANNEDGROK</code>, both one-off), "
   "<a href=\"https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture\" target=\"_blank\" rel=\"noopener\">series?category=Culture</a>. Neither has an open market in the snapshot.",
   "The culture page cannot show a price, a ranking or a jump, even though culture is one of the five topics in the brief.",
   "Shown as an empty topic, not filled. The page states the count of series found.",
   "https://docs.kalshi.com/api-reference/market/get-series-list"),
 
- ("F20", "A public page takes a demo private key as input",
+ ("F21", "A public page takes a demo private key as input",
   "<code>live/trading.html</code> asks the user to paste the demo API Key ID and the PEM private key. The key is used in the browser to sign demo requests, and it is kept in sessionStorage. "
   "Source: the page and script in the repository (see R18).",
   "The site is public. A script injected into the page, or a browser extension, could read the key while the tab is open.",
@@ -1114,9 +1140,13 @@ FLAGGED = [
 
 
 def build_flagged() -> None:
-    rows = [[f[0], f"<b>{f[1]}</b><br>{f[2]}", f[3], f[4],
-             (f'<a href="{f[5]}" target="_blank" rel="noopener">{f[5].split("//", 1)[1].split("/", 1)[0]}</a>'
-              if f[5].startswith("http") else src(f[5], f[5].rsplit("/", 1)[-1])),
+    def fsrc(p):
+        if isinstance(p, (list, tuple)):
+            return ", ".join(fsrc(x) for x in p)
+        if p.startswith("http"):
+            return f'<a href="{p}" target="_blank" rel="noopener">{p.split("//", 1)[1].split("/", 1)[0]}</a>'
+        return src(p, p.rsplit("/", 1)[-1])
+    rows = [[f[0], f"<b>{f[1]}</b><br>{f[2]}", f[3], f[4], fsrc(f[5]),
              '<span class="pill flag">open for review</span>'] for f in FLAGGED]
     body = """
 <h1>Flagged for review</h1>
@@ -1132,6 +1162,7 @@ wrong.</p>
 <li><b>F6</b>: the portfolio page says \u201cnot configured\u201d; it is not a zero balance.</li>
 <li><b>F11</b>: the chart notes whether it is plotting a derived quoted mid or a traded price.</li>
 <li><b>F12</b>: the Gas page says \u201ccatalogue only\u201d instead of showing an unexplained empty table.</li>
+<li><b>F13</b>: sharp jumps \u2265 &#36;0.10 are marked with red vertical markers on the chart and listed in a table below it, each tagged \u201ccause unverified\u201d \u2014 the Trade API returns price and volume only, never the news or event behind a move.</li>
 <li><b>F8</b>: the dashboard header shows the snapshot time and age, so stale data is visible.</li>
 <li><b>F9</b>: compare the in-scope series list per topic against the unclassified list in
   <code>data/snapshot.json</code>.</li>
@@ -1261,7 +1292,7 @@ REPO_FINDINGS = [
   "The same repo has no matching form on any other page (checked by searching every HTML file for key inputs). "
   "Source: the file contents (<code>live/trading.html</code> lines 101-107; <code>live/assets/app.js</code> lines 663-690); <a href=\"https://docs.kalshi.com/getting_started/api_keys\" target=\"_blank\" rel=\"noopener\">Kalshi docs: API keys</a>.",
   "Anyone who can run script in that page, through an injected script or a browser extension, can read the key from sessionStorage and place demo orders with it. The README discloses this.",
-  "Flagged (F20). Recommended: remove the form and keep signed calls on the server side. Not changed here (the page belongs to another session\u2019s scope)."),
+  "Flagged (F21). Recommended: remove the form and keep signed calls on the server side. Not changed here (the page belongs to another session\u2019s scope)."),
 
  ("R19", "instrument-panel/site/analysis.html, instrument-panel/site/verification.html", "Two source links still contain unfilled template text",
   "<code>analysis.html</code> has an API link with a literal <code>{ticker}</code> and <code>{status}</code> in it. <code>verification.html</code> has one with a literal <code>{category}</code>. "

@@ -1,6 +1,6 @@
 {
   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories",
-  "collected_at": "2026-11-20T12:25:58Z",
+  "collected_at": "2026-11-20T13:02:32Z",
   "tags_by_categories": {
     "AI": null,
     "Business": null,
@@ -14,7 +14,6 @@
       "Events",
       "Climate change",
       "Hurricanes",
-      "Hourly temperature",
       "Cold",
       "Degree days"
     ],

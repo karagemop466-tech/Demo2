@@ -880,3 +880,43 @@ Sources to verify against (official only): https://docs.kalshi.com/api-reference
 - **Main's CI was red** at `9319862` (run 44740812355, step "Fail if regenerating produced a diff"): committed pages did not match the generators. Fixed by regenerating from the merged `build_site.py` / `build_content.py`; the diff gate is clean on the merged tree.
 - **Jump numbers changed with the data.** The collector picks the largest markets each run, so the trade set changed. At snapshot `2026-11-20T13:02:54Z`: **7 trade-print moves ≥ $0.10 across 6 of 11 markets with trade data** (the 39 / 12 figures above were from snapshot `12:43:59Z`). Snapshot moves: 0 across 1,399 pairs (gaps 2.2–66.1 min). The live page `jumps/index.html` is authoritative and is rebuilt on every 15-minute data run.
 - The 7 current moves include prints of 0.01 contracts (for example `KXAAAGASMAXFL-26DEC31-5.90`, 2026-09-15 0.01 → 0.90 on 0.01 contracts). They are shown with their sizes, because a thin print can look like a market move.
+---
+
+# Final record — PR #27 (session 5330bffb)
+
+- **PR:** https://github.com/karagemop466-tech/Demo2/pull/27 — "Final integration: verified data
+  pipeline, live dashboard, trade CLI, consolidated registers" — **MERGED** into `main` as
+  merge commit `9319862` on 2026-11-20 (~13:05 UTC).
+- **Pre-merge checks (all green):** ci.yml "Build and check the site" (generator-determinism,
+  Python compile, analysis fixture, links/nav/data/secrets/JS), verify-monitor "Test and build
+  monitor subsite" (8 tests + 15-page build), linkcheck (external host rejections like
+  WSJ/Reuters 401, CoinDesk 429, DPWorldTour timeout now classified as anti-bot warnings —
+  dead links 404/410/DNS still fail).
+- **PR #6:** closed as superseded (content integrated at 296ad33; explanation comment posted).
+- **PR #15:** found already merged by another session; its monitor/ tree was also integrated via
+  merge 0680686 — nothing lost.
+- **Deploy:** GitHub Pages deploy workflow `pages.yml` triggered on `main` at 9319862; result
+  recorded by the next session entry in this file and visible at
+  https://github.com/karagemop466-tech/Demo2/actions/workflows/pages.yml.
+- Collector (`collect.yml`) continues refreshing `data/` on this branch and on main's data
+  pipelines; the site falls back to committed snapshots when the API is unreachable.
+## Session `arena-8b9a46b4` — branch `arena/8b9a46b4-demo2` (added 2026-11-20)
+
+**Scope (non-overlapping, new folder only):** `session-8b9a46b4/` — sharp-jump (≥$0.10) detector + simulated-strategy backtest on already-collected demo data + executive-summary/suggestions pages. No edits to `pages/`, `tools/`, `data/`, `instrument-panel/`, `intelligence/`, `dashboard/`, `site/`, `verified/`, `live/`, `server/`, root HTML.
+
+| ID | Task | Status | Files touched |
+|----|------|--------|---------------|
+| J-1 | Claim scope, push claim | in progress | `COORDINATION.md` |
+| J-2 | Jump detector (≥$0.10 consecutive trade prints) over `data/dashboard_instrument.json` trades | unclaimed | `session-8b9a46b4/tools/jump_backtest.py`, `session-8b9a46b4/data/jumps.json` |
+| J-3 | Simulated strategy backtest on resolved traded markets (volume>0), by topic | unclaimed | same script, `session-8b9a46b4/data/backtest.json` |
+| J-4 | Site: executive summary, jumps, strategies, flagged, verification pages | unclaimed | `session-8b9a46b4/site/*.html` |
+| J-5 | Link/JS checks, PR → main, merge, Pages verify | unclaimed | this section |
+
+Rules honored: news/event *causes* of jumps are not in the Kalshi API — left blank and flagged, never inferred. Backtest is labeled SIMULATED (historical demo prints), not live demo-account execution (requires user keys; existing gated executor in `tools/execute_strategy.py` untouched).
+
+### Results (session arena-8b9a46b4)
+- Jump detector over 2,479 trade prints / 12 markets: **39 jumps ≥ $0.10** → `session-8b9a46b4/data/jumps.json` (each row source-linked; cause/news blank = J-F1).
+- Simulated backtest on 317 traded resolved markets (of 1,601): always-NO mean +$0.60/contract reflects calibration (73.8% resolved NO), NOT a tradable edge — labeled SIMULATED with lookahead caveat (J-F2). Gas/culture: no traded resolved markets → blank (J-F3).
+- Site: 5 pages under `session-8b9a46b4/site/` incl. live browser chart (seconds/minutes/hours + orderbook depth) polling the demo API directly.
+- Verification: `python3 session-8b9a46b4/tools/jump_backtest.py` reproducible; `node --check live.js` OK; `python3 scripts/check_links.py` → 8,124 refs, all OK; `python3 tools/check.py` clean; local smoke 200s.
+- Tasks J-1…J-5: done (J-5 PR/merge record below).

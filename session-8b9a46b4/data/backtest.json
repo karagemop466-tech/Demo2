@@ -1,0 +1,118 @@
+{
+ "generated_at": "2026-11-20T12:43:59Z",
+ "api_base": "https://external-api.demo.kalshi.co/trade-api/v2",
+ "simulated": true,
+ "caveat": "Entry at final print price (lookahead); measures calibration edge, not a tradable strategy. Historical demo data only.",
+ "population": {
+  "resolved_collected": 1601,
+  "traded_and_priced": 317
+ },
+ "overall": {
+  "always_yes": {
+   "n": 317,
+   "total_pnl_per_contract": 40.305,
+   "mean_pnl_per_contract": 0.1271,
+   "win_rate": 0.2618
+  },
+  "always_no": {
+   "n": 317,
+   "total_pnl_per_contract": 191.305,
+   "mean_pnl_per_contract": 0.6035,
+   "win_rate": 0.7382
+  },
+  "favorite": {
+   "n": 317,
+   "total_pnl_per_contract": 187.305,
+   "mean_pnl_per_contract": 0.5909,
+   "win_rate": 0.7256
+  },
+  "underdog": {
+   "n": 317,
+   "total_pnl_per_contract": 44.305,
+   "mean_pnl_per_contract": 0.1398,
+   "win_rate": 0.2744
+  }
+ },
+ "by_topic": {
+  "crypto": {
+   "always_yes": {
+    "n": 10,
+    "total_pnl_per_contract": 0.08,
+    "mean_pnl_per_contract": 0.008,
+    "win_rate": 0.2
+   },
+   "always_no": {
+    "n": 10,
+    "total_pnl_per_contract": 6.08,
+    "mean_pnl_per_contract": 0.608,
+    "win_rate": 0.8
+   },
+   "favorite": {
+    "n": 10,
+    "total_pnl_per_contract": 8.08,
+    "mean_pnl_per_contract": 0.808,
+    "win_rate": 1.0
+   },
+   "underdog": {
+    "n": 10,
+    "total_pnl_per_contract": -1.92,
+    "mean_pnl_per_contract": -0.192,
+    "win_rate": 0.0
+   }
+  },
+  "elections": {
+   "always_yes": {
+    "n": 142,
+    "total_pnl_per_contract": -4.635,
+    "mean_pnl_per_contract": -0.0326,
+    "win_rate": 0.1831
+   },
+   "always_no": {
+    "n": 142,
+    "total_pnl_per_contract": 85.365,
+    "mean_pnl_per_contract": 0.6012,
+    "win_rate": 0.8169
+   },
+   "favorite": {
+    "n": 142,
+    "total_pnl_per_contract": 76.365,
+    "mean_pnl_per_contract": 0.5378,
+    "win_rate": 0.7535
+   },
+   "underdog": {
+    "n": 142,
+    "total_pnl_per_contract": 4.365,
+    "mean_pnl_per_contract": 0.0307,
+    "win_rate": 0.2465
+   }
+  },
+  "golf": {
+   "always_yes": {
+    "n": 165,
+    "total_pnl_per_contract": 44.86,
+    "mean_pnl_per_contract": 0.2719,
+    "win_rate": 0.3333
+   },
+   "always_no": {
+    "n": 165,
+    "total_pnl_per_contract": 99.86,
+    "mean_pnl_per_contract": 0.6052,
+    "win_rate": 0.6667
+   },
+   "favorite": {
+    "n": 165,
+    "total_pnl_per_contract": 102.86,
+    "mean_pnl_per_contract": 0.6234,
+    "win_rate": 0.6848
+   },
+   "underdog": {
+    "n": 165,
+    "total_pnl_per_contract": 41.86,
+    "mean_pnl_per_contract": 0.2537,
+    "win_rate": 0.3152
+   }
+  }
+ },
+ "source_file": "data/dashboard_instrument.json",
+ "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker={series}&status=settled"
+}

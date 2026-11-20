@@ -158,6 +158,23 @@ knowledge. No decision is transmitted anywhere.</div>
   <label for="note-S8">Reviewer note (stored in this browser only)</label>
   <input id="note-S8" data-note="S8" placeholder="why, and what would change your mind">
 </div>
+<div class="card" style="margin-bottom:12px" data-sug="S9">
+  <h3>S9 · Mark sharp price jumps (≥ $0.10) on the live chart</h3>
+  <p><b>Problem.</b> A sharp price move has no visible marker on the chart, so a trader can miss a significant move.</p>
+  <p style="margin-bottom:.2em"><b>Options on the table.</b></p>
+  <ul class="clean"><li>Mark jumps ≥ $0.10 with red vertical markers + a table below the chart (implemented)</li><li>No markers, keep chart clean (rejected)</li><li>Add news/event links for each jump (not possible from the API — cause unverified)</li></ul>
+  <p><b>Recommendation.</b> Implemented — see the "Sharp price moves" card on the Dashboard. Each jump is flagged <span class="pill flag">cause unverified</span> because the Trade API returns price and volume only.</p>
+  <p class="small muted">Effort Low · Impact High · Risk: A reader could mistake a jump marker for a confirmed causal event — mitigated by the unverified flag and the F13 flag.</p>
+  <p class="small">Source: <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/market/get-market-candlesticks</a></p>
+  <div class="row">
+    <button class="sm" data-decide="choose" data-id="S9">Choose this path</button>
+    <button class="secondary sm" data-decide="defer" data-id="S9">Defer</button>
+    <button class="secondary sm" data-decide="reject" data-id="S9">Reject</button>
+    <span class="status" id="dec-S9">No decision recorded</span>
+  </div>
+  <label for="note-S9">Reviewer note (stored in this browser only)</label>
+  <input id="note-S9" data-note="S9" placeholder="why, and what would change your mind">
+</div>
 <script>
 (function(){
   const KEY='kalshi-demo-decisions-v2';
@@ -165,7 +182,7 @@ knowledge. No decision is transmitted anywhere.</div>
   const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
   function paint(){
     const d=load(); let n=0;
-    ['S1','S2','S3','S4','S5','S6','S7','S8'].forEach(id=>{
+    ['S1','S2','S3','S4','S5','S6','S7','S8','S9'].forEach(id=>{
       const el=document.getElementById('dec-'+id); if(!el) return;
       const rec=d[id];
       if(rec){ n++; el.innerHTML='<span class="pill '+(rec.decision==='choose'?'ok':rec.decision==='reject'?'err':'flag')+'">'+rec.decision+'</span> <span class="small muted">'+new Date(rec.at).toLocaleString()+'</span>'; }
@@ -173,7 +190,7 @@ knowledge. No decision is transmitted anywhere.</div>
       const note=document.getElementById('note-'+id);
       if(note && rec && rec.note && !note.value) note.value=rec.note;
     });
-    document.getElementById('decSummary').textContent=n+' of 8 decided';
+    document.getElementById('decSummary').textContent=n+' of 9 decided';
   }
   document.querySelectorAll('button[data-decide]').forEach(b=>b.addEventListener('click',()=>{
     const d=load(), id=b.dataset.id;
