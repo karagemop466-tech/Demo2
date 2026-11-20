@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resolutions · Kalshi Demo Dashboard</title>
+<meta name="description" content="In-scope Kalshi demo markets tracked until resolution, with the official yes/no result.">
+<link rel="stylesheet" href="../assets/style.css">
+</head><body>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../pages/resolutions.html" aria-current="page">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<div class="wrap">
+
+<h1>Resolutions — tracked until the market resolves</h1>
+<p class="lead">Every in-scope market Kalshi has settled, with the official outcome
+(<b>yes</b> or <b>no</b>), the settlement value, and the settlement timestamp. Rows come
+straight from <code>GET /markets?status=settled</code>; the <code>result</code> field is
+Kalshi's own, not computed here.</p>
+<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Loading…</div></div></div>
+<div class="kpis" id="kpis"></div>
+<div class="row" style="margin:10px 0">
+  <div><label for="topicFilter">Topic</label>
+    <select id="topicFilter"><option value="">All</option><option value="gas">Gas</option>
+    <option value="elections">Elections</option><option value="culture">Culture</option>
+    <option value="crypto">Crypto</option><option value="golf">Golf</option></select></div>
+  <div><label for="resFilter">Result</label>
+    <select id="resFilter"><option value="">All</option><option value="yes">Yes only</option><option value="no">No only</option></select></div>
+</div>
+<div id="resTable"></div>
+<h2>How resolution is defined</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Term</th><th>Meaning</th><th>Source</th></tr></thead><tbody>
+<tr><td><code>result</code></td><td>Official market outcome once settled: <code>yes</code> or <code>no</code>; empty while live.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+<tr><td><code>settlement_value_dollars</code></td><td>Settlement value of the market in fixed-point dollars.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+<tr><td><code>status=settled</code></td><td>The filter used to list resolved markets.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+<tr><td>Settlement rules</td><td>How outcomes are determined and positions resolved.</td>
+<td><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a></td></tr>
+<tr><td>Historical cutoff</td><td>Very old settled markets move to <code>/historical/markets</code>; they are not lost, just partitioned.</td>
+<td><a href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noopener">Historical Data</a></td></tr>
+</tbody></table></div>
+
+</div>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a></div></div></footer>
+<script src="../assets/site.js"></script>
+
+<script>
+(async function(){
+  const $ = id=>document.getElementById(id);
+  try{
+    const d = await KR.resolutions();
+    KR.staleness($('staleness'), d.generated_at_utc);
+    const rows = d.resolutions||[];
+    const yes = rows.filter(r=>r.result==='yes').length, no = rows.filter(r=>r.result==='no').length;
+    const per = {};
+    rows.forEach(r=>{ per[r.topic]=per[r.topic]||{yes:0,no:0,total:0}; per[r.topic].total++;
+      if(r.result==='yes')per[r.topic].yes++; if(r.result==='no')per[r.topic].no++; });
+    $('kpis').innerHTML = `
+      <div class="kpi-card"><div class="k">Resolved in scope</div><div class="v">${rows.length}</div><div class="s">all topics</div></div>
+      <div class="kpi-card"><div class="k">Resolved YES</div><div class="v ok">${yes}</div><div class="s">result = yes</div></div>
+      <div class="kpi-card"><div class="k">Resolved NO</div><div class="v bad">${no}</div><div class="s">result = no</div></div>
+      <div class="kpi-card"><div class="k">Topics with data</div><div class="v">${Object.keys(per).length}</div>
+        <div class="s">${Object.entries(per).map(([k,v])=>k+': '+v.total).join(' · ')||'none'}</div></div>`;
+    function render(){
+      const t=$('topicFilter').value, rf=$('resFilter').value;
+      const f = rows.filter(r=>(!t||r.topic===t)&&(!rf||r.result===rf));
+      KR.renderTable($('resTable'), [
+        {label:'Topic', get:r=>KR.topicPill(r.topic)},
+        {label:'Result', get:r=>KR.resultPill(r.result)},
+        {label:'Market', get:r=>`<b>${KR.esc(r.title||r.market_ticker)}</b><br><span class="muted small">${KR.esc(r.market_ticker)}</span>`},
+        {label:'Settlement $', num:true, get:r=>KR.usd(r.settlement_value_dollars,2)},
+        {label:'Settled (UTC)', get:r=>`<span class="small">${KR.when(r.settlement_ts)}</span>`},
+        {label:'Volume', num:true, get:r=>KR.num(r.volume_fp,0)},
+        {label:'Rules', get:r=>r.rules_primary?`<span class="small" title="${KR.esc(r.rules_primary)}">${KR.esc(r.rules_primary.slice(0,80))}…</span>`:'—'},
+        {label:'Source', get:r=>`<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">settled markets</a>`}
+      ], f, 'No resolved markets for this filter in the current snapshot.');
+    }
+    render();
+    ['topicFilter','resFilter'].forEach(id=>$(id).addEventListener('change', render));
+  }catch(e){
+    $('kpis').innerHTML = `<div class="notice bad">Could not load data/resolutions.json: ${KR.esc(e.message)}</div>`;
+  }
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,6 @@
+# Machine-written data snapshots are produced by the refresh workflow and committed
+# deliberately (they are the site's evidence trail). Nothing else belongs here.
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
