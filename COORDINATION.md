@@ -123,4 +123,5 @@ Note: this session's rules name the branch `arena/6822d767-demo2` and allow work
 - Files changed: `pages/portfolio.html`, `pages/flagged.html`, `index.html`, `README.md`, `assets/app.js`, `COORDINATION.md`.
 - Verification performed: `node --check assets/app.js` passed; searched for credential-entry/signing code references and confirmed none remain in the active dashboard client. Suggestion-voting localStorage is unrelated and remains.
 - Remaining verification: live Kalshi API/browser CORS and GitHub Pages deployment are not verified from this turn. Historical deployment notes above are not evidence of this branch's deployment.
+- PR #6: https://github.com/karagemop466-tech/Demo2/pull/6 (open). GitHub reports the PR branch as conflicting after rebase onto fetched `origin/main`; no merge was attempted. The PR has no reported checks.
 - Irregularity: request for trade execution conflicts with safe public-static hosting; disabled pending separately secured backend and review. See `pages/flagged.html` F6 and `pages/suggestions.html`.
