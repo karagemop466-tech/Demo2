@@ -56,7 +56,13 @@ OFFICIAL_HOSTS = {
 
 # Key names that hold the official URL a row was read from.
 SOURCE_KEY_RE = re.compile(r"(?:^|_)(?:source|src)(?:_url|_api)?$", re.I)
-EXTRA_SOURCE_KEYS = {"url_as_recorded"}
+EXTRA_SOURCE_KEYS = {
+    "url_as_recorded",
+    # Per-row official API URLs written by tools/collector.py. They used to fall
+    # outside SOURCE_KEY_RE, so 30k+ fully sourced rows were reported as
+    # "missing source" (fixed by session b7bc848c after the K-4 audit run).
+    "market_url", "event_url", "series_url", "contract_url", "api_url",
+}
 
 # Files that hold derived or reference data rather than sampled API rows.
 DERIVED_FILES = {

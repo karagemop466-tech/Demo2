@@ -17,11 +17,12 @@ high-ROI. Markets are watched until they resolve <b>yes</b> or <b>no</b>; resolu
 appear in the feed.</p>
 <p class="small muted">Related: the <a href="pages/live-alerts.html">collected jump chat</a>
 renders the snapshot-based trade-print moves (tunable rule filter) as the same two-chat layout;
-this page is the browser-live version. See <a href="pages/flagged.html">Flagged</a> for the
-audit rows on that page.</p>
+this page is the browser-live version. A third, <a href="pages/alerts.html">history-seeded
+variant</a> (session b7bc848c) seeds every ≥ $0.10 move from the collector's own
+candlestick/tick history on load, with a documented two-tier rule model. See
+<a href="pages/flagged.html">Flagged</a> for the audit rows on those pages.</p>
 <div id="stalenessAlerts"></div>
 
-<p class="small muted">Preserved variant: <a href="pages/alerts.html">history-seeded alert chats</a> (session b7bc848c — seeds every ≥ $0.10 move from the collector's own candlestick/tick history on load, with a documented two-tier rule model). Kept published, one nav entry only.</p>
 <div class="kpis" id="alertsKpis">
   <div class="kpi-card"><div class="k">All-event alerts</div><div class="v" id="allCount">0</div>
     <div class="s">every ≥ $0.10 swing, session total</div></div>

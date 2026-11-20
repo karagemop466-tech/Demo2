@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-20T13:39:35Z",
+ "generated_at": "2026-11-20T21:13:16Z",
  "api_base": "https://external-api.demo.kalshi.co/trade-api/v2",
  "api_docs": "https://docs.kalshi.com/getting_started/demo_env",
  "mode": "static only (no egress)",
@@ -62,8 +62,8 @@
   },
   {
    "file": "data/dashboard_instrument.json",
-   "rows": 3200,
-   "with_source": 3200,
+   "rows": 2916,
+   "with_source": 2916,
    "missing_source": 0,
    "not_official": 0,
    "note": ""
@@ -93,6 +93,22 @@
    "note": "derived or reference data; checked but not required to carry a source on every row"
   },
   {
+   "file": "data/history.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/jumps.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
    "file": "data/kalshi_snapshot.json",
    "rows": 0,
    "with_source": 0,
@@ -110,16 +126,16 @@
   },
   {
    "file": "data/markets_open.json",
-   "rows": 1540,
-   "with_source": 1540,
+   "rows": 369,
+   "with_source": 369,
    "missing_source": 0,
    "not_official": 0,
    "note": ""
   },
   {
    "file": "data/markets_settled.json",
-   "rows": 382,
-   "with_source": 382,
+   "rows": 21,
+   "with_source": 21,
    "missing_source": 0,
    "not_official": 0,
    "note": ""
@@ -141,6 +157,14 @@
    "note": ""
   },
   {
+   "file": "data/paper_portfolio.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
    "file": "data/pipeline_meta.json",
    "rows": 0,
    "with_source": 0,
@@ -155,6 +179,14 @@
    "missing_source": 0,
    "not_official": 0,
    "note": "derived or reference data; checked but not required to carry a source on every row"
+  },
+  {
+   "file": "data/resolutions.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
   },
   {
    "file": "data/resolved.json",
@@ -181,6 +213,14 @@
    "note": ""
   },
   {
+   "file": "data/snapshot.json",
+   "rows": 20482,
+   "with_source": 20482,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
    "file": "data/strategy_plan.json",
    "rows": 0,
    "with_source": 0,
@@ -192,6 +232,46 @@
    "file": "data/taxonomy.json",
    "rows": 0,
    "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/topic-crypto.json",
+   "rows": 376,
+   "with_source": 376,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/topic-culture.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/topic-elections.json",
+   "rows": 9797,
+   "with_source": 9797,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/topic-gas.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/topic-golf.json",
+   "rows": 68,
+   "with_source": 68,
    "missing_source": 0,
    "not_official": 0,
    "note": ""
@@ -267,10 +347,18 @@
    "missing_source": 0,
    "not_official": 0,
    "note": ""
+  },
+  {
+   "file": "session-eeb796d7/data/verification.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
   }
  ],
- "rows_checked": 6980,
- "rows_with_official_source": 6980,
+ "rows_checked": 35887,
+ "rows_with_official_source": 35887,
  "rows_missing_source": 0,
  "rows_not_official": 0,
  "missing_examples": [],
@@ -291,5 +379,5 @@
  },
  "status": "pass",
  "violations": [],
- "summary": "6980 rows checked across 33 data files; 6980 carry an official Kalshi source; 0 of 0 live re-checks matched; 0 violation(s)."
+ "summary": "35887 rows checked across 44 data files; 35887 carry an official Kalshi source; 0 of 0 live re-checks matched; 0 violation(s)."
 }
