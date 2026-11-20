@@ -190,3 +190,51 @@ publishes.
   sign `timestamp(ms) + METHOD + path-without-query`; Ed25519 signs the message
   directly, RSA uses PSS/MGF1-SHA-256 with salt length = digest length;
   timestamp must be within 30 s of Kalshi's clock.
+
+
+---
+
+## Session arena-3420a90d — branch `arena/3420a90d-demo2` (added 2026-11-20)
+
+Session owner: `arena-3420a90d`. Work was scoped to the new folder `dashboard/` plus this section. Shared root files (`index.html`, `README.md` top section, `pages/`, `verified/`, `tools/`, `.github/workflows/pages.yml`) were **not** rewritten. The merge from `origin/main` kept their content. Those sessions' claims are untouched.
+
+**Overlap note.** `main` already contains a multi-page site (`pages/`, `verified/`). This session added a separate dashboard at `dashboard/` with different page coverage (Resolutions, Live tape, Portfolio status, Analysis, Suggestions with Approve/Defer/Reject, Questions, Flagged). The integration session should decide whether to consolidate the two sites. Consolidating is not done here, so no working pages are removed.
+
+| Task | Status | Owner | Files touched |
+|---|---|---|---|
+| T0 Board/claims | done | arena-3420a90d | `COORDINATION.md` |
+| T1 Executive summary | done | arena-3420a90d | `dashboard/index.html` |
+| T2 Markets tables (Gas, Crypto, Elections, Culture, Golf) | done | arena-3420a90d | `dashboard/markets.html`, `dashboard/data/snapshot.json` |
+| T3 Resolutions (YES/NO) | done | arena-3420a90d | `dashboard/resolutions.html` |
+| T4 Live dashboard (price chart, live tape, orderbook) | done | arena-3420a90d | `dashboard/live.html`, `dashboard/assets/live.js` |
+| T5 Portfolio & trades | **blocked** (needs Kalshi demo API key; no trades placed) | arena-3420a90d | `dashboard/portfolio.html` |
+| T6 Analysis | done (hypotheses only) | arena-3420a90d | `dashboard/analysis.html` |
+| T7 Suggestions (decision-first) | done | arena-3420a90d | `dashboard/suggestions.html` |
+| T8 Questions | done | arena-3420a90d | `dashboard/questions.html` |
+| T9 Flagged for Review | done (F1–F15, constraints U1–U8) | arena-3420a90d | `dashboard/flagged.html` |
+| T10 Integration (merge `main`, link + script checks, PR, merge, Pages) | in progress | arena-3420a90d | `COORDINATION.md`, `README.md` (appended section), `dashboard/` |
+
+### Sources (official)
+- Kalshi docs: `docs.kalshi.com/getting_started/api_environments` · `/api-reference/market/get-markets` · `/api-reference/market/get-series-list` · `/api-reference/market/get-market-candlesticks` · `/getting_started/orderbook_responses` · `/getting_started/market_settlement` · `/getting_started/rate_limits` · `/getting_started/quick_start_websockets` · `/getting_started/api_keys`
+- Demo API responses (read via the sandbox fetch tool, which can reach Kalshi; sandbox bash cannot): `https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASM`, `/markets?series_ticker=KXAAAGASM|KXBTCMINY|KXPGATOP40`, `/markets?tickers=…`, `/markets/{ticker}/orderbook?depth=5`, `/series/KXBTCMINY/markets/…/candlesticks`, `/series?category=Crypto|Elections|Culture|Sports`, `/series?tags=Golf`, `/series/KXELONMARS`, `/events?status=open&with_nested_markets=true`
+- Production API (read-only comparison): `https://external-api.kalshi.com/trade-api/v2/series/KXAAAGASM`
+
+### Verification performed
+- Every snapshot row cites the API URL it was read from. Blanks are marked UNVERIFIED and never filled in.
+- Re-fetched after drafting: gas 4.80 and 4.70 quotes (`markets?tickers=`); BTC 50k orderbook top bid $0.23 matches the market `yes_bid`, and implied YES ask $0.24 matches `yes_ask`; KXELONMARS series and event source lists (F13 corrected to the event).
+- Link check: all relative links in `dashboard/*.html` resolve. Each page's inline and `assets/*.js` scripts parse with `node --check`. All 9 pages were executed under jsdom against `data/snapshot.json` with no script errors.
+
+### Irregularities (non-blocking; see `dashboard/flagged.html`)
+- F1–F2 placeholder and search-engine settlement sources (KXXBANNED*, KXCABALLOTMEASURES, KXTALARICO…, KXELONMARS-99).
+- F3 demo vs production metadata differs (KXAAAGASM `fee_type`, contract URL staging S3 vs assets).
+- F4 docs status-enum mismatch (filter enum unopened/open/paused/closed/settled vs schema initialized/inactive/active/closed/determined/disputed/amended/finalized; responses use `active`/`finalized`).
+- F5 last trade outside current quote (KXBTCMINY-27JAN01-50000.00: last $0.50, quote $0.23/$0.24).
+- F6 one-sided quote with large open interest (KXAAAGASM-26NOV30-4.80: OI 55,567.52; bid $0.00 / ask $1.00).
+- F7 missing metadata (KXDOGEPERP); F8 demo-only synthetic markets; F9 category mapping ("Gas prices" = Economics/Oil & Gas tag; "Golf" = Sports tag); F10 contracts not dollars; F11 markdown in titles; F12 gas close_time before measurement date; F13 event vs series settlement-source mismatch (KXELONMARS-99 vs KXELONMARS); F14 HTTP 502 on one request; F15 tracking parameter in a settlement URL.
+
+### Handoffs / conflicts
+- Merge conflict with `origin/main` (advanced by sessions fed802ba / 6822d767 / 407c72e2): `COORDINATION.md`, `README.md`, `index.html` (add/add). Resolved by keeping `origin/main` versions of these shared root files and appending this session's section. No other session's work was discarded. Recorded here.
+- Pages settings: the integration token returned HTTP 403 on `PUT /repos/.../pages`. The workflow `pages.yml` on `main` deploys the repo root, so `dashboard/` is published with it. No Pages setting was changed.
+
+### Not done / blocked (requires user action)
+- Portfolio, balances, trade execution and per-trade P&L need a Kalshi **demo API key** created by a human login. Not available in this workspace. No trades were placed and no values were invented.

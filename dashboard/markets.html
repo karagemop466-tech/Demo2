@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Markets — Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div id="nav"></div>
+<main>
+  <h1>Markets by category</h1>
+  <p class="lead">Every row is read from an official Kalshi API response (link in the Source column). Blank cells are marked <span class="unv">UNVERIFIED</span> and were never filled in. Prices are in dollars per YES contract (e.g., $0.46 = 46% implied).</p>
+
+  <div class="note">
+    <strong>Scope:</strong> the tables are a <em>sample</em> of series returned by the API, not the full catalog. The API has hundreds of series per category; the fetch tool truncated long responses. See <a href="flagged.html">Flagged for review</a>.
+    “Highest dollar amount” is not returned by the API. The closest official field is <strong>contracts traded</strong> (<code>volume_fp</code>), shown below.
+  </div>
+
+  <h2>Series by contracts traded (all categories in sample)</h2>
+  <div class="tabs" id="cat-tabs"></div>
+  <div class="tablewrap">
+    <table id="series-table">
+      <thead><tr>
+        <th>#</th><th>Category</th><th>Series</th><th>Title</th><th>Frequency</th>
+        <th class="num">Contracts traded (series total)</th><th class="barcell">Relative size (vs largest shown)</th><th>Settlement source (as listed by API)</th><th>Source</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <h2>Markets (individual contracts)</h2>
+  <p class="status-line">Status values are as returned by the API (e.g., <code>active</code>, <code>finalized</code>). Result: <code>yes</code>/<code>no</code> once settled; blank while open.</p>
+  <div class="tablewrap">
+    <table id="market-table">
+      <thead><tr>
+        <th>Category</th><th>Series</th><th>Market ticker</th><th>Title</th><th>Status</th><th>Result</th>
+        <th class="num">Last</th><th class="num">YES bid</th><th class="num">YES ask</th>
+        <th class="num">Contracts traded</th><th class="num">Open interest</th><th>Close (UTC)</th><th>Source</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <p class="small muted" id="count-line"></p>
+</main>
+<footer>Data: Kalshi Trade API (demo environment) — <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments</a> · <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets docs</a></footer>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var CATS = ["All", "Gas prices", "Crypto", "Elections", "Culture", "Golf"];
+  var active = "All";
+  var snap = null;
+
+  function inCat(c) { return active === "All" || c === active; }
+
+  function renderTabs() {
+    var box = document.getElementById("cat-tabs");
+    box.innerHTML = CATS.map(function (c) {
+      return '<button data-c="' + esc(c) + '" class="' + (c === active ? "on" : "") + '">' + esc(c) + "</button>";
+    }).join("");
+    box.querySelectorAll("button").forEach(function (b) {
+      b.onclick = function () { active = b.getAttribute("data-c"); renderTabs(); render(); };
+    });
+  }
+
+  function render() {
+    var series = snap.series.filter(function (s) { return inCat(s.category); });
+    series.sort(function (a, b) {
+      var va = parseFloat(a.series_volume_contracts), vb = parseFloat(b.series_volume_contracts);
+      if (isNaN(va)) va = -1; if (isNaN(vb)) vb = -1;
+      return vb - va;
+    });
+    var maxV = Math.max.apply(null, series.map(function (s) { return parseFloat(s.series_volume_contracts) || 0; }).concat([1]));
+    document.querySelector("#series-table tbody").innerHTML = series.map(function (s, i) {
+      var v = parseFloat(s.series_volume_contracts);
+      var pct = isNaN(v) ? 0 : (v / maxV) * 100;
+      return "<tr>" +
+        "<td>" + (i + 1) + "</td>" +
+        "<td>" + esc(s.category) + "</td>" +
+        "<td><strong>" + esc(s.series) + "</strong></td>" +
+        "<td class='wrap'>" + textOrUnv(s.title) + "</td>" +
+        "<td>" + textOrUnv(s.frequency) + "</td>" +
+        "<td class='num'>" + contracts(s.series_volume_contracts) + "</td>" +
+        "<td class='barcell'>" + (isNaN(v) ? "" : "<div class='bar' style='width:" + pct.toFixed(1) + "%'></div>") + "</td>" +
+        "<td class='wrap small'>" + textOrUnv(s.settlement_source) + "</td>" +
+        "<td>" + apiLink(snap, s.source) + "</td>" +
+        "</tr>";
+    }).join("") || "<tr><td colspan='9'>No series in this category in the sample.</td></tr>";
+
+    var mk = snap.markets.filter(function (m) { return inCat(m.category); });
+    document.querySelector("#market-table tbody").innerHTML = mk.map(function (m) {
+      var badge = m.status === "finalized" ? "b-info" : "b-ok";
+      var res = m.result === "" ? '<span class="muted">open</span>' :
+        '<span class="badge ' + (m.result === "yes" ? "b-ok" : "b-bad") + '">' + esc(m.result.toUpperCase()) + "</span>";
+      return "<tr>" +
+        "<td>" + esc(m.category) + "</td>" +
+        "<td>" + esc(m.series) + "</td>" +
+        "<td><code>" + esc(m.ticker) + "</code></td>" +
+        "<td class='wrap'>" + esc(m.title) + "</td>" +
+        "<td><span class='badge " + badge + "'>" + esc(m.status) + "</span></td>" +
+        "<td>" + res + "</td>" +
+        "<td class='num'>" + money(m.last_price) + "</td>" +
+        "<td class='num'>" + money(m.yes_bid) + "</td>" +
+        "<td class='num'>" + money(m.yes_ask) + "</td>" +
+        "<td class='num'>" + contracts(m.volume_contracts) + "</td>" +
+        "<td class='num'>" + contracts(m.open_interest_contracts) + "</td>" +
+        "<td>" + textOrUnv(m.close_time_utc) + "</td>" +
+        "<td>" + apiLink(snap, m.source) + "</td>" +
+        "</tr>";
+    }).join("") || "<tr><td colspan='13'>No markets in this category in the sample.</td></tr>";
+
+    document.getElementById("count-line").textContent =
+      "Showing " + series.length + " series and " + mk.length + " markets in “" + active + "”. Snapshot captured 2026-11-20 (UTC).";
+  }
+
+  loadSnapshot().then(function (s) { snap = s; renderTabs(); render(); })
+    .catch(function (e) {
+      document.getElementById("count-line").innerHTML = '<span class="unv">Could not load data/snapshot.json: ' + esc(e.message) + "</span>";
+    });
+})();
+</script>
+</body>
+</html>
