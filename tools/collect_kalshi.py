@@ -126,10 +126,12 @@ class Collector:
             "error": None,
         }
         for attempt in range(3):
+            started = time.time()
             try:
-                with urllib.request.urlopen(req, timeout=60, context=self.ctx) as resp:
+                with urllib.request.urlopen(req, timeout=120, context=self.ctx) as resp:
                     raw = resp.read().decode("utf-8")
                     entry["status"] = resp.status
+                    entry["seconds"] = round(time.time() - started, 2)
                     try:
                         data = json.loads(raw)
                     except json.JSONDecodeError:
@@ -141,6 +143,7 @@ class Collector:
                     return data
             except urllib.error.HTTPError as exc:
                 entry["status"] = exc.code
+                entry["seconds"] = round(time.time() - started, 2)
                 entry["error"] = "HTTP %s %s" % (exc.code, exc.reason)
                 self.log.append(entry)
                 if exc.code in (400, 401, 403, 404):
@@ -148,11 +151,12 @@ class Collector:
                 time.sleep(2 * (attempt + 1))
             except Exception as exc:  # noqa: BLE001 - network errors are recorded, not raised
                 entry["error"] = "%s: %s" % (type(exc).__name__, exc)
+                entry["seconds"] = round(time.time() - started, 2)
                 time.sleep(2 * (attempt + 1))
         self.log.append(entry)
         return None
 
-    def get_many(self, jobs, workers=8):
+    def get_many(self, jobs, workers=12):
         """Run a list of (url, note) requests concurrently.
 
         Used for the per-series market lookups: the demo environment has a few
@@ -309,12 +313,13 @@ def collect(out_dir):
         in_scope_series = in_scope_series[:max_series]
         print("WARNING: series list truncated to %d (KALSHI_MAX_SERIES)" % max_series, flush=True)
 
+    # One request per series: the listing returns every market of that series
+    # and each row carries its own `status` (active / finalized), so open and
+    # settled markets are collected together.
     jobs = []
     for st, topic, basis, detail in in_scope_series:
-        for status in ("open", "settled"):
-            url = ("%s/markets?series_ticker=%s&status=%s&limit=1000"
-                   % (API_BASE, urllib.parse.quote(st), status))
-            jobs.append((url, "%s %s" % (status, st)))
+        url = "%s/markets?series_ticker=%s&limit=1000" % (API_BASE, urllib.parse.quote(st))
+        jobs.append((url, "series %s" % st))
 
     open_markets, settled_markets = [], []
     series_market_urls = []
@@ -325,10 +330,11 @@ def collect(out_dir):
             return
         series_market_urls.append(url)
         batch = data.get("markets") or []
-        if note.startswith("open"):
-            open_markets.extend(batch)
-        else:
-            settled_markets.extend(batch)
+        for m in batch:
+            if (m.get("status") or "").lower() in ("finalized", "settled", "closed", "determined"):
+                settled_markets.append(m)
+            else:
+                open_markets.append(m)
         cur = data.get("cursor") or ""
         if cur:
             cursors.append((url, note, cur))
@@ -369,6 +375,21 @@ def collect(out_dir):
         "/events", {"status": "open", "limit": 200}, "events", max_pages=6,
         note="open events, first pages",
     )
+    # 5b. Write the market files now, before the slower orderbook phase, so a
+    #     long collection is never lost.
+    os.makedirs(out_dir, exist_ok=True)
+    def early_dump(name, obj):
+        path = os.path.join(out_dir, name)
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(obj, fh, indent=2, sort_keys=False)
+            fh.write("\n")
+        print("wrote %s (early)" % path, flush=True)
+
+    early_dump("markets_open.json", {"source_urls": series_market_urls, "collected_at": started,
+                                     "rows": open_rows})
+    early_dump("markets_settled.json", {"source_urls": series_market_urls, "collected_at": started,
+                                         "rows": settled_rows})
+
     # 6. Orderbook depth for the highest-notional in-scope markets
     orderbooks = {}
     picked = []
@@ -510,10 +531,10 @@ def collect(out_dir):
                                 "rows": open_rows})
     dump("markets_settled.json", {"source_urls": series_market_urls, "collected_at": started,
                                   "rows": settled_rows})
-    dump("events_open.json", {"source_urls": event_urls, "collected_at": started,
-                              "rows": event_rows})
     dump("series_scope.json", {"source_urls": series_urls, "collected_at": started,
                                "rows": series_rows})
+    dump("events_open.json", {"source_urls": event_urls, "collected_at": started,
+                              "rows": event_rows})
     dump("orderbooks.json", {"collected_at": started, "rows": orderbooks})
     dump("collection_log.json", {"started_at": started, "finished_at": now_iso(),
                                  "requests": c.log})
