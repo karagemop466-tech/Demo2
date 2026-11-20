@@ -1237,12 +1237,34 @@ Sandbox bash egress to `*.kalshi.co` remains blocked (F1); run/API evidence abov
 workflow run metadata (44800417665 job steps), committed snapshots, and prior sessions' verified
 live-API rows — nothing about live market values is asserted from memory.
 
-### PR / deploy record — session a984e8f4 (filled in after merge)
+### PR / deploy record — session a984e8f4
 
-- PR: _pending — see follow-up commit below_
-- Merge result: _pending_
-- Pages deploy: _pending_
-- Refresh-data recovery: _pending (workflow_dispatch on merge to prove A-1)_
+- **Integration PR:** https://github.com/karagemop466-tech/Demo2/pull/58 — merged into `main`
+  as `61c3ba1` (2026-11-20 ~20:45 UTC). Gating checks green before merge: `Build and check the
+  site` (17 s), `Verify read-only monitor` (15 s). The advisory external linkcheck was still
+  queued (non-gating by repo design, historically 25+ min) — internal links were verified green
+  locally (9,650 refs / 121 files).
+- **Pages deploy:** `Deploy GitHub Pages` run 44814529956 **success** on `61c3ba1`; legacy
+  `pages build and deployment` also green on the follow-up data commits (its failure on some
+  data-only commits is the pre-existing owner item).
+- **A-1 recovery (the point of the fix):** `Refresh Kalshi demo data` run 44814339062
+  **completed/success** at 20:53Z — the first successful data commit since 14:10Z.
+  Snapshot `2026-11-20T20:53:47Z`: 27,440 in-scope markets scanned (10,000 events),
+  published 2,563 top rows with trimming fully recorded (elections 24,877 trimmed),
+  `snapshot.json` = 5.9 MB (the old code path would have written >100 MB at this row count
+  and been rejected at push — exactly the failure chain diagnosed in A-1). Gas now has
+  3 live AAA markets (KXAAAGASD family — enrichment fix end-to-end). `by_topic` = tickers only.
+- **Paper trading:** `Paper trading simulation` runs 44814371059 + 44814339329 **success**;
+  ledger committed (`data: paper-trading simulation 2026-11-20T20:49Z`).
+- **Second bug found by inspecting the recovery commit, fixed in this record PR:** the
+  push-retry path used `git reset --soft origin/main`, which keeps the old index — so when a
+  push raced another pipeline (pages.yml landed `43efffc` in the same second), the retry commit
+  `5c5fa40` silently re-reverted `data/dashboard_instrument.json`, `data/jumps.json` and
+  `data/history_instrument/*` to older states (visible in its stat: 243k-line changes to files
+  this workflow does not own). Self-healing (pages.yml refreshes them every 15 min) but wrong:
+  both retry loops (`refresh-data.yml`, `paper-trade.yml`) now use `git reset --mixed origin/main`
+  so the retry commit contains only each workflow's owned files.
+- **Follow-up record/fix PR:** this section's PR (see merge commit on `main` after `5c5fa40`).
 
 Sources to verify against (official only): https://docs.kalshi.com/getting_started/demo_env,
 https://docs.kalshi.com/api-reference/market/get-markets,

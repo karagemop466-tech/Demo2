@@ -68,7 +68,7 @@ jobs:
             fi
             echo "::warning::push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -10 | tr '\n' '|' | cut -c1-1500)"
             git fetch origin main 2>&1 | tail -1
-            git reset --soft origin/main
+            git reset --mixed origin/main
             git add data/paper_portfolio.json
             git commit --allow-empty -m "$MSG"
             sleep $((attempt * 5))

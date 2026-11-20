@@ -136,7 +136,7 @@ jobs:
             fi
             echo "::warning::push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -25 | tr '\n' '|' | cut -c1-3500)"
             git fetch origin main 2>&1 | tail -1
-            git reset --soft origin/main
+            git reset --mixed origin/main
             git add data/snapshot.json data/topic-*.json data/resolutions.json data/history.json index.html alerts.html pages/
             git commit --allow-empty -m "$MSG"
             sleep $((attempt * 5))
