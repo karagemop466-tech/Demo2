@@ -866,8 +866,37 @@ Summary of what this session changed and why (all verified after the change):
    #40/#41 (**duplicate** the sharp-jump generator port that is already on
    this branch — their authors should close them as superseded once this PR
    lands, or rebase on it; nothing of theirs is lost, the same fix is here).
-8. **R-5 in progress:** PR from this branch → main next, then Pages confirm
-   and the final record below.
+8. **R-5 COMPLETE (2026-11-20 15:0x UTC).**
+   - **PR:** https://github.com/karagemop466-tech/Demo2/pull/42 —
+     "Final review + integration: CI-gate fix, security fix, sourced snapshot
+     adapter, line-by-line re-verification". **MERGED** 2026-11-20T14:57:24Z,
+     merge commit `c207d24`. Gates before merge: `Build and check the site`
+     SUCCESS, `Verify read-only monitor` SUCCESS, `Link check (internal +
+     external)` SUCCESS (the last two dispatched explicitly after push events
+     lagged). The PR summary + sources + flagged list is in the PR body.
+   - **Pages confirmed live** (fetched from the deployed site after the merge):
+     `index.html` serves the dashboard with the 2026-11-20T14:10:44Z snapshot
+     (10,241 in-scope markets, price chart, sharp-jump table, disclosure card);
+     `pages/flagged.html` publishes F1–F14 including this session's F13
+     (sharp-jump cause unverified + context links) and F14 (browser-key safety).
+     `pages/build and deployment` workflow SUCCESS on the merge commit.
+   - **Post-merge defect found and fixed here:** the deployed
+     `pages/resolutions.html` reported `data/resolutions.json → HTTP 404`
+     although the file serves 200 at the site root — pages under `/pages/`,
+     `/dashboard/` etc. fetch `data/*.json` relative to their own folder.
+     Fix: cached prefix discovery in the shared fetch helpers
+     (`assets/site.js`, `dashboard/assets/site.js`, `assets/app.js`) — shipped
+     as the follow-up commit on this branch and re-verified on the deploy.
+   - **PR landscape at merge time:** PRs #45–#48 (eeb796d7) had merged the
+     duplicate sharp-jump generator port + collector hardening; conflicts were
+     union-resolved three times without discarding anyone's work (their
+     KNOWN_DEAD_URLS link policy adopted; their collector data supersedes the
+     F15 adapter, which stays documented as the fallback).
+   - **Open items left for their owners (not dropped):** PRs #34 (docs),
+     #36 (consolidated desk), #38 (price-jump page), #40 (sharp-jump card) —
+     each still open; #40's scope already landed via #45+this PR (its author
+     should close as superseded). The `Refresh Kalshi demo data` bot keeps
+     committing to `main`; sessions must rebase `-X theirs` on data/.
 
 Outputs of this session live under `integration/bdb4d2d0/` (new directory,
 non-overlapping with every other session's scope). Any edit to a shared file is

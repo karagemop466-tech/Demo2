@@ -17,8 +17,33 @@
   /* ---------------- fetch helpers ---------------- */
   KR.getJSON = function (path) {
     if (KR.cache[path]) return KR.cache[path];
-    var url = path + (path.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
-    var p = fetch(url, { cache: "no-store" }).then(function (r) {
+  /* Data files live at the GitHub Pages project root (data/*.json). Pages under
+   * /pages/, /dashboard/, /live/, /intelligence/ etc. would fetch them relative
+   * to their own folder and get a 404. Probe prefixes once and cache the one
+   * that works (integration fix, session bdb4d2d0 - found when the deployed
+   * pages/resolutions.html reported 'Could not load data/resolutions.json: 404'
+   * while the file served fine at the site root). */
+  var dataPrefix = null;
+  function resolveData(path) {
+    if (/^(https?:|\/|\.\.\/)/.test(path)) return Promise.resolve(path);
+    if (dataPrefix !== null) return Promise.resolve(dataPrefix + path);
+    var candidates = ["", "../", "../../", "../../../"];
+    var i = 0;
+    function tryNext() {
+      if (i >= candidates.length) { dataPrefix = ""; return path; }
+      var url = candidates[i] + path + (path.indexOf("?") >= 0 ? "&" : "?") + "probe=" + Date.now();
+      return fetch(url, { cache: "no-store" }).then(function (r) {
+        if (r.ok) { dataPrefix = candidates[i]; return dataPrefix + path; }
+        i += 1;
+        return tryNext();
+      }, function () { i += 1; return tryNext(); });
+    }
+    return tryNext();
+  }
+
+    var p = resolveData(path).then(function (u) {
+      return fetch(u + (u.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" });
+    }).then(function (r) {
       if (!r.ok) throw new Error(path + " → HTTP " + r.status);
       return r.json();
     });

@@ -43,8 +43,27 @@
     return '<a href="' + esc(u) + '" target="_blank" rel="noopener">official API ↗</a>';
   };
 
+  var _dataPrefix = null;
+  function resolveData(path) {
+    if (/^(https?:|\/|\.\.\/)/.test(path)) return Promise.resolve(path);
+    if (_dataPrefix !== null) return Promise.resolve(_dataPrefix + path);
+    var candidates = ["", "../", "../../", "../../../"];
+    var i = 0;
+    function tryNext() {
+      if (i >= candidates.length) { _dataPrefix = ""; return path; }
+      var url = candidates[i] + path + (path.indexOf("?") >= 0 ? "&" : "?") + "probe=" + Date.now();
+      return fetch(url, { cache: "no-store" }).then(function (r) {
+        if (r.ok) { _dataPrefix = candidates[i]; return _dataPrefix + path; }
+        i += 1; return tryNext();
+      }, function () { i += 1; return tryNext(); });
+    }
+    return tryNext();
+  }
+
   window.loadSnapshot = function () {
-    return fetch("data/snapshot.json", { cache: "no-store" }).then(function (r) {
+    return resolveData("data/snapshot.json").then(function (u) {
+    return fetch(u, { cache: "no-store" });
+    }).then(function (r) {
       if (!r.ok) throw new Error("snapshot HTTP " + r.status);
       return r.json();
     });

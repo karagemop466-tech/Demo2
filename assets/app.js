@@ -64,7 +64,25 @@ async function fetchSettled() {
 }
 /* ---- committed snapshot fallback (data/ refreshed by GitHub Actions every 2h) ---- */
 async function fetchSnapshot(name) {
-  const r = await fetch("data/" + name, { cache: "no-store" });
+    var _dataPrefix = null;
+  function resolveData(path) {
+    if (/^(https?:|\/|\.\.\/)/.test(path)) return Promise.resolve(path);
+    if (_dataPrefix !== null) return Promise.resolve(_dataPrefix + path);
+    var candidates = ["", "../", "../../", "../../../"];
+    var i = 0;
+    function tryNext() {
+      if (i >= candidates.length) { _dataPrefix = ""; return path; }
+      var url = candidates[i] + path + (path.indexOf("?") >= 0 ? "&" : "?") + "probe=" + Date.now();
+      return fetch(url, { cache: "no-store" }).then(function (r) {
+        if (r.ok) { _dataPrefix = candidates[i]; return _dataPrefix + path; }
+        i += 1; return tryNext();
+      }, function () { i += 1; return tryNext(); });
+    }
+    return tryNext();
+  }
+
+  const u = await resolveData("data/" + name);
+  const r = await fetch(u, { cache: "no-store" });
   if (!r.ok) throw new Error("snapshot " + name + " HTTP " + r.status);
   return r.json();
 }
