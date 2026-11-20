@@ -29,7 +29,7 @@ Last updated: 2026-11-20 (session 7085e643)
 | 24 | K-3 Automated simulated trade loop (strategies → ledger → page) run by the refresh workflow | **done** | 7085e643 | `tools/paper_trade.py`, `pages/paper-trading.html` (generated), `data/paper_ledger.json`, `session-7085e643/tests/**` |
 | 25 | K-4 Landing page + nav simplification (clean entry point, topics separated, registers grouped) | **done** | 7085e643 | `tools/build_site.py` (NAV, index body), `README.md`, generated `index.html` |
 | 26 | K-5 Registers: live re-verification rows, new flags, executive summary refresh | **done** | 7085e643 | `tools/build_content.py`, `pages/{verification,flagged,executive-summary,suggestions,questions}.html` (generated), `docs/*` |
-| 27 | K-6 Final integration: take over idle claims, triage the 4 stale conflicting PRs, PR → main, merge, Pages confirm, record | **unclaimed → mine on push** | 7085e643 | `COORDINATION.md`, shared `index.html`/nav, PR operations |
+| 27 | K-6 Final integration: take over idle claims, triage the 4 stale conflicting PRs, PR → main, merge, Pages confirm, record | **done — triage + branch pushed; no merge (main already has a competing merged integration, PR #58)** | 7085e643 | `COORDINATION.md`, shared `index.html`/nav, PR operations |
 | 28 | Consolidate the 8 duplicated subsites into one canonical site by deleting `desk/`-style parallel trees | **not started — needs owner decision** | unclaimed | other sessions' trees; see S5 / K-4 (documented as a register, not deleted) |
 
 Scope note: rows 12–20 re-own the filenames produced by `e3f65782` because a correctness defect was
@@ -119,10 +119,16 @@ empty candlestick trade prices; Gas topic catalogue-only in demo.
 
 ## PR / deploy record
 
-- PR: _to be recorded after `gh pr create`_
-- Merge result: _to be recorded_
-- Pages deploy: _to be recorded_
-- Data refresh run: _to be recorded_
+- PR: **not opened** — see the "Post-push finding" in this session's work record (below). `main`
+  already carries a merged, competing integration of this scope (PR #58, session `a984e8f4`, merged
+  2026-11-20T20:46:12Z). Opening a second PR for the same three features would ask the owner to pick
+  between two equivalent implementations, so this branch is pushed and preserved instead.
+- Merge result: **not merged** (deliberate). Branch `arena/7085e643-demo2` pushed at tip `7f528a3`.
+- Pages deploy: not deployed from this branch.
+- Data refresh run: not run against this branch's collector (the `a984e8f4` pipeline on `main` is
+  running and refreshed the snapshot at 20:49Z).
+- Earlier placeholders above referred to this session's planned PR; they are superseded by the
+  finding recorded in the "Session `7085e643`" section.
 
 ## Other sessions' output preserved (no work discarded)
 
