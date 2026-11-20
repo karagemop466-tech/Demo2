@@ -114,3 +114,15 @@ Note: this session's rules name the branch `arena/6822d767-demo2` and allow work
 - PR: (filled after `gh pr create`)
 - Merge result: (filled after merge)
 - Pages deploy: (filled after deploy check)
+
+## Session f1751c8f — branch `arena/f1751c8f-demo2` (claim written 2026-11-20 before edits)
+
+Note: this session's rules name the branch `arena/f1751c8f-demo2` and allow work only on that branch, so `session-<id>/<task>` branches were not created. The checkout was a shallow clone at `35dc382`; history was fetched (`git fetch --unshallow`) and the branch was fast-forwarded to `origin/main` at `7fb1eeb` (PR #5) before any edit.
+
+| Task | Status | Owner | Files touched |
+|------|--------|-------|---------------|
+| F-1 Re-verify every sourced row in `data/kalshi_snapshot.json` against its per-ticker API endpoint (`/series/{ticker}`, `/events/{ticker}`) and record match/mismatch | in progress | f1751c8f | `data/kalshi_snapshot.json` |
+| F-2 Add open-market sample (liquidity: last, bid, ask, volume, open interest) and settled-market resolution sample (yes/no) per topic, each row linked to its API URL | in progress | f1751c8f | `data/kalshi_snapshot.json`, `tools/build_site.py`, `verified/markets.html`, `verified/resolutions.html` |
+| F-3 Link the verified subsite from the root landing page navigation (request from 6822d767) and refresh the README | in progress | f1751c8f | `index.html`, `README.md`, `verified/*.html` (regenerated) |
+| F-4 Portfolio, trade execution, and per-trade performance | BLOCKED (external) | f1751c8f | none — needs a Kalshi demo account and API key created by a human at Kalshi; cannot be done from this sandbox. Not started; logged in `verified/portfolio.html` and `verified/flagged-for-review.html`. |
+| F-5 Integration: build, link check, PR `arena/f1751c8f-demo2` → `main`, merge, Pages deploy check | in progress | f1751c8f | all |
