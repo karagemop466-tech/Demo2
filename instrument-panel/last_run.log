@@ -1,0 +1,33 @@
+run 44737343195 commit 543d5f60d16f0ec69441bf347d5afffac23c4dc3
+--- collect ---
+{
+ "series_in_scope": 174,
+ "open_markets_in_scope": 1311,
+ "resolved_in_scope_collected": 1601,
+ "orderbooks": 48,
+ "trade_histories": 12,
+ "culture_adjacent_series": 2630,
+ "culture_adjacent_markets": 0
+}
+requests: 440 errors: 0
+--- validate ---
+rows checked: 3086
+requests: 440  errors: 0
+WARN: series KXZECPERP: no settlement source returned by API
+WARN: series KXBCHPERP: no settlement source returned by API
+WARN: topic culture: no open markets matched its scope queries
+OK: data is sourced, price fields are in range, derived values reconcile, snapshot is fresh.
+--- build ---
+Traceback (most recent call last):
+  File "/home/runner/work/Demo2/Demo2/instrument-panel/tools/build_dashboard_site.py", line 728, in <module>
+    main()
+  File "/home/runner/work/Demo2/Demo2/instrument-panel/tools/build_dashboard_site.py", line 718, in main
+    page_analysis()
+  File "/home/runner/work/Demo2/Demo2/instrument-panel/tools/build_dashboard_site.py", line 392, in page_analysis
+    topic_rows = "".join(
+                 ^^^^^^^^
+  File "/home/runner/work/Demo2/Demo2/instrument-panel/tools/build_dashboard_site.py", line 396, in <genexpr>
+    f'<td class="num">{t["resolved_yes"]}</td><td class="num">{t["resolved_no"]}</td>'
+                       ~^^^^^^^^^^^^^^^^
+KeyError: 'resolved_yes'
+--- links ---
