@@ -28,6 +28,7 @@ A `needs review` item is published on the **Flagged for Review** page and does n
 - **Verification performed**: each snapshot row was re-read from the API response it cites. Gas 4.80 and 4.70 quotes were re-fetched (`markets?tickers=`). The KXBTCMINY-27JAN01-50000.00 orderbook top bid ($0.23) and implied YES ask ($0.24) matched the market's `yes_bid`/`yes_ask`. Market endpoint returns `{"market": {...}}`; candlesticks return `candlesticks[].price.close_dollars`.
 - **Irregularities found**: F1–F15 on `docs/flagged.html` (placeholder and search-engine settlement sources; demo vs production metadata; docs status-enum mismatch; last price outside quote; one-sided quote with open interest; missing metadata; demo-only markets; category mapping; contracts-not-dollars; and others).
 - **Sample coverage**: Elections and Sports listings were too large for the fetch tool; the site shows a documented sample (see Flagged U7).
+- **Pages deviation (logged)**: The integration token received HTTP 403 when updating Pages settings (`PUT /repos/.../pages` to source `/docs`). Pages therefore stays on `main` `/` (its existing config). A root `index.html` redirects to `docs/index.html`, and `.nojekyll` is at the root. All site pages and links are under `docs/` and resolve from there. Verified: the redirect target exists and every page loads.
 - **Handoffs/conflicts**: none.
 
 
