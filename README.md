@@ -63,6 +63,7 @@ rather than deleted, because they contain independently verified research:
 |------|--------|----------------------|
 | `dashboard/`, `verified/`, `dashboard/data/snapshot.json`, `data/kalshi_snapshot.json` | session `fed802ba` | Independently collected demo data and a per-topic research write-up; regenerable with `tools/build_site_parallel.py`, `tools/collect_kalshi.py` |
 | `analysis.html`, `portfolio.html`, `review.html`, `app.js`, `style.css` (root) | session `fed802ba` | Earlier standalone pages |
+| `site/` | session `406a2f21` | Its own live dashboard, market, portfolio, trades and strategies pages |
 | `pages/executive-summary.html` … `pages/sources.html` | session `e3f65782` | Superseded by the pages generated from `tools/build_site.py` + `tools/build_content.py` |
 
 The canonical, CI-checked site is `index.html` plus `pages/`, generated from `tools/`.

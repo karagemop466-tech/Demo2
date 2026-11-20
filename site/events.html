@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Events · Kalshi Demo Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="events">
+  <header class="topbar">
+    <div class="brand"><span class="logo">K</span> Kalshi Demo Dashboard</div>
+    <nav class="nav">
+      <a href="index.html">Dashboard</a>
+      <a href="events.html" class="active">Live Events</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="trades.html">Trades</a>
+      <a href="strategies.html">Strategies</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+    </nav>
+    <span id="conn-status" class="status-pill"><span class="dot"></span><span>Connecting…</span></span>
+  </header>
+
+  <main>
+    <h1>Live Events</h1>
+    <p class="subtitle">
+      In-scope open events ranked by estimated notional (price × volume). Events are tracked until they
+      resolve, recording whether they resolved <span class="badge yes">YES</span> or
+      <span class="badge no">NO</span>.
+    </p>
+
+    <div class="panel">
+      <div class="head">
+        <h2>Events</h2>
+        <div class="controls">
+          <label>Topic:
+            <select id="topic-filter"></select>
+          </label>
+          <button class="btn" onclick="location.reload()">Refresh</button>
+        </div>
+      </div>
+      <div id="events-table"></div>
+    </div>
+
+    <div class="note">
+      <b>Ranking metric.</b> "Est. notional" is computed as last price × volume. Kalshi exposes
+      <code>volume_fp</code> and dollar prices but no single "dollar amount" field; this is a derived
+      metric, marked computed (see <a href="suggestions.html#S1">Suggestion S1</a>).
+      Source: <a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a>.
+    </div>
+  </main>
+
+  <footer>
+    Kalshi Demo Dashboard · data verified from <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a>
+  </footer>
+  <script src="js/app.js"></script>
+</body>
+</html>

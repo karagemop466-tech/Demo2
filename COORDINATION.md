@@ -1,7 +1,7 @@
 # COORDINATION.md — Shared Task Board
 
 Session ID: `e88eb254` (branch `arena/e88eb254-demo2`, base `6072808` on `main`)
-Earlier sessions merged into this repository: `e3f65782`, `3420a90d`, `fed802ba`, `f1751c8f`
+Earlier sessions merged into this repository: `e3f65782`, `3420a90d`, `fed802ba`, `f1751c8f`, `406a2f21`
 Last updated: 2026-11-20 (session e88eb254, after the merge with `fed802ba`'s work)
 
 > Rule: claim a task (session ID + file scope) and commit/push the claim **before** starting it.
@@ -127,6 +127,11 @@ empty candlestick trade prices; Gas topic catalogue-only in demo.
 | `pages/*` from e3f65782 | e3f65782 | superseded by the generated pages; the defect fixed is recorded as F4 / R3 |
 
 ## Log
+
+- 2026-11-20 e88eb254 — third merge conflict resolved (`406a2f21` merged PR #13 with a `site/`
+  subsite while this session's CI was running). Their `site/` tree is untouched; only
+  `.gitignore`, `README.md` and this file conflicted. There are now four subsites; the
+  duplication is recorded as Q12 rather than resolved by deleting anyone's work.
 
 - 2026-11-20 e88eb254 — merged `origin/main` (PR #1/#2 output) into this branch; no conflicts.
   Claimed tasks 12–19 and pushed the claim before starting work.
