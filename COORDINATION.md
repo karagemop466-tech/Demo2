@@ -1,6 +1,6 @@
 # COORDINATION.md — Shared Task Board
 
-Session ID: `e3f65782` (branch `arena/e3f65782-demo2`, base `6072808` on `main`)
+Session ID: `fed802ba` (branch `arena/fed802ba-demo2`, base `35dc3822` on `main`)
 Last updated: 2026-11-20
 
 > Single-session execution: all tasks below are claimed by this session.
@@ -21,7 +21,7 @@ Last updated: 2026-11-20
 | 8 | Questions / missing-information register | done | e3f65782 | `pages/questions.html` |
 | 9 | Flagged for Review page | done | e3f65782 | `pages/flagged.html` |
 | 10 | GitHub Pages deploy config | done | e3f65782 | `.github/workflows/pages.yml` |
-| 11 | Final integration + link check + PR | in progress | e3f65782 | all |
+| 11 | Final integration + link check + PR | in progress | fed802ba | all |
 
 ## Sources used (official only)
 
@@ -45,6 +45,25 @@ Last updated: 2026-11-20
 - Sandbox egress to Kalshi API fails (TLS `SSL_ERROR_SYSCALL`); live data
   is therefore fetched client-side in the visitor's browser. No market
   values are hard-coded — see Flagged for Review.
+
+## Verification performed — session fed802ba (2026-11-20)
+
+All claims re-checked against official Kalshi docs (docs.kalshi.com) on 2026-11-20:
+
+| Claim checked | Official source | Status |
+|---|---|---|
+| Demo REST base `https://external-api.demo.kalshi.co/trade-api/v2`; also `https://demo-api.kalshi.co/trade-api/v2` | https://docs.kalshi.com/getting_started/demo_env | Verified |
+| Demo WS `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2`; also `wss://demo-api.kalshi.co/trade-api/ws/v2` | https://docs.kalshi.com/getting_started/demo_env + api_environments | Verified |
+| Demo = mock funds; prices may not reflect real markets | https://docs.kalshi.com/getting_started/demo_env | Verified |
+| Public market-data endpoints need no auth | https://docs.kalshi.com/getting_started/quick_start_market_data | Verified |
+| Get Markets fields (ticker, title, subtitle, yes/no bid/ask dollars, last_price_dollars, volume_fp, result, settlement_value_dollars, settlement_ts, close_time, status, cursor pagination) | https://docs.kalshi.com/api-reference/market/get-markets | Verified |
+| Orderbook `yes_dollars`/`no_dollars` = [price, count] strings, ascending, no asks (reciprocal), depth param, empty arrays valid | https://docs.kalshi.com/getting_started/orderbook_responses | Verified |
+| Auth headers KALSHI-ACCESS-KEY/TIMESTAMP/SIGNATURE; sign timestamp+method+path (no query); RSA-PSS/SHA-256 or Ed25519; 30s tolerance | https://docs.kalshi.com/getting_started/quick_start_authenticated_requests + api_keys | Verified |
+| GET /portfolio/balance, /portfolio/positions, /portfolio/fills, POST /portfolio/orders | https://docs.kalshi.com/getting_started/quick_start_authenticated_requests | Verified |
+
+Link check: 17 HTML files, 276 internal links resolved, 0 broken.
+JS syntax: `node --check assets/app.js` and `node --check app.js` passed.
+No secrets or hard-coded market values in the repo; live values come only from the visitor's browser.
 
 ## Irregularities / handoffs
 
