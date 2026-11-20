@@ -1177,3 +1177,182 @@ serves the last pushable snapshot (`data/snapshot.json`, 46 MB, generated 2026-1
 Second-order findings: five data pipelines race into `data/` (F17 / R-5) with five different
 commit-message formats; only `refresh-data.yml` (10-min cadence, the one the site banner
 advertises) is blocked.
+
+---
+
+## K-1 — data pipeline fix (DONE, session b7bc848c, 2026-11-20 ~20:20 UTC)
+
+**Root cause (verified, not inferred):** GitHub pre-receive rejected every push of the
+refresh-data pipeline: `File data/snapshot.json is 111.97 MB; this exceeds GitHub's file size
+limit of 100.00 MB` (GH001) and `File data/topic-elections.json is 52.01 MB` (50 MB warning).
+Evidence: Actions run annotations for runs `44768457660` and `44800417665` ("could not push
+snapshot after 6 attempts"; all 6 attempts identical). The collector itself succeeded. The site
+was frozen on the last pushable snapshot (generated 2026-11-20 14:10:44 UTC).
+
+**Size driver (measured):** rows doubled when event pagination widened 25→50 pages
+(`eeb796d7` E-5), every row was stored TWICE (`markets` + `by_topic`), and rows carried full
+`rules_primary` + unbounded `settlement_sources`. PR #52's "legal text" slim cut ~10%, missing
+the real driver. Measured on the frozen snapshot: `markets` 20.2M chars + `by_topic` 20.2M chars
+(duplicate) of 40.8M total.
+
+**Fix (tools/collector.py + tools/test_publish_limits.py + tools/slim_data.py):**
+1. per-topic publish cap (`--publish-per-topic`, default 500, ranked by dollar volume);
+   `counts.per_topic` keeps FULL counts; `counts.per_topic_published`, `counts.rows_capped`,
+   per-topic `count_total`/`capped` keep the distinction visible on the site;
+2. `rules_primary` shortened to 300 chars with `rules_truncated` flag; `settlement_sources`
+   capped at 3 entries (name ≤ 100, url ≤ 160 chars) with `settlement_sources_total` kept;
+3. `series_index.json` slimmed (`additional_prohibitions` — ~8 MB of repeated legal boilerplate
+   with no consumer — dropped; every record keeps its full-record `source` URL);
+4. `history.json` bounded (top 300 markets × 288 points, untracked pruned) — it was on a path to
+   hundreds of MB;
+5. rolling `resolutions_log.json` capped at 5,000 rows;
+6. compact JSON for the big files; **publish guard**: `write_json` refuses > 45 MB payloads and
+   fails the run (GH001 can never recur silently);
+7. `write_json_if_changed` for catalogue files (identical content apart from timestamps is not
+   rewritten — otherwise ~170 MB/day of git history is burned on a 12 MB static file);
+8. refresh-data.yml: cadence 10 → 30 min (each run commits ~4 MB and git keeps every blob;
+   10-min cadence grew the repo ~750 MB/day — bounded now, growth vector still flagged below),
+   shared concurrency key `kalshi-data-writers` (from 6332d7d3) merged with eeb796d7's push-retry
+   loop; `data/snapshot.json` stays committed (tools/analyze.py + tools/execute_strategy.py read
+   it; 6332d7d3's `.gitignore` exclusion of it was therefore NOT taken) and is kept as a run
+   artifact too.
+9. `tools/slim_data.py` applied the same caps to the already-committed files: snapshot.json
+   46 MB → 3.4 MB, topic-elections.json 22 MB → 0.8 MB, series_index.json 26 MB → 11.7 MB.
+
+**Verification:** `tools/test_publish_limits.py` 35/35 (caps, flags, guard, history bounds,
+ranking order preserved), `tools/test_collector.py` 43/43 (unaffected), `tools/check.py` clean,
+`scripts/check_links.py` all OK, `scripts/render_check.mjs` 14/14 with real data. The live
+confirmation (a refresh run landing on main) is recorded in K-5.
+
+## K-2 — takeover of stale PR #44 / session 6332d7d3 (DONE, per-file disposition)
+
+Takeover per the 60-minute rule (branch idle since 14:16, CONFLICTING with main, session dead).
+Their work was integrated, not discarded. Their session's own claim/record is preserved verbatim
+at the end of this file.
+
+| Area | Disposition |
+|---|---|
+| `tools/collector.py` (+572/−126) | **taken** (series-scoped sweep, rotating cap, measured 24h dollars from trade prints, time budget) + layered with K-1 caps/guards |
+| `tools/build_site.py` (+430), `tools/build_content.py`, `tools/check.py`, `tools/check_live_links.py` | **taken** (Start-here landing, live dashboard, causes page, stronger checks) |
+| `tools/test_collector.py` (43 offline checks), `scripts/render_check.mjs` | **taken**; render_check extended with `pages/alerts.html` |
+| `assets/site.js`, `index.html`, `dashboard.html`, `live/index.html`, `pages/*` (18 files incl. NEW `causes.html`) | **taken** and regenerated from the generators |
+| **Defect found and fixed on takeover:** `dashboard.html` read `KR.snapshot()` = `dashboard_meta.json` which has NO `markets`/`candles`/`orderbooks` — the market table and chart were empty against real data (their render check passed because empty tables render fallback text). Fixed in the generator: the dashboard loads `data/snapshot.json` (which now also carries the derived summary keys), while other pages keep the small `dashboard_meta.json`. Verified: dashboard table renders 200 rows against real data. | |
+| data: `top.json`, `liquidity.json`, `dashboard_meta.json`, `snapshot_api_log.json`, `resolutions_log.json` | **taken** (new products) |
+| data: `series_index.json`, `topic-*.json`, `snapshot.json`, `history.json`, `resolutions.json` | **taken and slimmed** to the K-1 shape (mixed run timestamps until the first refresh; see K-5) |
+| `.github/workflows/*.yml` (6) | **taken** (shared concurrency key, dispatch inputs, artifact backup) + eeb796d7's push-retry re-applied |
+| `.gitignore` (excludes data/snapshot.json) | **NOT taken** — trade pipeline (analyze.py, execute_strategy.py) reads data/snapshot.json; it stays tracked and slim |
+| `COORDINATION.md` (+65) | preserved verbatim at the end of this file |
+
+## K-3 — stale PRs #40, #36, #34 (DONE)
+
+| PR | Disposition | Evidence |
+|---|---|---|
+| #36 (220913cb) "Consolidated Kalshi demo desk" | **integrated** (takeover, idle >60 min): `desk/` tree (requirements register R-01.. mapped to official sources, jump monitor, verification gate, offline JS tests `node desk/tests/desk.test.js` → fail 0) + `desk-verify.yml` with its concurrency key aligned to `kalshi-data-writers` and the push-retry loop | unique files taken unchanged; workflow hardened |
+| #40 (d0bea7de) "Restore sharp-jump landing card" | **superseded** — will be closed with this evidence | its card/feature exists on current `main`-in-branch: `dashboard.html` "Sharp price moves ≥ $0.10" + `KR.detectJumps` + `jumps/index.html` + landing card text ("sharp-move table"); the PR's index.html is an OLDER revision of the same content and has no unique files (`git diff --name-status HEAD origin/pr40` → no `A` rows) |
+| #34 (21eed9ff) "docs: verify summary, record gaps" | **superseded** — will be closed with this evidence | no unique files; its single gap ("account-specific performance and orders unverified — no demo credentials") is already recorded as task 21, S4 and the F-flags on `pages/flagged.html`; its exec-summary draft predates the current `docs/EXECUTIVE_SUMMARY.md` + `pages/executive-summary.html` |
+
+## K-4 — line-by-line re-verification (DONE, 2026-11-20 ~20:40 UTC)
+
+| Claim checked | Official source | Result |
+|---|---|---|
+| Get Trades schema: `trades[]: {trade_id, ticker, count_fp, yes_price_dollars, no_price_dollars, taker_outcome_side, taker_book_side, created_time, is_block_trade, taker_side}`; `limit` max 1000 | https://docs.kalshi.com/api-reference/market/get-trades | **Verified** (doc text read this session). The Live Alerts poller uses exactly `ticker`, `yes_price_dollars`, `created_time`, `limit=1000`. |
+| Same fields on the live demo API | `GET https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?limit=2` | **Verified** — live response fields identical (`created_time` ISO, `yes_price_dollars` string) |
+| Demo REST base + alternate base listed in the official endpoint table | https://docs.kalshi.com/api-reference/market/get-trades (host table) | **Verified** — `https://external-api.demo.kalshi.co/trade-api/v2`, `https://demo-api.kalshi.co/trade-api/v2` both listed |
+| Exchange status | `GET .../exchange/status` | **Verified** — `exchange_active: true, trading_active: true` (2026-11-20 20:40 UTC) |
+| Gas row identity + settlement rule (top.json row `KXAAAGASW-26NOV23-3.6200`) | `GET .../markets/KXAAAGASW-26NOV23-3.6200` | **Verified** — ticker, title ("Will average gas prices be above $3.6200?"), `rules_primary` ("...strictly greater than $3.6200 on Nov 23, 2026 according to AAA..."), `floor_strike` 3.62 match exactly. Price fields differ from the 14:08 snapshot (live: last 0.9700/bid 0.9600/ask 0.9700/vol 15,145.83 vs snapshot 0.9400/0.8600/0.9400/14,761.30) because the market traded after collection — expected for a dated snapshot; snapshot values matched the API at collection time (43-check suite + b326b649's 3-row sample) |
+| CORS: browser may call the demo API from the Pages origin | `data/cors.json` (observed headers, 2026-11-20 12:12 UTC): `access-control-allow-origin: https://karagemop466-tech.github.io` | **Verified** — the Live Alerts live poll is feasible browser-side |
+| Orderbook returns bids only; asks derived (1 − p) | https://docs.kalshi.com/api-reference/market/get-market-orderbook (read by prior sessions, code labels derived side) | Verified (carried forward) |
+| Legacy `POST /portfolio/orders` → 410; use `POST /portfolio/events/orders` | https://docs.kalshi.com/api-reference/orders/create-order-v2 | Verified (carried forward) |
+
+Gate results at this commit: `tools/test_collector.py` 43/43 · `tools/test_publish_limits.py` 35/35 ·
+`desk/tests/desk.test.js` fail 0 · `tools/check.py` links/nav/data/secrets/js clean (20 pages) ·
+`scripts/check_links.py` 10,735 references / 121 HTML files, all OK · `scripts/render_check.mjs` 14/14
+with real data (alerts chats render 65 real ≥$0.10 moves from collector history).
+
+## K-5 — PR, merge, deploy, live data (record filled after the merge)
+
+- PR: _to be recorded_
+- Merge result: _to be recorded_
+- Pages deploy: _to be recorded_
+- First data refresh after the fix: _to be recorded_
+
+## New flags raised this session (published on pages/flagged.html after regen where applicable)
+
+- **K-F1 (repo growth):** every data commit stores full blobs; even slimmed (~4 MB/run at 30-min
+  cadence) this is ~190 MB/day of git history. Mitigated (caps, cadence, skip-unchanged) but not
+  solved; recommended fixes (owner decision): git-squash the `data/` path weekly, git-LFS, or an
+  external store. Related to R-5/R-12/R-15.
+- **K-F2 (mixed fallback data):** the committed fallback files carry mixed run timestamps
+  (top.json 14:08:56 with 131 gas rows from 6332d7d3's collector; topic/snapshot 14:10:44 with
+  gas 0 from the pre-takeover collector). Invisible on pages that read snapshot/topic files, but
+  the datasets disagree until the first post-merge refresh run (K-5) rewrites them from one
+  collector. No value was invented to paper over it.
+- **K-F3 (alert model is a heuristic):** the Live Alerts "high ROI" filter is a documented
+  two-tier rule, not a learned or backtested model. Labeled as such on the page. Not advice.
+
+**Process note:** one `git pull --rebase` on this branch was attempted after a merge of `origin/main`. Rebasing would have replayed merged `main` history and stopped on another session's commit. It was aborted, nothing was lost, and the branch was pushed as a fast-forward. For this branch, use `git merge origin/main` rather than `pull --rebase`.
+
+---
+
+## Session `6332d7d3` — branch `arena/6332d7d3-demo2` — final integration (claim written 2026-11-20 13:00 UTC, before edits)
+
+**Role:** final integration session for branch `arena/6332d7d3-demo2` (base `4c13151`, the tip of `main`).
+The brief asks for one working, live, verified dashboard plus PR → merge → Pages confirmation,
+and names the integration session as the only owner of shared outputs.
+
+**What I found on arrival (evidence, not assumption):**
+
+| Observation | Evidence |
+|---|---|
+| The deployed root dashboard renders **"Snapshot none yet"** and **"0 in-scope markets"**, and its JS throws `data/snapshot.json → HTTP 404` | fetched https://karagemop466-tech.github.io/Demo2/ this session; `data/snapshot.json` is not in `git ls-files` |
+| `data/snapshot.json` has **never** been committed on any branch or on `main` | `git log --all -- data/snapshot.json` → empty; no remote branch contains it |
+| The workflow that is supposed to produce it (`Refresh Kalshi demo data`) **fails at its first data step** | run 44728913873 on `main`, job `collect`, step "Collect demo snapshot": failure |
+| `Deploy GitHub Pages` on `main` has been **stuck in progress for >12 minutes** on a run started before this session | run 44739209404, job `collect`, status in_progress |
+| Four dashboards are published side by side (`pages/`, `verified/`, `dashboard/`, `site/` + `intelligence/`, `instrument-panel/`, `live/`), plus 4 stale open PRs (#6, #15, #27, #32) | `gh pr list`; directory listing |
+
+**Scope of this session (all of the following files are mine this session):**
+
+| # | Task | Status | Files |
+|---|------|--------|-------|
+| Z-1 | Diagnose and repair the snapshot pipeline so the deployed root dashboard shows real, sourced data | in progress | `tools/collector.py` (or a new `tools/build_snapshot.py`), `.github/workflows/*` (additive) |
+| Z-2 | Consolidated landing page + navigation, one entry point for every dashboard | in progress | `index.html` (generated), `tools/build_site.py` |
+| Z-3 | Verify the pipeline output line by line (sources present, values in range, empty stays empty) | unclaimed→in progress | `tools/check.py` |
+| Z-4 | PR → merge → confirm Pages deploy → record result here | in progress | this file |
+
+**Non-overlap:** I do not rewrite `pages/`, `verified/`, `dashboard/`, `site/`, `intelligence/`,
+`instrument-panel/` or `live/` content; where the landing page indexes them I only add links.
+
+### Session `6332d7d3` — findings so far (evidence, 2026-11-20 13:00 → 14:00 UTC)
+
+Every item below was reproduced this session; none is inferred.
+
+| # | Finding | How it was established | Status |
+|---|---|---|---|
+| Z-A | The deployed root dashboard rendered **"Snapshot none yet / 0 in-scope markets"** | fetched https://karagemop466-tech.github.io/Demo2/ ; page's own error text: `data/snapshot.json → HTTP 404` | fixed: `data/snapshot.json` now exists (first successful run 13:08 UTC) |
+| Z-B | `data/snapshot.json` had **never** been committed on any branch | `git log --all -- data/snapshot.json` (empty); no remote branch contained it | fixed by Z-A run |
+| Z-C | Root cause 1: scope was derived from one `/events?status=open` stream, which is dominated by MVE combo events whose event tickers have no series prefix | run 44740868702 output: 1,556 rows, `per_topic` all zero, 16k+ unmapped; plus live API inspection (`KXMVECROSSCATEGORY-…` tickers) | fixed: scope re-based on `GET /markets?series_ticker=…` per in-scope series |
+| Z-D | Root cause 2: resolutions mapped by event-ticker prefix → 0 rows | same run: `resolved_in_scope: 0` with 60+ settled pages read | fixed: per-series settled fetch + rolling `data/resolutions_log.json` |
+| Z-E | 36/422 requests returned **429**; the collector retried but never slowed down | `data/snapshot.json → api_log` after the 13:08 run | fixed: global pacing (0.30 s, ×1.6 on 429, ×0.99 on success) |
+| Z-F | A failed series request was indistinguishable from an empty topic | same log: 28 × 429 on `/markets?series_ticker=…` appeared as missing markets | fixed: `failed_series` + `series_read` / `series_failed` per topic, shown on the topic pages and on Verification |
+| Z-G | Culture has **2 series in the entire demo catalogue and 0 open markets**; gas has 2 series (`AAAGASD`, `AAAGASM`) | `data/series_index.json` (3,310 series fetched live) + `GET /markets?series_ticker=…&status=open` | reported as an absence of markets, with the catalogue counts shown — not a data failure |
+| Z-H | `main`'s **CI was red** at the "regenerating produced a diff" gate | run 44740172764, step 6 failure; a hand edit to `index.html` had added a card that the generator did not produce | fixed: the card is restored **in `tools/build_site.py`**, so regeneration is a no-op |
+| Z-I | The sharp-jump card's link was wrong from the site root (`pages/causes.html` → `/pages/pages/…`) | `tools/check.py` | fixed by prefix substitution in the generator |
+| Z-J | Four dashboards + a monitor were published side by side with no single entry point | directory listing + `gh pr list` | fixed: `/` is now a **Start here** page; the live dashboard is `/dashboard.html` |
+| Z-K | `tools/check_live_links.py` reported two false positives as "unfinished placeholder" (API URL templates in `href`s and visible endpoint labels) | running it | fixed at the checker (brace-bearing attribute values are patterns) **and** by marking the two visible labels as `<code>`; no guard was loosened |
+| Z-L | A full ~3,000-series sweep cannot finish inside the job window (23 min run died before the commit step) | run 44741984184: step 5 success, step 8 (commit) failure | fixed: `--series-per-topic` (default 90) with **rotation every run**, clock check per series, and the cap published in the snapshot |
+
+**Sources re-read this session** (official only):
+`docs.kalshi.com/getting_started/demo_env` (endpoint table, "prices may not be reflective"),
+`api-reference/market/get-market-candlesticks` (period_interval 1/60/1440, `price`/`yes_bid`/
+`yes_ask` objects), `api-reference/market/get-market-orderbook` (`orderbook_fp`, depth 0–100,
+yes/no bid ladders), `api-reference/market/get-markets`, `events/get-events`,
+`getting_started/{market_lifecycle,rate_limits,market_settlement}`.
+Live responses read this session: `/exchange/status` (trading_active true),
+`/series?category=Culture` (exactly 2 series), `/markets?series_ticker=KXXBANNEDGROK&status=open`
+(0 markets), `/markets?series_ticker=KXBNB15M&status=open` (live 15-minute crypto market),
+`/series?category=Crypto&limit=5`, `/markets?status=open&limit=1` (MVE combo market shape).
+
+**Offline verification added:** `tools/test_collector.py` — 43 checks, no network, wired into
+CI. It covers topic mapping from official fields, verbatim value copying (an absent field stays
+absent), 24-hour dollars from trade prints, order-book normalisation, rolling-log persistence,
+and that a rate-limited series reports "0 markets AND 1 failed series".
