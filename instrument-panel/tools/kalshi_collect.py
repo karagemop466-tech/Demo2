@@ -110,8 +110,8 @@ MAX_ORDERBOOKS_PER_TOPIC = 30        # live depth snapshots, per topic
 MAX_TRADE_MARKETS_PER_TOPIC = 5      # trade-history pulls, per topic (largest markets)
 MAX_RESOLVED_PER_SERIES = 8          # settled markets copied per series
 REQUEST_PAUSE = 0.05                 # be polite: unauthenticated limits are unpublished
-MAX_SERIES_PER_TOPIC = 40            # cap the series breadth per topic (documented in meta)
-SERIES_WORKERS = 6                   # concurrent per-series fetches
+MAX_SERIES_PER_TOPIC = int(os.environ.get('KALSHI_MAX_SERIES', '120'))  # series breadth per topic
+SERIES_WORKERS = int(os.environ.get('KALSHI_WORKERS', '10'))  # concurrent per-series fetches
 
 MARKET_FIELDS = [
     "ticker", "event_ticker", "market_type", "title", "yes_sub_title", "status",
@@ -259,6 +259,22 @@ def discover_series():
     return found, adj, queries, cache
 
 
+def select_series(all_series, limit):
+    """Choose which series to query when a topic has more than the cap allows.
+
+    Rule (deterministic, no judgement about which market matters): sort by the
+    API's own `frequency` field first - daily before weekly before monthly before
+    one_off - then by ticker, and take the first `limit`. That guarantees the
+    recurring contracts (daily gas prices, daily/hourly crypto) are always
+    included, and the series dropped are the tail of the long one-off lists.
+    The number dropped is reported per topic, never hidden.
+    """
+    order = {"daily": 0, "hourly": 0, "15 min": 0, "weekly": 1, "monthly": 2}
+    def key(s):
+        return (order.get(str(s.get("frequency") or "").lower(), 3), str(s.get("ticker") or ""))
+    return sorted(all_series, key=key)[:limit]
+
+
 def slim_series(s, topic_id):
     return {
         "topic": topic_id,
@@ -388,7 +404,7 @@ def main():
     for topic in SCOPE:
         tid = topic["id"]
         mkts = []
-        series_list = found.get(tid, [])[:MAX_SERIES_PER_TOPIC]
+        series_list = select_series(found.get(tid, []), MAX_SERIES_PER_TOPIC)
         truncated[tid] = max(0, len(found.get(tid, [])) - len(series_list))
 
         def fetch_series(s):
@@ -474,7 +490,7 @@ def main():
     # culture-adjacent (reported separately)
     adj_rows = [slim_series(s, "culture-adjacent") for s in adjacent]
     adj_markets = []
-    for s in adjacent[:12]:
+    for s in adjacent[:8]:
         om, om_url = collect_markets(s.get("ticker"), "open")
         for m in om:
             row = {k: m.get(k) for k in MARKET_FIELDS}
