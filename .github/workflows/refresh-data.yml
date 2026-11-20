@@ -83,6 +83,14 @@ jobs:
             exit 0
           fi
           git commit -m "data: refresh Kalshi demo snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
-          # small, frequent commits; rebase before push to avoid clobbering other work
-          git pull --rebase --autostash origin main
-          git push origin HEAD:main
+          # Small, frequent commits. Several data pipelines commit into data/ in
+          # parallel, so a single pull/push can lose the race; retry instead of
+          # failing the run (session eeb796d7: runs 44753235358/44755074121 both
+          # collected fine and died here).
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase --autostash origin main && git push origin HEAD:main && exit 0
+            echo "push race on attempt $attempt; retrying..."
+            sleep $((attempt * 5))
+          done
+          echo "could not push snapshot after 5 attempts" >&2
+          exit 1
