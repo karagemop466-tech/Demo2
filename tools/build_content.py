@@ -707,6 +707,15 @@ QUESTIONS = [
   "Answered partly: the collector publishes every tag and category it sees with counts, and every "
   "Gas-tagged series. A human must choose whether to widen the mapping.",
   "api-reference/market/get-series-list"),
+ ("Q12", "Which subsite is authoritative?",
+  "Parallel sessions produced three independent builds: <code>/</code> (this one, CI-checked), "
+  "<code>/dashboard/</code> and <code>/verified/</code>. All three were preserved during the merge "
+  "rather than one being deleted.",
+  "A decision on which subsite to keep, redirect or delete, before search engines index three "
+  "competing dashboards.",
+  "Nothing is deleted unilaterally; the README table names each path and its origin, and this "
+  "question records the choice as the owner's to make.",
+  "getting_started/api_environments"),
  ("Q11", "Who owns the running cost and the secrets?",
   "GitHub Actions runs the collector; Pages hosts the site; a relay (if chosen) needs hosting.",
   "An owner for the workflow, the key rotation, and any future relay.",
@@ -719,7 +728,7 @@ def build_questions() -> None:
     rows = [[q[0], q[1], q[2], q[3], q[4], src(q[5], q[5].rsplit("/", 1)[-1])] for q in QUESTIONS]
     body = """
 <h1>Questions, information and answers needed before deciding</h1>
-<p class="lead">Eleven questions stand between the current build and a decision that is defensible.
+<p class="lead">Twelve questions stand between the current build and a decision that is defensible.
 For each one: what we already know from an official source, exactly what is still missing, how it
 can be discovered, and the source that anchors the known part. Nothing here is padded with
 questions that the data already answers.</p>
