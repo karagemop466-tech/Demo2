@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live dashboard — Kalshi demo</title>
+<meta name="description" content="Live Kalshi demo markets for gas prices, elections, culture, crypto and golf: prices, order book depth, price charts and resolution tracking.">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="dashboard">
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="index.html"><span class="brand-mark">K</span><span>Kalshi demo dashboard<small>public demo API · read + paper</small></span></a>
+    <span class="demo-chip" id="liveChip"><span class="dot stale"></span> Connecting…</span>
+  </div>
+  <nav class="main" aria-label="Sections">
+    <a href="../index.html">Main dashboard</a>
+    <a href="index.html" aria-current="page">Live console</a>
+    <a href="trading.html">Trading &amp; portfolio</a>
+    <a href="trading-analysis.html">Trade analysis</a>
+  </nav>
+</header>
+<main class="wrap">
+
+  <div class="page-head">
+    <p class="eyebrow">Live · five topics only</p>
+    <h1>The biggest live events on the Kalshi demo exchange</h1>
+    <p class="lede">Gas prices, elections, culture, crypto and golf — ranked by notional traded, charted by contract
+      price over time, with the live order book so you can see how many contracts sit at each price. Everything is read
+      from <code>external-api.demo.kalshi.co</code> in your browser. Demo money only; demo prices are not real market prices.</p>
+  </div>
+
+  <div id="dataStatus"></div>
+
+  <div class="grid kpis" style="margin-bottom:14px">
+    <div class="kpi"><div class="label">In-scope open markets</div><div class="value" id="kpiCount">—</div><div class="sub" id="kpiOpen">scanning…</div></div>
+    <div class="kpi"><div class="label">Largest notional traded</div><div class="value" id="kpiTop">—</div><div class="sub" id="kpiTopName">—</div></div>
+    <div class="kpi"><div class="label">Contracts traded, in scope</div><div class="value" id="kpiVolume">—</div><div class="sub">sum of volume_fp</div></div>
+    <div class="kpi"><div class="label">Open interest, in scope</div><div class="value" id="kpiOI">—</div><div class="sub">contracts still held</div></div>
+    <div class="kpi"><div class="label">Per topic</div><div class="value" style="font-size:13px;font-weight:600;line-height:1.6" id="kpiTopics">—</div><div class="sub">match counts</div></div>
+  </div>
+
+  <div class="toolbar">
+    <div class="tabs" id="topicTabs" role="group" aria-label="Filter by topic">
+      <button class="chip" data-topic="all" aria-pressed="true">All five topics</button>
+      <button class="chip" data-topic="gas" aria-pressed="false">Gas prices</button>
+      <button class="chip" data-topic="elections" aria-pressed="false">Elections</button>
+      <button class="chip" data-topic="culture" aria-pressed="false">Culture</button>
+      <button class="chip" data-topic="crypto" aria-pressed="false">Crypto</button>
+      <button class="chip" data-topic="golf" aria-pressed="false">Golf</button>
+    </div>
+    <input class="search" id="marketSearch" type="search" placeholder="Filter by ticker, event or title…" aria-label="Search markets">
+    <label class="sr" for="sortSelect">Sort markets</label>
+    <select id="sortSelect">
+      <option value="notional">Sort: notional traded</option>
+      <option value="oi">Sort: notional open interest</option>
+      <option value="volume">Sort: contract volume</option>
+      <option value="price">Sort: last price</option>
+      <option value="close">Sort: closing soonest</option>
+    </select>
+    <button id="refreshBtn" class="primary">Refresh now</button>
+    <span class="status">Updated <b id="lastUpdate">—</b> · auto-refresh 15s</span>
+  </div>
+
+  <div class="grid two">
+    <section class="card" aria-labelledby="mkH">
+      <div class="card-head">
+        <h2 id="mkH">Live markets, largest notional first</h2>
+        <span class="src">GET /markets?status=open</span>
+      </div>
+      <div class="table-wrap" style="max-height:560px">
+        <table>
+          <thead>
+            <tr>
+              <th class="num">Notional</th><th>Ticker</th><th>Market</th><th>Topic</th>
+              <th class="num">Last</th><th class="num">YES bid / ask</th>
+              <th class="num">Volume</th><th class="num">Open int.</th><th class="num">Closes</th>
+            </tr>
+          </thead>
+          <tbody id="marketsBody"><tr><td colspan="9" class="empty">Loading live demo markets…</td></tr></tbody>
+        </table>
+      </div>
+      <p class="table-note">Click a row to chart it. <b>Notional = contracts × last price</b> — Kalshi publishes contract
+        counts, not dollar turnover, so this is a labelled proxy ().</p>
+    </section>
+
+    <section class="card" aria-labelledby="chartH">
+      <div class="card-head">
+        <div>
+          <h2 id="chartH" style="margin-bottom:2px">Contract price over time</h2>
+          <p class="xs faint" style="margin:0"><span id="selTitle">No market selected</span> <span id="selTopic"></span></p>
+          <p class="xs mono faint" style="margin:2px 0 0" id="selTicker"></p>
+        </div>
+      </div>
+
+      <div class="toolbar" style="margin-bottom:8px">
+        <div class="tabs" id="windowTabs" role="group" aria-label="Chart time window">
+          <button class="chip" data-window="60" aria-pressed="false">60s</button>
+          <button class="chip" data-window="300" aria-pressed="true">5m</button>
+          <button class="chip" data-window="900" aria-pressed="false">15m</button>
+          <button class="chip" data-window="3600" aria-pressed="false">1h</button>
+          <button class="chip" data-window="21600" aria-pressed="false">6h</button>
+        </div>
+        <button id="clearHist" class="ghost xs">Clear series</button>
+      </div>
+
+      <div class="chart-box">
+        <canvas id="priceChart" height="300" role="img" aria-label="Line chart of contract price against time"></canvas>
+        <div class="chart-meta">
+          <span>x = time · y = contract price in dollars (0.00–1.00)</span>
+          <span id="chartTip" class="mono"></span>
+        </div>
+      </div>
+      <p class="xs faint" style="margin:7px 0 0" id="chartNote">The series is built from REST snapshots taken while this
+        page is open and kept in this browser. It is <b>not</b> exchange tick history — Kalshi’s candlestick endpoint
+        (1m minimum) is the official historical source and is linked on the page.</p>
+
+      <div id="selStats" style="margin-top:10px"></div>
+    </section>
+  </div>
+
+  <section class="card" aria-labelledby="bookH">
+    <div class="card-head">
+      <h2 id="bookH">Live liquidity — how many contracts sit at each price</h2>
+      <div class="row">
+        <span class="src">GET /markets/{ticker}/orderbook</span>
+        <button id="reloadBook" class="xs">Reload book</button>
+      </div>
+    </div>
+    <div id="bookBox"><p class="muted small" style="margin:0">Select a market above to load its order book.</p></div>
+  </section>
+
+  <div class="grid two" style="margin-top:14px">
+    <section class="card" aria-labelledby="resH">
+      <div class="card-head">
+        <h2 id="resH">Resolved events — how each one ended</h2>
+        <span class="src">GET /markets?status=settled</span>
+      </div>
+      <div class="table-wrap" style="max-height:340px">
+        <table>
+          <thead><tr><th>Ticker</th><th>Market</th><th>Topic</th><th>Result</th><th class="num">Settlement</th><th class="num">Settled</th></tr></thead>
+          <tbody id="resolvedBody"><tr><td colspan="6" class="empty">Loading…</td></tr></tbody>
+        </table>
+      </div>
+      <p class="table-note">YES and NO payouts are $1 per winning contract
+        (<a href="https://docs.kalshi.com/getting_started/market_settlement">settlement docs</a>).</p>
+    </section>
+
+    <section class="card" aria-labelledby="watchH">
+      <div class="card-head">
+        <h2 id="watchH">Tracked until resolution</h2>
+        <span class="src">LOCAL · this browser only</span>
+      </div>
+      <div class="table-wrap" style="max-height:340px">
+        <table>
+          <thead><tr><th>Ticker</th><th>Market</th><th>Topic</th><th>Outcome</th><th class="num">When</th></tr></thead>
+          <tbody id="watchBody"><tr><td colspan="5" class="empty">Nothing tracked yet.</td></tr></tbody>
+        </table>
+      </div>
+      <p class="table-note">Markets you have loaded are remembered locally and flip to YES/NO automatically once the
+        API reports a result. Clearing browser data clears this list.</p>
+    </section>
+  </div>
+
+  <div class="notice warn" style="margin-top:14px">
+    <b>Read this before trusting a number.</b> This is the <b>demo</b> environment: Kalshi states that demo prices and
+    behaviour “may not be reflective of those in real markets”
+    (<a href="https://docs.kalshi.com/getting_started/demo_env">demo environment docs</a>). Topic labels come from
+    keyword matching, not an official taxonomy. Both caveats, plus every other open issue, are listed with sources on
+    .
+  </div>
+
+</main>
+<footer class="site">
+  <div class="bar">
+    <span>Kalshi <b>demo</b> only — mock funds, not investment advice. Prices come live from
+      <a href="https://docs.kalshi.com/getting_started/demo_env">external-api.demo.kalshi.co</a>.</span>
+    <span>Every claim is sourced on .</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

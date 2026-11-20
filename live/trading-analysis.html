@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trade analysis & strategy — Kalshi demo</title>
+<meta name="description" content="Categorise Kalshi demo trades by topic, side and price band, and see which strategies are actually supported by data.">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="analysis">
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html"><span class="brand-mark">K</span><span>Kalshi demo dashboard<small>public demo API · read + paper</small></span></a>
+    <span class="demo-chip"><span class="dot"></span>DEMO ENVIRONMENT</span>
+  </div>
+  <nav class="main" aria-label="Sections">
+    <a href="../index.html">Main dashboard</a>
+    <a href="index.html" aria-current="page">Live console</a>
+    <a href="trading.html">Trading &amp; portfolio</a>
+    <a href="trading-analysis.html">Trade analysis</a>
+  </nav>
+</header>
+<main class="wrap">
+
+  <div class="page-head">
+    <p class="eyebrow">Categorisation · evidence first</p>
+    <h1>Trade analysis and strategy</h1>
+    <p class="lede">Every trade is bucketed four ways — topic, side, entry-price band, and topic × side — and a bucket is
+      only allowed to call itself a pattern once it holds at least <b>10 trades</b>. Below that threshold the page says
+      “insufficient data” instead of writing a strategy. Source of trades: <b id="analysisSource">checking…</b>
+      (<b id="analysisCount">0</b> rows).</p>
+  </div>
+
+  <div class="toolbar">
+    <button class="primary" id="analysisRefresh">Recompute from current data</button>
+    <span class="status">Uses real demo fills if a key is connected, otherwise this browser’s paper-trade log.</span>
+  </div>
+
+  <section class="card">
+    <div class="card-head"><h2>How each bucket is computed</h2><span class="src">DEFINITIONS</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Bucket</th><th>Rule</th><th>Why it is the right unit</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Topic</td><td>Keyword match on ticker and market text</td><td>Lets a gas-price edge be judged separately from a golf edge</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></td></tr>
+          <tr><td>Side</td><td><code>outcome_side</code> — <code>yes</code> or <code>no</code></td><td>Buying YES and buying NO have different risk profiles at the same price</td><td><a href="https://docs.kalshi.com/getting_started/order_direction">Order direction</a></td></tr>
+          <tr><td>Entry-price band</td><td>&lt;20¢, 20–50¢, 50–80¢, 80¢+</td><td>A 90¢ contract needs a 90% hit rate to break even; a 10¢ one needs 10%</td><td>Arithmetic on the trade price</td></tr>
+          <tr><td>P&amp;L</td><td>(count if side matches <code>result</code> else 0) − price × count</td><td>Matches the documented $1-per-winning-contract payout</td><td><a href="https://docs.kalshi.com/getting_started/market_settlement">Market settlement</a></td></tr>
+          <tr><td>Fees</td><td><code>fee_cost</code> per fill, summed</td><td>Fees turn a marginal edge negative</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills">Get Fills</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">Paper trades carry no fee, so their P&amp;L is gross. That is stated on every table that mixes them
+      rather than quietly assuming zero costs on the real side.</p>
+  </section>
+
+  <section class="card" id="analysisBody">
+    <div class="notice">Analysis has not run yet.</div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Strategy candidates that clear the threshold</h2>
+      <span class="src">DERIVED · NOT ADVICE</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Bucket</th><th class="num">n</th><th class="num">Avg entry</th><th class="num">P&amp;L to date</th><th>Status and the rule it implies</th></tr></thead>
+        <tbody id="strategyBody"><tr><td colspan="5" class="empty">No bucket has reached the 10-trade threshold, so no strategy can be supported yet.</td></tr></tbody>
+      </table>
+    </div>
+    <p class="table-note">A candidate is a description of what the data already did, not a forecast. Ten trades is a low
+      bar chosen so the page is usable; it is not a statistical test, and nothing here has been fee-adjusted on the paper
+      side.</p>
+  </section>
+
+  <div class="grid two" style="margin-top:14px">
+    <section class="card">
+      <h2>What the numbers cannot tell you</h2>
+      <ul class="tight small muted">
+        <li><b>Demo ≠ real.</b> Kalshi states demo prices and behaviour may not reflect real markets, so an edge here may
+          not exist on the live exchange (<a href="https://docs.kalshi.com/getting_started/demo_env">demo env</a>).</li>
+        <li><b>Selection bias.</b> Trades you chose to place are not a random sample of markets.</li>
+        <li><b>Survivorship.</b> Fill data only covers markets that traded; quiet markets never appear.</li>
+        <li><b>No counterfactual.</b> We never see what the alternative trade would have returned.</li>
+        <li><b>Small samples.</b> Ten trades cannot separate skill from luck; treat any candidate as a hypothesis.</li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2>How to make a strategy decision anyway</h2>
+      <ol class="tight small muted">
+        <li>Log at least 10 trades per bucket you want to judge, or connect a demo account with real fills.</li>
+        <li>Check the price band: an edge concentrated in 80¢+ contracts needs very few losses to vanish.</li>
+        <li>Subtract fees before believing a positive bucket.</li>
+        <li>Compare against doing nothing — the honest baseline for a demo is 0% return.</li>
+        <li>Only then choose a path on ; nothing here is auto-applied.</li>
+      </ol>
+      <p class="xs faint" style="margin-top:10px">Open questions that block a firmer answer are listed with discovery
+        steps on , chiefly Q-3 (minimum sample) and Q-5 (fee schedule).</p>
+    </section>
+  </div>
+
+</main>
+<footer class="site">
+  <div class="bar">
+    <span>Kalshi <b>demo</b> only — mock funds, not investment advice. Prices come live from
+      <a href="https://docs.kalshi.com/getting_started/demo_env">external-api.demo.kalshi.co</a>.</span>
+    <span>Every claim is sourced on .</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>
