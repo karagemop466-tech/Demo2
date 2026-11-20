@@ -259,7 +259,6 @@ Both sets of pages are published by the root-deploying `pages.yml` workflow.
 - Retry of KXCABALLOTMEASURES (previously HTTP 502): **now succeeded**. Demo results (all status `finalized`, volume ~3 contracts each): Prop 45 `no`, Prop 44 `no`, Prop 43 `no`, Prop 42 `yes`. Not yet added to `dashboard/data/snapshot.json`. Follow-up for the next dashboard update, since these are low-dollar.
 - Still open for the user: demo API key (portfolio/trading); R-F5 and the root-navigation request from main's board.
 
-<<<<<<< HEAD
 ## Current checkout follow-up — 2026-11-20
 
 - Current Arena branch: `arena/22b4f0cb-demo2`; session ID: `22b4f0cb`.
@@ -338,7 +337,6 @@ docs.kalshi.com.
   per-branch (G-9) so the two collection runs cannot cancel each other.
 - KXCABALLOTMEASURES retry values could not be re-verified (empty API response);
   NOT carried into any table — see pages/flagged.html G-3.
-=======
 ---
 
 ## Session arena-1d709f30 — branch `arena/1d709f30-demo2` (added 2026-11-20)
@@ -598,7 +596,6 @@ Final local state before merge: `tools/check_live_links.py` clean (46 files / 10
 re-running both generators produces no diff.
 
    link fix were applied on top.
->>>>>>> origin/main
 
 ## Session 0c901fea — read-only Kalshi monitor (PR #15)
 
@@ -639,3 +636,145 @@ Branch: `arena/0c901fea-demo2`. This session contributes a complementary static 
 - Initial integration of `e3a6f5f`: `17e8c8f`.
 - Integration of `4b84abf`: `a98cb75`.
 - `main` subsequently advanced to `2ccd57c` (including PRs #16 and #21 and the `intelligence/` subsite); this update is being integrated without deleting or replacing `monitor/`, the root dashboard, or the other subsites. Confirm PR checks, mergeability, and Pages deployment only after the current integration is pushed.
+
+---
+
+# Merged from main (PRs #28–#31, instrument panel session)
+
+### Merge record (f1751c8f, 2026-11-20)
+- Merged `origin/main` (d98c436, which includes PR #9, #10, and #11 from session arena-3420a90d) into `arena/f1751c8f-demo2`. The conflict in COORDINATION.md was resolved by keeping both sections in order. README.md auto-merged.
+- Main changes were additive (`dashboard/`, `tools/collect_kalshi.py`, `.github/workflows/collect.yml`, `.gitignore`). No shared file owned by this session was overwritten.
+
+## Session `64df4faa` — branch `arena/64df4faa-demo2` (claim written 2026-11-20 11:35 UTC, before edits)
+
+This session's rules name the branch `arena/64df4faa-demo2`, so `session-<id>/<task>` branches
+were not created. The board was read first. `main` at claim time: `8330897` (PR #12),
+with sessions `f1751c8f`, `arena-3420a90d`, `bb334a65`, `6822d767`, `e3f65782` and `407c72e2`
+already merged and **still active** on their own branches (`Refresh Kalshi demo data snapshot`
+and `Build and check the site` runs were in progress while this claim was written).
+
+**Scope discipline.** Because three other dashboards are being actively edited, this session is
+**additive only**. It does not edit `pages/`, `verified/`, `dashboard/`, `assets/`, `app.js`,
+`style.css`, `analysis.html`, `portfolio.html`, `review.html`, `data/kalshi_snapshot.json`,
+`tools/build_site.py`, `tools/check_links.py` or `tools/collect_kalshi.py`.
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| W-1 | Verified data collector (public demo API → snapshot + 3-day tick history) | done | 64df4faa | `tools/kalshi_collect.py`, `data/dashboard.json`, `data/history/*` |
+| W-2 | Data validator that fails the build on unsourced / out-of-range / unreconciled / stale rows | done | 64df4faa | `tools/validate_data.py` |
+| W-3 | Dashboard site: overview, 5 topic pages, live chart + orderbook, resolutions, portfolio, analysis | done | 64df4faa | `site/*.html`, `site/assets/*` |
+| W-4 | Questions register (22 questions, known/missing/how-to-find-out) | done | 64df4faa | `site/content/questions.json`, `site/questions.html` |
+| W-5 | Suggestions board (10 decisions, nothing implemented) | done | 64df4faa | `site/content/suggestions.json`, `site/suggestions.html` |
+| W-6 | Flagged for Review register (data + repo irregularities, evidence links) | done | 64df4faa | `site/content/flags.json`, `site/flagged.html` |
+| W-7 | Repo review: claim-by-claim against official docs | done | 64df4faa | `site/content/repo_review.json`, `site/repo-review.html` |
+| W-8 | Clean landing page indexing every dashboard in the repo | done | 64df4faa | `index.html` |
+| W-9 | Workflow: collect → validate → commit → link-check → deploy, every 15 min | done | 64df4faa | `.github/workflows/pages.yml` |
+| W-10 | Integration: re-verify rows, build, link check, PR to `main`, merge, deploy check | in progress | 64df4faa | all of the above |
+
+### Environment facts verified by this session (not assumed)
+
+- Additive sandbox bash **cannot** reach Kalshi (TLS `SSL_ERROR_SYSCALL`, DNS resolves to the AWS
+  NLB for `external-api.demo.kalshi.co` and `external-api-ws.demo.kalshi.co`). Confirmed by `curl`.
+- The sandbox's `fetch_page` tool **can** reach the demo API and the docs; that is how the raw
+  responses cited on the site were read.
+- A GitHub Actions runner **can** reach the demo API: a probe workflow returned HTTP 200 from
+  `/exchange/status` and committed the response to the branch, which is how the collector design
+  was validated before writing it.
+- **CORS**: `/exchange/status` with `Origin: https://karagemop466-tech.github.io` returned
+  `access-control-allow-origin: https://karagemop466-tech.github.io` (and `cache-control: public, max-age=1`).
+  That is why the browser can poll the API directly and no proxy is needed for public data.
+  This contradicts the earlier board note “CORS not verified”; it is now verified and re-checked each run.
+- `search/tags_by_categories` contains **no Culture category** but does contain Entertainment;
+  Culture exists only as a series category (`/series?category=Culture` → 2 series). Golf is a tag
+  under Sports. Both are documented on the site rather than worked around.
+
+### Sources (official, read this session)
+`docs.kalshi.com`: `getting_started/demo_env`, `getting_started/orderbook_responses`,
+`getting_started/market_settlement`, `getting_started/historical_data`, `getting_started/rate_limits`,
+`getting_started/fixed_point_migration`, `api-reference/market/get-markets`,
+`api-reference/market/get-market-orderbook`, `api-reference/market/get-series-list`,
+`api-reference/market/get-trades`, `api-reference/market/get-market-candlesticks`,
+`api-reference/events/get-events`, `api-reference/portfolio/get-balance`.
+Raw API responses cited per row: `/series?category=Economics|Elections|Culture|Crypto`,
+`/series?tags=Golf`, `/markets?series_ticker=…&status=open|settled`, `/markets/{ticker}/orderbook`,
+`/markets/trades?ticker=…`, `/exchange/status`, `/search/tags_by_categories`.
+
+### Verification performed
+- `python3 tools/build_dashboard_site.py` then `python3 tools/check_site.py`: 55 pages checked,
+  0 blocking errors; owned pages all carry the demo disclaimer and are reachable from the nav.
+  Issues found in other sessions' pages are printed as **REPORTED, not blocking** so they are
+  visible without blocking this session.
+- `python3 tools/validate_data.py` enforces: source URL on every row, prices inside $0.00–$1.00,
+  derived money reconciling with its inputs, no field filled in when its inputs are missing,
+  snapshot younger than 6 hours.
+- Every Kalshi doc path used on the site was fetched during this session; results are listed on
+  `site/repo-review.html` under “Documentation links checked” (FETCHED vs REFERENCED).
+
+### Requests to other sessions (not edited here)
+1. **`pages/portfolio.html` and the root monitor still contain a credential-entry form** (API key ID
+   + private key pasted into the page). PR #6 removed it but was never merged. This is recorded as
+   F-08 on `site/flagged.html`. Whoever owns `pages/` should merge or close PR #6.
+2. `dashboard/`, `verified/`, `pages/` and the root notes now make **four parallel dashboards**.
+   This session did not consolidate them because all three are being edited right now; the landing
+   page indexes all four instead. Consolidation is Suggestion S5 on the site.
+3. The board's earlier claim that CORS is unverified is out of date — see above.
+
+### Results actually obtained (not planned)
+
+| Fact | Value | How it was verified |
+|---|---|---|
+| Open in-scope markets collected | 1,311 | `data/dashboard_instrument.json` `counts.open_markets_in_scope`, from one shared `/markets?status=open` stream intersected with each topic's series list |
+| In-scope series | 174 | `/series?category=…` and `/series?tags=Golf` |
+| Resolved markets collected | 1,601 | `/markets?series_ticker=…&status=settled` per series, `result` copied verbatim |
+| — of which ever traded | 270 | `volume_fp > 0` |
+| — of which never traded | 1,331 | `volume_fp == 0`; API returns `last_price_dollars` `0.0000` for these |
+| Live orderbook snapshots | 48 (20 non-empty) | `/markets/{ticker}/orderbook?depth=20` |
+| Trade histories | 12 markets | `/markets/trades?ticker=…` |
+| Requests per run | ~440, 0 errors | `meta.https_requests`, `meta.request_errors` |
+| Run duration | ~2 minutes | GitHub run 44737674422 |
+
+### Two bugs this session found in its own work, and what now prevents them
+
+1. **Resolved-market block silently emptied.** Restructuring the topic loop dropped the settled-markets
+   call; the run still "passed" with 0 resolved rows. `tools/validate_data.py` now **fails** when the
+   resolved set is empty, and `instrument-panel/tests_smoke.py` (offline, no network) runs first in CI.
+2. **A calibration that measured a default value.** 1,331 of 1,601 resolved markets never traded and
+   carry `last_price_dollars = 0.0000`. Calibrating them reported a fake +26-point edge on long shots.
+   The Analysis page now calibrates **only traded markets** (n=270), labels bands with n<30 as too small
+   to interpret, and keeps the uncorrected table in a collapsible block so the correction is checkable.
+   Recorded as flag **F-15**.
+
+### Rate limiting, verified rather than assumed
+The 300-series run produced **539 x HTTP 429**. Kalshi documents that public endpoints “charge your IP
+address's budget first”, that publicly cacheable responses carry **no** `X-RateLimit-*` headers, and that
+a 429 has no penalty — so backoff is the only remedy. The collector now spaces requests globally
+(widening x1.5 per 429, narrowing 0.5% per success, 4 workers) and publishes the observed 429 count on
+the Verification page. After the restructure: 440 requests, 0 errors, 5 observed 429s.
+
+| PR | What | Result |
+|----|------|--------|
+| [#28](https://github.com/karagemop466-tech/Demo2/pull/28) | The instrument panel itself (15 pages, collector, validator, workflow) | **merged** `46acd3e` at 2026-11-20T12:43:50Z |
+| [#29](https://github.com/karagemop466-tech/Demo2/pull/29) | Move the nav link into `build_site.py` so the generated-page check passes | **merged** |
+| [#30](https://github.com/karagemop466-tech/Demo2/pull/30) | Derive the expected nav size from the generator instead of hardcoding 20 | **merged** `64d0961` |
+
+**`Build and check the site` is green on main at `64d0961`.** `pages build and deployment` succeeded,
+and `Deploy GitHub Pages` ran the full collect → validate → rebuild → link-check chain.
+
+**Live and verified by fetching the deployed page** (not by assuming):
+`https://karagemop466-tech.github.io/Demo2/instrument-panel/site/analysis.html` returns the dashboard,
+showing 1,601 resolved markets, 317 traded / 1,284 never-traded, and the corrected calibration table.
+
+### Two CI failures I caused on main, and what was actually wrong
+
+Both were **my** mistakes, both blocked nothing but looked like broken deployments, and both are worth
+recording so another session does not repeat them:
+
+1. **Edited a generated file.** `index.html` is produced by `tools/build_site.py`. Adding a nav link by
+   hand made CI's "pages must match the generator" step fail. *Lesson: if a file has a generator, edit
+   the generator.*
+2. **A hardcoded count in a checker.** `tools/check.py` asserted "nav has 20 links", a magic number that
+   has to be edited whenever a section is added. It now reads the count from the generator's `NAV` list,
+   so it checks that pages match their source rather than a number someone has to remember.
+
+In both cases the Pages deploy itself was fine; only the consistency job was red. The site was never
+broken, and it is worth distinguishing the two when reading Actions.

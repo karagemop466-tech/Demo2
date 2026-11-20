@@ -1,10 +1,40 @@
-# Kalshi Demo Dashboard
-
 A live, sourced dashboard for Kalshi **demo** markets in five topics only — **gas prices,
 elections, culture, crypto, golf**. It ranks the highest-dollar live events, charts contract price
 against time with selectable windows, shows how many contracts are available at each price, tracks
 every event until it resolves **yes** or **no**, reports demo-account performance, categorises
 trades and proposes strategies only when the evidence supports them.
+
+
+---
+
+## Instrument panel (this session's dashboard)
+
+A second, fully source-linked dashboard lives at [instrument-panel/site/index.html](instrument-panel/site/index.html).
+It is additive: the dashboards above are untouched.
+
+| Page | What it is |
+|------|------------|
+| [Overview](instrument-panel/site/index.html) | Live totals per topic and the highest open-interest markets |
+| [Live & liquidity](instrument-panel/site/live.html) | Price chart (60 s → 6 h) and full orderbook depth |
+| [Resolutions](instrument-panel/site/resolved.html) | Settled markets with the recorded YES/NO outcome |
+| [Portfolio & trades](instrument-panel/site/portfolio.html) | Why trading needs a backend, plus a key-free trade classifier |
+| [Analysis](instrument-panel/site/analysis.html) | Calibration of traded, resolved contracts and what cannot be concluded |
+| [Questions](instrument-panel/site/questions.html) | 22 questions: known, missing, how to find out |
+| [Suggestions](instrument-panel/site/suggestions.html) | 10 decisions with options and trade-offs; nothing implemented |
+| [Verification](instrument-panel/site/verification.html) | Endpoints, scope queries, CORS probe, rate-limit evidence, what is **not** verified |
+| [Repo review](instrument-panel/site/repo-review.html) | Claim-by-claim check against official docs |
+| [Flagged for Review](instrument-panel/site/flagged.html) | Every irregularity, with evidence links |
+
+Pipeline: `instrument-panel/tools/kalshi_collect.py` → `validate_data.py` → `build_dashboard_site.py` → `check_site.py`,
+run by `.github/workflows/pages.yml` every 15 minutes. `instrument-panel/tests_smoke.py` runs offline first.
+
+Two findings worth knowing before reading that dashboard:
+
+- **Most resolved demo markets never traded.** 1,331 of 1,601 have `volume_fp = 0` and return
+  `last_price_dollars = 0.0000`, which is a default rather than a price. Calibrating those would report a
+  fake +19-point edge. The analysis page calibrates only the 270 that traded and says so.
+- **Open interest is not liquidity.** 20 of 48 snapshot orderbooks are completely empty — the largest markets
+  by open interest are often the least quoted.
 
 **Site:** https://karagemop466-tech.github.io/Demo2/
 
