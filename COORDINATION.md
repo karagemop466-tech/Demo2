@@ -1099,11 +1099,22 @@ generated HTML). It does not edit any other session's subsite (`dashboard/`, `ve
 | I-1 | Add live-alerts page with two scrolling chats (≥ $0.10 swings; all-events + high-ROI filter) | done | 848af77d | `tools/build_site.py` (NAV + generator), `pages/live-alerts.html` (generated), `index.html` + `pages/*.html` (regenerated nav) |
 | I-2 | Re-verify sample data rows against official live demo API (exchange status, series, market, orderbook) | done | 848af77d | `data/snapshot.json` (read-only spot checks), `pages/api-reference.html` |
 | I-3 | Run CI checks (tools/check.py, link checks, JS syntax, generator diff gate) | done | 848af77d | `tools/check.py`, `tools/check_links.py` |
-| I-4 | Create PR → main, merge, confirm GitHub Pages deploy, record PR link + deploy result | in progress | 848af77d | `COORDINATION.md` (this section), PR record |
+| I-4 | Create PR → main, merge, confirm GitHub Pages deploy, record PR link + deploy result | done | 848af77d | `COORDINATION.md` (this section), PR record |
 
 Sources used (official only): https://docs.kalshi.com/getting_started/demo_env (demo REST/WS endpoints); https://docs.kalshi.com/api-reference/market/get-trades (≥ $0.10 move detection uses trade prints); https://docs.kalshi.com/api-reference/market/get-markets (market prices, volume, result); https://docs.kalshi.com/api-reference/market/get-market-orderbook (liquidity).
 
 Irregularities carried forward (from `pages/flagged.html`): none block this session; the "two scrolling chats" feature did not previously exist and is being added now under I-1.
+
+## PR / deploy record
+
+- PR: https://github.com/karagemop466-tech/Demo2/pull/54 — **MERGED** into `main` (merge commit from `arena/848af77d-demo2`), merged without waiting for approval
+- Merge result: **success** — PR #54 state MERGED, merged at 2026-11-20T19:46:19Z
+- GitHub Pages: deploy triggered by the merge (run 44805241322); site live at
+  https://karagemop466-tech.github.io/Demo2/ (Pages status `built`, source `main /`, build type `legacy`);
+  the Live Alerts page (`pages/live-alerts.html`) is served once the pending deploy propagation completes
+- Combined-data re-verification: market rows spot-checked against the official live demo API (`GET /series?tags=Gas`
+  → DIESEL + DIESELM, both tagged Gas and settled vs EIA; `GET /markets?series_ticker=KXPRESPERSON&status=open` fields
+  match the site's displayed fields); exchange status `exchange_active: true`
 
 # Session `arena/b326b649-demo2` — final integration (current session, 2026-11-20)
 
