@@ -401,8 +401,15 @@ Verification after fixes: `python3 scripts/check_links.py` → 0 problems;
   (in `tools/build_content.py` API rows) and
   `docs.kalshi.com/api-reference/markets/get-market` → `.../market/get-market`
   (singular `market`) in `review.html`. Both re-checked live (200).
-- This record + data sync PR: https://github.com/karagemop466-tech/Demo2/pull/25
-  (filled after create/merge).
+- This record + data sync PR: https://github.com/karagemop466-tech/Demo2/pull/25 —
+  **MERGED** 2026-11-20 12:19:11 UTC, merge commit `b8e29c3`; both PR checks
+  passed (link check incl. external, build+check). Pages deployments for
+  `b8e29c3` created 12:19:15Z / 12:19:23Z; final site status verified `built`
+  at https://karagemop466-tech.github.io/Demo2/ .
+- Session 1d709f30 complete: all claimed tasks (S-1…S-7) done; open items that
+  require a human (Kalshi demo account + API key for portfolio/trade execution)
+  remain flagged on the Flagged pages and in the questions register, per the
+  verification rules (blank, never inferred).
 ---
 
 ---
