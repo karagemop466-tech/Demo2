@@ -575,6 +575,7 @@ def main():
                     "source_market_url": ENDPOINTS["market"].format(ticker=urllib.parse.quote(str(m.get("ticker")))),
                 })
                 row.update(derive(m))
+                row["_traded"] = (fnum(m.get("volume_fp")) or 0) > 0
                 resolved_rows.append(row)
                 per_topic_resolved += 1
 
@@ -628,6 +629,22 @@ def main():
             row.update(derive(m))
             adj_markets.append(row)
     adj_markets.sort(key=lambda m: (m.get("open_interest_usd") or -1), reverse=True)
+
+    # Keep traded markets ahead of never-traded ones when a topic exceeds its cap, so a
+    # topic whose resolved list is dominated by placeholders still contributes the rows
+    # that carry a real price. Order is otherwise preserved (most recent series first).
+    by_topic_rows = {}
+    for r in resolved_rows:
+        by_topic_rows.setdefault(r["topic"], []).append(r)
+    resolved_final = []
+    for tid, rows in by_topic_rows.items():
+        traded_rows = [r for r in rows if r.get("_traded")]
+        other = [r for r in rows if not r.get("_traded")]
+        resolved_final.extend(traded_rows)
+        resolved_final.extend(other[: max(0, MAX_RESOLVED_PER_TOPIC - len(traded_rows))])
+    for r in resolved_final:
+        r.pop("_traded", None)
+    resolved_rows = resolved_final
 
     # ---------------- calibration over resolved in-scope markets -------------
     # TWO populations, reported separately because they mean different things:
@@ -695,7 +712,9 @@ def main():
         },
         "bands": summarise(traded),
         "bands_all_rows_for_comparison": summarise(resolved_rows),
-        "by_topic": [{"topic": k, **v} for k, v in sorted(by_topic.items())],
+        "by_topic": [{"topic": k, "n": v["n"], "resolved_yes": v["yes"], "resolved_no": v["no"],
+                      "traded": v["traded"], "never_traded": v["never_traded"]}
+                     for k, v in sorted(by_topic.items())],
         "totals": {"resolved_rows": len(resolved_rows),
                    "traded": len(traded), "never_traded": len(never),
                    "with_price_and_result": len(traded)},

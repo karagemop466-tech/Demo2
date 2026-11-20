@@ -393,8 +393,8 @@ def page_analysis():
         f'<tr><td>{badge(TOPIC_META.get(t["topic"], {}).get("title", t["topic"]), TOPIC_META.get(t["topic"], {}).get("cls", "info"))}</td>'
         f'<td class="num">{t["n"]}</td><td class="num">{t.get("traded", 0)}</td>'
         f'<td class="num">{t.get("never_traded", 0)}</td>'
-        f'<td class="num">{t["resolved_yes"]}</td><td class="num">{t["resolved_no"]}</td>'
-        f'<td class="num">{(t["resolved_yes"] / max(1, t["n"])):.1%}</td></tr>'
+        f'<td class="num">{t.get("resolved_yes", 0)}</td><td class="num">{t.get("resolved_no", 0)}</td>'
+        f'<td class="num">{(t.get("resolved_yes", 0) / max(1, t["n"])):.1%}</td></tr>'
         for t in by_topic if t.get("topic") in TOPIC_META)
 
     big = [b for b in bands if b.get("n", 0) >= 30]
@@ -406,19 +406,20 @@ def page_analysis():
 {demo_banner()}
 
 <h2>0. The correction: a resolved market is not necessarily a priced market</h2>
-<div class="notice bad"><h4>1,383 of {tot.get('resolved_rows', 0):,} resolved in-scope markets never traded</h4>
+<div class="notice bad"><h4>{never_pop.get('n', 0):,} of {tot.get('resolved_rows', 0):,} resolved in-scope markets never traded</h4>
 A settled market with <code>volume_fp = 0</code> comes back with <code>last_price_dollars = 0.0000</code>
 (values observed in this snapshot: {", ".join(never_pop.get("price_returned") or ["—"])}). Treating that zero as “the market priced this at 0%”
-and then observing that {never_pop.get('resolved_yes') or 0} of them resolved YES produces a fake edge of
-about {((never_pop.get('yes_rate') or 0) * 100):.0f} percentage points. It measures Kalshi's default, not the market's opinion.
+and then observing that {never_pop.get('resolved_yes') or 0} of them ({((never_pop.get('yes_rate') or 0) * 100):.1f}%) resolved YES
+produces a fake edge of that full amount against a supposed 0% price. It measures Kalshi's default, not the market's opinion.
 
 The calibration below therefore uses only markets that actually traded
-(<b>{tot.get('traded', 0):,}</b> of {tot.get('resolved_rows', 0):,}). The never-traded population is reported next to it, for transparency, and is excluded from the bands.</div>
+(<b>{traded_pop.get('n', 0):,}</b> of {tot.get('resolved_rows', 0):,}). The never-traded population is reported next to it, for transparency, and is excluded from the bands.</div>
 
 <div class="grid c3" style="margin:14px 0">
   {kpi("Resolved markets", f"{tot.get('resolved_rows', 0):,}", "collected from settled-market queries")}
-  {kpi("Traded (calibrated)", f"{tot.get('traded', 0):,}", "volume &gt; 0, so the price is real", "good")}
-  {kpi("Never traded (excluded)", f"{tot.get('never_traded', 0):,}", "price field is a 0.00 default", "warn")}
+  {kpi("Traded (calibrated)", f"{traded_pop.get('n', 0):,}", "volume &gt; 0, so the price is real", "good")}
+  {kpi("Never traded (excluded)", f"{never_pop.get('n', 0):,}", "price field is a 0.00 default", "warn")}
+  {kpi("Never-traded YES rate", f"{(never_pop.get('yes_rate') or 0):.1%}", "vs the default price they carry", "warn")}
 </div>
 
 <h2>1. Calibration of traded, resolved markets</h2>
