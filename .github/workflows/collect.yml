@@ -20,7 +20,9 @@ permissions:
 
 concurrency:
   group: collect-kalshi
-  cancel-in-progress: true
+  # Do not cancel a collection that is already running: two sessions may ask
+  # for a snapshot at the same time, and the second run can simply redo it.
+  cancel-in-progress: false
 
 jobs:
   collect:

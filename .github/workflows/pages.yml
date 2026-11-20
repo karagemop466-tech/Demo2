@@ -1,4 +1,5 @@
 name: Deploy GitHub Pages
+
 on:
   push:
     branches: [main]
@@ -18,9 +19,38 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Regenerate the data-driven pages
+        run: python3 tools/build_site.py
+
+      - name: Verify the request-signing implementation
+        run: python3 tools/test_signing.py
+
+      - name: Check links, anchors and row sources
+        run: python3 tools/check_links.py
+
+      - name: Check JavaScript syntax
+        run: |
+          for f in assets/*.js; do node --check "$f"; done
+          echo "all scripts parse"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
+
       - id: deployment
         uses: actions/deploy-pages@v4
