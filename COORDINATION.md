@@ -253,9 +253,45 @@ Both sets of pages are published by the root-deploying `pages.yml` workflow.
 
 ---
 
+# Session `arena-ddc587ae` — board appended at integration (2026-11-20)
+
+> Added by the integration merge of PR #16. The board above records sessions that landed on `main` first; this section records the parallel session's scope, evidence and decisions. Both are preserved deliberately.
+
+**Branch:** `arena/ddc587ae-demo2` · **Scope:** `intelligence/` subsite + its data + `intelligence/scripts/linkcheck.mjs` (non-overlapping with root/`pages/`/`dashboard/`/`site/`/`verified/` scopes).
+
+## Task board (session arena-ddc587ae)
+
+| ID | Task | Status | Evidence / notes |
+|----|------|--------|------------------|
+| T1 | Coordination setup | done | This board first pushed in commit `954870d` (pre-merge branch history). |
+| T2 | Official docs research & endpoint verification | done | docs.kalshi.com: demo_env, openapi.yaml v3.37.0, get-markets, get-events, get-series-list, get-market-orderbook, get-market-candlesticks, get-trades, get-tags-for-series-categories, market_settlement, quick_start_authenticated_requests, quick_start_websockets, create-order-v2, get-balance, get-fills, get-positions, get-settlements; cftc.gov/PressRoom/PressReleases/8302-20. Live: `GET /exchange/status` → 200 trading-active. |
+| T3 | Demo API data collection | done | `intelligence/data/watchlist.json` + `intelligence/data/snapshot.json` — 177 records, each with its exact source URL; enumeration completeness per query (complete: Oil&Gas 4/4, BTC 4/4, DWTS 1/1; partial flagged F-16). |
+| T4 | Site build (landing + subpages, per-row sources) | done | 9 pages under `intelligence/` (relocated at integration to coexist with the root site on `main`). |
+| T5 | Live dashboard (ranking + chart + depth) | done | Batched 60 s REST polling with LIVE/SNAPSHOT badge; chart periods 1/60/1440 min + seconds via trade ticks (spec-verified); depth from official bids-only orderbook with documented 1−P ask equivalence. |
+| T6 | Portfolio & trading | done (security-aligned) | Verified metric formulas + public-feed categorisation engine + strategy templates; **browser credential entry removed at integration** (F-17/D-05, aligned with repo README + PR #6); execution paths = `server/` backend / docs playground. No session keys existed (F-02) → no fabricated account data. |
+| T7 | Event resolution tracking | done | `intelligence/events.html` — protocol table + captured YES ($1.0000) and NO ($0.0000) settlements with `settlement_ts`; blank PR04 flagged (F-04). |
+| T8 | Suggestions + Questions | done | 9 suggestions (S-06 implemented), 5 decisions D-01…D-05; 14 Q&As + missing-information discovery table. |
+| T9 | Flagged for Review | done | `intelligence/flagged.html` — 17 flags with verbatim API values + sources. |
+| T10 | Verification pass | done | `node intelligence/scripts/linkcheck.mjs` → PASS (9 pages, 272 links, 177 source fields); `node --check` on all JS; local smoke test 16/16 HTTP 200. |
+| T11 | Integration + PR + merge + Pages | done | PR: https://github.com/karagemop466-tech/Demo2/pull/16 — `gh pr merge 16 --merge` executed 2026-11-20 (merge result recorded in PR). Conflicts with `main` resolved add/add-style: README + COORDINATION combined (both sessions preserved), site relocated to `intelligence/` so no root files were overwritten. Pages: https://karagemop466-tech.github.io/Demo2/intelligence/ (root site untouched). |
+
+## Irregularities / handoffs (session arena-ddc587ae)
+
+- 17 open flags — see `intelligence/flagged.html` (F-01…F-17). None block merge per instructions.
+- Security: browser-side key entry removed; related open PR #6 left for its owner session (cross-scope — not edited).
+- Cross-scope requests: none outstanding; `server/` (backend) referenced by pointer only, not modified.
+- Note for later sessions: `git pull --rebase` was replaced by an explicit `git merge origin/main` for this sync — a rebase would have replayed pre-relocation commits over the root site and destroyed the combined conflict resolution; recorded here as a deliberate deviation.
+
+## PR / Pages record (session arena-ddc587ae)
+
+- PR #16: https://github.com/karagemop466-tech/Demo2/pull/16 — merged to `main` 2026-11-20 via `gh pr merge 16 --merge` (see PR for merge commit).
+- Pages root (existing site): https://karagemop466-tech.github.io/Demo2/ — unchanged by this PR.
+- Pages subsite (this session): https://karagemop466-tech.github.io/Demo2/intelligence/ — verified after merge (post-merge check appended in the follow-up commit below).
+---
+
 ## Session 0c901fea — read-only Kalshi monitor (PR #15)
 
-Branch: `arena/0c901fea-demo2`. This session contributes a complementary static monitor under `monitor/`, linked from the root dashboard and documented in `README.md`. The integrated root dashboard, backend, data pipeline, `pages/`, `verified/`, `dashboard/`, `site/`, and existing Pages publishing workflow are preserved. The monitor is not a replacement for those projects.
+Branch: `arena/0c901fea-demo2`. This session contributes a complementary static monitor under `monitor/`, linked from the root dashboard footer and documented in `README.md`. The root dashboard, backend, data pipeline, `pages/`, `verified/`, `dashboard/`, `site/`, `intelligence/`, and existing Pages publishing workflow are preserved. The monitor is not a replacement for those projects.
 
 ### Scope and status
 
@@ -264,9 +300,9 @@ Branch: `arena/0c901fea-demo2`. This session contributes a complementary static 
 | Review official Kalshi demo/API/authentication/rate-limit sources | done | `monitor/`, docs |
 | Build five-topic read-only monitor, charts, book depth, local watchlist, review and sources pages | done | `monitor/` |
 | Keep account figures blank without authenticated data; leave trade execution disabled | done | `monitor/portfolio.html`, `monitor/review.html` |
-| Link monitor from root dashboard and README | done | `index.html`, `README.md` |
-| Add monitor test/check/build scripts and PR verification workflow | done locally; remote checks to verify | `package.json`, `tests/`, `scripts/`, `.github/workflows/verify-monitor.yml` |
-| Integrate latest `main`, preserve both dashboards, push | in progress | current merge of `origin/main` |
+| Link monitor from root dashboard and README | done | `index.html`, `tools/build_site.py`, `README.md` |
+| Add monitor test/check/build scripts and PR verification workflow | done locally; remote checks pending | `package.json`, `tests/`, `scripts/`, `.github/workflows/verify-monitor.yml` |
+| Integrate the latest `main` and preserve all subsites | in progress | merge of `origin/main` |
 
 ### Important caveats
 
@@ -278,9 +314,10 @@ Branch: `arena/0c901fea-demo2`. This session contributes a complementary static 
 
 ### Local verification
 
-- `npm test`: 8 tests passed.
+- `npm ci` succeeded; `npm test`: 8 tests passed.
 - `npm run check`: 15 monitor pages passed.
 - `npm run build`: 15 static pages built; `node scripts/check-site.mjs dist` passed.
+- The existing `tools/build_site.py` + `tools/build_content.py` regeneration is reproducible; `python3 tools/check.py` passed (with the expected warning that the first `data/snapshot.json` collection is pending).
 - `python3 tools/check_links.py`: 14 main data pages and 24 rows checked; no broken internal links/anchors or unsourced rows.
 - JavaScript syntax checks, Python compile checks, and `git diff --check` passed.
 
@@ -288,5 +325,6 @@ Branch: `arena/0c901fea-demo2`. This session contributes a complementary static 
 
 - PR #15: https://github.com/karagemop466-tech/Demo2/pull/15
 - Original implementation commit: `c7b06b1`.
-- Initial integration commit: `17e8c8f`, merging `origin/main` at `e3a6f5f`.
-- `main` subsequently advanced to `4b84abf`; its update is being integrated before considering PR mergeability. Confirm current remote checks, PR mergeability, and deployment only after that integration is pushed.
+- Initial integration of `e3a6f5f`: `17e8c8f`.
+- Integration of `4b84abf`: `a98cb75`.
+- `main` subsequently advanced to `2ccd57c` (including PRs #16 and #21 and the `intelligence/` subsite); this update is being integrated without deleting or replacing `monitor/`, the root dashboard, or the other subsites. Confirm PR checks, mergeability, and Pages deployment only after the current integration is pushed.

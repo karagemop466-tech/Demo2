@@ -15,6 +15,7 @@ Demo environment only. Mock funds. Not investment advice.
 | Page | What it answers |
 |------|-----------------|
 | `index.html` — Dashboard | Ranked in-scope markets, price-vs-time chart (60 s → 7 d), order-book depth, recent resolutions |
+| `intelligence/` | session `arena-ddc587ae` | Source-linked subsite (dashboard, resolutions, portfolio analysis, trading request-builder, review queue, 17 flags) with per-row source data |
 | `pages/executive-summary.html` | The whole build in one screen, plus what is still open |
 | `pages/gas.html` … `golf.html` | One page per topic: live markets, resolved outcomes, series in scope |
 | `pages/resolutions.html` | Everything settled, with the official yes/no result |
@@ -100,15 +101,30 @@ Every table row links an official source. If a value cannot be confirmed from an
 source it is left blank and flagged rather than inferred. Open items live on
 `pages/flagged.html` and `pages/questions.html`.
 
-## Additional read-only monitor
+---
 
-This branch also preserves the source-linked Kalshi demo monitor in `monitor/`.
-It is discoverable from the root dashboard and is published at `/Demo2/monitor/`
-when the repository root is deployed. It does not submit orders or contain
-credentials; account values remain blank without authenticated data. Its checks
-are `npm test`, `npm run check`, `npm run build`, and
-`node scripts/check-site.mjs dist`. Browser-side API/CORS behavior is not yet
-verified. The existing dashboard, backend, and Pages workflow remain in place.
-See [`monitor/review.html`](monitor/review.html) for caveats, including the
-currently labeled bid-depth proxy used for the ambiguous “highest dollar amount”
-ranking.
+## Kalshi Demo Intelligence (`intelligence/` — session arena-ddc587ae)
+
+A self-contained, source-linked subsite added by session `arena-ddc587ae` (PR #16), living entirely under `intelligence/` so the sites above are untouched:
+
+- **Pages:** landing, executive summary (API surfaces + verified endpoints), live dashboard (top-dollar event ranking for gas/elections/culture/crypto/golf, price chart with Seconds/Minutes/Hours/Days, order-book depth ladder), events & resolutions (YES/NO settlement evidence), portfolio analysis + strategy templates, trading, suggestions (review -> decide -> implement workflow), Q&A, and Flagged for Review (17 flags).
+- **Data:** `intelligence/data/watchlist.json` (official series queries with enumeration-completeness flags) and `intelligence/data/snapshot.json` (events, markets, resolutions, orderbooks, candlesticks, trade ticks) — every record embeds the exact official source URL.
+- **Verification:** `node intelligence/scripts/linkcheck.mjs` -> internal links + per-row source fields must pass (it does).
+- **Trading is security-aligned (F-17/D-05):** the page builds the official Create Order (V2) body and a signed curl export with environment placeholders — it accepts **no credentials**, consistent with the safety notice above and PR #6. Execution happens through the `server/` backend, the Actions-based executor, or the official docs playground.
+- **Live data:** dashboard polls the public demo REST API from the visitor browser (60 s, batched) with an explicit LIVE/SNAPSHOT mode badge and bundled verified snapshots as fallback.
+
+Serve locally with `python3 -m http.server 8000` and open `/intelligence/`.
+
+---
+
+## Additional read-only monitor (`monitor/` — session 0c901fea)
+
+The source-linked Kalshi demo monitor is preserved in `monitor/` and linked from
+the root dashboard footer. It is included at `/Demo2/monitor/` when the repository
+root is deployed. It does not submit orders or contain credentials; account values
+remain blank without authenticated data. Checks are `npm test`, `npm run check`,
+`npm run build`, and `node scripts/check-site.mjs dist`. Browser-side API/CORS
+behavior is not yet verified. The existing dashboard, backend, Pages site, and the
+`intelligence/` subsite are kept independently; the monitor is not a replacement.
+See [`monitor/review.html`](monitor/review.html) for caveats, including the labeled
+bid-depth proxy used for the ambiguous “highest dollar amount” ranking.

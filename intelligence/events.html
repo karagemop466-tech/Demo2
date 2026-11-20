@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Events &amp; Resolutions — Kalshi Demo Intelligence</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="shell">
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="k">◈</span> Kalshi Demo Intelligence</a>
+    <span class="tagline">Verified demo-exchange analytics · session arena-ddc587ae</span>
+    <div class="nav-section">Start</div>
+    <a class="item" href="index.html">🏠 Overview</a>
+    <a class="item" href="executive-summary.html">📄 Executive Summary</a>
+    <div class="nav-section">Monitor</div>
+    <a class="item" href="dashboard.html">📊 Live Dashboard</a>
+    <a class="item active" href="events.html">🎯 Events &amp; Resolutions</a>
+    <div class="nav-section">Account</div>
+    <a class="item" href="portfolio.html">💼 Portfolio &amp; Analysis</a>
+    <a class="item" href="trading.html">🧪 Trading</a>
+    <div class="nav-section">Review</div>
+    <a class="item" href="suggestions.html">💡 Suggestions</a>
+    <a class="item" href="questions.html">❓ Questions &amp; Answers</a>
+    <a class="item" href="flagged.html">🚩 Flagged for Review</a>
+  </nav>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <h1>Events &amp; Resolutions</h1>
+        <div class="sub">Live events are watched until they resolve. Resolution outcome is read from the official <code>result</code> field (<code>yes</code> / <code>no</code> / <code>scalar</code> / empty) together with <code>settlement_value_dollars</code> and <code>settlement_ts</code> — never from prose or inference.</div>
+      </div>
+      <div class="badges"><span class="badge" id="modeBadge"><span class="spin"></span> <b>Checking</b>…</span></div>
+    </div>
+
+    <div class="panel">
+      <h2>Tracking protocol (how “until resolution” is implemented)</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Step</th><th>Poll / read</th><th>Transition</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>1 · Detect live event</td><td><code>GET /events?status=open&amp;series_ticker=…</code></td><td>Event appears with <code>status=open</code> markets</td><td><a href="https://docs.kalshi.com/api-reference/events/get-events.md" target="_blank" rel="noopener">docs · Get Events</a></td></tr>
+          <tr><td>2 · Follow to close</td><td>market <code>status</code> ∈ active → closed; watch <code>close_time</code> (UTC)</td><td><code>can_close_early</code> events can close on <code>early_close_condition</code></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noopener">docs · Get Markets</a></td></tr>
+          <tr><td>3 · Read outcome</td><td>market <code>result</code> + <code>settlement_value_dollars</code> + <code>settlement_ts</code> + <code>status=finalized</code></td><td><b>YES</b> → <code>result:"yes"</code>, payout $1.0000/contract · <b>NO</b> → <code>result:"no"</code>, payout $0.0000/contract</td><td><a href="https://docs.kalshi.com/getting_started/market_settlement.md" target="_blank" rel="noopener">docs · Market Settlement</a></td></tr>
+          <tr><td>4 · Grace window</td><td><code>settlement_timer_seconds</code> (60–3600 s observed)</td><td>Result may be published during the timer after expiration</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noopener">Market schema</a></td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Verified payout mechanics: “Yes outcome: Yes contract holders receive $1 per contract · No outcome: No contract holders receive $1 per contract · Only net positions are settled” — <a href="https://docs.kalshi.com/getting_started/market_settlement.md" target="_blank" rel="noopener">official Market Settlement page</a>.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Open events on watch (snapshot 2026-11-20T11:20:09Z)</h2>
+      <p class="hint">These are events the collector verified as <code>status=open</code> on the official API. The <b>Live Dashboard</b> re-queries them (and the rest of the watchlist) every 60 s in live mode.</p>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Topic</th><th>Event</th><th>Ticker</th><th>Strike / window (UTC)</th><th>Last updated</th><th>Settlement sources (official)</th><th>Source query</th></tr></thead>
+        <tbody id="openBody"><tr><td colspan="7" class="note"><span class="spin"></span> loading…</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <div class="panel">
+      <h2>Resolutions — YES / NO outcomes with settlement evidence</h2>
+      <p class="hint">Captured from official responses: <code>GET /markets?status=settled</code> and <code>GET /events?status=settled&amp;with_nested_markets=true</code>. Rows with an empty outcome stay blank and flagged — see row notes.</p>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Market</th><th>Question</th><th>Topic</th><th>Result</th><th>Settlement $ (per contract)</th><th>Settled at (UTC)</th><th>Market status</th><th>Rules (verbatim excerpt)</th><th>Source</th></tr></thead>
+        <tbody id="resBody"><tr><td colspan="9" class="note"><span class="spin"></span> loading…</td></tr></tbody>
+      </table></div>
+      <div class="flagbox" id="resFlags"></div>
+    </div>
+
+    <div class="panel" id="trades">
+      <h2>Recent executions (sample)</h2>
+      <p class="hint">Latest trade prints captured from <code>GET /markets/trades</code> — timestamps are millisecond-precision UTC. Topic labels follow official series category mapping only; tickers whose series metadata was not fetched are marked <i>unclassified</i>.</p>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Time (UTC)</th><th>Ticker</th><th>Topic</th><th>Contracts</th><th>YES $</th><th>NO $</th><th>Taker side</th><th>Source</th></tr></thead>
+        <tbody id="tradesBody"><tr><td colspan="8" class="note"><span class="spin"></span> loading…</td></tr></tbody>
+      </table></div>
+      <p class="note">Live mode note: the global feed <code>GET /markets/trades?limit=40</code> was returning prints at 11:19:35Z across elections, golf, crypto and culture topics during collection. Gas topics trade on hourly/daily cadence events and may not appear in any short window — absence is reported as absence, never imputed.</p>
+    </div>
+
+    <div class="foot">Resolution data: official demo API · Mechanics: <a href="https://docs.kalshi.com/getting_started/market_settlement.md" target="_blank" rel="noopener">docs.kalshi.com/getting_started/market_settlement</a></div>
+  </main>
+</div>
+<script src="assets/app.js"></script>
+<script>
+KDS.setModeBadge(document.getElementById("modeBadge"));
+KDS.getSnapshot().then(s => {
+  // open events
+  const open = (s.events || []).filter(e => e.status_query === "open");
+  document.getElementById("openBody").innerHTML = open.map(e => `
+    <tr>
+      <td>${KDS.topicPill(e.topic)}</td>
+      <td><b>${KDS.esc(e.title)}</b>${e.sub_title ? '<br><span class="note">' + KDS.esc(e.sub_title) + "</span>" : ""}${e.flag ? '<br><span class="note" style="color:#ff8b3d">⚑ ' + KDS.esc(e.flag) + "</span>" : ""}</td>
+      <td class="mono">${KDS.esc(e.event_ticker)}</td>
+      <td class="num">${e.strike_date ? KDS.fmtTs(e.strike_date) : "—"}${e.strike_date ? "" : ' <span class="note">(strike date not in captured fields)</span>'}</td>
+      <td class="num">${KDS.fmtTs(e.last_updated_ts)}</td>
+      <td>${(e.settlement_sources || []).map(x => `<a href="${KDS.esc(x.url)}" target="_blank" rel="noopener">${KDS.esc(x.name)}</a>`).join("<br>") || '<span class="blank">— blank</span>'}</td>
+      <td>${KDS.srcCell(e.src, "query")}</td>
+    </tr>`).join("");
+
+  // resolutions
+  const res = (s.resolutions || []);
+  document.getElementById("resBody").innerHTML = res.map(r => `
+    <tr>
+      <td class="mono">${KDS.esc(r.ticker)}</td>
+      <td>${KDS.esc(r.title)}${r.subtitle ? '<br><span class="note">' + KDS.esc(r.subtitle) + "</span>" : ""}${r.flag ? '<br><span class="note" style="color:#ff8b3d">⚑ ' + KDS.esc(r.flag) + "</span>" : ""}</td>
+      <td>${r.topic ? KDS.topicPill(r.topic) : '<span class="pill">n/a</span>'}</td>
+      <td>${r.result === "" ? '<span class="blank">— blank (unverified)</span>' : KDS.resultPill(r.result)}</td>
+      <td class="num">${r.settlement_value_dollars === "" ? '<span class="blank">— blank</span>' : KDS.fmtPrice(r.settlement_value_dollars)}</td>
+      <td class="num">${r.settlement_ts ? KDS.fmtTs(r.settlement_ts) : '<span class="blank">— blank</span>'}</td>
+      <td><span class="pill">${KDS.esc(r.status || "")}</span></td>
+      <td class="note">${r.rules_primary ? KDS.esc(r.rules_primary) : "—"}</td>
+      <td>${KDS.srcCell(r.src, "endpoint")}</td>
+    </tr>`).join("");
+  const flagged = res.filter(r => r.flag || r.result === "");
+  document.getElementById("resFlags").innerHTML = flagged.length
+    ? `<b>${flagged.length} resolution row(s) carry flags or blanks:</b> ` + flagged.map(r => `<span class="mono">${KDS.esc(r.ticker)}</span>`).join(", ") + " — full detail on the <a href='flagged.html'>Flagged page</a>. Values were left exactly as returned."
+    : "";
+
+  // trades
+  const tr = (s.trades_sample || []);
+  document.getElementById("tradesBody").innerHTML = tr.map(t => `
+    <tr>
+      <td class="num">${KDS.fmtTs(t.created_time)}</td>
+      <td class="mono">${KDS.esc(t.ticker)}</td>
+      <td>${t.topic === "unclassified" ? '<span class="pill">unclassified</span>' : KDS.topicPill(t.topic)}</td>
+      <td class="num">${KDS.fmtInt(t.count_fp)}</td>
+      <td class="num">${KDS.fmtPrice(t.yes_price_dollars)}</td>
+      <td class="num">${KDS.fmtPrice(t.no_price_dollars)}</td>
+      <td>${KDS.esc((t.taker_book_side || "") + " / " + (t.taker_outcome_side || ""))}</td>
+      <td>${KDS.srcCell(t.src, "endpoint")}</td>
+    </tr>`).join("");
+}).catch(e => { console.error(e); });
+</script>
+</body>
+</html>
