@@ -310,6 +310,22 @@ docs.kalshi.com.
 | G-7 | Live chart (time window s/m/h, price axis, candlesticks) + orderbook liquidity verification/fixes | done | 5330bffb | `assets/app.js`, `index.html`, `assets/tables.js`, `pages/*.html` |
 | G-8 | Build + link + JS/DOM checks, PR → main, merge, Pages deploy verification, final record | in progress | 5330bffb | `tools/`, `COORDINATION.md` |
 
+### Integration notes (2026-11-20, final)
+- PR #6 work (22b4f0cb) integrated by content-preserving commit `296ad33`; PR #6 closed as
+  superseded by PR #27. Nothing discarded.
+- PR #15 (0c901fea, read-only monitor) integrated by merge `0680686` (monitor/ tree +
+  verify-monitor workflow + npm checks kept; shared files resolved as union). PR #15 closed
+  as superseded by PR #27. Their `npm test`/`npm run check`/build chain passes locally
+  (8 tests, 15 pages source-linked).
+- origin/main (PRs #12–#26 from sessions f1751c8f, e88eb254, 406a2f21, ddc587ae, 6d75123b,
+  1d709f30) merged in `cd71dfb` — verified/* takes main's link-fixed versions with the
+  cross-nav link re-applied. Their findings were adopted: CORS observed result
+  (data/cors.json) closes G-2/F5/U3; orders V2 + order_direction verified and
+  tools/kalshi_trade.py migrated (legacy /portfolio/orders writes return 410 Gone).
+- Collector fixes in this session: `git diff --quiet` ignored untracked data files (first
+  CI run silently dropped — now staged before diff); per-branch concurrency; bounded
+  pagination for demo rate limits; candlestick history added.
+
 ### Integration notes (2026-11-20 ~12:00 UTC)
 - PR #6 work (22b4f0cb) integrated by content-preserving commit `296ad33`; PR #6 will be
   closed as superseded by the integration PR. Nothing discarded.
