@@ -1141,3 +1141,35 @@ endpoint `GET /trade-api/v2/markets/{ticker}`. All matched exactly; nothing infe
 - Sandbox bash egress to `*.kalshi.co` is blocked (TLS handshake fails — flagged F1); live source
   checks above were done with the fetch tool, which can reach the demo host and docs. GitHub
   Actions runners have normal egress, so the collection workflows run there.
+
+---
+
+# Session `arena/a984e8f4-demo2` — gap-fill + integration (CLAIM, 2026-11-20 19:47 UTC)
+
+Branch: `arena/a984e8f4-demo2`, branched from `main` at `e7fabd4` (merged `origin/main` at
+`8818f6b`). Session ID: `a984e8f4`. This claim was written and pushed **before** any work
+started. Platform constraint: this session may only work on its own branch (no
+`session-<id>/<task>` branches), same as prior sessions.
+
+Checked first: session `b326b649` holds I-1…I-5 (final-integration verification + deploy +
+their own PR record) with fresh commits — **not touched, not duplicated here**. The four open
+PRs #34, #36, #40, #44 are >60 min old with no commits and CONFLICTING with `main`; their
+sessions are inactive, so they are eligible for takeover under the 60-minute rule (handoffs
+logged below). Task 21 (demo API key secrets) remains owner action and is not claimed.
+
+| # | Task | Status | Owner | Files (exclusive scope) |
+|---|------|--------|-------|--------------------------|
+| A-1 | Fix failing `Refresh Kalshi demo data` pipeline (collector OK, "Commit snapshot" step fails on every run — last success unknown; site data goes stale) | claimed → in progress | a984e8f4 | `.github/workflows/refresh-data.yml`, `tools/collector.py` (only if the defect is collector-side) |
+| A-2 | Requirement gap: two live scrolling alert chats — (1) all in-scope events, (2) high-ROI model filter — with ≥$0.10 swing alerts, wired into the canonical site nav + generator (required by the brief; grep shows no ROI/chat/alert content in `index.html`, `assets/site.js`, `pages/*`) | claimed → in progress | a984e8f4 | `assets/alerts.js` (new), `assets/style.css` (append-only), `tools/build_site.py` (generated page + nav entry), `tools/build_content.py` (additive verification/flag rows only), generated `index.html`, `alerts.html`, `pages/*.html` (regenerated outputs) |
+| A-3 | Takeover of stale conflicting PRs #34, #36, #40, #44 per the 60-minute rule: review each, integrate any still-relevant unique value, close or merge with a recorded disposition comment (no session's work silently discarded) | claimed → in progress | a984e8f4 | PR operations only + this section |
+| A-4 | Automated simulated (paper) trading that runs with NO secrets, testing multiple strategies, with portfolio performance + trade categorization surfaced on the site (live demo-account execution stays gated behind task 21 secrets) | claimed → in progress | a984e8f4 | `tools/paper_trade.py` (new), `.github/workflows/paper-trade.yml` (new), `data/paper_portfolio.json` (generated), page rows via A-2 generator scope |
+| A-5 | Final pass: line-by-line verification of changed content, all checkers green, PR `arena/a984e8f4-demo2` → `main`, merge without waiting, confirm Pages deploy, record PR + merge + deploy here | claimed | a984e8f4 | this section + PR operations |
+
+Sources to verify against (official only): https://docs.kalshi.com/getting_started/demo_env,
+https://docs.kalshi.com/api-reference/market/get-markets,
+https://docs.kalshi.com/api-reference/market/get-market-orderbook,
+https://docs.kalshi.com/api-reference/market/get-market-candlesticks,
+https://docs.kalshi.com/api-reference/market/get-trades,
+https://docs.kalshi.com/getting_started/quick_start_websockets,
+https://docs.kalshi.com/api-reference/portfolio/get-positions,
+https://docs.kalshi.com/api-reference/orders/create-order-v2.
