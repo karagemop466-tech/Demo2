@@ -93,7 +93,7 @@ their official contract-terms and product-certification links.</p>
       {label:'Open int.', num:true, get:m=>KR.num(m.open_interest_fp,0)},
       {label:'Est. $ vol', num:true, get:m=>`${KR.usd(m.est_dollar_volume,0)} <span class="pill flag">est.</span>`},
       {label:'Closes', get:m=>`<span class="small">${KR.when(m.close_time)}</span>`},
-      {label:'Rules', get:m=>m.rules_primary?`<span class="small" title="${KR.esc(m.rules_primary)}">${KR.esc(m.rules_primary.slice(0,90))}${m.rules_primary.length>90?'…':''}</span>`:'—'},
+      {label:'Rules', get:m=>m.rules_primary_head?`<span class="small" title="${KR.esc(m.rules_primary_head)}">${KR.esc(m.rules_primary_head.slice(0,90))}${m.rules_primary_head.length>90?'…':''}</span>`:'—'},
       {label:'Source', get:m=>KR.link(m.market_url,'Kalshi market')}
     ], highest, 'No live markets for this topic in the current snapshot.');
 
