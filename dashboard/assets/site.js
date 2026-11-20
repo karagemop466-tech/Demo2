@@ -10,7 +10,9 @@
     ["analysis.html", "Analysis"],
     ["suggestions.html", "Suggestions"],
     ["questions.html", "Questions"],
-    ["flagged.html", "Flagged for review"]
+    ["flagged.html", "Flagged for review"],
+    ["../index.html", "Main site ↗"],
+    ["../verified/index.html", "Verified tables ↗"]
   ];
 
   window.esc = function (s) {

@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Executive summary — Kalshi Demo (session 8b9a46b4)</title>
+<link rel="stylesheet" href="style.css"></head><body>
+<header><h1>Kalshi Demo — sharp jumps & simulated strategies</h1><nav><a href="index.html">Executive summary</a> · <a href="jumps.html">Sharp jumps & live chart</a> · <a href="strategies.html">Simulated strategies</a> · <a href="flagged.html">Flagged for review</a> · <a href="verification.html">Verification</a></nav>
+<p class="disc">Demo environment only · mock funds · not investment advice · session arena-8b9a46b4</p></header>
+<main>
+<h2>Executive summary</h2>
+<p>Scope: five topics only — <b>gas prices, elections, culture, crypto, golf</b> — on the Kalshi
+<b>demo</b> API (<a href="https://docs.kalshi.com/getting_started/demo_env">docs</a>).
+This subsite adds two things the main site did not have: a <b>sharp-jump detector</b>
+(consecutive trade prints moving ≥ $0.10) and a <b>simulated strategy backtest</b> on
+resolved demo markets that actually traded. Everything else (rankings, resolutions,
+portfolio gating) is already covered by the main site and is linked, not duplicated.</p>
+<table><tr><th>Finding</th><th>Value</th><th>Source</th></tr>
+<tr><td>Trade prints scanned for jumps</td><td>2,479 across 12 markets</td><td><code>GET /markets/trades</code></td></tr>
+<tr><td>Sharp jumps (≥ $0.10)</td><td>39</td><td><a href="../data/jumps.json">jumps.json</a></td></tr>
+<tr><td>Resolved markets collected</td><td>1,601</td><td><code>GET /markets (settled)</code></td></tr>
+<tr><td>Of which ever traded (backtest population)</td><td>317</td><td><a href="../data/backtest.json">backtest.json</a></td></tr>
+<tr><td>Snapshot generated</td><td>2026-11-20T12:43:59Z</td><td><a href="../../data/dashboard_instrument.json">snapshot</a></td></tr></table>
+<h3>Most recent jumps</h3><table><tr><th>Ticker</th><th>Time (UTC)</th><th>YES price</th><th>Δ</th><th>Dir.</th><th>Cause / news link</th><th>Source</th></tr><tr><td>KXAOCSENATE-28</td><td>2026-11-19T23:31:46.712362Z</td><td>$0.75 → $0.97</td><td>+0.22</td><td>up</td><td>— (blank, unverified)</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAOCSENATE-28&amp;limit=1000">source</a></td></tr><tr><td>KXAOCSENATE-28</td><td>2026-11-18T17:42:29.316561Z</td><td>$0.75 → $0.97</td><td>+0.22</td><td>up</td><td>— (blank, unverified)</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAOCSENATE-28&amp;limit=1000">source</a></td></tr><tr><td>KXAOCSENATE-28</td><td>2026-11-18T17:42:29.316561Z</td><td>$0.97 → $0.75</td><td>-0.22</td><td>down</td><td>— (blank, unverified)</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAOCSENATE-28&amp;limit=1000">source</a></td></tr><tr><td>KXAOCSENATE-28</td><td>2026-10-28T21:33:40.299112Z</td><td>$0.33 → $0.75</td><td>+0.42</td><td>up</td><td>— (blank, unverified)</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAOCSENATE-28&amp;limit=1000">source</a></td></tr><tr><td>KXAOCSENATE-28</td><td>2026-10-28T19:46:22.648705Z</td><td>$0.01 → $0.33</td><td>+0.32</td><td>up</td><td>— (blank, unverified)</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAOCSENATE-28&amp;limit=1000">source</a></td></tr><tr><td>KX2028DRUN-28-GWHI</td><td>2026-10-27T18:58:38.31184Z</td><td>$0.23 → $0.97</td><td>+0.74</td><td>up</td><td>— (blank, unverified)</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KX2028DRUN-28-GWHI&amp;limit=1000">source</a></td></tr><tr><td>KXSCOTTIESLAM-28</td><td>2026-10-22T02:52:15.046534Z</td><td>$0.45 → $0.55</td><td>+0.10</td><td>up</td><td>— (blank, unverified)</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXSCOTTIESLAM-28&amp;limit=1000">source</a></td></tr><tr><td>KXAOCSENATE-28</td><td>2026-10-16T15:26:13.222949Z</td><td>$0.33 → $0.01</td><td>-0.32</td><td>down</td><td>— (blank, unverified)</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAOCSENATE-28&amp;limit=1000">source</a></td></tr><tr><td>KXAOCSENATE-28</td><td>2026-10-14T16:03:16.289977Z</td><td>$0.02 → $0.33</td><td>+0.31</td><td>up</td><td>— (blank, unverified)</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAOCSENATE-28&amp;limit=1000">source</a></td></tr><tr><td>KXSCOTTIESLAM-28</td><td>2026-10-14T05:38:25.224763Z</td><td>$0.55 → $0.45</td><td>-0.10</td><td>down</td><td>— (blank, unverified)</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXSCOTTIESLAM-28&amp;limit=1000">source</a></td></tr></table>
+<p><b>Key caveat:</b> Entry at final print price (lookahead); measures calibration edge, not a tradable strategy. Historical demo data only. The large always-NO profit reflects that most traded demo
+markets resolved NO at low final prices (documented calibration effect on the main site) — it is
+<b>not</b> evidence of a tradable edge. See <a href="strategies.html">Simulated strategies</a>.</p>
+<p><b>Suggestions to make the site more live/interactive</b> (proposals only, nothing implemented
+beyond this page): (1) auto-refresh jump table from the 10-minute data pipeline; (2) WebSocket
+ticker tape — note WS requires auth headers even for public data
+(<a href="https://docs.kalshi.com/getting_started/quick_start_websockets">docs</a>), so a small
+backend proxy is needed; (3) one-click jump → candlestick chart deep link; (4) alert badge when a
+jump ≥ $0.10 prints on a watched ticker; (5) consolidate the four parallel dashboards into one nav.</p></main><footer><p>Data: <a href="../../data/dashboard_instrument.json">data/dashboard_instrument.json</a>
+(collected from the official demo API). Every row links its source. Blank = unverified.</p></footer>
+</body></html>

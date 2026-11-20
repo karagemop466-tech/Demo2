@@ -59,7 +59,11 @@ Demo environment only. Mock funds. Not investment advice.
 | `pages/repo-review.html` | What was wrong in the repo before and what changed |
 | `pages/sources.html` | All official sources |
 
+<<<<<<< HEAD
+Portfolio access and order submission are deliberately disabled in the static site. Browser-side private-key signing is not suitable for a public GitHub Pages application. Do not enter API credentials into this site. Enabling authenticated portfolio analysis or demo order execution requires a separately secured backend; see `pages/suggestions.html` and `pages/flagged.html`.
+=======
 ## How the data flows
+>>>>>>> origin/main
 
 ```
 GitHub Actions (every 10 min)            static site (GitHub Pages)
@@ -143,6 +147,21 @@ A self-contained, source-linked subsite added by session `arena-ddc587ae` (PR #1
 - **Trading is security-aligned (F-17/D-05):** the page builds the official Create Order (V2) body and a signed curl export with environment placeholders — it accepts **no credentials**, consistent with the safety notice above and PR #6. Execution happens through the `server/` backend, the Actions-based executor, or the official docs playground.
 - **Live data:** dashboard polls the public demo REST API from the visitor browser (60 s, batched) with an explicit LIVE/SNAPSHOT mode badge and bundled verified snapshots as fallback.
 
+<<<<<<< HEAD
+Data: `dashboard/data/snapshot.json`. Verified values only; blanks are marked UNVERIFIED. See `COORDINATION.md` for sources and irregularities.
+
+---
+
+## Final integration — session 5330bffb (`pages/`, `assets/`, `tools/`, `data/`)
+
+The landing page is [`index.html`](index.html) (live dashboard). Everything is cross-linked; entry points:
+
+- `pages/executive-summary.html` — executive summary; `pages/gas|elections|culture|crypto|golf.html` — per-topic verified tables (every row links to its official API response, rendered from `data/` by `assets/tables.js`)
+- `pages/portfolio.html` — portfolio & trading: **this site never accepts credentials** (PR #6 security fix); run `tools/kalshi_trade.py` locally with your own Kalshi demo key to track the portfolio, execute demo orders, and generate the categorized trade/strategy report (`python3 tools/kalshi_trade.py selftest` verifies the signing offline)
+- `pages/flagged.html` — the consolidated Flagged for Review register (all archives linked); `pages/questions.html`, `pages/suggestions.html` (decision board), `pages/verification.html`, `pages/sources.html`, `pages/repo-review.html`
+- `data/` — verified snapshots refreshed by the GitHub Action `Collect Kalshi demo data` (`tools/collect_kalshi.py`, every 2h + on demand): markets (open/settled), events, series, orderbooks, candlesticks (1-min/24h + 60-min/7d), taxonomy, and `collection_log.json` (every request URL/status logged). Each row carries its `source_url`.
+- Live browser fetch to the demo API is attempted first and falls back to the labelled snapshot; WebSocket streaming is impossible in a browser (signed handshake headers) — see Flagged G-1/G-2.
+=======
 Serve locally with `python3 -m http.server 8000` and open `/intelligence/`.
 
 ---
@@ -178,3 +197,18 @@ found it and will catch any recurrence.
 python3 tools/check_links.py        # verified/ subsite + sourced data rows (pre-existing)
 python3 tools/check_live_links.py   # every HTML file: internal links, duplicate ids, stray placeholders
 ```
+>>>>>>> origin/main
+
+---
+
+## Additional read-only monitor (`monitor/` — session 0c901fea)
+
+The source-linked Kalshi demo monitor is preserved in `monitor/` and linked from
+the root dashboard footer. It is included at `/Demo2/monitor/` when the repository
+root is deployed. It does not submit orders or contain credentials; account values
+remain blank without authenticated data. Checks are `npm test`, `npm run check`,
+`npm run build`, and `node scripts/check-site.mjs dist`. Browser-side API/CORS
+behavior is not yet verified. The existing dashboard, backend, Pages site, and the
+`intelligence/` subsite are kept independently; the monitor is not a replacement.
+See [`monitor/review.html`](monitor/review.html) for caveats, including the labeled
+bid-depth proxy used for the ambiguous “highest dollar amount” ranking.

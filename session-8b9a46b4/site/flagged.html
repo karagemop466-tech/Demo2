@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Flagged for review — Kalshi Demo (session 8b9a46b4)</title>
+<link rel="stylesheet" href="style.css"></head><body>
+<header><h1>Kalshi Demo — sharp jumps & simulated strategies</h1><nav><a href="index.html">Executive summary</a> · <a href="jumps.html">Sharp jumps & live chart</a> · <a href="strategies.html">Simulated strategies</a> · <a href="flagged.html">Flagged for review</a> · <a href="verification.html">Verification</a></nav>
+<p class="disc">Demo environment only · mock funds · not investment advice · session arena-8b9a46b4</p></header>
+<main>
+<h2>Flagged for review</h2>
+<table><tr><th>ID</th><th>Item</th><th>Why blank / caveat</th><th>Source</th></tr>
+<tr><td>J-F1</td><td>Jump cause / news links</td><td>Kalshi Trade API has no news/event-cause field; left blank, never inferred.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-trades">get-trades docs</a></td></tr>
+<tr><td>J-F2</td><td>Backtest entry price</td><td>Final print = lookahead; measures calibration, not tradable entry.</td><td><a href="../data/backtest.json">backtest.json</a></td></tr>
+<tr><td>J-F3</td><td>Gas & culture backtest rows</td><td>No traded resolved markets in snapshot for these topics; blank.</td><td><a href="../data/backtest.json">backtest.json</a></td></tr>
+<tr><td>J-F4</td><td>Live demo-account portfolio/trades</td><td>Requires user API keys (Ed25519/RSA signing); none in workspace; not fabricated.</td><td><a href="https://docs.kalshi.com/getting_started/api_keys">api_keys docs</a></td></tr>
+<tr><td>J-F5</td><td>WebSocket live tape</td><td>WS handshake requires auth headers even for public data; browser-only tape not possible without a backend proxy.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets">websockets docs</a></td></tr></table></main><footer><p>Data: <a href="../../data/dashboard_instrument.json">data/dashboard_instrument.json</a>
+(collected from the official demo API). Every row links its source. Blank = unverified.</p></footer>
+</body></html>
