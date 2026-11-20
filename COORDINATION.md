@@ -583,3 +583,43 @@ re-running both generators produces no diff.
 
    link fix were applied on top.
 >>>>>>> origin/main
+
+## Session 0c901fea — read-only Kalshi monitor (PR #15)
+
+Branch: `arena/0c901fea-demo2`. This session contributes a complementary static monitor under `monitor/`, linked from the root dashboard footer and documented in `README.md`. The root dashboard, backend, data pipeline, `pages/`, `verified/`, `dashboard/`, `site/`, `intelligence/`, and existing Pages publishing workflow are preserved. The monitor is not a replacement for those projects.
+
+### Scope and status
+
+| Task | Status | Files |
+|---|---|---|
+| Review official Kalshi demo/API/authentication/rate-limit sources | done | `monitor/`, docs |
+| Build five-topic read-only monitor, charts, book depth, local watchlist, review and sources pages | done | `monitor/` |
+| Keep account figures blank without authenticated data; leave trade execution disabled | done | `monitor/portfolio.html`, `monitor/review.html` |
+| Link monitor from root dashboard and README | done | `index.html`, `tools/build_site.py`, `README.md` |
+| Add monitor test/check/build scripts and PR verification workflow | done locally; remote checks pending | `package.json`, `tests/`, `scripts/`, `.github/workflows/verify-monitor.yml` |
+| Integrate the latest `main` and preserve all subsites | in progress | merge of `origin/main` |
+
+### Important caveats
+
+- Browser-side Kalshi demo API/CORS behavior could not be verified from this sandbox. Errors are surfaced; the monitor does not substitute sample market values.
+- Ranking sums displayed YES and NO bid-side notional (`price × contracts`). This is a labeled visible-depth proxy, not traded-dollar turnover. The requested meaning of “highest dollar amount” remains unresolved.
+- Portfolio/account values remain blank without authenticated account data. No credentials are included; trade execution is disabled and no order was submitted.
+- Topic matching uses local keywords, not a verified Kalshi taxonomy. The watchlist is browser-local.
+- The existing root Pages publishing setup is retained; when deployed from the repository root the monitor is under `/Demo2/monitor/`.
+
+### Local verification
+
+- `npm ci` succeeded; `npm test`: 8 tests passed.
+- `npm run check`: 15 monitor pages passed.
+- `npm run build`: 15 static pages built; `node scripts/check-site.mjs dist` passed.
+- The existing `tools/build_site.py` + `tools/build_content.py` regeneration is reproducible; `python3 tools/check.py` passed (with the expected warning that the first `data/snapshot.json` collection is pending).
+- `python3 tools/check_links.py`: 14 main data pages and 24 rows checked; no broken internal links/anchors or unsourced rows.
+- JavaScript syntax checks, Python compile checks, and `git diff --check` passed.
+
+### PR / integration record
+
+- PR #15: https://github.com/karagemop466-tech/Demo2/pull/15
+- Original implementation commit: `c7b06b1`.
+- Initial integration of `e3a6f5f`: `17e8c8f`.
+- Integration of `4b84abf`: `a98cb75`.
+- `main` subsequently advanced to `2ccd57c` (including PRs #16 and #21 and the `intelligence/` subsite); this update is being integrated without deleting or replacing `monitor/`, the root dashboard, or the other subsites. Confirm PR checks, mergeability, and Pages deployment only after the current integration is pushed.

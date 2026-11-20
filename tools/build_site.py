@@ -63,7 +63,8 @@ def footer_html(prefix: str) -> str:
         f'<div><a href="{prefix}pages/sources.html">Sources</a> · '
         f'<a href="{prefix}pages/verification.html">Verification</a> · '
         f'<a href="{prefix}pages/flagged.html">Flagged for Review</a> · '
-        f'<a href="{prefix}pages/repo-review.html">Repo Review</a></div>'
+        f'<a href="{prefix}pages/repo-review.html">Repo Review</a> · '
+        f'<a href="{prefix}monitor/index.html">Read-only Monitor</a></div>'
         "</div></footer>"
     )
 

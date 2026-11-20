@@ -168,3 +168,17 @@ python3 tools/check_links.py        # verified/ subsite + sourced data rows (pre
 python3 tools/check_live_links.py   # every HTML file: internal links, duplicate ids, stray placeholders
 ```
 >>>>>>> origin/main
+
+---
+
+## Additional read-only monitor (`monitor/` — session 0c901fea)
+
+The source-linked Kalshi demo monitor is preserved in `monitor/` and linked from
+the root dashboard footer. It is included at `/Demo2/monitor/` when the repository
+root is deployed. It does not submit orders or contain credentials; account values
+remain blank without authenticated data. Checks are `npm test`, `npm run check`,
+`npm run build`, and `node scripts/check-site.mjs dist`. Browser-side API/CORS
+behavior is not yet verified. The existing dashboard, backend, Pages site, and the
+`intelligence/` subsite are kept independently; the monitor is not a replacement.
+See [`monitor/review.html`](monitor/review.html) for caveats, including the labeled
+bid-depth proxy used for the ambiguous “highest dollar amount” ranking.

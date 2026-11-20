@@ -3,6 +3,9 @@
 node_modules/
 __pycache__/
 *.pyc
+dist/
+_site/
+*.log
 .DS_Store
 .env
 .env.*
