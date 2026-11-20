@@ -698,7 +698,16 @@ QUESTIONS = [
   "The collector pages live settled markets first; the historical endpoints are documented and "
   "can be added if completeness is required.",
   "getting_started/historical_data"),
- ("Q10", "Who owns the running cost and the secrets?",
+ ("Q10", "Should the gas topic be widened so it is not empty in the demo environment?",
+  "<code>DIESEL</code>/<code>DIESELM</code> are the only Gas-tagged series and neither has live demo "
+  "markets, so the Gas page currently shows catalogue entries and zero live prices. Retail gasoline "
+  "and crude-oil series may exist under other tags or categories.",
+  "A decision on whether the gas topic means &#8220;the Gas tag only&#8221; (literal, currently empty) or "
+  "&#8220;fuel and energy prices&#8221; broadly (wider, but then the boundary needs defining).",
+  "Answered partly: the collector publishes every tag and category it sees with counts, and every "
+  "Gas-tagged series. A human must choose whether to widen the mapping.",
+  "api-reference/market/get-series-list"),
+ ("Q11", "Who owns the running cost and the secrets?",
   "GitHub Actions runs the collector; Pages hosts the site; a relay (if chosen) needs hosting.",
   "An owner for the workflow, the key rotation, and any future relay.",
   "Operational question for the repo owner.",
@@ -710,7 +719,7 @@ def build_questions() -> None:
     rows = [[q[0], q[1], q[2], q[3], q[4], src(q[5], q[5].rsplit("/", 1)[-1])] for q in QUESTIONS]
     body = """
 <h1>Questions, information and answers needed before deciding</h1>
-<p class="lead">Ten questions stand between the current build and a decision that is defensible.
+<p class="lead">Eleven questions stand between the current build and a decision that is defensible.
 For each one: what we already know from an official source, exactly what is still missing, how it
 can be discovered, and the source that anchors the known part. Nothing here is padded with
 questions that the data already answers.</p>
@@ -905,14 +914,15 @@ FLAGGED = [
   "They show an explicit \u201cnot configured\u201d state rather than zeros, with the exact secret "
   "names required. Raised as Q4 / S4.",
   "getting_started/api_keys"),
- ("F7", "Demo data contains placeholder strikes",
-  "Some demo markets carry obviously synthetic strikes, e.g. <code>custom_strike: "
-  "{\"demo strike\": \"demo strike\"}</code> on a NATO Secretary-General market, and many "
-  "far-future close dates in 2099.",
-  "Any metric that treats demo strikes as meaningful is misleading.",
-  "The site reports what the API returns and does not interpret strikes; strategies require "
-  "resolved fills, which placeholder markets will not produce.",
-  "api-reference/events/get-events"),
+ ("F7", "Demo data contains synthetic test markets",
+  "Verified live: <code>KXQUICKSETTLE-20NOV26H0550-3</code> is titled &#8220;1+1 = 3&#8221; with rules "
+  "&#8220;If 1+1 equals 3 &#8230; resolves to Yes&#8221;, <code>KXDEMOFUTHOURLY-</code> markets are "
+  "explicitly labelled Demo BTC, and some events carry placeholder strikes such as "
+  "<code>{\"demo strike\": \"demo strike\"}</code> with close dates in 2099.",
+  "Averaging over synthetic markets produces meaningless statistics.",
+  "Nothing is excluded silently: these markets fall outside the five topics because they carry no "
+  "in-scope tag or category, and the unmapped-series list is published for review.",
+  "api-reference/market/get-markets"),
  ("F8", "Snapshot freshness is 10 minutes, not real time",
   "Data is refreshed by a scheduled GitHub Actions run.",
   "Short chart windows are often empty; the word \u201clive\u201d overstates it.",
@@ -932,6 +942,24 @@ FLAGGED = [
   "Links are surfaced as returned, with the production docs link provided as the authoritative "
   "reference on the same row.",
   "api-reference/market/get-series-list"),
+ ("F11", "Candlestick traded price is empty in quiet periods",
+  "Verified live on <code>KXPGATOUR-THRC26-LABE</code>: several candlesticks return "
+  "<code>\"price\":{}</code> because no trade occurred in that period, while the bid and ask closes "
+  "are still present. Periods with no activity can be omitted from the response entirely.",
+  "Plotting the traded price alone leaves gaps, or an empty chart, on thin demo markets.",
+  "The chart defaults to a <b>derived quoted mid</b> = (yes bid close + yes ask close) / 2, labelled "
+  "&#8220;derived&#8221;, and keeps &#8220;last trade&#8221; as an explicit option that shows its own gaps. The "
+  "collector stores both, so nothing is interpolated.",
+  "api-reference/market/get-market-candlesticks"),
+ ("F12", "A topic can exist in the catalogue with no live markets",
+  "Verified live: <code>DIESEL</code> and <code>DIESELM</code> are the Gas-tagged series, but the demo "
+  "environment has no open events or markets for either. Elections, culture, crypto and golf do have "
+  "live markets.",
+  "An empty Gas page would look like a bug rather than a fact about the demo exchange.",
+  "The collector records <code>series_in_catalog</code> and <code>series_with_live_markets</code> per "
+  "topic, and the Gas page states &#8220;catalogue only &#8212; 2 series exist, none has a live market&#8221;. "
+  "Gas stays in scope and populates automatically when the demo exchange lists those markets.",
+  "api-reference/market/get-series-list"),
 ]
 
 
@@ -950,6 +978,8 @@ wrong.</p>
 <li><b>F2</b>: any figure tagged <span class="pill flag">est.</span> is computed, not returned.</li>
 <li><b>F3</b>: the ask column says <i>derived</i>; the raw response has only bids.</li>
 <li><b>F6</b>: the portfolio page says \u201cnot configured\u201d; it is not a zero balance.</li>
+<li><b>F11</b>: the chart notes whether it is plotting a derived quoted mid or a traded price.</li>
+<li><b>F12</b>: the Gas page says \u201ccatalogue only\u201d instead of showing an unexplained empty table.</li>
 <li><b>F8</b>: the dashboard header shows the snapshot time and age, so stale data is visible.</li>
 <li><b>F9</b>: compare the in-scope series list per topic against the unclassified list in
   <code>data/snapshot.json</code>.</li>

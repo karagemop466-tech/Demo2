@@ -12,6 +12,7 @@
 <p class="lead">Election markets: primaries, seat control, party control and international votes. Official discovery category <code>Elections</code>; each contract lists its own settlement source (state election boards, AP, county clerks, and so on).</p>
 <div id="metaBar"><div class="card tight"><div class="status" id="staleness">Loading snapshot…</div></div></div>
 <div class="kpis" id="kpis"></div>
+<div class="card tight" style="margin-bottom:14px"><div class="status" id="catNote">Checking the series catalogue…</div></div>
 
 <h2>Live markets — highest estimated dollar volume first</h2>
 <p class="muted">Scope rule: a market is in this topic only if its <b>official</b> series record
@@ -45,6 +46,27 @@ their official contract-terms and product-certification links.</p>
     const d = await KR.topic(TOPIC);
     KR.staleness($('staleness'), d.generated_at_utc);
     const ms = d.markets||[];
+    // Whether the topic exists in Kalshi's catalogue at all is a different fact from
+    // whether it has live markets today. Say both, so "0 live" is never ambiguous.
+    let snap = null;
+    try { snap = await KR.snapshot(); } catch(e) {}
+    const cat = ((snap && snap.topic_catalog) || {})[TOPIC] || {};
+    const inCat = cat.series_in_catalog;
+    const withLive = (cat.series_with_live_markets || []).length;
+    const catBox = $('catNote');
+    if(catBox){
+      if(inCat === undefined){
+        catBox.innerHTML = '<span class="muted">Series-catalogue counts are not in this snapshot yet.</span>';
+      } else if(inCat === 0){
+        catBox.innerHTML = '<span class="pill flag">no series</span> The API returned no series tagged or categorised for this topic.';
+      } else if(withLive === 0){
+        catBox.innerHTML = '<span class="pill flag">catalogue only</span> <b>' + inCat + '</b> series exist for this topic in Kalshi&#8217;s catalogue (' +
+          (cat.series_tickers||[]).slice(0,6).map(t=>'<code>'+KR.esc(t)+'</code>').join(' ') +
+          ') but <b>none has a live market in the demo environment</b> right now. That is an absence of markets, not a data failure.';
+      } else {
+        catBox.innerHTML = '<span class="pill ok">live</span> <b>' + withLive + '</b> of <b>' + inCat + '</b> catalogued series for this topic have live markets in the demo environment.';
+      }
+    }
     const highest = ms.slice().sort((a,b)=>(b.est_dollar_volume||0)-(a.est_dollar_volume||0));
     const res = (d.resolutions||[]);
     const live = ms.length, settled = res.length;

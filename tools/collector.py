@@ -335,8 +335,21 @@ def collect_scope(signer: Signer | None) -> dict:
                     "market_url": f"https://kalshi.com/markets/{st.lower()}",
                 }
             )
+    # A series can exist in the catalogue with no live events at all (verified live for
+    # DIESEL/DIESELM gas series in the demo environment). Record that explicitly so the
+    # site can say "series exist, no live markets" instead of implying the topic is empty.
+    catalog = {}
+    for t in TOPICS:
+        tickers = sorted([k for k, v in topic_cache.items() if v == t])
+        catalog[t] = {
+            "series_in_catalog": len(tickers),
+            "series_tickers": tickers[:40],
+            "series_with_live_markets": sorted({r["series_ticker"] for r in rows if r["topic"] == t}),
+        }
+
     return {
         "series_index_size": len(series_idx),
+        "topic_catalog": catalog,
         "events_scanned": len(events),
         "markets_in_scope": rows,
         "unmapped_series": dict(sorted(unmapped_series.items(), key=lambda kv: -kv[1])[:50]),
@@ -419,6 +432,17 @@ def collect_candles(rows: list[dict], signer: Signer | None, top_n: int = 8) -> 
             candles = []
             for c in j.get("candlesticks") or []:
                 price = c.get("price") or {}
+                bid = (c.get("yes_bid") or {}).get("close_dollars")
+                ask = (c.get("yes_ask") or {}).get("close_dollars")
+                # `price` is the TRADED price and is empty in any period with no trade
+                # (verified live). The quoted mid is therefore derived so the chart has a
+                # continuous line; it is labelled "derived" wherever it is shown.
+                mid = None
+                try:
+                    if bid not in (None, "") and ask not in (None, ""):
+                        mid = round((float(bid) + float(ask)) / 2, 4)
+                except (TypeError, ValueError):
+                    mid = None
                 candles.append(
                     {
                         "ts": c.get("end_period_ts"),
@@ -428,8 +452,9 @@ def collect_candles(rows: list[dict], signer: Signer | None, top_n: int = 8) -> 
                         "close": price.get("close_dollars"),
                         "previous": price.get("previous_dollars"),
                         "mean": price.get("mean_dollars"),
-                        "yes_ask_close": (c.get("yes_ask") or {}).get("close_dollars"),
-                        "yes_bid_close": (c.get("yes_bid") or {}).get("close_dollars"),
+                        "yes_ask_close": ask,
+                        "yes_bid_close": bid,
+                        "derived_mid": mid,
                         "volume_fp": c.get("volume_fp"),
                         "open_interest_fp": c.get("open_interest_fp"),
                     }
@@ -458,6 +483,7 @@ def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list
                 "series_ticker": st,
                 "event_ticker": ev,
                 "market_ticker": m.get("ticker"),
+                "status": m.get("status"),
                 "title": m.get("title"),
                 "result": m.get("result") or "",          # "yes" / "no" / ""
                 "settlement_value_dollars": m.get("settlement_value_dollars"),
@@ -472,8 +498,13 @@ def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list
         )
         if len(rows) >= limit_markets:
             break
-    rows.sort(key=lambda r: (r.get("settlement_ts") or ""), reverse=True)
-    return rows
+    dedup: dict[str, dict] = {}
+    for r in rows:
+        if r["market_ticker"]:
+            dedup[r["market_ticker"]] = r
+    out = list(dedup.values())
+    out.sort(key=lambda r: (r.get("settlement_ts") or ""), reverse=True)
+    return out
 
 
 def exchange_status(signer: Signer | None) -> dict:
@@ -522,6 +553,7 @@ def main() -> int:
         "authenticated": signer is not None,
         "exchange_status": status,
         "series_inventory": scope["series_inventory"],
+        "topic_catalog": scope["topic_catalog"],
         "unmapped_series": scope["unmapped_series"],
         "counts": {
             "series_index": scope["series_index_size"],
@@ -547,6 +579,11 @@ def main() -> int:
                 "(Kalshi orderbook docs). Shown so ask-side depth and spread are visible."
             ),
             "result": "Official market field. 'yes' or 'no' once settled; empty while live.",
+            "derived_mid": (
+                "Derived, not raw: (yes_bid_close + yes_ask_close) / 2 per candlestick. The "
+                "candlestick `price` object is the TRADED price and is empty in any period with "
+                "no trade, so this keeps the chart continuous without inventing a traded price."
+            ),
         },
         "api_log": API_LOG,
     }

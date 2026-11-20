@@ -140,8 +140,8 @@ tables on the category, resolution and verification pages still work without it.
       <label class="small" style="margin:0">Window</label>
       <div class="seg" id="winSeg" role="group" aria-label="Chart window">
         <button data-w="60" aria-pressed="false">60 s</button>
-        <button data-w="300" aria-pressed="true">5 min</button>
-        <button data-w="3600" aria-pressed="false">1 h</button>
+        <button data-w="300" aria-pressed="false">5 min</button>
+        <button data-w="3600" aria-pressed="true">1 h</button>
         <button data-w="21600" aria-pressed="false">6 h</button>
         <button data-w="86400" aria-pressed="false">24 h</button>
         <button data-w="604800" aria-pressed="false">7 d</button>
@@ -150,14 +150,15 @@ tables on the category, resolution and verification pages still work without it.
     <div class="row" style="margin-bottom:8px">
       <label class="small" style="margin:0">Series</label>
       <div class="seg" id="fieldSeg" role="group" aria-label="Series to plot">
-        <button data-f="close" aria-pressed="true">Last trade</button>
+        <button data-f="mid" aria-pressed="true">Quoted mid <span class="small">(derived)</span></button>
+        <button data-f="close" aria-pressed="false">Last trade</button>
         <button data-f="yes_bid_close" aria-pressed="false">Yes bid</button>
         <button data-f="yes_ask_close" aria-pressed="false">Yes ask</button>
       </div>
     </div>
     <div class="chartwrap"><canvas id="chart" class="chart"></canvas></div>
     <div class="legend">
-      <span><span class="swatch" style="background:#00c389"></span>contract price (USD per $1 contract)</span>
+      <span><span class="swatch" style="background:#00c389"></span>contract price, USD per $1 contract (0.00 - 1.00)</span>
       <span id="chartNote" class="muted"></span>
     </div>
     <p class="small muted" style="margin-top:6px">Long windows use official candlesticks
@@ -217,7 +218,7 @@ DASH_JS = r"""
 <script>
 (async function(){
   const $ = id => document.getElementById(id);
-  let state = { window: 300, field: 'close', ticker: null, snap:null, filtered:[] };
+  let state = { window: 3600, field: 'mid', ticker: null, snap:null, filtered:[] };
 
   try{
     const snap = await KR.snapshot();
@@ -302,18 +303,23 @@ DASH_JS = r"""
     const cset = (per[intervalKey]||{}).candles || [];
     let hist = [];
     try{ const h = await KR.history(); hist = ((h.points||{})[state.ticker]||[]); }catch(e){}
-    const fieldMap = {close:'close_dollars', yes_bid_close:'yes_bid_close', yes_ask_close:'yes_ask_close'};
-    const candles = cset.map(c=>({ts:c.ts, close_dollars:c.close, yes_bid_close:c.yes_bid_close, yes_ask_close:c.yes_ask_close}));
+    const fieldMap = {mid:'derived_mid', close:'close_dollars', yes_bid_close:'yes_bid_close', yes_ask_close:'yes_ask_close'};
+    const candles = cset.map(c=>({ts:c.ts, close_dollars:c.close, yes_bid_close:c.yes_bid_close,
+                                  yes_ask_close:c.yes_ask_close, derived_mid:c.derived_mid}));
     const series = KR.buildSeries(candles, hist, fieldMap[state.field])
-      .filter(p=>p.t >= Date.now()-state.window*1000);
+      .filter(p=>p.t >= Date.now()-state.window*1000 && p.t <= Date.now()+60000);
     KR.drawChart(document.getElementById('chart'), series, {
       spanSeconds: state.window,
       emptyMessage: state.window<=300
         ? 'No ticks inside this window yet. The collector samples every 10 minutes, so a 60-second or 5-minute window only fills when a run has just completed.'
-        : 'No price points in this window (no trades, or the market is too new).'
+        : 'No price points in this window. Candlestick price objects are empty in periods with no trade - try the quoted-mid series or a longer window.'
     });
     const srcCount = series.filter(p=>p.src==='candle').length, tickCount = series.length-srcCount;
-    $('chartNote').innerHTML = `${series.length} points · ${tickCount} collector ticks + ${srcCount} official candlesticks (period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'})`;
+    const label = state.field==='mid' ? 'quoted mid (derived from official bid/ask closes)'
+      : state.field==='close' ? 'last traded price - empty in periods with no trade'
+      : state.field==='yes_bid_close' ? 'yes bid close' : 'yes ask close';
+    $('chartNote').innerHTML = `${series.length} points · ${tickCount} collector ticks + ${srcCount} candlesticks `
+      + `(period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`;
   }
 
   async function renderLiquidity(){
@@ -378,6 +384,27 @@ CATEGORY_JS = r"""
     const d = await KR.topic(TOPIC);
     KR.staleness($('staleness'), d.generated_at_utc);
     const ms = d.markets||[];
+    // Whether the topic exists in Kalshi's catalogue at all is a different fact from
+    // whether it has live markets today. Say both, so "0 live" is never ambiguous.
+    let snap = null;
+    try { snap = await KR.snapshot(); } catch(e) {}
+    const cat = ((snap && snap.topic_catalog) || {})[TOPIC] || {};
+    const inCat = cat.series_in_catalog;
+    const withLive = (cat.series_with_live_markets || []).length;
+    const catBox = $('catNote');
+    if(catBox){
+      if(inCat === undefined){
+        catBox.innerHTML = '<span class="muted">Series-catalogue counts are not in this snapshot yet.</span>';
+      } else if(inCat === 0){
+        catBox.innerHTML = '<span class="pill flag">no series</span> The API returned no series tagged or categorised for this topic.';
+      } else if(withLive === 0){
+        catBox.innerHTML = '<span class="pill flag">catalogue only</span> <b>' + inCat + '</b> series exist for this topic in Kalshi&#8217;s catalogue (' +
+          (cat.series_tickers||[]).slice(0,6).map(t=>'<code>'+KR.esc(t)+'</code>').join(' ') +
+          ') but <b>none has a live market in the demo environment</b> right now. That is an absence of markets, not a data failure.';
+      } else {
+        catBox.innerHTML = '<span class="pill ok">live</span> <b>' + withLive + '</b> of <b>' + inCat + '</b> catalogued series for this topic have live markets in the demo environment.';
+      }
+    }
     const highest = ms.slice().sort((a,b)=>(b.est_dollar_volume||0)-(a.est_dollar_volume||0));
     const res = (d.resolutions||[]);
     const live = ms.length, settled = res.length;
@@ -443,6 +470,7 @@ def category_page(topic: str, title: str, blurb: str, series_hint: str) -> None:
 <p class="lead">{blurb}</p>
 <div id="metaBar"><div class="card tight"><div class="status" id="staleness">Loading snapshot…</div></div></div>
 <div class="kpis" id="kpis"></div>
+<div class="card tight" style="margin-bottom:14px"><div class="status" id="catNote">Checking the series catalogue…</div></div>
 
 <h2>Live markets — highest estimated dollar volume first</h2>
 <p class="muted">Scope rule: a market is in this topic only if its <b>official</b> series record
@@ -552,10 +580,13 @@ def build_live_pages() -> None:
 
     category_page(
         "gas", "Gas prices",
-        "Fuel-price markets on the Kalshi demo exchange. In the verified demo data the in-scope "
-        "series are tagged <code>Gas</code> and settle against U.S. Energy Information "
-        "Administration fuel-price data (see the series table below for the exact EIA page on "
-        "each contract).",
+        "Fuel-price markets on the Kalshi demo exchange. The in-scope series are the ones tagged "
+        "<code>Gas</code>. <b>Verified on 2026-11-20:</b> the demo environment lists "
+        "<code>DIESEL</code> (weekly diesel price) and <code>DIESELM</code> (monthly diesel price), "
+        "both settled against U.S. Energy Information Administration data, but has <b>no open events "
+        "or markets</b> for either series &mdash; so this page shows series, not live prices. That is "
+        "a property of the demo exchange, not a gap in the data; the page fills in automatically "
+        "when those markets are listed.",
         'tags include <code>Gas</code>; categories are <code>Economics</code> — so category alone '
         'would not find these, which is why the tag is used')
     category_page(

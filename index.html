@@ -7,7 +7,7 @@
 </head><body>
 <header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="index.html" aria-current="page">Dashboard</a><a href="pages/executive-summary.html">Executive Summary</a><a href="pages/gas.html">Gas</a><a href="pages/elections.html">Elections</a><a href="pages/culture.html">Culture</a><a href="pages/crypto.html">Crypto</a><a href="pages/golf.html">Golf</a><a href="pages/resolutions.html">Resolutions</a><a href="pages/portfolio.html">Portfolio</a><a href="pages/analysis.html">Analysis</a><a href="pages/suggestions.html">Suggestions</a><a href="pages/questions.html">Questions</a><a href="pages/api-reference.html">API Reference</a><a href="pages/verification.html">Verification</a><a href="pages/flagged.html">Flagged</a><a href="pages/repo-review.html">Repo Review</a><a href="pages/sources.html">Sources</a></nav></div></header>
 <div class="wrap">
-<div class="card tight"><div class="row" style="justify-content:space-between"><div class="status" id="staleness">Snapshot <span class="muted">2026-11-20T11:22:22+00:00</span></div><div class="status muted">30 in-scope markets · API key configured: no · source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a></div></div></div>
+<div class="card tight"><div class="row" style="justify-content:space-between"><div class="status" id="staleness">Snapshot <span class="muted">none yet</span></div><div class="status muted">0 in-scope markets · API key configured: no · source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a></div></div></div>
 <h1>Highest-dollar live markets in scope</h1>
 <p class="lead">Live Kalshi <b>demo</b> markets for five topics only — <b>gas prices,
 elections, culture, crypto, golf</b>. Ranked by <i>estimated</i> dollar volume, charted by
@@ -30,8 +30,8 @@ tables on the category, resolution and verification pages still work without it.
       <label class="small" style="margin:0">Window</label>
       <div class="seg" id="winSeg" role="group" aria-label="Chart window">
         <button data-w="60" aria-pressed="false">60 s</button>
-        <button data-w="300" aria-pressed="true">5 min</button>
-        <button data-w="3600" aria-pressed="false">1 h</button>
+        <button data-w="300" aria-pressed="false">5 min</button>
+        <button data-w="3600" aria-pressed="true">1 h</button>
         <button data-w="21600" aria-pressed="false">6 h</button>
         <button data-w="86400" aria-pressed="false">24 h</button>
         <button data-w="604800" aria-pressed="false">7 d</button>
@@ -40,14 +40,15 @@ tables on the category, resolution and verification pages still work without it.
     <div class="row" style="margin-bottom:8px">
       <label class="small" style="margin:0">Series</label>
       <div class="seg" id="fieldSeg" role="group" aria-label="Series to plot">
-        <button data-f="close" aria-pressed="true">Last trade</button>
+        <button data-f="mid" aria-pressed="true">Quoted mid <span class="small">(derived)</span></button>
+        <button data-f="close" aria-pressed="false">Last trade</button>
         <button data-f="yes_bid_close" aria-pressed="false">Yes bid</button>
         <button data-f="yes_ask_close" aria-pressed="false">Yes ask</button>
       </div>
     </div>
     <div class="chartwrap"><canvas id="chart" class="chart"></canvas></div>
     <div class="legend">
-      <span><span class="swatch" style="background:#00c389"></span>contract price (USD per $1 contract)</span>
+      <span><span class="swatch" style="background:#00c389"></span>contract price, USD per $1 contract (0.00 - 1.00)</span>
       <span id="chartNote" class="muted"></span>
     </div>
     <p class="small muted" style="margin-top:6px">Long windows use official candlesticks
@@ -109,7 +110,7 @@ official <code>result</code> field (<code>yes</code>/<code>no</code>) moves the 
 <script>
 (async function(){
   const $ = id => document.getElementById(id);
-  let state = { window: 300, field: 'close', ticker: null, snap:null, filtered:[] };
+  let state = { window: 3600, field: 'mid', ticker: null, snap:null, filtered:[] };
 
   try{
     const snap = await KR.snapshot();
@@ -194,18 +195,23 @@ official <code>result</code> field (<code>yes</code>/<code>no</code>) moves the 
     const cset = (per[intervalKey]||{}).candles || [];
     let hist = [];
     try{ const h = await KR.history(); hist = ((h.points||{})[state.ticker]||[]); }catch(e){}
-    const fieldMap = {close:'close_dollars', yes_bid_close:'yes_bid_close', yes_ask_close:'yes_ask_close'};
-    const candles = cset.map(c=>({ts:c.ts, close_dollars:c.close, yes_bid_close:c.yes_bid_close, yes_ask_close:c.yes_ask_close}));
+    const fieldMap = {mid:'derived_mid', close:'close_dollars', yes_bid_close:'yes_bid_close', yes_ask_close:'yes_ask_close'};
+    const candles = cset.map(c=>({ts:c.ts, close_dollars:c.close, yes_bid_close:c.yes_bid_close,
+                                  yes_ask_close:c.yes_ask_close, derived_mid:c.derived_mid}));
     const series = KR.buildSeries(candles, hist, fieldMap[state.field])
-      .filter(p=>p.t >= Date.now()-state.window*1000);
+      .filter(p=>p.t >= Date.now()-state.window*1000 && p.t <= Date.now()+60000);
     KR.drawChart(document.getElementById('chart'), series, {
       spanSeconds: state.window,
       emptyMessage: state.window<=300
         ? 'No ticks inside this window yet. The collector samples every 10 minutes, so a 60-second or 5-minute window only fills when a run has just completed.'
-        : 'No price points in this window (no trades, or the market is too new).'
+        : 'No price points in this window. Candlestick price objects are empty in periods with no trade - try the quoted-mid series or a longer window.'
     });
     const srcCount = series.filter(p=>p.src==='candle').length, tickCount = series.length-srcCount;
-    $('chartNote').innerHTML = `${series.length} points · ${tickCount} collector ticks + ${srcCount} official candlesticks (period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'})`;
+    const label = state.field==='mid' ? 'quoted mid (derived from official bid/ask closes)'
+      : state.field==='close' ? 'last traded price - empty in periods with no trade'
+      : state.field==='yes_bid_close' ? 'yes bid close' : 'yes ask close';
+    $('chartNote').innerHTML = `${series.length} points · ${tickCount} collector ticks + ${srcCount} candlesticks `
+      + `(period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`;
   }
 
   async function renderLiquidity(){
