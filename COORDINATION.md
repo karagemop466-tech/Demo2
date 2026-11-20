@@ -829,4 +829,10 @@ Sources to verify against (official only): https://docs.kalshi.com/api-reference
 | J-5 | Link/JS checks, PR → main, merge, Pages verify | unclaimed | this section |
 
 Rules honored: news/event *causes* of jumps are not in the Kalshi API — left blank and flagged, never inferred. Backtest is labeled SIMULATED (historical demo prints), not live demo-account execution (requires user keys; existing gated executor in `tools/execute_strategy.py` untouched).
->>>>>>> 3017b4b (Session 8b9a46b4: claim session-8b9a46b4 scope (jump detector + simulated backtest))
+
+### Results (session arena-8b9a46b4)
+- Jump detector over 2,479 trade prints / 12 markets: **39 jumps ≥ $0.10** → `session-8b9a46b4/data/jumps.json` (each row source-linked; cause/news blank = J-F1).
+- Simulated backtest on 317 traded resolved markets (of 1,601): always-NO mean +$0.60/contract reflects calibration (73.8% resolved NO), NOT a tradable edge — labeled SIMULATED with lookahead caveat (J-F2). Gas/culture: no traded resolved markets → blank (J-F3).
+- Site: 5 pages under `session-8b9a46b4/site/` incl. live browser chart (seconds/minutes/hours + orderbook depth) polling the demo API directly.
+- Verification: `python3 session-8b9a46b4/tools/jump_backtest.py` reproducible; `node --check live.js` OK; `python3 scripts/check_links.py` → 8,124 refs, all OK; `python3 tools/check.py` clean; local smoke 200s.
+- Tasks J-1…J-5: done (J-5 PR/merge record below).
