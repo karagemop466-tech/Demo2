@@ -836,3 +836,31 @@ Rules honored: news/event *causes* of jumps are not in the Kalshi API — left b
 - Site: 5 pages under `session-8b9a46b4/site/` incl. live browser chart (seconds/minutes/hours + orderbook depth) polling the demo API directly.
 - Verification: `python3 session-8b9a46b4/tools/jump_backtest.py` reproducible; `node --check live.js` OK; `python3 scripts/check_links.py` → 8,124 refs, all OK; `python3 tools/check.py` clean; local smoke 200s.
 - Tasks J-1…J-5: done (J-5 PR/merge record below).
+
+## Session `6332d7d3` — branch `arena/6332d7d3-demo2` — final integration (claim written 2026-11-20 13:00 UTC, before edits)
+
+**Role:** final integration session for branch `arena/6332d7d3-demo2` (base `4c13151`, the tip of `main`).
+The brief asks for one working, live, verified dashboard plus PR → merge → Pages confirmation,
+and names the integration session as the only owner of shared outputs.
+
+**What I found on arrival (evidence, not assumption):**
+
+| Observation | Evidence |
+|---|---|
+| The deployed root dashboard renders **"Snapshot none yet"** and **"0 in-scope markets"**, and its JS throws `data/snapshot.json → HTTP 404` | fetched https://karagemop466-tech.github.io/Demo2/ this session; `data/snapshot.json` is not in `git ls-files` |
+| `data/snapshot.json` has **never** been committed on any branch or on `main` | `git log --all -- data/snapshot.json` → empty; no remote branch contains it |
+| The workflow that is supposed to produce it (`Refresh Kalshi demo data`) **fails at its first data step** | run 44728913873 on `main`, job `collect`, step "Collect demo snapshot": failure |
+| `Deploy GitHub Pages` on `main` has been **stuck in progress for >12 minutes** on a run started before this session | run 44739209404, job `collect`, status in_progress |
+| Four dashboards are published side by side (`pages/`, `verified/`, `dashboard/`, `site/` + `intelligence/`, `instrument-panel/`, `live/`), plus 4 stale open PRs (#6, #15, #27, #32) | `gh pr list`; directory listing |
+
+**Scope of this session (all of the following files are mine this session):**
+
+| # | Task | Status | Files |
+|---|------|--------|-------|
+| Z-1 | Diagnose and repair the snapshot pipeline so the deployed root dashboard shows real, sourced data | in progress | `tools/collector.py` (or a new `tools/build_snapshot.py`), `.github/workflows/*` (additive) |
+| Z-2 | Consolidated landing page + navigation, one entry point for every dashboard | in progress | `index.html` (generated), `tools/build_site.py` |
+| Z-3 | Verify the pipeline output line by line (sources present, values in range, empty stays empty) | unclaimed→in progress | `tools/check.py` |
+| Z-4 | PR → merge → confirm Pages deploy → record result here | in progress | this file |
+
+**Non-overlap:** I do not rewrite `pages/`, `verified/`, `dashboard/`, `site/`, `intelligence/`,
+`instrument-panel/` or `live/` content; where the landing page indexes them I only add links.
