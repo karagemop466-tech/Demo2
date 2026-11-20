@@ -114,3 +114,37 @@ A self-contained, source-linked subsite added by session `arena-ddc587ae` (PR #1
 - **Live data:** dashboard polls the public demo REST API from the visitor browser (60 s, batched) with an explicit LIVE/SNAPSHOT mode badge and bundled verified snapshots as fallback.
 
 Serve locally with `python3 -m http.server 8000` and open `/intelligence/`.
+
+---
+
+## `live/` — interactive console, trading and trade analysis
+
+Additive subsection (does not modify the dashboard, `pages/`, `verified/`, `dashboard/` or `site/`):
+
+- **`live/index.html`** — interactive console: five-topic market table, price chart with 60 s / 5 m / 15 m / 1 h / 6 h
+  windows on a fixed $0–$1 axis, full order-book depth (contracts resting at each price, cumulative depth, dollar value
+  per level, best bid, implied ask and spread), resolved feed and a markets-tracked-until-YES/NO list.
+- **`live/trading.html`** — paper-trade simulator needing no key, plus real demo-account reads and signed V2 demo
+  orders (`POST /portfolio/events/orders`) for anyone who supplies their own demo key.
+- **`live/trading-analysis.html`** — trades bucketed by topic, side, entry-price band and topic × side; a bucket needs
+  10 trades before a pattern is described.
+
+Verified in a jsdom harness with fixtures modelled on the documented response shapes: market filtering (including
+exclusion of an out-of-scope market), order-book best bid / implied ask / spread / cumulative-depth arithmetic, chart
+windows, offline error state with no fabricated values, paper-trade validation, and analysis withholding below
+threshold.
+
+### Fixed here: broken `verified/` links
+
+Navigation links to the `verified/` subsite were pointing one directory too high
+(`pages/*.html` → `../../verified/index.html`, which resolves outside the repository root, and the root page →
+`../verified/index.html`). On the deployed Pages site every one of those links 404s. All 17 were corrected to
+`../verified/index.html` (pages) and `verified/index.html` (root). `tools/check_live_links.py` is the checker that
+found it and will catch any recurrence.
+
+### Checkers
+
+```bash
+python3 tools/check_links.py        # verified/ subsite + sourced data rows (pre-existing)
+python3 tools/check_live_links.py   # every HTML file: internal links, duplicate ids, stray placeholders
+```

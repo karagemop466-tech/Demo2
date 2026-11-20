@@ -287,3 +287,52 @@ Both sets of pages are published by the root-deploying `pages.yml` workflow.
 - PR #16: https://github.com/karagemop466-tech/Demo2/pull/16 — **MERGED** 2026-11-20, merge commit `2ccd57c` (`gh pr merge 16 --merge`; verified `gh pr view 16` state=MERGED).
 - Pages root (existing site): https://karagemop466-tech.github.io/Demo2/ — unchanged by this PR.
 - Pages subsite (this session): https://karagemop466-tech.github.io/Demo2/intelligence/ — **verified live with full content** post-merge (fetched title "Kalshi Demo Intelligence — Overview", stats 5/124/10/8/17 render, all nav links present).
+
+---
+
+## Session `6d75123b` — branch `arena/6d75123b-demo2` (final scope after rebase)
+
+`origin/main` advanced three times while this session worked (PR #9–#14). By the third rebase, main already contained
+a merged root-dashboard rebuild (session `406a2f21` / `e88eb254`) that had independently reached the same API
+corrections this session made: V2 `POST /portfolio/events/orders`, the removed legacy order endpoint (`410 Gone`), and
+the WebSocket handshake requirement.
+
+**Decision: do not overwrite it.** Main's dashboard, `pages/`, `verified/`, `dashboard/`, `site/` and `server/` are
+kept exactly as merged. This session's unique contribution is published additively under `live/`, and one real defect
+found in main was fixed.
+
+### Delivered
+
+| Item | Status | Files |
+|---|---|---|
+| Interactive console: windows, fixed $0–$1 chart axis, full order-book depth with cumulative liquidity | done | `live/index.html`, `live/assets/app.js`, `live/assets/style.css` |
+| Resolution tracking to YES/NO, persisted per browser | done | `live/index.html` |
+| Paper trading without credentials | done | `live/trading.html` |
+| Signed demo orders on V2 endpoint with confirmation step | done | `live/trading.html` |
+| Trade categorisation (topic, side, price band, topic×side) + strategy only above n=10 | done | `live/trading-analysis.html` |
+| Nav links from the main site into `live/` | done | `index.html`, every `pages/*.html` |
+
+### Defect found in main and fixed
+
+- **17 broken `verified/` navigation links.** `pages/*.html` linked `../../verified/index.html`, which resolves to a
+  path outside the repository root, and the root page linked `../verified/index.html`. Both 404 on the deployed Pages
+  site. Corrected to `../verified/index.html` and `verified/index.html`. Found by `tools/check_live_links.py`.
+
+### Verification
+
+- `python3 tools/check_live_links.py` → 46 HTML files, 1063 href/src attributes, no broken internal links, no duplicate
+  ids, no placeholders (skips `<script>` bodies and `<code>` examples so template literals are not false positives).
+- `python3 tools/check_links.py` (pre-existing, `verified/` subsite) → OK.
+- `node --check` on `assets/site.js`, `assets/app.js`, `live/assets/app.js`, `server/*.js` → OK.
+- jsdom behaviour harness against `live/` with mocked demo-API fixtures: 19 assertions, all passing.
+- `node scripts/smoke.mjs` against `server/index.js`: 0 errors; Kalshi network calls fail only because of the sandbox
+  egress limit (F-1).
+
+### Conflicts encountered (all resolved without discarding other sessions' work)
+
+1. `COORDINATION.md` — upstream kept in full, this session's section appended.
+2. `README.md` — this session's section appended below upstream content.
+3. `tools/check_links.py` — name collision with main's checker; upstream file kept untouched, this session's stricter
+   checker published as `tools/check_live_links.py`.
+4. Root `index.html` and `pages/` — upstream's newer rebuild kept; only the nav link to `live/` and the `verified/`
+   link fix were applied on top.
