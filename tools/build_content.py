@@ -556,6 +556,20 @@ SUGGESTIONS = [
          effort="Low", impact="Medium", risk="None.",
          source=DOCS + "/getting_started/pagination",
          recommended="Implemented \u2014 see the API log section on Verification."),
+    dict(id="S9", title="Mark sharp price jumps (\u2265 $0.10) on the live chart",
+         problem="A sharp price move has no visible marker on the chart, so a trader can miss a "
+                 "significant move.",
+         options=["Mark jumps \u2265 $0.10 with red vertical markers + a table below the chart (implemented)",
+                  "No markers, keep chart clean (rejected)",
+                  "News/event links per jump: the cause is not derivable from the API, so each jump "
+                  "instead gets a clearly labelled \u201cpossible context\u201d search link plus a "
+                  "\u201ccause unverified\u201d flag (implemented)"],
+         effort="Low", impact="High", risk="A reader could mistake a jump marker for a confirmed "
+                                         "causal event \u2014 mitigated by the unverified flag (F13).",
+         source=DOCS + "/api-reference/market/get-market-candlesticks",
+         recommended="Implemented \u2014 see the \u201cSharp price moves\u201d card on the Dashboard. Each "
+                     "jump is flagged \u201ccause unverified\u201d because the Trade API returns price "
+                     "and volume only."),
 ]
 
 
@@ -583,7 +597,7 @@ def build_suggestions() -> None:
 </div>""")
     body = f"""
 <h1>Suggestions \u2014 review before anything changes</h1>
-<p class="lead">Eight improvement proposals, each with the problem, the options, the trade-off and
+<p class="lead">Nine improvement proposals, each with the problem, the options, the trade-off and
 the official source that motivates it. Nothing here is implemented on your behalf. Record a
 decision per item; decisions and notes stay in this browser so you can review the set as a whole
 before choosing a path.</p>
@@ -603,7 +617,7 @@ knowledge. No decision is transmitted anywhere.</div>
   const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
   function paint(){{
     const d=load(); let n=0;
-    ['S1','S2','S3','S4','S5','S6','S7','S8'].forEach(id=>{{
+    ['S1','S2','S3','S4','S5','S6','S7','S8','S9'].forEach(id=>{{
       const el=document.getElementById('dec-'+id); if(!el) return;
       const rec=d[id];
       if(rec){{ n++; el.innerHTML='<span class="pill '+(rec.decision==='choose'?'ok':rec.decision==='reject'?'err':'flag')+'">'+rec.decision+'</span> <span class="small muted">'+new Date(rec.at).toLocaleString()+'</span>'; }}
@@ -611,7 +625,7 @@ knowledge. No decision is transmitted anywhere.</div>
       const note=document.getElementById('note-'+id);
       if(note && rec && rec.note && !note.value) note.value=rec.note;
     }});
-    document.getElementById('decSummary').textContent=n+' of 8 decided';
+    document.getElementById('decSummary').textContent=n+' of 9 decided';
   }}
   document.querySelectorAll('button[data-decide]').forEach(b=>b.addEventListener('click',()=>{{
     const d=load(), id=b.dataset.id;
@@ -853,11 +867,23 @@ VERIFIED = [
  ("Portfolio / order endpoints require signed keys",
   "GET /portfolio/balance and GET /portfolio/positions return 401 without signed headers; no demo credentials exist in this workspace, so all portfolio/trade rows stay blank and flagged",
   "api-reference/portfolio/get-balance", "read on page (security scheme kalshiAccessKey) + unauthenticated request fails", "Verified"),
+ ("Sharp-jump price-move detection (\u2265 $0.10)",
+  "Chart detects moves of $0.10 or more between consecutive price points and marks them with red "
+  "vertical markers; the table below the chart lists each jump with a link to the market on Kalshi "
+  "and a clearly labelled \u201cpossible context\u201d search link. The cause of each jump is not "
+  "derivable from the Kalshi API (no news/event field in price responses) and is flagged cause unverified.",
+  "api-reference/market/get-market-candlesticks|api-reference/market/get-trades",
+  "implemented in assets/site.js (KR.detectJumps) + chart markers in KR.drawChart; table renders on index.html", "By design"),
 ]
 
 
+def src_multi(p: str) -> str:
+    # one row can cite several official pages, separated by "|"
+    return ", ".join(src(x, x.rsplit("/", 1)[-1]) for x in p.split("|"))
+
+
 def build_verification() -> None:
-    rows = [[c, v, src(p, p.rsplit("/", 1)[-1]), how,
+    rows = [[c, v, src_multi(p), how,
              '<span class="pill ok">Verified</span>' if st == "Verified"
              else '<span class="pill flag">By design</span>']
             for c, v, p, how, st in VERIFIED]
@@ -1002,11 +1028,22 @@ FLAGGED = [
   "topic, and the Gas page states &#8220;catalogue only &#8212; 2 series exist, none has a live market&#8221;. "
   "Gas stays in scope and populates automatically when the demo exchange lists those markets.",
   "api-reference/market/get-series-list"),
+ ("F13", "Sharp-jump cause cannot be determined from the API",
+  "The dashboard now marks price moves \u2265 $0.10 between consecutive points on the live chart and "
+  "links each to the market\u2019s page on Kalshi, plus a clearly labelled \u201cpossible context\u201d "
+  "search link. But the Trade API returns price and volume only \u2014 no news, no event, no "
+  "explanation for why a contract moved.",
+  "A reader could mistake a jump marker for a confirmed causal event.",
+  "Each jump row links to the market on Kalshi (where traders can see discussion) and is tagged "
+  "<span class=\"pill flag\">cause unverified</span>; the search link is labelled \u201cnot an official "
+  "source\u201d. Nothing is inferred. Raised as verification row on pages/verification.html and as "
+  "suggestion S9 on pages/suggestions.html.",
+  "api-reference/market/get-markets|api-reference/market/get-trades"),
 ]
 
 
 def build_flagged() -> None:
-    rows = [[f[0], f"<b>{f[1]}</b><br>{f[2]}", f[3], f[4], src(f[5], f[5].rsplit("/", 1)[-1]),
+    rows = [[f[0], f"<b>{f[1]}</b><br>{f[2]}", f[3], f[4], src_multi(f[5]),
              '<span class="pill flag">open for review</span>'] for f in FLAGGED]
     body = """
 <h1>Flagged for review</h1>
@@ -1022,6 +1059,9 @@ wrong.</p>
 <li><b>F6</b>: the portfolio page says \u201cnot configured\u201d; it is not a zero balance.</li>
 <li><b>F11</b>: the chart notes whether it is plotting a derived quoted mid or a traded price.</li>
 <li><b>F12</b>: the Gas page says \u201ccatalogue only\u201d instead of showing an unexplained empty table.</li>
+<li><b>F13</b>: sharp jumps \u2265 $0.10 are marked with red vertical markers on the chart and listed in
+  a table below it, each tagged \u201ccause unverified\u201d \u2014 the Trade API returns price and volume
+  only, never the news or event behind a move.</li>
 <li><b>F8</b>: the dashboard header shows the snapshot time and age, so stale data is visible.</li>
 <li><b>F9</b>: compare the in-scope series list per topic against the unclassified list in
   <code>data/snapshot.json</code>.</li>
