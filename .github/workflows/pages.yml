@@ -42,11 +42,13 @@ jobs:
         run: python tools/kalshi_collect.py
       - name: Validate the snapshot
         run: python tools/validate_data.py
-      - name: Commit the snapshot
+      - name: Rebuild the dashboard pages from the new snapshot
+        run: python tools/build_dashboard_site.py
+      - name: Commit the snapshot and pages
         run: |
           git config user.name "kalshi-dashboard-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/dashboard.json data/history
+          git add data/dashboard.json data/history site
           if git diff --cached --quiet; then
             echo "No data changes to commit."
           else
