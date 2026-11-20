@@ -115,17 +115,20 @@ def snapshot_meta() -> dict:
 
 
 def meta_bar(s: dict) -> str:
-    gen = s.get("generated_at_utc") or ""
-    counts = s.get("counts") or {}
-    n = counts.get("markets_in_scope", 0)
-    seen = counts.get("markets_seen")
-    scope_txt = f"{n} in-scope markets" if not seen else f"{n} published of {seen} in-scope markets"
-    auth = "yes" if s.get("authenticated") else "no"
+    """The freshness strip above a page.
+
+    It deliberately carries NO build-time data value. The numbers and the
+    timestamp are filled in by the page script from the snapshot the browser
+    actually loaded, so a data refresh cannot make the generated HTML differ
+    from the committed file (which would fail the CI diff gate on the next
+    data-only commit). The placeholders below are what a reader sees before
+    the script runs.
+    """
     return (
         '<div class="card tight"><div class="row" style="justify-content:space-between">'
-        f'<div class="status" id="staleness">Snapshot <span class="muted">{gen or "none yet"}</span></div>'
-        f'<div class="status muted">{scope_txt} · API key configured: {auth} · '
-        f'source <a href="{DOCS}/getting_started/demo_env">demo environment</a></div>'
+        '<div class="status" id="staleness">Loading the latest snapshot…</div>'
+        '<div class="status muted" id="metaFacts">source '
+        f'<a href="{DOCS}/getting_started/demo_env">demo environment</a></div>'
         "</div></div>"
     )
 
@@ -332,6 +335,14 @@ DASH_JS = r"""
     KR.staleness($('staleness'), snap.generated_at_utc);
     $('metaBar').innerHTML = '';
     const c = snap.counts || {};
+    const facts = $('metaFacts');
+    if(facts){
+      const seen = c.markets_seen;
+      const scopeTxt = seen ? (KR.num(c.markets_in_scope,0)+' published of '+KR.num(seen,0)+' in-scope markets')
+                            : (KR.num(c.markets_in_scope,0)+' in-scope markets');
+      facts.innerHTML = scopeTxt + ' · API key configured: ' + (snap.authenticated?'yes':'no')
+        + ' · source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a>';
+    }
     const pt = c.per_topic || {};
     const sub = snap.published_subset || null;
     $('kpis').innerHTML = `
@@ -1138,6 +1149,22 @@ def build_alerts_page(snap: dict) -> None:
         volume:m.volume_fp||'', est_vol:m.est_dollar_volume||'',
       };
     }).sort(function(a,b){return (b.time||'').localeCompare(a.time||'');});
+    /* The stamp is filled in at runtime from the data this page loaded. Baking
+       it into the generated HTML would make the file change on every data
+       refresh, and the CI gate that compares generated pages with their
+       generator would fail on the next data-only commit. */
+    var stamp=(jdata.generated_from||{}).snapshot_generated_at || (snap.generated_at_utc||'');
+    var asOf=$('alertsAsOf');
+    if(asOf) asOf.textContent = stamp ? stamp+' UTC' : 'the snapshot this page loaded';
+    var facts=$('metaFacts');
+    if(facts){
+      var c=(snap.counts||{});
+      var seen=c.markets_seen;
+      var scopeTxt=seen?(KR.num(c.markets_in_scope,0)+' published of '+KR.num(seen,0)+' in-scope markets')
+                        :(KR.num(c.markets_in_scope,0)+' in-scope markets');
+      facts.innerHTML=scopeTxt+' · API key configured: '+(snap.authenticated?'yes':'no')
+        +' · source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a>';
+    }
     apply();
   }).catch(function(e){
     chatAll.innerHTML='<div class="notice bad">Could not load alert data: '+esc(String(e))+'. The snapshot is produced by .github/workflows/refresh-data.yml.</div>';
@@ -1156,7 +1183,7 @@ more in either direction appears in "All alerts"; "High ROI" shows the subset a 
 rule-based filter flags as higher-conviction (a larger move in a more liquid market). Thresholds
 are tunable on the page — this is a rule, not a predictive model, and nothing is inferred about
 why a move happened.</p>
-<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Snapshot {gen or "none yet"}</div></div></div>
+<div id="metaBar"><div class="card tight"><div class="row" style="justify-content:space-between"><div class="status" id="staleness">Loading the latest snapshot&hellip;</div><div class="status muted" id="metaFacts">source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a></div></div></div>
 <div class="card tight" style="margin-top:8px">
   <div class="row" style="margin:0;gap:10px;align-items:flex-end;flex-wrap:wrap">
     <div><label for="roiThreshold">High-ROI move floor ($)</label>
@@ -1183,8 +1210,8 @@ why a move happened.</p>
 <a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>). Market links point to the
 Kalshi series page pattern (checked against the live site); cause is never inferred — each row links to the
 market's own trade/market API responses and is flagged <span class="pill flag">cause unverified</span>.
-Data as of {jumps_gen or "not collected yet"}; the collector runs every 30 minutes via
-<a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>.</p>
+Data as of <span id="alertsAsOf">the snapshot this page loaded</span>; the collector runs every
+30 minutes via <a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>.</p>
 <p class="small muted"><b>Two alert surfaces, two different sources.</b> This page is the
 <b>committed history</b> of moves, rebuilt from the collector's trade prints and market snapshots.
 The <a href="../index.html">Dashboard</a> carries the <b>live</b> feeds: the browser polls the demo
