@@ -1,0 +1,100 @@
+name: Demo portfolio, analysis and (optional) execution
+
+# Reads the demo account with a signed request, recomputes the analysis, and — only when
+# explicitly enabled — executes the orders in data/strategy_plan.json.
+#
+# All three gates must be open for a live order to be sent:
+#   1. repository secret KALSHI_DEMO_API_KEY_ID + KALSHI_DEMO_PRIVATE_KEY exist
+#   2. repository variable KALSHI_TRADING_ENABLED = "1"
+#   3. the order passes the executor's own checks (in-scope ticker, notional cap, no dupes)
+# Without them this workflow is a read-only reporter and dry-run validator.
+
+on:
+  workflow_dispatch:
+    inputs:
+      execute:
+        description: "Send the orders in data/strategy_plan.json to the DEMO exchange"
+        type: boolean
+        default: false
+  schedule:
+    - cron: "20 * * * *"   # hourly portfolio refresh
+  push:
+    branches: [main]
+    paths:
+      - "tools/portfolio.py"
+      - "tools/analyze.py"
+      - "data/strategy_plan.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kalshi-portfolio
+  cancel-in-progress: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install --quiet cryptography
+
+      - name: Portfolio snapshot (signed)
+        env:
+          KALSHI_DEMO_API_KEY_ID: ${{ secrets.KALSHI_DEMO_API_KEY_ID }}
+          KALSHI_DEMO_PRIVATE_KEY: ${{ secrets.KALSHI_DEMO_PRIVATE_KEY }}
+        run: |
+          if [ -z "$KALSHI_DEMO_API_KEY_ID" ]; then
+            echo "::notice title=Read-only mode::No demo API key configured. Writing an explicit 'not configured' state instead of invented figures."
+          fi
+          python tools/portfolio.py
+
+      - name: Trade analysis and strategies
+        run: python tools/analyze.py
+
+      - name: Execution - dry run or live (demo)
+        env:
+          KALSHI_DEMO_API_KEY_ID: ${{ secrets.KALSHI_DEMO_API_KEY_ID }}
+          KALSHI_DEMO_PRIVATE_KEY: ${{ secrets.KALSHI_DEMO_PRIVATE_KEY }}
+          KALSHI_TRADING_ENABLED: ${{ vars.KALSHI_TRADING_ENABLED || '0' }}
+          KALSHI_MAX_NOTIONAL_USD: ${{ vars.KALSHI_MAX_NOTIONAL_USD || '25' }}
+          KALSHI_DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.execute) && '0' || '1' }}
+        run: python tools/execute_strategy.py
+
+      - name: Summarise
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          for name in ("portfolio", "analysis", "executions"):
+              p = pathlib.Path("data") / f"{name}.json"
+              if not p.exists():
+                  print(f"{name}: missing"); continue
+              d = json.loads(p.read_text())
+              if name == "portfolio":
+                  print("portfolio authenticated:", d.get("authenticated"),
+                        "positions:", len(d.get("positions") or []),
+                        "fills:", len(d.get("fills") or []))
+              elif name == "analysis":
+                  print("analysis verdict:", d.get("verdict"),
+                        "fills:", (d.get("totals") or {}).get("fills"))
+              else:
+                  print("executions mode:", d.get("mode"),
+                        "results:", len(d.get("results") or []))
+          PY
+
+      - name: Commit reporting artefacts
+        run: |
+          git config user.name  "kalshi-demo-bot"
+          git config user.email "kalshi-demo-bot@users.noreply.github.com"
+          git add data/portfolio.json data/analysis.json data/executions.json
+          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+          git commit -m "data: portfolio + analysis $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase --autostash origin main
+          git push origin HEAD:main

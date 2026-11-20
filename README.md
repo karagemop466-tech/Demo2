@@ -1,15 +1,72 @@
 # Kalshi Demo Dashboard
 
-Live GitHub Pages dashboard for Kalshi **demo** markets in five topics only:
-gas prices, elections, culture, crypto, golf.
+A live, sourced dashboard for Kalshi **demo** markets in five topics only — **gas prices,
+elections, culture, crypto, golf**. It ranks the highest-dollar live events, charts contract price
+against time with selectable windows, shows how many contracts are available at each price, tracks
+every event until it resolves **yes** or **no**, reports demo-account performance, categorises
+trades and proposes strategies only when the evidence supports them.
 
-- **Landing / Dashboard:** `index.html` — live markets ranked by notional, price chart (time vs contract price), orderbook liquidity, resolved (yes/no) tracking.
-- **Subpages:** `pages/` — Executive Summary, Gas, Elections, Culture, Crypto, Golf, Portfolio & Trading, Analysis, Suggestions, Questions, Verification, Flagged for Review, Sources.
-- **Demo API:** `https://external-api.demo.kalshi.co/trade-api/v2` (REST) and `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` (WS). See `pages/sources.html`.
-- **Trading:** paste your own demo API Key ID + private key on the Portfolio page. Keys stay in your browser and are signed in-browser (RSA-PSS/SHA-256 or Ed25519). Never commit keys.
+**Site:** https://karagemop466-tech.github.io/Demo2/
 
-## Run locally
-Open `index.html` in a browser (live fetch happens client-side). Or serve: `python3 -m http.server 8000`.
+Demo environment only. Mock funds. Not investment advice.
 
-## Deploy
-GitHub Pages via `.github/workflows/pages.yml` (deploy from `main`).
+## Pages
+
+| Page | What it answers |
+|------|-----------------|
+| `index.html` — Dashboard | Ranked in-scope markets, price-vs-time chart (60 s → 7 d), order-book depth, recent resolutions |
+| `pages/executive-summary.html` | The whole build in one screen, plus what is still open |
+| `pages/gas.html` … `golf.html` | One page per topic: live markets, resolved outcomes, series in scope |
+| `pages/resolutions.html` | Everything settled, with the official yes/no result |
+| `pages/portfolio.html` | Demo balance, positions, fills, executions |
+| `pages/analysis.html` | Cost/payout/realised P&L per fill, five categorisations, strategy candidates |
+| `pages/suggestions.html` | Eight proposals to review and choose between before anything changes |
+| `pages/questions.html` | Ten questions, what is known, what is missing, how to find it |
+| `pages/api-reference.html` | Every endpoint used, verified line by line against official docs |
+| `pages/verification.html` | Claim → official source → how it was checked → status, plus the live API log |
+| `pages/flagged.html` | Irregularities and judgement calls, with mitigations |
+| `pages/repo-review.html` | What was wrong in the repo before and what changed |
+| `pages/sources.html` | All official sources |
+
+## How the data flows
+
+```
+GitHub Actions (every 10 min)            static site (GitHub Pages)
+tools/collector.py  ──► data/*.json ──►  pages read the snapshot
+   │  official demo Trade API            no secrets in the browser
+   └─ writes an HTTP log per request      missing values render as "—"
+```
+
+The authoring sandbox cannot reach `external-api.demo.kalshi.co` (TLS handshake fails), so
+collection runs where egress works and every snapshot carries the status code of every request.
+Nothing is hard-coded into the HTML.
+
+## Trade execution
+
+Read-only by default. Three independent gates must all be open before a demo order is sent:
+
+1. repository secrets `KALSHI_DEMO_API_KEY_ID` and `KALSHI_DEMO_PRIVATE_KEY`;
+2. repository variable `KALSHI_TRADING_ENABLED=1`;
+3. the order passes the executor's checks — ticker in the collector's in-scope set, no duplicate
+   tickers, and inside the per-run notional cap (default $25).
+
+Orders use `POST /portfolio/events/orders` with the documented V2 body. The legacy
+`POST /portfolio/orders` is **not** used: it returns `410 Gone`
+([Create Order (V2)](https://docs.kalshi.com/api-reference/orders/create-order-v2)).
+
+## Local development
+
+```bash
+cd tools && python3 build_site.py && python3 build_content.py && cd ..
+python3 tools/check.py          # links, nav, data, secrets, inline JS
+python3 -m http.server 8000     # then open http://localhost:8000/
+```
+
+Regenerate the pages after editing anything in `tools/`; CI fails if the generated HTML and the
+generator disagree.
+
+## Verification policy
+
+Every table row links an official source. If a value cannot be confirmed from an official Kalshi
+source it is left blank and flagged rather than inferred. Open items live on
+`pages/flagged.html` and `pages/questions.html`.

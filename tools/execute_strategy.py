@@ -35,7 +35,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from collector import DATA, DEMO_REST, signer_from_env  # noqa: E402
 
-MAX_NOTIONAL_PER_RUN = float(os.environ.get("KALSHI_MAX_NOTIONAL_USD", "25"))
+# Caps are taken from the plan file when present (data/strategy_plan.json -> run_limits),
+# and can only be tightened by the environment, never loosened.
+DEFAULT_MAX_NOTIONAL = 25.0
 DRY_RUN = os.environ.get("KALSHI_DRY_RUN", "1") not in ("0", "false", "False")
 
 
@@ -71,6 +73,13 @@ def main() -> int:
         return 0
 
     plan = json.loads(plan_path.read_text())
+    limits = plan.get("run_limits") or {}
+    max_notional = DEFAULT_MAX_NOTIONAL
+    if limits.get("max_notional_usd") is not None:
+        max_notional = float(limits["max_notional_usd"])
+    # the environment may only tighten the cap
+    max_notional = min(max_notional, float(os.environ.get("KALSHI_MAX_NOTIONAL_USD", max_notional)))
+    max_orders = int(limits.get("max_orders_per_run") or 10)
     snap_path = DATA / "snapshot.json"
     snap = json.loads(snap_path.read_text()) if snap_path.exists() else {}
     in_scope = {m["market_ticker"]: m for m in snap.get("markets") or []}
@@ -98,13 +107,15 @@ def main() -> int:
             note = {"skipped": "duplicate ticker in one run"}
         elif count <= 0:
             note = {"skipped": "count must be positive"}
+        elif len([r for r in results if r.get("mode") == "live_demo"]) >= max_orders:
+            note = {"skipped": f"max_orders_per_run ({max_orders}) reached"}
         elif price is None:
             note = {"skipped": "no price supplied"}
         else:
             yes_px = float(price)
             notional = count * (yes_px if side == "yes" else 1 - yes_px)
-            if spent + notional > MAX_NOTIONAL_PER_RUN:
-                note = {"skipped": f"run notional cap ${MAX_NOTIONAL_PER_RUN} would be exceeded",
+            if spent + notional > max_notional:
+                note = {"skipped": f"run notional cap ${max_notional} would be exceeded",
                         "notional": round(notional, 4)}
 
         if note:
@@ -141,14 +152,15 @@ def main() -> int:
         "mode": "dry_run" if DRY_RUN else "live_demo",
         "endpoint": DEMO_REST + "/portfolio/events/orders",
         "endpoint_doc": "https://docs.kalshi.com/api-reference/orders/create-order-v2.md",
-        "run_notional_cap_usd": MAX_NOTIONAL_PER_RUN,
+        "run_notional_cap_usd": max_notional,
+        "max_orders_per_run": max_orders,
         "planned_notional_usd": round(spent, 4),
         "results": results,
     }
     (DATA / "executions.json").write_text(json.dumps(out, indent=1) + "\n")
     ok = sum(1 for r in results if r.get("ok"))
     skipped = sum(1 for r in results if "skipped" in r)
-    print(f"execution: mode={out['mode']} sent_ok={ok} skipped={skipped} cap=${MAX_NOTIONAL_PER_RUN}")
+    print(f"execution: mode={out['mode']} sent_ok={ok} skipped={skipped} cap=${max_notional}")
     return 0
 
 
