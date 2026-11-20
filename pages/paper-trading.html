@@ -47,7 +47,7 @@ verdict is withheld until at least 10 settled trades &mdash; below that the cell
 <p class="lead">Entry and exit prices are the official ask fields of the market at the moment of the
 run. A position is settled from the official settlement value when the market has resolved, and left
 open with a review flag otherwise &mdash; the desk does not guess a settlement.</p><div class="empty">No positions have been opened yet. On the published snapshot the desk matched no market whose posted ask was executable &mdash; see &ldquo;Why so few (or no) fills&rdquo; above.</div>
-<h2>Run history</h2><div class="tablewrap "><table><thead><tr><th class="num">Run</th><th>When (UTC)</th><th class="num">Opened</th><th class="num">Settled</th><th class="num">Cash</th><th class="num">Equity</th><th>Snapshot used</th></tr></thead><tbody><tr><td class="num"><span class="num">None</span></td><td></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num">$0.00</span></td><td></td></tr></tbody></table></div>
+<h2>Run history</h2><div class="tablewrap "><table><thead><tr><th class="num">Run</th><th>When (UTC)</th><th class="num">Opened</th><th class="num">Settled</th><th class="num">Cash</th><th class="num">Equity</th><th>Snapshot used</th><th>Source</th></tr></thead><tbody><tr><td class="num"><span class="num">None</span></td><td></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num">$0.00</span></td><td></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> <span class="muted">(prices)</span></td></tr></tbody></table></div>
 <h2>Method and assumptions</h2>
 <p class="lead">What the desk takes as given, and where each number comes from. Anything that
 cannot be confirmed is left blank and flagged above rather than estimated.</p>
@@ -84,8 +84,12 @@ exists in this repository, so the account itself stays &ldquo;not configured&rdq
 <td><span class="pill flag">not the demo account</span></td>
 <td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">api_keys</a></td></tr>
 <tr><td>Verification</td><td>The desk's arithmetic is checked by a hand-computed offline fixture
-(<code>python3 tools/paper_trade.py --selftest</code>), which is the CI gate for this page.</td>
-<td>Automated, offline</td><td><a href="../.github/workflows/refresh-data.yml">refresh-data.yml</a></td></tr>
+(<code>python3 tools/paper_trade.py --selftest</code>), which is the CI gate for this page; the
+fixture asserts the sizing, the six-decimal fee rounding and both settlement sides against numbers
+computed by hand.</td>
+<td>Automated, offline</td>
+<td><a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">fee rounding</a>,
+<a href="../.github/workflows/refresh-data.yml">refresh-data.yml</a></td></tr>
 </tbody></table></div>
 <p class="lead">Reproduce: <code>python3 tools/paper_trade.py --dry-run</code> prints what the next run
 would do without writing anything; <code>python3 tools/paper_trade.py</code> advances the ledger and

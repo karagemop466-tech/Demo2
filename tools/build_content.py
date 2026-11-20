@@ -964,12 +964,22 @@ makes. This is the provenance for every figure in the dashboard tables.</p>
 <div class="kpis" id="logKpis"></div>
 <div id="apiLog"></div>
 <h2>What is deliberately <i>not</i> claimed</h2>
-""" + table(["Not claimed", "Why not"], [
- ["That demo prices predict production prices", "Kalshi documents that demo prices may not reflect real markets."],
- ["A dollar-volume figure presented as exact", "No such field exists in the Trade API; the dashboard labels its figure an estimate."],
- ["Ask-side order-book depth as a raw field", "The API returns bids only; the ask side is derived as 1 \u2212 p and labelled."],
- ["A strategy derived from a handful of fills", "The analysis refuses to emit below 5 resolved fills."],
- ["Portfolio figures without credentials", "\u201cNo key\u201d and \u201czero balance\u201d are different facts, and are shown differently."],
+""" + table(["Not claimed", "Why not", "Official source"], [
+ ["That demo prices predict production prices",
+  "Kalshi documents that demo prices may not reflect real markets.",
+  src("getting_started/demo_env", "demo_env")],
+ ["A dollar-volume figure presented as exact",
+  "No such field exists in the Trade API; the dashboard labels its figure an estimate.",
+  src("api-reference/market/get-markets", "get-markets")],
+ ["Ask-side order-book depth as a raw field",
+  "The API returns bids only; the ask side is derived as 1 - p and labelled.",
+  src("api-reference/market/get-market-orderbook", "get-market-orderbook")],
+ ["A strategy derived from a handful of fills",
+  "The analysis refuses to emit below 5 resolved fills, so no rule is stated on a small sample.",
+  src("getting_started/market_settlement", "market_settlement")],
+ ["Portfolio figures without credentials",
+  "\u201cNo key\u201d and \u201czero balance\u201d are different facts, and are shown differently.",
+  src("getting_started/api_keys", "api_keys")],
 ]) + "</div>"
     js = r"""
 <script>
@@ -1066,7 +1076,7 @@ in the browser; the WebSocket handshake still needs signed headers a browser can
 <td>Verified 2026-11-20T12:12:40Z; the desk falls back to the snapshot stream if it is blocked</td></tr>
 <tr><td>Float comparison on the $0.10 threshold</td><td><code>1.00 - 0.90</code> evaluates to
 <code>0.09999999999999998</code>, so a strict <code>&gt;= 0.10</code> test drops a real $0.10 move.</td>
-<td><a href="session-7085e643/tests/test_alerts.cjs">reproducing test</a> (node)</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a> (the price fields) &middot; <a href="session-7085e643/tests/test_alerts.cjs">reproducing test</a> (node)</td>
 <td>Verified 2026-11-20 &mdash; both the alert desk and the chart's jump markers now compare with a
 1e-9 tolerance</td></tr>
 </tbody></table></div>
@@ -1478,7 +1488,10 @@ open with a review flag otherwise &mdash; the desk does not guess a settlement.<
                      r.get("snapshot_generated_at_utc", "")]
                     for r in runs[-20:]]
             body += table(["Run", "When (UTC)", "Opened", "Settled", "Cash", "Equity",
-                           "Snapshot used"], rows, num_cols={0, 2, 3, 4, 5})
+                           "Snapshot used", "Source"],
+                           [r + [f'<a href="{DOCS}/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>'
+                                 ' <span class="muted">(prices)</span>'] for r in rows],
+                           num_cols={0, 2, 3, 4, 5})
 
     body += f"""
 <h2>Method and assumptions</h2>
@@ -1517,8 +1530,12 @@ exists in this repository, so the account itself stays &ldquo;not configured&rdq
 <td><span class="pill flag">not the demo account</span></td>
 <td><a href="{DOCS}/getting_started/api_keys" target="_blank" rel="noopener">api_keys</a></td></tr>
 <tr><td>Verification</td><td>The desk's arithmetic is checked by a hand-computed offline fixture
-(<code>python3 tools/paper_trade.py --selftest</code>), which is the CI gate for this page.</td>
-<td>Automated, offline</td><td><a href="../.github/workflows/refresh-data.yml">refresh-data.yml</a></td></tr>
+(<code>python3 tools/paper_trade.py --selftest</code>), which is the CI gate for this page; the
+fixture asserts the sizing, the six-decimal fee rounding and both settlement sides against numbers
+computed by hand.</td>
+<td>Automated, offline</td>
+<td><a href="{DOCS}/getting_started/fee_rounding" target="_blank" rel="noopener">fee rounding</a>,
+<a href="../.github/workflows/refresh-data.yml">refresh-data.yml</a></td></tr>
 </tbody></table></div>
 <p class="lead">Reproduce: <code>python3 tools/paper_trade.py --dry-run</code> prints what the next run
 would do without writing anything; <code>python3 tools/paper_trade.py</code> advances the ledger and
