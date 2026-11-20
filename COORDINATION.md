@@ -800,20 +800,32 @@ Sources to verify against (official only): https://docs.kalshi.com/api-reference
 
 Session owner: `0cb69749`. Base: `4c13151` (PR #31 merge). This session acts as final integration for its own scope and does not edit other sessions' subsites (`dashboard/`, `verified/`, `site/`, `intelligence/`, `instrument-panel/`, `live/`, `pages/` content, `assets/`, `app.js`, `style.css`).
 
-**Scope (additive only, non-overlapping):** new `pulse/` subsite + `tools/pulse_*.py` engines + `data/pulse_*.json` outputs + additive nav entry in `tools/build_site.py` (one line) + this section. No other session's page content is rewritten.
+**Scope (additive only):** new `pulse/` subsite + `tools/pulse_*.py` engines + `data/pulse_*.json` outputs + additive nav entry in `tools/build_site.py` + this section. Later integration amendments P-8/P-9 add only the scheduled Pulse refresh in `.github/workflows/pages.yml` and generator reproducibility for the already-merged sharp-jump UI; cross-scope overlaps are logged below.
 
 | # | Task | Status | Owner | Files touched |
 |---|------|--------|-------|---------------|
-| P-1 | Claim + push | in progress | 0cb69749 | `COORDINATION.md` |
-| P-2 | Sharp-jump detector (≥$0.10) with cause links | unclaimed | 0cb69749 | `tools/pulse_jumps.py`, `data/pulse_jumps.json` |
-| P-3 | Automated simulated-trading engine + backtest + categorisation | unclaimed | 0cb69749 | `tools/pulse_simulate.py`, `data/pulse_simulated.json`, `data/pulse_backtest.json` |
-| P-4 | Pulse subsite (landing, live chart, jumps, simulated, resolved, verification, flagged) | unclaimed | 0cb69749 | `pulse/*.html`, `pulse/assets/*` |
-| P-5 | Executive summary refresh with verified numbers | unclaimed | 0cb69749 | `docs/EXECUTIVE_SUMMARY.md` (append section), `pulse/index.html` summary |
-| P-6 | Verification (link check, JS/Python checks, source-link audit) | unclaimed | 0cb69749 | `pulse/verification.html`, this section |
-| P-7 | Integration: nav link, regen check, PR → main, merge, Pages confirm | unclaimed | 0cb69749 | `tools/build_site.py` (1 line), `index.html`+`pages/*.html` regen, PR record |
+| P-1 | Claim + push | done | 0cb69749 | `COORDINATION.md` |
+| P-2 | Sharp-jump detector (≥$0.10) with cause-context links | done | 0cb69749 | `tools/pulse_jumps.py`, `data/pulse_jumps.json` |
+| P-3 | Automated paper simulator + backtest + categorisation | done | 0cb69749 | `tools/pulse_simulate.py`, `data/pulse_simulated.json`, `data/pulse_backtest.json` |
+| P-4 | Pulse subsite (landing, live chart, jumps, simulated, resolved, verification, flagged) | done | 0cb69749 | `pulse/*.html`, `pulse/assets/*` |
+| P-5 | Executive summary refresh with verified numbers | done | 0cb69749 | `docs/EXECUTIVE_SUMMARY.md` (append section), `pulse/index.html` summary |
+| P-6 | Verification (link check, JS/Python checks, source-link audit) | done | 0cb69749 | `pulse/verification.html`, this section |
+| P-7 | Integration: nav link, regen check, PR → main, merge, Pages confirm | in progress | 0cb69749 | `tools/build_site.py` (NAV), generated nav, PR/deploy record |
+| P-8 | Refresh Pulse outputs during scheduled collection | in progress | 0cb69749 | `.github/workflows/pages.yml` (additive step/staging) |
+| P-9 | Restore generator reproducibility for merged sharp-jump UI without dropping it | in progress | 0cb69749 | `tools/build_site.py`, `tools/build_content.py`, generated outputs |
 
 Rules honored: claim committed+pushed before edits; small frequent commits; `git pull --rebase` before push; conflicts resolved without discarding others' work; nothing marked verified without an official source link; flagged items do not block merge.
 
 ### P-8 claim amendment — scheduled Pulse refresh
 
 Session `0cb69749` expands its integration scope to add a small additive step to `.github/workflows/pages.yml` and commit the generated `data/pulse_*.json` outputs during the existing scheduled collector run. Reason: otherwise Pulse tables, jumps, and paper positions would remain pinned to this initial snapshot although the instrument collector refreshes every 15 minutes. The workflow's prior owner (session `64df4faa`, W-9) is complete/merged; no active claim for this workflow exists. This amendment is committed and pushed before editing the workflow. Scope addition: `.github/workflows/pages.yml` only, additive command and artifact staging; no other workflow behavior changed.
+
+### P-9 claim — generator reproducibility repair
+
+Claimed by session `0cb69749` before editing generator sources. PR #35 from session `arena/e36292f6` is already merged to `main`, but its `Build and check the site` status is failure. Running the documented generator commands reproduces the issue: `tools/build_site.py` removes the merged sharp-move card/table from `index.html`, while `tools/build_content.py` removes additions in the generated flagged/suggestions/verification pages. P-9 will move those already-merged additions into their existing generator sources and regenerate output without dropping their behavior. This is integration repair of merged work, not an edit to a live owner's unmerged branch. Files: `tools/build_site.py`, `tools/build_content.py`, and generated output only.
+
+### Cross-scope coordination discovered during integration
+
+- **PR #32 / session `8b9a46b4`:** its isolated `session-8b9a46b4/` branch implements similar jump and backtest features in separate files. The Pulse P-2/P-3 implementations are already integrated in `pulse/`; do not publish both user-facing copies without consolidating. Request to the final integration owner: choose one canonical site and close or explicitly document the redundant isolated implementation; this session will not edit PR #32's files or merge it blindly.
+- **PR #34 / session `21eed9ff`:** touches `docs/EXECUTIVE_SUMMARY.md`, also used by P-5. Our P-5 change is appended as section 8; final integration must preserve both sessions' documentation rather than overwrite either. No files from the PR #34 scope are edited here.
+- **Rebase conflict:** rebasing onto `origin/main` (`e79ede8`, including PR #35) conflicted only in `COORDINATION.md` because both this session and e36292f6 appended session records. Resolved by preserving both complete session sections and all earlier board history; no content discarded.
