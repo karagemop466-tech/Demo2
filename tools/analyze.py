@@ -26,10 +26,13 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import os
 from collections import defaultdict
 from pathlib import Path
 
-DATA = Path(__file__).resolve().parent.parent / "data"
+# DATA_DIR lets the CI maths test run against a throwaway fixture directory instead of the
+# real snapshot, so a test can never leave data behind that the site would then serve.
+DATA = Path(os.environ.get("DATA_DIR") or (Path(__file__).resolve().parent.parent / "data"))
 
 
 def f(x, default=0.0) -> float:

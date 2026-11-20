@@ -46,12 +46,12 @@ jobs:
         run: python -m py_compile tools/collector.py tools/portfolio.py tools/analyze.py tools/execute_strategy.py
 
       - name: Analysis maths on a known fixture
+        # Runs in a temp DATA_DIR so the fixture can never be mistaken for a real snapshot
+        # by the checks in the next step.
         run: |
           python - <<'PY'
           import json, os, subprocess, sys, tempfile, pathlib
-          root = pathlib.Path.cwd()
-          data = root / "data"
-          data.mkdir(exist_ok=True)
+          data = pathlib.Path(tempfile.mkdtemp(prefix="kalshi-fixture-"))
           snap = {
             "markets": [
               {"market_ticker": "T-YES", "topic": "golf", "result": "yes", "status": "settled"},
@@ -76,7 +76,8 @@ jobs:
           }
           (data / "snapshot.json").write_text(json.dumps(snap))
           (data / "portfolio.json").write_text(json.dumps(port))
-          subprocess.run([sys.executable, "tools/analyze.py"], check=True)
+          env = dict(os.environ, DATA_DIR=str(data))
+          subprocess.run([sys.executable, "tools/analyze.py"], check=True, env=env)
           a = json.loads((data / "analysis.json").read_text())
           # expected: fill 1 costs 4.00, pays 10.00, fee .05 -> +5.95
           #           fill 2 costs 3.00, pays 10.00, fee .05 -> +6.95
@@ -86,7 +87,6 @@ jobs:
           assert a["totals"]["wins"] == 2 and a["totals"]["losses"] == 0, a["totals"]
           print("analysis fixture OK:", got)
           PY
-          git checkout -- data 2>/dev/null || true
 
       - name: Link, nav, data, secret and script checks
         run: python tools/check.py
