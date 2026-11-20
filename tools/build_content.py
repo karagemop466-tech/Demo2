@@ -707,6 +707,11 @@ QUESTIONS = [
   "Answered partly: the collector publishes every tag and category it sees with counts, and every "
   "Gas-tagged series. A human must choose whether to widen the mapping.",
   "api-reference/market/get-series-list"),
+ ("Q11", "Who owns the running cost and the secrets?",
+  "GitHub Actions runs the collector; Pages hosts the site; a relay (if chosen) needs hosting.",
+  "An owner for the workflow, the key rotation, and any future relay.",
+  "Operational question for the repo owner.",
+  "getting_started/api_keys"),
  ("Q12", "Which subsite is authoritative?",
   "Parallel sessions produced three independent builds: <code>/</code> (this one, CI-checked), "
   "<code>/dashboard/</code> and <code>/verified/</code>. All three were preserved during the merge "
@@ -716,11 +721,6 @@ QUESTIONS = [
   "Nothing is deleted unilaterally; the README table names each path and its origin, and this "
   "question records the choice as the owner's to make.",
   "getting_started/api_environments"),
- ("Q11", "Who owns the running cost and the secrets?",
-  "GitHub Actions runs the collector; Pages hosts the site; a relay (if chosen) needs hosting.",
-  "An owner for the workflow, the key rotation, and any future relay.",
-  "Operational question for the repo owner.",
-  "getting_started/api_keys"),
 ]
 
 
