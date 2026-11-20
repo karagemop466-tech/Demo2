@@ -106,7 +106,7 @@ ADJACENT = {
     "note": "Kalshi files these under the Entertainment category, not Culture. Shown in a separate table.",
 }
 
-MAX_MARKETS_PER_TOPIC = 400          # metadata copies, per topic
+MAX_MARKETS_PER_TOPIC = 500          # metadata copies, per topic
 MAX_ORDERBOOKS_PER_TOPIC = 12        # live depth snapshots, per topic
 MAX_TRADE_MARKETS_PER_TOPIC = 3      # trade-history pulls, per topic (largest markets)
 MAX_RESOLVED_PER_TOPIC = 400         # settled markets copied per topic
@@ -366,6 +366,20 @@ def collect_markets(series_ticker, status):
     return j.get("markets", []) or [], url
 
 
+def collect_events_paged(first_url, max_pages=12):
+    """Follow the cursor for an events query. Returns (rows, url_of_first_page)."""
+    rows, url, pages = [], first_url, 0
+    while url and pages < max_pages:
+        j, st, _ = _req(url)
+        if st != 200 or not j:
+            break
+        rows.extend(j.get("events") or [])
+        cur = j.get("cursor") or ""
+        url = f"{first_url}&cursor={urllib.parse.quote(cur)}" if cur else ""
+        pages += 1
+    return rows, first_url
+
+
 def collect_markets_paged(first_url, max_pages=4):
     """Follow the cursor for a markets query. Returns (rows, url_of_first_page)."""
     rows, url, pages = [], first_url, 0
@@ -470,75 +484,65 @@ def main():
     truncated = {}
     series_by_ticker = {}
 
+    # ---- one shared open-market stream and one events query for the whole run ----
+    # /markets has no category filter, so scoping is done by intersecting this stream with
+    # each topic's series list. Fetching it once keeps the run inside a 15-minute slot and
+    # makes every topic read the same instant of the book.
+    open_markets, open_markets_url = collect_markets_paged(
+        f"{API}/markets?status=open&limit=1000&mve_filter=exclude", max_pages=20)
+    events_raw, events_url = collect_events_paged(f"{API}/events?status=open&limit=200", max_pages=20)
+    for e in events_raw:
+        event_titles[e.get("event_ticker")] = {
+            "title": e.get("title"), "sub_title": e.get("sub_title"),
+            "series_ticker": e.get("series_ticker"), "event_ticker": e.get("event_ticker"),
+            "source_url": events_url,
+        }
+
     for topic in SCOPE:
         tid = topic["id"]
         mkts = []
         series_list = select_series(found.get(tid, []), MAX_SERIES_PER_TOPIC)
         truncated[tid] = max(0, len(found.get(tid, [])) - len(series_list))
 
-        def fetch_series(s):
-            """(series, open markets, events, urls) for one series."""
-            st = s.get("ticker")
-            evs, ev_url = collect_events(st, "open")
-            om, om_url = collect_markets(st, "open")
-            return s, om, evs, om_url, ev_url
+        # scope = this topic's series list intersected with the shared open-market stream
+        in_scope = {str(s0.get("ticker")) for s0 in found.get(tid, [])}
+        covered = set()
+        for m in open_markets:
+            stk = str(m.get("series_ticker") or "")
+            if not stk:
+                ev = str(m.get("event_ticker") or "")
+                stk = ev.rsplit("-", 1)[0] if "-" in ev else ev
+            if stk not in in_scope:
+                continue
+            m2 = dict(m)
+            m2["series_ticker"] = stk
+            m2["_source_markets_url"] = open_markets_url
+            m2["_series"] = series_by_ticker.get(stk) or next(
+                (x for x in found.get(tid, []) if x.get("ticker") == stk), None)
+            mkts.append(m2)
+            covered.add(stk)
 
-        results = []
-        with ThreadPoolExecutor(max_workers=SERIES_WORKERS) as pool:
-            futs = {pool.submit(fetch_series, s): s for s in series_list}
-            for f in as_completed(futs):
-                try:
-                    results.append(f.result())
-                except Exception as e:  # a single series failing never sinks the run
-                    _errors.append({"url": "series " + str(futs[f].get("ticker")), "status": None,
-                                    "detail": f"{type(e).__name__}: {e}"})
-
-        results.sort(key=lambda r: str(r[0].get("ticker")))
-        for s, om, evs, om_url, ev_url in results:
-            st_ticker = s.get("ticker")
-            series_rows.append(slim_series(s, tid))
-            for e in evs:
-                event_titles[e.get("event_ticker")] = {
-                    "title": e.get("title"),
-                    "sub_title": e.get("sub_title"),
-                    "series_ticker": e.get("series_ticker"),
-                    "event_ticker": e.get("event_ticker"),
-                    "source_url": ev_url,
-                }
+        # a series in scope that the stream never mentioned is queried once, so a quiet
+        # series is never mistaken for an absent one
+        missing = [x for x in found.get(tid, []) if str(x.get("ticker")) not in covered]
+        for s0 in missing[:40]:
+            om, om_url = collect_markets(str(s0.get("ticker")), "open")
             for m in om:
-                m["_source_markets_url"] = om_url
-                m["_series"] = s
-                mkts.append(m)
-            series_by_ticker[st_ticker] = s
+                m2 = dict(m)
+                m2["series_ticker"] = s0.get("ticker")
+                m2["_source_markets_url"] = om_url
+                m2["_series"] = s0
+                mkts.append(m2)
 
-        # resolved markets: ONE paginated query per topic, not one per series
-        settled_url = f"{API}/markets?status=settled&limit=1000&mve_filter=exclude"
-        settled, settled_url = collect_markets_paged(settled_url, max_pages=4)
-        in_scope_series = {s.get("ticker") for s in series_list}
-        added = 0
-        for m in settled:
-            ev = str(m.get("event_ticker") or "")
-            st_guess = ev.rsplit("-", 1)[0] if "-" in ev else ev
-            s_obj = series_by_ticker.get(st_guess)
-            if s_obj is None:
-                continue          # cannot attribute it to an in-scope series -> not shown as in scope
-            if added >= MAX_RESOLVED_PER_TOPIC:
-                break
-            row = {k: m.get(k) for k in MARKET_FIELDS}
-            row.update(
-                {
-                    "topic": tid,
-                    "series_ticker": s_obj.get("ticker"),
-                    "series_title": s_obj.get("title"),
-                    "event_title": (event_titles.get(m.get("event_ticker")) or {}).get("title"),
-                    "source_url": settled_url,
-                    "source_market_url": ENDPOINTS["market"].format(ticker=urllib.parse.quote(str(m.get("ticker")))),
-                    "series_attribution": "event_ticker prefix match (see note on Verification)",
-                }
-            )
-            row.update(derive(m))
-            resolved_rows.append(row)
-            added += 1
+        for s0 in found.get(tid, []):
+            series_by_ticker.setdefault(str(s0.get("ticker")), s0)
+        for s0 in mkts:
+            ser = s0.get("_series")
+            if ser:
+                series_by_ticker[str(ser.get("ticker"))] = ser
+        for s0 in found.get(tid, []):
+            if str(s0.get("ticker")) in covered or s0 in missing[:40]:
+                series_rows.append(slim_series(s0, tid))
 
         mkts.sort(key=lambda m: (derive(m)["open_interest_usd"] or -1), reverse=True)
         mkts = mkts[:MAX_MARKETS_PER_TOPIC]
