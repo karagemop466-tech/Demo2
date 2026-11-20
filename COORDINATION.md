@@ -119,6 +119,6 @@ Note: this session's rules name the branch `arena/6822d767-demo2` and allow work
 
 | Task | Status | Owner | Files touched |
 |------|--------|-------|---------------|
-| I-1 Integrate verified research pages into primary navigation; run final build, link, security, and deployment checks | in progress | ba6fce13 | `index.html`, `COORDINATION.md` |
+| I-1 Integrate verified research pages into primary navigation; remove unsafe public credential/trading UI; run final build, link, security, and deployment checks | in progress | ba6fce13 | `index.html`, `pages/portfolio.html`, `assets/app.js`, `COORDINATION.md` |
 
-Claim scope is limited to the root landing page and this board. Existing category/research content is retained as-is; no independent data values are added. Existing demo account limitations and non-verified ranking metric will remain explicitly flagged.
+Claim covers the landing page, public demo portfolio page and its shared script, and this board. Existing category/research data is retained as-is; no independent market values are added. Existing demo account limitations and non-verified ranking metric will remain explicitly flagged. The legacy portfolio form's localStorage/signing/trading behavior is being removed because public static site private-key exposure is unsafe.
