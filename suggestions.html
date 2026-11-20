@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suggestions — Kalshi Demo Intelligence</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="shell">
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="k">◈</span> Kalshi Demo Intelligence</a>
+    <span class="tagline">Verified demo-exchange analytics · session arena-ddc587ae</span>
+    <div class="nav-section">Start</div>
+    <a class="item" href="index.html">🏠 Overview</a>
+    <a class="item" href="executive-summary.html">📄 Executive Summary</a>
+    <div class="nav-section">Monitor</div>
+    <a class="item" href="dashboard.html">📊 Live Dashboard</a>
+    <a class="item" href="events.html">🎯 Events &amp; Resolutions</a>
+    <div class="nav-section">Account</div>
+    <a class="item" href="portfolio.html">💼 Portfolio &amp; Analysis</a>
+    <a class="item" href="trading.html">🧪 Trading</a>
+    <div class="nav-section">Review</div>
+    <a class="item active" href="suggestions.html">💡 Suggestions</a>
+    <a class="item" href="questions.html">❓ Questions &amp; Answers</a>
+    <a class="item" href="flagged.html">🚩 Flagged for Review</a>
+  </nav>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <h1>Suggestions</h1>
+        <div class="sub">Ideas that improve decisions made with this site — for the site itself and for anyone relying on it. <b>Nothing ships without passing the review workflow:</b> each suggestion has a state, and the implementation step is gated on the decision being made.</div>
+      </div>
+      <div class="badges"><span class="badge flag">workflow: For review → Decided → Implemented / Rejected</span></div>
+    </div>
+
+    <div class="panel">
+      <h2>How to use this queue</h2>
+      <div class="reqbox">
+        <b>Review</b> (default for every item) → <b>Decide</b> (record decision + rationale on this page) → <b>Implement</b> (small frequent commits, source links preserved) or <b>Reject</b> (reason recorded, nothing built).
+        Items marked <i>Decision input</i> list the exact information required before the decision can be made — see also the <a href="questions.html">Questions &amp; Answers</a> page for missing information discovery.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>For review</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>ID</th><th>Suggestion</th><th>Why it improves decisions</th><th>Decision input needed</th><th>Effort</th><th>State</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="mono">S-01</td>
+            <td><b>WebSocket relay for true tick streaming</b> — a thin authenticated proxy would let the dashboard subscribe to ticker/orderbook channels instead of REST polling.<br><span class="note">Source of constraint: <a href="https://docs.kalshi.com/getting_started/quick_start_websockets.md" target="_blank" rel="noopener">WS quickstart</a> (auth handshake headers) — browsers cannot set custom headers on WebSocket, so no in-page WS is possible.</span></td>
+            <td>Sub-second updates for the chart's Seconds view; removes polling lag (REST responses are cached and can lag “several seconds” — <a href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noopener">docs</a>).</td>
+            <td>Hosting decision: GitHub Pages is static-only — does the owner accept a small serverless proxy (cost, credentials storage, who runs it)? Until then REST polling stands.</td>
+            <td>High</td><td><span class="pill">For review</span></td>
+          </tr>
+          <tr>
+            <td class="mono">S-02</td>
+            <td><b>Multi-estimator dollar-volume panel</b> — show derived estimates side by side: 24h×last, 24h×mid((bid+ask)/2), OI×last, each with explicit confidence labels.</td>
+            <td>Ranking robustness: today's single estimator (flagged F-01) can mis-order thin books; showing estimator spread reveals ranking uncertainty instead of hiding it.</td>
+            <td>Choose default estimator + whether “spread &gt; 20% → grey out rank” is desirable.</td>
+            <td>Low–Med</td><td><span class="pill">For review</span></td>
+          </tr>
+          <tr>
+            <td class="mono">S-03</td>
+            <td><b>Exhaustive cursor crawl</b> of the large topic enumerations (Elections 529 chunks, Entertainment 330, US Elections 198) with a crawl-progress UI and a “complete” badge per topic.</td>
+            <td>Turns every topic's ranking from “top among fetched” into a true global top-N — removes the biggest sampling caveat on the dashboard.</td>
+            <td>Accept ~1,000+ extra API reads at crawl time (rate budget confirmation, Q8) vs re-running periodically?</td>
+            <td>Med</td><td><span class="pill">For review</span></td>
+          </tr>
+          <tr>
+            <td class="mono">S-04</td>
+            <td><b>Resolution &amp; price-move alerts</b> — browser notifications when a watched market's <code>result</code> flips non-empty, price moves ≥ threshold, or a strike enters the top rank.</td>
+            <td>Event tracking “until resolution” becomes proactive; users don't need to keep the tab open staring at tables.</td>
+            <td>Which thresholds matter (default proposal: price ±5¢, any resolution, new topic leader)? Notification permission UX acceptable?</td>
+            <td>Med</td><td><span class="pill">For review</span></td>
+          </tr>
+          <tr>
+            <td class="mono">S-05</td>
+            <td><b>Strategy backtest harness</b> — once fills exist (Q1), replay strategy templates against historical candlesticks/trades to report win-rate and P&amp;L with confidence intervals.</td>
+            <td>Prevents judging strategies on anecdotes; makes the “strategy effectiveness intentionally unjudged” caveat resolvable with data.</td>
+            <td>Needs Q1 answered first (credentials → fills), plus minimum sample size policy (e.g. n≥50 fills per category).</td>
+            <td>Med–High</td><td><span class="pill">For review</span> · blocked by Q1</td>
+          </tr>
+          <tr>
+            <td class="mono">S-06</td>
+            <td><b>Automated link &amp; source verification</b> — build-time script that walks every table definition, extracts source URLs and page links, and fails on dead links or rows missing a source.</td>
+            <td>“Every row has a source” is the core trust promise; manual checks rot. CI enforcement keeps it true.</td>
+            <td>Accept CI runtime adding ~1–2 min (external HEAD checks have flakiness — retry policy)?</td>
+            <td>Low</td><td><span class="pill yes">Implemented</span> — <code>scripts/linkcheck.mjs</code> run at integration; see <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">repo</a></td>
+          </tr>
+          <tr>
+            <td class="mono">S-07</td>
+            <td><b>Shareable dashboard state</b> — topic/sort/market/timeframe reflected in the URL (<code>?topic=crypto&amp;tf=sec</code>) and restored on load; last selection also persists.</td>
+            <td>Analysts share exact views (“look at this market now”) instead of re-describing them — fewer misread snapshots.</td>
+            <td>Prefer URL-only state (no localStorage) for privacy, or allow local persistence too?</td>
+            <td>Low</td><td><span class="pill">For review</span></td>
+          </tr>
+          <tr>
+            <td class="mono">S-08</td>
+            <td><b>CSV export + contrast/accessibility pass</b> — every data table downloadable as CSV (with the source-URL column preserved) for independent re-verification; audit colour contrast and keyboard navigation.</td>
+            <td>Enables external audit of the no-hallucination promise and inclusive use — decision quality improves when reviewers can check rows in a spreadsheet.</td>
+            <td>Which tables need export first (proposal: all)? Screen-reader labels priority over visual polish?</td>
+            <td>Low</td><td><span class="pill">For review</span></td>
+          </tr>
+          <tr>
+            <td class="mono">S-09</td>
+            <td><b>Multi-market comparison chart</b> — overlay 2–4 markets (normalised to % move) for cross-topic relative-strength reads (e.g. BTC hourly vs WTI hourly).</td>
+            <td>Relative movement is a decision input the single-market chart can't give; useful for cross-topic allocation conversations.</td>
+            <td>Compare by raw $ (binary prices) or normalised-to-start? Max series count?</td>
+            <td>Med</td><td><span class="pill">For review</span></td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="panel">
+      <h2>Decided (audit trail)</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>ID</th><th>Decision</th><th>Rationale</th><th>Recorded</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">D-01</td><td><b>Static snapshot fallback instead of hard-failing</b> when the browser cannot reach the demo API</td><td>GitHub Pages must stay useful under blocked-CORS/ad-blocker conditions; mode is always displayed so fallback can never masquerade as live.</td><td>2026-11-20 (build)</td></tr>
+          <tr><td class="mono">D-02</td><td><b>REST polling at 60 s</b> rather than WebSocket or sub-second loops</td><td>WS impossible in-browser without proxy (S-01); REST responses officially cached seconds-lag; keeps request volume modest while numbers still change meaningfully.</td><td>2026-11-20 (build)</td></tr>
+          <tr><td class="mono">D-03</td><td><b>Derived dollar estimator shown but never hidden as official</b></td><td>No-inference rule: estimator is useful for ranking only if its derived status is impossible to miss (column header, tooltip, F-01).</td><td>2026-11-20 (build)</td></tr>
+          <tr><td class="mono">D-04</td><td><b>Topic watchlists curated with completeness flags</b> instead of crawling 500+ chunk categories during collection</td><td>Context/time budget trade-off recorded openly; S-03 offers the full crawl later. Flags appear on every affected table.</td><td>2026-11-20 (build)</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="foot">Nothing on this page is active code unless its state says Implemented · decisions recorded here and in <a href="https://github.com/karagemop466-tech/Demo2/blob/main/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a></div>
+  </main>
+</div>
+</body>
+</html>

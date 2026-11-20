@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalshi Demo Intelligence — Overview</title>
+<link rel="stylesheet" href="assets/style.css">
+<meta name="description" content="Verified Kalshi demo exchange dashboard: live events, price charts, liquidity, portfolio analysis, suggestions and flagged items — every row sourced.">
+</head>
+<body>
+<div class="shell">
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="k">◈</span> Kalshi Demo Intelligence</a>
+    <span class="tagline">Verified demo-exchange analytics · session arena-ddc587ae</span>
+    <div class="nav-section">Start</div>
+    <a class="item active" href="index.html">🏠 Overview</a>
+    <a class="item" href="executive-summary.html">📄 Executive Summary</a>
+    <div class="nav-section">Monitor</div>
+    <a class="item" href="dashboard.html">📊 Live Dashboard</a>
+    <a class="item" href="events.html">🎯 Events &amp; Resolutions</a>
+    <div class="nav-section">Account</div>
+    <a class="item" href="portfolio.html">💼 Portfolio &amp; Analysis</a>
+    <a class="item" href="trading.html">🧪 Trading</a>
+    <div class="nav-section">Review</div>
+    <a class="item" href="suggestions.html">💡 Suggestions</a>
+    <a class="item" href="questions.html">❓ Questions &amp; Answers</a>
+    <a class="item" href="flagged.html">🚩 Flagged for Review</a>
+  </nav>
+
+  <main class="main">
+    <div class="hero">
+      <h1><span class="k">◈</span> Kalshi Demo Intelligence</h1>
+      <p>A clean, source-linked dashboard for the Kalshi <b>demo</b> exchange. It tracks the highest-activity live events in five topics — <b>gas prices, elections, culture, crypto, and golf</b> — follows them through YES/NO resolution, charts contract prices over seconds/minutes/hours, shows order-book liquidity at every price, and provides portfolio analysis, trade execution, and a review workflow for suggested changes.</p>
+      <div class="badges" style="margin-bottom:12px">
+        <span class="badge" id="modeBadge"><span class="spin"></span> <b>Checking</b> demo API…</span>
+        <span class="badge">Base <b>external-api.demo.kalshi.co</b></span>
+        <span class="badge" id="exStatusBadge">Exchange status: <b>…</b></span>
+      </div>
+      <div class="quick-links">
+        <a href="dashboard.html">→ Open live dashboard</a>
+        <a href="executive-summary.html">→ Executive summary</a>
+        <a href="flagged.html">→ Items flagged for review</a>
+        <a href="questions.html">→ Open questions</a>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="label">Topics tracked</div><div class="value">5</div><div class="note">gas · elections · culture · crypto · golf</div></div>
+      <div class="stat"><div class="label">Series in watchlist</div><div class="value" id="statSeries">…</div><div class="note">official GET /series responses</div></div>
+      <div class="stat"><div class="label">Live events captured</div><div class="value" id="statEvents">…</div><div class="note">snapshot 2026-11-20 UTC</div></div>
+      <div class="stat"><div class="label">Resolutions recorded</div><div class="value" id="statRes">…</div><div class="note">YES / NO with settlement $</div></div>
+      <div class="stat"><div class="label">Flagged for review</div><div class="value" id="statFlags">…</div><div class="note">non-blocking · see 🚩 page</div></div>
+    </div>
+
+    <div class="cards">
+      <a class="card" href="executive-summary.html"><span class="ico">📄</span><h3>Executive Summary</h3><p>What Kalshi is, the official API surfaces, verified endpoints, environment status, methodology and headline findings.</p></a>
+      <a class="card" href="dashboard.html"><span class="ico">📊</span><h3>Live Dashboard</h3><p>Highest-dollar live events per topic, price chart with seconds / minutes / hours zoom, and liquidity depth at every price.</p></a>
+      <a class="card" href="events.html"><span class="ico">🎯</span><h3>Events &amp; Resolutions</h3><p>Live events tracked until they resolve — YES or NO — with settlement value, timestamp and official source links.</p></a>
+      <a class="card" href="portfolio.html"><span class="ico">💼</span><h3>Portfolio &amp; Analysis</h3><p>Demo-account performance tracking, trade categorisation by topic and style, and strategy templates built on verified API capabilities.</p></a>
+      <a class="card" href="trading.html"><span class="ico">🧪</span><h3>Trading</h3><p>Execute orders against the demo API (V2 order shape, browser-side signing), view fills, and track resulting positions.</p></a>
+      <a class="card" href="suggestions.html"><span class="ico">💡</span><h3>Suggestions</h3><p>Improvements for better decision-making — each with effort/impact and a review → choose → implement workflow. Nothing ships without review.</p></a>
+      <a class="card" href="questions.html"><span class="ico">❓</span><h3>Questions &amp; Answers</h3><p>What we know, what we don't know, and the exact information required before any decision can reasonably be made.</p></a>
+      <a class="card" href="flagged.html"><span class="ico">🚩</span><h3>Flagged for Review</h3><p>Unverified values, API irregularities and project decisions that need a human look — with source links.</p></a>
+    </div>
+
+    <div class="panel">
+      <h2>Verification model</h2>
+      <p class="hint">"Never infer or fill in values" is enforced structurally, not just by policy.</p>
+      <div class="okbox"><b>Every table row carries a source link</b> to an official endpoint (api demo host) or official documentation page (docs.kalshi.com). Rows are rendered directly from <code>data/watchlist.json</code> and <code>data/snapshot.json</code>, whose records each embed the exact URL the values were read from.</div>
+      <div class="flagbox"><b>Unconfirmable values stay blank</b> and are rendered as <i>"— blank (unverified)"</i> in amber. Nothing is estimated, back-filled or averaged. Derived metrics (e.g. estimated dollar volume) are labelled <b>derived</b> with the formula shown, and are additionally listed on the Flagged page.</div>
+      <div class="warnbox"><b>Demo ≠ production.</b> Official docs state demo prices and behaviour "may not be reflective of those in real markets" — <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">docs.kalshi.com/getting_started/demo_env</a>. Treat all figures as demo-environment facts only.</div>
+    </div>
+
+    <div class="foot">
+      Data: <a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">Kalshi demo REST API</a> ·
+      Docs: <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a> (official) ·
+      Coordination log: <a href="https://github.com/karagemop466-tech/Demo2/blob/main/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a> ·
+      Snapshot collected 2026-11-20T11:20:09Z by session <code>arena-ddc587ae</code>.
+    </div>
+  </main>
+</div>
+<script src="assets/app.js"></script>
+<script>
+  KDS.setModeBadge(document.getElementById("modeBadge"));
+  Promise.all([KDS.getSnapshot(), KDS.getWatchlist()]).then(([s, w]) => {
+    const ex = s.exchange_status;
+    document.getElementById("exStatusBadge").innerHTML =
+      "Exchange status: <b>" + (ex.trading_active ? "TRADING ACTIVE" : "TRADING DOWN") + "</b> · index 0";
+    let series = 0;
+    (w.topics || []).forEach(t => (t.queries || []).forEach(q => series += (q.series || []).length));
+    series += ((w.topics || []).find(t => t.topic === "culture")?.series_with_volume_not_in_queries || []).length;
+    document.getElementById("statSeries").textContent = series.toLocaleString();
+    document.getElementById("statEvents").textContent = (s.events || []).length;
+    document.getElementById("statRes").textContent = (s.resolutions || []).length;
+    document.getElementById("statFlags").textContent = "16";
+  }).catch(e => { console.error(e); });
+</script>
+</body>
+</html>

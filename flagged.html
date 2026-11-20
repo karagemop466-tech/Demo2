@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flagged for Review — Kalshi Demo Intelligence</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="shell">
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="k">◈</span> Kalshi Demo Intelligence</a>
+    <span class="tagline">Verified demo-exchange analytics · session arena-ddc587ae</span>
+    <div class="nav-section">Start</div>
+    <a class="item" href="index.html">🏠 Overview</a>
+    <a class="item" href="executive-summary.html">📄 Executive Summary</a>
+    <div class="nav-section">Monitor</div>
+    <a class="item" href="dashboard.html">📊 Live Dashboard</a>
+    <a class="item" href="events.html">🎯 Events &amp; Resolutions</a>
+    <div class="nav-section">Account</div>
+    <a class="item" href="portfolio.html">💼 Portfolio &amp; Analysis</a>
+    <a class="item" href="trading.html">🧪 Trading</a>
+    <div class="nav-section">Review</div>
+    <a class="item" href="suggestions.html">💡 Suggestions</a>
+    <a class="item" href="questions.html">❓ Questions &amp; Answers</a>
+    <a class="item active" href="flagged.html">🚩 Flagged for Review</a>
+  </nav>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <h1>Flagged for Review</h1>
+        <div class="sub">Everything unverified, derived, irregular or awaiting a decision — published openly rather than hidden. Flags are non-blocking for the site, but each one stays until it is resolved or explicitly accepted. Values shown are <b>exactly</b> what official responses returned; nothing was corrected or inferred.</div>
+      </div>
+      <div class="badges"><span class="badge flag">16 open flags</span><span class="badge">last review 2026-11-20</span></div>
+    </div>
+
+    <div class="panel">
+      <h2>A · Data-quality flags (API observed)</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>ID</th><th>Item</th><th>Why flagged</th><th>What the API actually says (verbatim)</th><th>Impact / treatment</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="mono">F-03</td><td>Series <code>KXMAXSHARDINGTEST</code> (“shard”)</td>
+            <td>Title and name look like internal test data yet it sits in Crypto/BTC queries and reports huge volume.</td>
+            <td><code>title: "shard"</code>, <code>volume_fp: "26521066.00"</code>, tags ["BTC"]</td>
+            <td>Included as-is (values never altered); excluded from topic-leader claims; test-suspected.</td>
+            <td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&amp;tags=BTC&amp;include_volume=true" target="_blank" rel="noopener">GET /series?category=Crypto&amp;tags=BTC</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-04</td><td>Event <code>KXCABALLOTMEASURES-26NOV03</code> status mismatch</td>
+            <td>Returned by <code>status=settled</code> query while containing market <code>…-PR04</code> with <code>status:"active"</code> and <code>result:""</code> — event-level and market-level state disagree.</td>
+            <td>PR04: <code>result:""</code>, <code>status:"active"</code>, no settlement_ts/value</td>
+            <td>PR04 row published with <b>blank</b> outcome and this flag; sibling markets (PR01–03) show settled YES with timestamps.</td>
+            <td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXCABALLOTMEASURES&amp;status=settled&amp;with_nested_markets=true&amp;limit=1" target="_blank" rel="noopener">GET /events?status=settled…</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-05</td><td>Event <code>KXBTCD-35FEB1010</code> temporal anomaly</td>
+            <td>Markets titled for Feb 10, <b>2035</b> show <code>close_time 2026-02-09</code> and settled 2026-02-09; event <code>product_metadata.cadence</code> is the literal string <code>"hi"</code>; title contains a double space (<code>"Bitcoin price  on Feb 10, 2035?"</code>).</td>
+            <td><code>strike_date: "2035-02-10T15:00:00Z"</code> vs <code>settlement_ts: "2026-02-09T19:55:31.053335Z"</code>; <code>cadence: "hi"</code></td>
+            <td>Used only as an example of a settled YES record; anomaly reported, values untouched.</td>
+            <td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXBTCD&amp;status=settled&amp;with_nested_markets=true&amp;limit=1" target="_blank" rel="noopener">GET /events?series_ticker=KXBTCD&amp;status=settled…</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-06</td><td>Event <code>KXPGAR1LEAD-MAST27</code> year mismatch</td>
+            <td>Event ticker ends <code>MAST27</code> while its subtitle reads <code>"2026 The Masters"</code> — possible ticker/edition inconsistency.</td>
+            <td><code>event_ticker: "KXPGAR1LEAD-MAST27"</code>, <code>sub_title: "2026 The Masters"</code>, <code>title: "The Masters End of Round 1 Leader"</code></td>
+            <td>Shown verbatim in the events table with this flag; not “fixed”.</td>
+            <td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXPGAR1LEAD&amp;status=open&amp;limit=1" target="_blank" rel="noopener">GET /events?series_ticker=KXPGAR1LEAD&amp;status=open</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-10</td><td>Series <code>KXBTCMAX130</code> title/ticker mismatch</td>
+            <td>Ticker suggests 130 (k), title asks “When will bitcoin hit <b>100k</b>?”</td>
+            <td><code>title: "When will bitcoin hit 100k?"</code> with ticker <code>KXBTCMAX130</code></td>
+            <td>Both fields displayed as returned; no interpretation added.</td>
+            <td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&amp;tags=BTC&amp;include_volume=true" target="_blank" rel="noopener">GET /series?category=Crypto&amp;tags=BTC</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-13</td><td><code>custom_strike</code> placeholders in demo metadata</td>
+            <td>Demo events carry placeholder strike objects such as <code>{"demo strike":"demo strike"}</code> (KXVPRESNOMR-28, KXCABALLOTMEASURES-…) and DWTS markets embed internal Actor UUIDs.</td>
+            <td><code>custom_strike: {"demo strike": "demo strike"}</code> (verbatim)</td>
+            <td>Not surfaced as contract terms anywhere; real strike semantics taken from <code>rules_primary</code> / subtitles.</td>
+            <td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/events?series_ticker=KXVPRESNOMR&amp;status=open&amp;with_nested_markets=true&amp;limit=2" target="_blank" rel="noopener">GET /events?series_ticker=KXVPRESNOMR…</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-07</td><td>Undocumented ordering of <code>/events?status=open</code></td>
+            <td>Default ordering appeared to return long-dated events first; spec publishes no order guarantee.</td>
+            <td>Observed first page: KXELONMARS-99, KXNEXTNATOSECGEN-99, KXNEWPOPE-70… (collection 2026-11-20)</td>
+            <td>No ordering assumption is made anywhere; ranking always computed client-side after fetch.</td>
+            <td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&amp;limit=50" target="_blank" rel="noopener">GET /events?status=open&amp;limit=50</a> · <a href="https://docs.kalshi.com/api-reference/events/get-events.md" target="_blank" rel="noopener">spec (silent on order)</a></td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="panel">
+      <h2>B · Derived &amp; unverified values (methodology)</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>ID</th><th>Item</th><th>Why flagged</th><th>What the API actually says</th><th>Impact / treatment</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="mono">F-01</td><td>Estimated dollar volume (derived)</td>
+            <td>Market schema has <b>no official dollar-turnover field</b> and <code>/markets</code> exposes <b>no sort-by-volume parameter</b> — any “$ volume” figure is computed, not read.</td>
+            <td>Schema fields: volume_fp / volume_24h_fp / open_interest_fp (counts) + price fields — no $ turnover key</td>
+            <td>Dashboard formula <code>Σ volume_24h_fp × last_price_dollars</code> is labelled <b>derived</b> in the column header, tooltip and text; blanks stay blank. Official count columns shown alongside. S-02 would show estimator spread.</td>
+            <td><a class="src-link" href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noopener">docs · Get Markets (schema)</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-11</td><td>Blank volume values (<code>KXTOPSONG</code>, <code>KXBTC</code>, <code>KXBTCD</code>, <code>KXPGATOUR</code>)</td>
+            <td>Single-series <code>GET /series/{ticker}</code> does not accept <code>include_volume</code>; volumes were not otherwise captured.</td>
+            <td><code>volume_fp</code> field absent from single-series responses (list endpoint carries it)</td>
+            <td>Watchlist cells render “— blank (unverified)”; never substituted with 0.</td>
+            <td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR" target="_blank" rel="noopener">GET /series/KXPGATOUR</a> (same for KXTOPSONG)</td>
+          </tr>
+          <tr>
+            <td class="mono">F-14</td><td>Browser CORS to demo API unverified from sandbox</td>
+            <td>The build sandbox cannot emulate a third-party browser origin; CORS preflight success/failure unknown ahead of time.</td>
+            <td>— (no official claim exists either way)</td>
+            <td>Runtime probe decides LIVE vs SNAPSHOT and the badge always tells the truth (Q7). No assumptions recorded.</td>
+            <td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">probe endpoint</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-15</td><td>General Read rate-limit budget not fetched</td>
+            <td>Only the balance bucket's limit was read this session; the main Read budget numbers are unverified here.</td>
+            <td>Verified: balance = 1 req/s (Basic/Advanced), 5 req/s higher tiers</td>
+            <td>Refresh cadence held at 60 s &lt; balance-bucket budget; any crawl/frequency change waits on Q8.</td>
+            <td><a class="src-link" href="https://docs.kalshi.com/api-reference/portfolio/get-balance.md" target="_blank" rel="noopener">Get Balance (rate limit note)</a> · <a href="https://docs.kalshi.com/getting_started/rate_limits.md" target="_blank" rel="noopener">rate_limits (not yet read)</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-08</td><td>Demo volumes exceed real-world plausibility</td>
+            <td>Golf series reports <code>8,245,802,181</code> contracts all-time on demo; official docs warn demo “may not be reflective of those in real markets”.</td>
+            <td><code>KXDPWORLDTOUR volume_fp: "8245802181.00"</code></td>
+            <td>Presented as demo data with environment labels everywhere; never cross-referenced to real-market claims.</td>
+            <td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Sports&amp;tags=Golf&amp;include_volume=true" target="_blank" rel="noopener">GET /series?category=Sports&amp;tags=Golf</a> · <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo caveat</a></td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="panel">
+      <h2>C · Blocked features &amp; project decisions</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>ID</th><th>Item</th><th>Why flagged</th><th>Evidence</th><th>Impact / treatment</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="mono">F-02</td><td>No demo credentials in this session</td>
+            <td>Portfolio read &amp; order write require signed requests; no keys exist in the environment/repo (checked at session start: only GitHub tokens present).</td>
+            <td>Official auth requirement: 401 Unauthorized without KALSHI-ACCESS-* headers</td>
+            <td>Portfolio/trading pages ship fully wired but empty &amp; clearly flagged; no fabricated balances. Unblocks instantly via <a href="trading.html">Trading → keys</a> (Q1).</td>
+            <td><a class="src-link" href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noopener">docs · authenticated requests</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-09</td><td>WebSocket unusable from a browser</td>
+            <td>WS handshake requires custom headers (<code>KALSHI-ACCESS-KEY/SIGNATURE/TIMESTAMP</code>) and the browser <code>WebSocket</code> API cannot send custom headers; GitHub Pages has no server.</td>
+            <td>“receiving a message on any WebSocket channel requires an authenticated WebSocket connection” + header table</td>
+            <td>Dashboard uses REST polling (D-02); relay proposal parked for review (S-01/Q2). Constraint documented, not worked around silently.</td>
+            <td><a class="src-link" href="https://docs.kalshi.com/getting_started/quick_start_websockets.md" target="_blank" rel="noopener">docs · WebSocket quickstart</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-12</td><td>“Culture” → Entertainment mapping</td>
+            <td>Official category list has <code>Entertainment</code> and a separate null-tag <code>Social</code>; the project maps culture to Entertainment.</td>
+            <td><code>tags_by_categories</code>: Entertainment = [Music, Awards, Movies, Television, People, …]; Social = null</td>
+            <td>Mapping declared on every topic view with basis link; decision requested (Q3); series?category=Social not yet fetched.</td>
+            <td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories" target="_blank" rel="noopener">GET /search/tags_by_categories</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-16</td><td>Partial enumeration of four topics</td>
+            <td>Elections (529 chunks), Entertainment (330), US Elections (198), Oil-and-energy (26) were not fully enumerated during collection — top-N claims are “top among fetched”.</td>
+            <td><code>totalChunks</code> values from each <code>GET /series</code> response</td>
+            <td>Completeness flag printed in watchlist metadata and page hints; full crawl proposed (S-03). Gas/Oil&amp;Gas, BTC, DWTS enumerations are complete and labelled so.</td>
+            <td>Per-query source URLs in <a href="data/watchlist.json">data/watchlist.json</a></td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="foot">16 flag IDs: 7 data-quality (F-03…F-07, F-10, F-13) · 5 derived/unverified (F-01, F-08, F-11, F-14, F-15) · 4 blocked/decisions (F-02, F-09, F-12, F-16) · review queue: <a href="suggestions.html">Suggestions</a> · <a href="questions.html">Q&amp;A</a></div>
+  </main>
+</div>
+</body>
+</html>

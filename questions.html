@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questions &amp; Answers — Kalshi Demo Intelligence</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="shell">
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="k">◈</span> Kalshi Demo Intelligence</a>
+    <span class="tagline">Verified demo-exchange analytics · session arena-ddc587ae</span>
+    <div class="nav-section">Start</div>
+    <a class="item" href="index.html">🏠 Overview</a>
+    <a class="item" href="executive-summary.html">📄 Executive Summary</a>
+    <div class="nav-section">Monitor</div>
+    <a class="item" href="dashboard.html">📊 Live Dashboard</a>
+    <a class="item" href="events.html">🎯 Events &amp; Resolutions</a>
+    <div class="nav-section">Account</div>
+    <a class="item" href="portfolio.html">💼 Portfolio &amp; Analysis</a>
+    <a class="item" href="trading.html">🧪 Trading</a>
+    <div class="nav-section">Review</div>
+    <a class="item" href="suggestions.html">💡 Suggestions</a>
+    <a class="item active" href="questions.html">❓ Questions &amp; Answers</a>
+    <a class="item" href="flagged.html">🚩 Flagged for Review</a>
+  </nav>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <h1>Questions &amp; Answers</h1>
+        <div class="sub">What we know, what we don't, and — most importantly — <b>which information is missing before which decision can be made</b>. Status pills: <span class="pill yes">answered</span> from official sources · <span class="pill">missing input</span> · <span class="pill no">blocking</span> an otherwise-ready feature.</div>
+      </div>
+      <div class="badges"><span class="badge flag">3 open questions block feature activation</span></div>
+    </div>
+
+    <div class="panel">
+      <h2>Blocking — needed before decisions can be made</h2>
+
+      <div class="qa">
+        <div class="q">Q1 · Where do demo API credentials come from, and can this session get them? <span class="status blocking">blocking</span></div>
+        <div class="a">
+          <b>Answer (official):</b> log in to the demo environment <a href="https://demo.kalshi.co/" target="_blank" rel="noopener">demo.kalshi.co</a> → <i>Account &amp; security</i> → <i>API Keys</i> → <i>Create Key</i>; you receive an API Key ID and a downloadable PEM private key (it cannot be retrieved again after closing the page) — <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noopener">official instructions</a>. Demo funds are granted to demo accounts per <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo docs</a>.<br>
+          <b>Missing input:</b> no keys were provided to this session (verified: environment and repository contain none). <b>Decisions blocked:</b> portfolio values (F-02), executing sample orders, strategy effectiveness verdicts (S-05). <b>How to unblock:</b> add keys via the <a href="trading.html">Trading page</a> (session-only storage) — the whole pipeline activates without any site change.<br>
+          <b>Sub-question:</b> which subaccount should trade? Spec says <code>subaccount=0</code> is primary and keys may be subaccount-locked — <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2.md" target="_blank" rel="noopener">Create Order V2</a>.
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q2 · Which hosting topology is acceptable for a WebSocket/proxy feature? <span class="status missing">missing input</span></div>
+        <div class="a">
+          <b>Answer (official):</b> WS needs a signed auth handshake with custom headers (<a href="https://docs.kalshi.com/getting_started/quick_start_websockets.md" target="_blank" rel="noopener">WS quickstart</a>); browser <code>WebSocket</code> cannot send custom headers, and GitHub Pages serves static assets only.<br>
+          <b>Decision needed:</b> (a) accept REST polling (current, decision D-02), or (b) approve a small relay (S-01) and say where it runs + how its key is stored. <b>How to discover:</b> owner policy on external services &amp; secrets — no doc page can answer this.
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q3 · Is culture ≡ Entertainment the right mapping? <span class="status missing">missing input</span></div>
+        <div class="a">
+          <b>Answer (official):</b> categories and tags come from <a href="https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories" target="_blank" rel="noopener">GET /search/tags_by_categories</a> — it lists <code>Entertainment</code> (tags Music, Awards, Movies, Television, People, Reality TV…) and separately a null-tag <code>Social</code> category.<br>
+          <b>Decision needed:</b> keep culture → Entertainment (current, flagged F-12), fold Social in, or split sub-tabs. <b>How to discover:</b> inspect <a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Social" target="_blank" rel="noopener">series?category=Social</a> (not yet fetched) to see whether Social holds anything beyond Entertainment before deciding.
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Answered from official sources</h2>
+
+      <div class="qa">
+        <div class="q">Q4 · What are the correct demo endpoints? <span class="status answered">answered</span></div>
+        <div class="a">REST <code>https://external-api.demo.kalshi.co/trade-api/v2</code> (also <code>https://demo-api.kalshi.co/trade-api/v2</code>); WS <code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code> (also <code>wss://demo-api.kalshi.co/trade-api/ws/v2</code>). Verified live: <code>GET /exchange/status</code> → 200, trading active. Source: <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">docs · demo environment</a>.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q5 · How do we rank “highest dollar amount” events without a server-side sort? <span class="status answered">answered · with flag</span></div>
+        <div class="a">The Market schema has no dollar-turnover field and <code>/markets</code> has no sort-by-volume parameter (verified in <a href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noopener">Get Markets spec</a>). Approach: fetch, then rank client-side by <code>volume_24h_fp × last_price_dollars</code>, labelled <b>derived</b> in every view (F-01, decision D-03), with official contract-count columns always shown alongside.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q6 · How does an event resolve and who pays what? <span class="status answered">answered</span></div>
+        <div class="a">Market <code>result</code> ∈ yes|no|scalar; winners receive $1/contract, losers $0; simple determinations have zero settlement fee; payouts settle after expiration + <code>settlement_timer_seconds</code>. Verified field examples on the <a href="events.html">Events &amp; Resolutions</a> page; rules: <a href="https://docs.kalshi.com/getting_started/market_settlement.md" target="_blank" rel="noopener">Market Settlement</a>.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q7 · Can this page poll the demo API directly from visitors' browsers (CORS)? <span class="status answered">answered at runtime</span></div>
+        <div class="a">Cannot be pre-verified from the build sandbox (network allowlist). The dashboard <b>probes</b> <code>GET /exchange/status</code> on load: success → LIVE mode with polling; failure → SNAPSHOT mode with bundled verified data. The displayed mode is always truthful, so CORS behaviour needs no assumption either way. Source endpoints: <a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">probe URL</a>.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q8 · What are the rate limits for market-data polling? <span class="status answered">partial — one number verified</span></div>
+        <div class="a">
+          <b>Verified:</b> <code>GET /portfolio/balance</code> has its own bucket — Basic/Advanced tiers <b>1 request/second</b> (higher tiers 5/s), and docs advise reacting to fill events instead of polling balance — <a href="https://docs.kalshi.com/api-reference/portfolio/get-balance.md" target="_blank" rel="noopener">Get Balance</a>. Responses across market data are cached server-side for a short time — <a href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noopener">Get Markets</a>.<br>
+          <b>Missing:</b> numeric Read-budget numbers were not fetched this session (rate-limits docs page exists: <a href="https://docs.kalshi.com/getting_started/rate_limits.md" target="_blank" rel="noopener">docs · rate limits</a>) — dashboard conservatively polls every 60 s and shows fewer than ~30 requests per refresh. <b>Decision it gates:</b> raising refresh frequency / running S-03 crawls — confirm budget there first.
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q9 · Which event should be tracked “to resolution” first? <span class="status answered">answered</span></div>
+        <div class="a">The tracker follows <i>all</i> open watchlist events (live mode polls status transitions) — so no pick is required. Nearest observed deadlines at collection: KXWTIH-26NOV2007 strike 2026-11-20T12:00:00Z, KXWTIW-26NOV2014 close 2026-11-20T19:30:00Z, KXBTC-26NOV2007 close 2026-11-20T12:00:00Z (hourly crypto settles each hour). Sources: <a href="events.html">events table rows</a>.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q10 · What precision do the chart axes need? <span class="status answered">answered</span></div>
+        <div class="a">Candlesticks support only 1/60/1440-minute periods (<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks.md" target="_blank" rel="noopener">spec</a>), so seconds granularity uses trade prints with millisecond timestamps (<a href="https://docs.kalshi.com/api-reference/market/get-trades.md" target="_blank" rel="noopener">Get Trades</a>: <code>min_ts</code>/<code>max_ts</code> in seconds). Chart X-axis exposes Seconds/Minutes/Hours/Days accordingly; Y-axis is the YES contract price in dollars (fixed-point strings, e.g. <code>0.0500</code>).</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q11 · Can we place and cancel orders through this site? <span class="status answered">answered · gated by Q1</span></div>
+        <div class="a">Create: <code>POST /portfolio/events/orders</code> (V2 body verified field-by-field — <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2.md" target="_blank" rel="noopener">spec</a>). Legacy <code>/portfolio/orders</code> writes are gone (410). Cancel: V2 cancel endpoint exists in docs (<a href="https://docs.kalshi.com/api-reference/orders/cancel-order-v2.md" target="_blank" rel="noopener">Cancel Order V2</a>) but was not exercised this session (no keys) — listed honestly on the Trading page rather than faked.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q12 · Does the API provide long-term history beyond the live data set? <span class="status answered">answered (not yet used)</span></div>
+        <div class="a">Yes — docs reference <code>GET /historical/fills</code> and <code>GET /historical/positions</code> for records before the historical cutoff / after archival — <a href="https://docs.kalshi.com/getting_started/historical_data.md" target="_blank" rel="noopener">docs · historical data</a>. Schemas were <b>not fetched this session</b>, so no table here uses them (would violate the source rule). Needed when: performance window exceeds live retention. <b>Next step:</b> fetch those two spec pages before building the long-horizon view.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q13 · How do we know the site actually published? <span class="status answered">answered</span></div>
+        <div class="a">GitHub Pages is enabled on the repository (legacy, source <code>main</code> root) → site URL <a href="https://karagemop466-tech.github.io/Demo2/" target="_blank" rel="noopener">https://karagemop466-tech.github.io/Demo2/</a> auto-deploys on push/merge to main. Verification procedure: link-check passes → PR merged → fetch the Pages URL → confirm 200 + nav works → record PR link &amp; merge result in <a href="https://github.com/karagemop466-tech/Demo2/blob/main/COORDINATION.md" target="_blank" rel="noopener">COORDINATION.md</a>.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q14 · Are demo numbers safe to present as real market facts? <span class="status answered">answered — no</span></div>
+        <div class="a">Officially: “The price and behavior of markets in the demo environment may not be reflective of those in real markets” — <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo docs</a>. The site therefore labels the environment everywhere and flags implausible demo volumes (F-08) instead of normalising them away.</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Suggestions to discover missing information</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Unknown</th><th>Discovery method (official)</th><th>What it would unblock</th></tr></thead>
+        <tbody>
+          <tr><td>Full Read rate-limit budget</td><td>Read <a href="https://docs.kalshi.com/getting_started/rate_limits.md" target="_blank" rel="noopener">rate_limits</a> page + observe <code>RateLimit</code> headers during a bounded probe</td><td>S-03 exhaustive crawls; faster refresh (S-04)</td></tr>
+          <tr><td>Social category contents</td><td><code>GET /series?category=Social&amp;include_volume=true</code> (small)</td><td>Q3 culture mapping decision (F-12)</td></tr>
+          <tr><td>Historical endpoints' schemas</td><td>Fetch <code>historical_data</code> docs + the two historical spec pages</td><td>Long-horizon P&amp;L view (Q12)</td></tr>
+          <tr><td>Browser CORS behaviour of the demo host</td><td>Open dashboard from a non-sandboxed network (runtime probe already reports mode)</td><td>Confirms S-01 necessity vs REST sufficiency</td></tr>
+          <tr><td>Whether demo keys differ per subaccount</td><td>Create key UI at demo.kalshi.co shows subaccount lock (per docs)</td><td>Trading ticket subaccount field policy (Q1)</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="foot">Answers cite official sources inline · open items mirror <a href="flagged.html">Flagged for Review</a> and the queue in <a href="suggestions.html">Suggestions</a></div>
+  </main>
+</div>
+</body>
+</html>

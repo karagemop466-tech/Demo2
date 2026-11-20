@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio &amp; Analysis — Kalshi Demo Intelligence</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="shell">
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="k">◈</span> Kalshi Demo Intelligence</a>
+    <span class="tagline">Verified demo-exchange analytics · session arena-ddc587ae</span>
+    <div class="nav-section">Start</div>
+    <a class="item" href="index.html">🏠 Overview</a>
+    <a class="item" href="executive-summary.html">📄 Executive Summary</a>
+    <div class="nav-section">Monitor</div>
+    <a class="item" href="dashboard.html">📊 Live Dashboard</a>
+    <a class="item" href="events.html">🎯 Events &amp; Resolutions</a>
+    <div class="nav-section">Account</div>
+    <a class="item active" href="portfolio.html">💼 Portfolio &amp; Analysis</a>
+    <a class="item" href="trading.html">🧪 Trading</a>
+    <div class="nav-section">Review</div>
+    <a class="item" href="suggestions.html">💡 Suggestions</a>
+    <a class="item" href="questions.html">❓ Questions &amp; Answers</a>
+    <a class="item" href="flagged.html">🚩 Flagged for Review</a>
+  </nav>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <h1>Portfolio &amp; Performance Analysis</h1>
+        <div class="sub">Track demo-account performance, categorise trades by topic and trade type, and apply strategy templates. Personal account data requires demo API keys (<a href="trading.html">Trading page</a>); the public-feed analysis below needs no keys and demonstrates the categorisation engine.</div>
+      </div>
+      <div class="badges"><span class="badge" id="modeBadge"><span class="spin"></span> <b>Checking</b>…</span></div>
+    </div>
+
+    <div class="warnbox" id="credBanner">
+      <b>Personal portfolio: awaiting demo credentials.</b> No keys were provided to this session (flag F-02 / Q1) — balance, positions, fills and settlements cannot be read, so every personal-account cell stays empty rather than estimated. Add keys on <a href="trading.html">Trading</a>, then press <b>Load performance</b>.
+    </div>
+
+    <div class="panel">
+      <h2>Performance <span class="pill">GET /portfolio/balance · /positions · /fills · /settlements</span></h2>
+      <div class="controls">
+        <button class="primary authOnly" id="loadBtn" disabled>↻ Load performance</button>
+        <span class="note" id="perfNote">keys required</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="label">Available balance</div><div class="value" id="pBal">—</div><div class="note">balance_dollars (official field)</div></div>
+        <div class="stat"><div class="label">Portfolio value</div><div class="value" id="pVal">—</div><div class="note">portfolio_value (cents → $)</div></div>
+        <div class="stat"><div class="label">Realized P&amp;L (settled)</div><div class="value" id="pRlz">—</div><div class="note">Σ revenue/100 − costs − fees (formula shown below)</div></div>
+        <div class="stat"><div class="label">Open exposure</div><div class="value" id="pExp">—</div><div class="note">Σ |market_exposure_dollars|</div></div>
+      </div>
+
+      <h2 style="font-size:15px">Settlement ledger (official settlement records)</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Market</th><th>Result</th><th>YES held</th><th>YES cost $</th><th>NO held</th><th>NO cost $</th><th>Revenue (¢)</th><th>Fees $</th><th>Realized P&amp;L $ (derived)</th><th>Settled (UTC)</th><th>Source</th></tr></thead>
+        <tbody id="setBody"><tr><td colspan="11" class="note">awaiting credentials — no values will be shown without official records</td></tr></tbody>
+      </table></div>
+      <p class="note"><b>Derived formula (transparent):</b> <code>P&amp;L$ = revenue_cents / 100 − yes_total_cost_dollars − no_total_cost_dollars − fee_cost</code> — revenue is the official settlement field (“winning contracts pay out 100 cents each”), costs are the official cost-basis fields. This is a <b>derived</b> metric (flagged like other derivations). Source schema: <a href="https://docs.kalshi.com/api-reference/portfolio/get-settlements.md" target="_blank" rel="noopener">Get Settlements</a>.</p>
+
+      <h2 style="font-size:15px">Positions (mark &amp; cost from official fields)</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Ticker</th><th>Net (±contracts)</th><th>Total traded $</th><th>Exposure $</th><th>Realized P&amp;L $</th><th>Fees $</th><th>Updated</th><th>Source</th></tr></thead>
+        <tbody id="posBody2"><tr><td colspan="8" class="note">awaiting credentials</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <div class="panel" id="analysis">
+      <h2>Trade analysis &amp; categorisation — public feed demo <span class="pill">no keys required</span></h2>
+      <p class="hint">The same categorisation engine that will run on personal fills is demonstrated here on the captured public trade feed (official <code>GET /markets/trades</code> rows). Categories come from verified fields only: topic via official series-category mapping; direction via <code>taker_outcome_side</code> (exposure) + <code>taker_book_side</code>; role taker always for public prints.</p>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Category</th><th>Dimension</th><th>Executions</th><th>Contracts</th><th>Avg YES price</th><th>Notes</th></tr></thead>
+        <tbody id="catBody"></tbody>
+      </table></div>
+      <p class="note">Categorisation rules (documented): <b>topic</b> = official series category/tags of the market's series (unclassified when metadata was not fetched — never guessed); <b>direction</b> = taker exposure (yes/no from <code>taker_outcome_side</code>); <b>price band</b> = the executed <code>yes_price_dollars</code> (deep no &lt;$0.10 · mid $0.10–0.50 · yes-leaning &gt;$0.50 — thresholds are project conventions, shown explicitly). Source rows: <a href="data/snapshot.json">data/snapshot.json → trades_sample</a> (each row carries its endpoint).</p>
+    </div>
+
+    <div class="panel" id="strategies">
+      <h2>Strategy templates by trade type</h2>
+      <p class="hint">Templates are grounded in verified API mechanics (order types, settlement rules, fee fields). Each states what data it needs before being judged effective — judgement is withheld until credential-gated performance data exists (see <a href="questions.html">Q1</a>).</p>
+      <div class="cards">
+        <div class="card"><span class="ico">🧊</span><h3>1 · Maker liquidity (post_only)</h3><p><b>Type:</b> maker · <b>Mechanic:</b> <code>post_only</code> orders rest and never cross; the quadratic fee model (<code>fee_type=quadratic</code>, <code>fee_multiplier=1</code> on series) plus maker fill role from <code>is_taker=false</code>. <b>Measure:</b> maker fills' share of volume, spread captured vs adverse selection. <b>Need:</b> fills with <code>is_taker=false</code>. <br><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2.md" target="_blank" rel="noopener">spec</a></p></div>
+        <div class="card"><span class="ico">⚡</span><h3>2 · Taker momentum (IOC)</h3><p><b>Type:</b> taker · <b>Mechanic:</b> <code>immediate_or_cancel</code> takes liquidity when the feed shows directional prints (e.g. clustered <code>taker_outcome_side=yes</code> prints like the captured DWTS sequence). <b>Measure:</b> P&amp;L per taker fill vs price move after 60 s (1-minute candles). <b>Need:</b> fills + candlesticks. <br><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks.md" target="_blank" rel="noopener">spec</a></p></div>
+        <div class="card"><span class="ico">🏁</span><h3>3 · Settlement capture</h3><p><b>Type:</b> event settlement · <b>Mechanic:</b> buy the near-certain outcome below $1 after determination — official settlement pays winners exactly $1/contract, zero settlement fee for simple yes/no. <b>Measure:</b> (1 − entry) × contracts captured vs opportunity cost of tied-up collateral. <b>Need:</b> settlements ledger. <br><a href="https://docs.kalshi.com/getting_started/market_settlement.md" target="_blank" rel="noopener">spec</a></p></div>
+        <div class="card"><span class="ico">📐</span><h3>4 · Range/strike basket</h3><p><b>Type:</b> multi-strike · <b>Mechanic:</b> range events list complementary strikes (observed WTI $77.00 band, BTC $54,200–54,499 bands); if asked-prices across the covering set sum &lt;$1 the basket is theoretically cheap — verify against <code>price_ranges</code> before acting. <b>Measure:</b> basket cost vs $1 payout. <b>Need:</b> orderbooks for every strike of an event. <br><a href="https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks.md" target="_blank" rel="noopener">spec</a></p></div>
+      </div>
+      <div class="flagbox"><b>Strategy effectiveness is intentionally unjudged:</b> with zero credential-gated fills/settlements collected, claiming any edge would violate the no-inference rule. The templates and metrics are ready; the verdict arrives when Q1 is answered.</div>
+    </div>
+
+    <div class="panel">
+      <h2>What feeds this page</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Signal</th><th>Official endpoint</th><th>Field(s) used</th><th>Gate</th></tr></thead>
+        <tbody>
+          <tr><td>Cash balance / portfolio value</td><td><code>GET /portfolio/balance</code></td><td>balance_dollars, portfolio_value (¢), updated_ts</td><td><span class="pill">keys</span></td></tr>
+          <tr><td>Open holdings &amp; exposure</td><td><code>GET /portfolio/positions</code></td><td>position_fp, market_exposure_dollars, realized_pnl_dollars, fees_paid_dollars</td><td><span class="pill">keys</span></td></tr>
+          <tr><td>Trade history (categorisation input)</td><td><code>GET /portfolio/fills</code></td><td>outcome_side, book_side, count_fp, prices, is_taker, fee_cost, created_time</td><td><span class="pill">keys</span></td></tr>
+          <tr><td>Realised performance</td><td><code>GET /portfolio/settlements</code></td><td>market_result, revenue¢, yes/no cost, fee_cost, settled_time</td><td><span class="pill">keys</span></td></tr>
+          <tr><td>Public market activity (demo engine)</td><td><code>GET /markets/trades</code></td><td>ticker, count_fp, prices, taker sides, created_time</td><td><span class="pill yes">open</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="foot">Field sources: <a href="https://docs.kalshi.com/api-reference/portfolio/get-settlements.md" target="_blank" rel="noopener">settlements</a> · <a href="https://docs.kalshi.com/api-reference/portfolio/get-positions.md" target="_blank" rel="noopener">positions</a> · <a href="https://docs.kalshi.com/api-reference/portfolio/get-fills.md" target="_blank" rel="noopener">fills</a> · <a href="https://docs.kalshi.com/api-reference/portfolio/get-balance.md" target="_blank" rel="noopener">balance</a></div>
+  </main>
+</div>
+<script src="assets/app.js"></script>
+<script src="assets/auth.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+KDS.setModeBadge($("modeBadge"));
+
+function keyGate() {
+  const s = KAuth.getSession();
+  document.querySelectorAll(".authOnly").forEach(el => el.disabled = !s);
+  if (!s) $("perfNote").innerHTML = '<span class="badge flag">no keys — personal tables remain blank</span>';
+}
+window.addEventListener("DOMContentLoaded", async () => {
+  keyGate();
+  // ---- public-feed categorisation demo ----
+  const s = await KDS.getSnapshot();
+  const tr = s.trades_sample || [];
+  const rows = [];
+  function agg(list, cat, dim, notes) {
+    if (!list.length) return;
+    const contracts = list.reduce((a, t) => a + (Number(t.count_fp) || 0), 0);
+    const avg = list.reduce((a, t) => a + (Number(t.yes_price_dollars) || 0), 0) / list.length;
+    rows.push(`<tr><td><b>${KDS.esc(cat)}</b></td><td>${KDS.esc(dim)}</td><td class="num">${list.length}</td><td class="num">${contracts.toLocaleString("en-US", {maximumFractionDigits: 2})}</td><td class="num">$${avg.toFixed(4)}</td><td class="note">${notes}</td></tr>`);
+  }
+  const topics = Array.from(new Set(tr.map(t => t.topic)));
+  for (const tp of topics) agg(tr.filter(t => t.topic === tp), tp, "topic", tp === "unclassified" ? "series metadata not fetched — left unclassified by rule" : "official series category mapping");
+  for (const side of ["yes", "no"]) agg(tr.filter(t => t.taker_outcome_side === side), side.toUpperCase() + " exposure", "direction", "taker_outcome_side (official field)");
+  agg(tr.filter(t => Number(t.yes_price_dollars) < 0.10), "deep-NO band", "price band", "yes_price < $0.10 (project threshold)");
+  agg(tr.filter(t => Number(t.yes_price_dollars) >= 0.10 && Number(t.yes_price_dollars) <= 0.50), "mid band", "price band", "$0.10–0.50 (project threshold)");
+  agg(tr.filter(t => Number(t.yes_price_dollars) > 0.50), "YES-leaning band", "price band", "> $0.50 (project threshold)");
+  $("catBody").innerHTML = rows.join("") || '<tr><td colspan="6" class="note">no rows</td></tr>';
+
+  $("loadBtn").addEventListener("click", async () => {
+    $("perfNote").innerHTML = '<span class="spin"></span> loading…';
+    try {
+      const [bal, pos, fills, sett] = await Promise.all([
+        KAuth.apiAuth("/portfolio/balance"),
+        KAuth.apiAuth("/portfolio/positions?count_filter=position&settlement_status=all&limit=200"),
+        KAuth.apiAuth("/portfolio/fills?limit=200"),
+        KAuth.apiAuth("/portfolio/settlements?limit=200")
+      ]);
+      $("pBal").textContent = KDS.fmtPrice(bal.balance_dollars);
+      $("pVal").textContent = "$" + (Number(bal.portfolio_value) / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const setts = sett.settlements || [];
+      let pnl = 0;
+      $("setBody").innerHTML = setts.map(x => {
+        const rev = (Number(x.revenue) || 0) / 100;
+        const cost = (Number(x.yes_total_cost_dollars) || 0) + (Number(x.no_total_cost_dollars) || 0) + (Number(x.fee_cost) || 0);
+        const profit = rev - cost; pnl += profit;
+        return `<tr><td class="mono">${KDS.esc(x.ticker)}</td><td>${KDS.resultPill(x.market_result)}</td>
+          <td class="num">${KDS.fmtInt(x.yes_count_fp)}</td><td class="num">${KDS.fmtPrice(x.yes_total_cost_dollars)}</td>
+          <td class="num">${KDS.fmtInt(x.no_count_fp)}</td><td class="num">${KDS.fmtPrice(x.no_total_cost_dollars)}</td>
+          <td class="num">${KDS.esc(String(x.revenue))}</td><td class="num">${KDS.fmtPrice(x.fee_cost)}</td>
+          <td class="num" style="color:${profit > 0 ? "#2dd4a7" : profit < 0 ? "#ff6b6b" : "inherit"}">${(profit >= 0 ? "+" : "") + profit.toFixed(4)}</td>
+          <td class="num">${KDS.fmtTs(x.settled_time)}</td>
+          <td><a class="src-link" href="${KDS.API}/portfolio/settlements?ticker=${encodeURIComponent(x.ticker)}" target="_blank" rel="noopener">source</a></td></tr>`;
+      }).join("") || '<tr><td colspan="11" class="note">no settlement records</td></tr>';
+      $("pRlz").textContent = (pnl >= 0 ? "+$" : "-$") + Math.abs(pnl).toFixed(2);
+      let exp = 0;
+      (pos.market_positions || []).forEach(p => exp += Math.abs(Number(p.market_exposure_dollars) || 0));
+      $("pExp").textContent = "$" + exp.toFixed(2);
+      $("posBody2").innerHTML = (pos.market_positions || []).map(p => `<tr><td class="mono">${KDS.esc(p.ticker)}</td>
+        <td class="num">${KDS.fmtInt(p.position_fp)}</td><td class="num">${KDS.fmtPrice(p.total_traded_dollars)}</td>
+        <td class="num">${KDS.fmtPrice(p.market_exposure_dollars)}</td><td class="num">${KDS.fmtPrice(p.realized_pnl_dollars)}</td>
+        <td class="num">${KDS.fmtPrice(p.fees_paid_dollars)}</td><td class="num">${KDS.fmtTs(p.last_updated_ts)}</td>
+        <td><a class="src-link" href="${KDS.API}/portfolio/positions?ticker=${encodeURIComponent(p.ticker)}" target="_blank" rel="noopener">source</a></td></tr>`).join("") ||
+        '<tr><td colspan="8" class="note">no positions</td></tr>';
+      $("credBanner").className = "okbox";
+      $("credBanner").innerHTML = "<b>Account data loaded from the official demo API.</b> All values verbatim from response fields; only P&amp;L$ is derived (formula above).";
+      $("perfNote").innerHTML = `<span class="badge live">loaded — ${setts.length} settlements, ${(fills.fills || []).length} fills</span>`;
+    } catch (e) {
+      $("perfNote").innerHTML = '<span class="badge err">' + KDS.esc(e.message) + "</span>";
+    }
+  });
+});
+</script>
+</body>
+</html>

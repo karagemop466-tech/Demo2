@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trading — Kalshi Demo Intelligence</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="shell">
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="k">◈</span> Kalshi Demo Intelligence</a>
+    <span class="tagline">Verified demo-exchange analytics · session arena-ddc587ae</span>
+    <div class="nav-section">Start</div>
+    <a class="item" href="index.html">🏠 Overview</a>
+    <a class="item" href="executive-summary.html">📄 Executive Summary</a>
+    <div class="nav-section">Monitor</div>
+    <a class="item" href="dashboard.html">📊 Live Dashboard</a>
+    <a class="item" href="events.html">🎯 Events &amp; Resolutions</a>
+    <div class="nav-section">Account</div>
+    <a class="item" href="portfolio.html">💼 Portfolio &amp; Analysis</a>
+    <a class="item active" href="trading.html">🧪 Trading</a>
+    <div class="nav-section">Review</div>
+    <a class="item" href="suggestions.html">💡 Suggestions</a>
+    <a class="item" href="questions.html">❓ Questions &amp; Answers</a>
+    <a class="item" href="flagged.html">🚩 Flagged for Review</a>
+  </nav>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <h1>Trading — demo order execution</h1>
+        <div class="sub">Create Order (V2): <code>POST /portfolio/events/orders</code> with single-book <code>bid</code>/<code>ask</code> side and fixed-point dollar prices. Requests are signed in your browser per the official spec — keys never leave this tab (sessionStorage) except to the demo API itself.</div>
+      </div>
+      <div class="badges"><span class="badge" id="modeBadge"><span class="spin"></span> <b>Checking</b>…</span></div>
+    </div>
+
+    <div class="flagbox">
+      <b>Blocked without credentials (Q1, flag F-02):</b> this session received no demo API keys (none exist in the environment or repository), so live orders cannot be pre-executed by the collector. The ticket below is fully wired; paste demo keys (created at <a href="https://demo.kalshi.co/" target="_blank" rel="noopener">demo.kalshi.co</a> → Account &amp; security → API Keys, per <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noopener">official instructions</a>) to activate it. Nothing is simulated or faked in the meantime.
+    </div>
+
+    <div class="panel">
+      <h2>Demo API keys <span id="keyStatus"></span></h2>
+      <p class="hint">Stored in <code>sessionStorage</code> only (this browser tab, this session). “Clear keys” removes them instantly. The private key is used for RSA-PSS/Ed25519 signing exactly as documented.</p>
+      <div class="controls">
+        <label>API Key ID <input type="text" id="keyId" placeholder="a952bcbe-ec3b-4b5b-b8f9-…" style="min-width:280px" autocomplete="off"></label>
+      </div>
+      <div class="controls">
+        <label style="flex:1">Private key (PEM) <textarea id="pem" rows="3" placeholder="-----BEGIN PRIVATE KEY-----" style="width:100%; min-width:320px; font-family:var(--mono); font-size:12px"></textarea></label>
+      </div>
+      <div class="controls">
+        <button class="primary" id="saveKeyBtn">Save keys (session only)</button>
+        <button class="danger" id="keyDelBtn" style="display:none">Clear keys</button>
+        <a class="note" href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noopener">how signing works (official) →</a>
+      </div>
+      <p class="note">Signature (verified from docs): <code>message = timestamp_ms + METHOD + path</code> (path without query) → RSA-PSS SHA-256 (salt = digest length) or Ed25519 → base64. Headers <code>KALSHI-ACCESS-KEY</code>, <code>KALSHI-ACCESS-TIMESTAMP</code>, <code>KALSHI-ACCESS-SIGNATURE</code>; timestamp must be within <b>±30 seconds</b> of Kalshi's clock.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Order ticket (Create Order V2)</h2>
+      <p class="hint">Required body fields per official spec: <code>ticker</code>, <code>side</code>, <code>count</code>, <code>price</code>, <code>time_in_force</code>, <code>self_trade_prevention_type</code>. Source: <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2.md" target="_blank" rel="noopener">docs · Create Order (V2)</a>.</p>
+      <div class="controls">
+        <label>Market ticker <input type="text" id="ordTicker" placeholder="KXDANCINGWITHTHESTARS-26DEC31-TAT" style="min-width:300px"></label>
+        <button id="fillFromChart" title="uses last selected market">use last charted market</button>
+        <label>Side
+          <select id="ordSide">
+            <option value="bid">bid (bid to trade YES, or offer NO at 1−p… book-side = YES leg)</option>
+            <option value="ask">ask (offer YES)</option>
+          </select>
+        </label>
+      </div>
+      <div class="controls">
+        <label>Count (contracts) <input type="text" id="ordCount" value="10.00" style="min-width:90px"></label>
+        <label>Price (YES $) <input type="text" id="ordPrice" placeholder="0.5600" style="min-width:90px"></label>
+        <label>Time in force
+          <select id="ordTif">
+            <option value="good_till_canceled">good_till_canceled</option>
+            <option value="immediate_or_cancel">immediate_or_cancel</option>
+            <option value="fill_or_kill">fill_or_kill</option>
+          </select>
+        </label>
+        <label>Self-trade prevention
+          <select id="ordStp">
+            <option value="taker_at_cross">taker_at_cross</option>
+            <option value="maker">maker</option>
+          </select>
+        </label>
+      </div>
+      <div class="controls">
+        <label><input type="checkbox" id="ordPostOnly"> post_only</label>
+        <label>expiration_time (unix s, optional) <input type="text" id="ordExp" placeholder="—" style="min-width:110px"></label>
+        <button class="primary authOnly" id="submitBtn" disabled>Submit order (POST /portfolio/events/orders)</button>
+      </div>
+      <div class="warnbox" id="orderErr" style="display:none"></div>
+      <div id="orderNote"></div>
+      <div id="orderResp" style="display:none"></div>
+      <p class="note">Semantics verified in spec: 201 = accepted (check <code>remaining_count</code> for what rests); legacy <code>/portfolio/orders</code> writes now return <b>410 Gone</b> (<code>deprecated_v1_order_endpoint</code>); <code>side</code> is the V2 single-book side where everything is quoted from the YES leg (bid = buy YES ≡ sell NO at 1−p — <a href="https://docs.kalshi.com/getting_started/order_direction.md" target="_blank" rel="noopener">order direction</a>).</p>
+    </div>
+
+    <div class="panel">
+      <h2>Account activity</h2>
+      <div class="controls"><button class="authOnly" id="loadAcctBtn" disabled>↻ Load balance · positions · fills</button><span id="acctNote" class="note">—</span></div>
+      <div class="stat-row" id="balCard"><div class="stat"><div class="label">Available balance</div><div class="value">—</div><div class="note">awaiting keys</div></div><div class="stat"><div class="label">Portfolio value</div><div class="value">—</div><div class="note">awaiting keys</div></div></div>
+
+      <h2 style="font-size:15px; margin-top:14px">Open positions <span class="pill">GET /portfolio/positions</span></h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Ticker</th><th>Net contracts (+YES/−NO)</th><th>Total traded $</th><th>Exposure $</th><th>Realized P&amp;L $</th><th>Fees $</th><th>Updated</th><th>Source</th></tr></thead>
+        <tbody id="posBody"><tr><td colspan="8" class="note">load with keys</td></tr></tbody>
+      </table></div>
+
+      <h2 style="font-size:15px; margin-top:14px">Recent fills <span class="pill">GET /portfolio/fills</span></h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Time (UTC)</th><th>Ticker</th><th>Exposure / book</th><th>Contracts</th><th>YES $</th><th>NO $</th><th>Role</th><th>Fee $</th><th>Source</th></tr></thead>
+        <tbody id="fillsBody"><tr><td colspan="9" class="note">load with keys</td></tr></tbody>
+      </table></div>
+      <p class="note">Field semantics verified: fill <code>outcome_side</code> ∈ yes|no = directional exposure (buy-yes and sell-no both → yes); <code>book_side</code> bid≡yes, ask≡no; <code>is_taker</code> distinguishes taker/maker; <code>fee_cost</code> in fixed-point dollars. Positions: <code>position_fp</code> signed (+YES/−NO), <code>realized_pnl_dollars</code> official field. Source: <a href="https://docs.kalshi.com/api-reference/portfolio/get-fills.md" target="_blank" rel="noopener">Get Fills</a> · <a href="https://docs.kalshi.com/api-reference/portfolio/get-positions.md" target="_blank" rel="noopener">Get Positions</a> · <a href="https://docs.kalshi.com/api-reference/portfolio/get-balance.md" target="_blank" rel="noopener">Get Balance</a>.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Order lifecycle — verified reference</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Step</th><th>Endpoint</th><th>Notes (verified)</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Create</td><td><code>POST /portfolio/events/orders</code></td><td>201 → order_id, fill_count, remaining_count, ts_ms</td><td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2.md" target="_blank" rel="noopener">Create Order (V2)</a></td></tr>
+          <tr><td>Observe fills</td><td><code>GET /portfolio/fills</code></td><td>filter by ticker (CSV ≤100), order_id, min_ts/max_ts, limit ≤1000</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills.md" target="_blank" rel="noopener">Get Fills</a></td></tr>
+          <tr><td>Observe positions</td><td><code>GET /portfolio/positions</code></td><td><code>count_filter=position</code> = non-zero holdings; <code>settlement_status=unsettled|settled|all</code></td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-positions.md" target="_blank" rel="noopener">Get Positions</a></td></tr>
+          <tr><td>Observe settlement P&amp;L</td><td><code>GET /portfolio/settlements</code></td><td><code>revenue</code> in cents; cost fields in dollars; <code>market_result</code> ∈ yes|no|scalar|""</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-settlements.md" target="_blank" rel="noopener">Get Settlements</a></td></tr>
+          <tr><td>Cancel / batch</td><td>Create Order V2 doc family</td><td>Legacy V1 cancel/amend/decrease endpoints return 410; V2 paths documented (not exercised this session — no keys)</td><td><a href="https://docs.kalshi.com/api-reference/orders/cancel-order-v2.md" target="_blank" rel="noopener">Cancel Order (V2)</a></td></tr>
+          <tr><td>Observe balance</td><td><code>GET /portfolio/balance</code></td><td>Own rate-limit bucket: <b>1 req/s on Basic/Advanced tiers</b> (5/s higher); docs advise reacting to fill events rather than polling balance</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance.md" target="_blank" rel="noopener">Get Balance</a></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="foot">Execution always targets the demo API: <code>https://external-api.demo.kalshi.co/trade-api/v2</code> · <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a></div>
+  </main>
+</div>
+<script src="assets/app.js"></script>
+<script src="assets/auth.js"></script>
+<script src="assets/trading.js"></script>
+</body>
+</html>
