@@ -46,6 +46,12 @@
    "equity_dollars": 99.9,
    "cash_dollars": 99.9,
    "open_positions": 1
+  },
+  {
+   "ts": "2026-11-20T20:49:31+00:00",
+   "equity_dollars": 99.9,
+   "cash_dollars": 99.9,
+   "open_positions": 1
   }
  ],
  "definitions": {
@@ -62,7 +68,7 @@
    "favorite": "buy YES at ask when last >= $0.90 and spread <= $0.05"
   }
  },
- "generated_at_utc": "2026-11-20T20:48:41+00:00",
+ "generated_at_utc": "2026-11-20T20:49:31+00:00",
  "source_snapshot_generated_at": "2026-11-20T14:10:44+00:00",
  "strategy_stats": {
   "longshot": {
