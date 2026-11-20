@@ -80,6 +80,11 @@
           <td>Orderbook outputs are bid ladders for YES and NO. The dashboard derives implied asks using binary-price parity; derived asks are not observed ask-side depth. UI labels and tests explicitly distinguish those derived values. Keep this distinction visible to avoid presenting an inferred ask as resting liquidity.</td>
           <td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook">Get Market Orderbook</a></td>
         </tr>
+        <tr>
+          <td>R9<br><span class="status">Needs review · live page load</span></td>
+          <td>Loaded the deployed <code>/pages/live-alerts.html</code> at the current GitHub Pages URL: it displayed “Could not load alert data: 503.” Its code calls <code>fetch('data/snapshot.json')</code> and <code>fetch('data/jumps.json')</code>; from a page under <code>/pages/</code> those relative URLs resolve under <code>/pages/data/</code>, whereas the published files are under the site-root <code>/data/</code> (the latter URL was fetched successfully). The browser path therefore fails before the alert rows can render. The page's data timestamp is also stale; see R7. This is directly observed live, not inferred from Kalshi data.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> · <a href="https://docs.kalshi.com/api-reference/market/get-trades">Get Trades</a></td>
+        </tr>
       </tbody>
     </table>
   </section>
@@ -91,7 +96,7 @@
       <li><code>npm run check</code>: 15 HTML pages; local references resolved; source-linked rows, unique IDs, and no inline handlers.</li>
       <li><code>npm run build</code>: generated 15 static pages.</li>
       <li><code>python3 tools/check.py</code>: links/nav/data/secrets/scripts passed across 18 pages; it reported 11 non-2xx snapshot API requests (the existing Verification page is the indicated evidence location; this audit did not re-fetch or reclassify each one).</li>
-      <li><code>python3 scripts/check_links.py</code>: 8,455 references across 124 HTML files, all resolved on the current integrated tree.</li>
+      <li><code>python3 scripts/check_links.py</code>: 8,459 references across 124 HTML files, all resolved on the current integrated tree.</li>
       <li>JSDOM smoke test ran the merged live-alerts page against the committed snapshot files: 14 rows rendered, 0/14 with a matched market/topic, 0 high-ROI rows, and 6 rows without a per-row source link. It also exposed mismatched snapshot timestamps. These are published here as verification findings, not silently corrected.</li>
       <li>Kalshi demo, event-list, orderbook, candlestick, order V2, WebSocket, and GitHub Pages documentation pages were read directly. A mocked request confirmed what the backend currently emits; no private key, live account, or order call was used.</li>
     </ul>
