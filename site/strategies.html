@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Strategies · Kalshi Demo Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="strategies">
+  <header class="topbar">
+    <div class="brand"><span class="logo">K</span> Kalshi Demo Dashboard</div>
+    <nav class="nav">
+      <a href="index.html">Dashboard</a>
+      <a href="events.html">Live Events</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="trades.html">Trades</a>
+      <a href="strategies.html" class="active">Strategies</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+    </nav>
+    <span id="conn-status" class="status-pill"><span class="dot"></span><span>Connecting…</span></span>
+  </header>
+
+  <main>
+    <h1>Strategies</h1>
+    <p class="subtitle">
+      Performance aggregates and strategy ideas derived from categorized trades. Strategies are
+      <b>proposed for review</b> — none are applied automatically.
+    </p>
+    <div id="strategies-perf" class="cards"></div>
+    <div class="panel">
+      <div id="strategies"></div>
+    </div>
+    <div class="note">
+      <b>Review before implementing.</b> Strategy candidates are generated from verified trade fields and
+      surfaced here and on the <a href="suggestions.html">Suggestions</a> board. Confirm the taxonomy and
+      outcomes before scaling any strategy.
+    </div>
+  </main>
+
+  <footer>
+    Kalshi Demo Dashboard · data verified from <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a>
+  </footer>
+  <script src="js/app.js"></script>
+</body>
+</html>

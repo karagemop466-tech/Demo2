@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trades · Kalshi Demo Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="trades">
+  <header class="topbar">
+    <div class="brand"><span class="logo">K</span> Kalshi Demo Dashboard</div>
+    <nav class="nav">
+      <a href="index.html">Dashboard</a>
+      <a href="events.html">Live Events</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="trades.html" class="active">Trades</a>
+      <a href="strategies.html">Strategies</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+    </nav>
+    <span id="conn-status" class="status-pill"><span class="dot"></span><span>Connecting…</span></span>
+  </header>
+
+  <main>
+    <h1>Trades</h1>
+    <p class="subtitle">
+      Executed trades on the demo account, categorized by topic, side, horizon, and type. Use
+      <a href="market.html">Market Detail</a> to execute trades; strategies derived from these trades appear on
+      the <a href="strategies.html">Strategies</a> page.
+    </p>
+    <div class="panel">
+      <div id="trades-table"></div>
+    </div>
+    <div class="note">
+      <b>Categorization.</b> Categories are derived from verified Kalshi fields (ticker, side, price, count,
+      timestamps). The strategy taxonomy is a product decision reviewed on the
+      <a href="suggestions.html">Suggestions</a> board before any strategy is applied automatically.
+      Source: <a href="https://docs.kalshi.com/llms.txt" target="_blank" rel="noopener">Kalshi order/trade endpoints</a>.
+    </div>
+  </main>
+
+  <footer>
+    Kalshi Demo Dashboard · data verified from <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a>
+  </footer>
+  <script src="js/app.js"></script>
+</body>
+</html>

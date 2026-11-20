@@ -49,3 +49,47 @@ A separate dashboard lives in `dashboard/` (published by the same Pages workflow
 - `dashboard/analysis.html`, `suggestions.html` (decision-first), `questions.html`, `flagged.html`
 
 Data: `dashboard/data/snapshot.json`. Verified values only; blanks are marked UNVERIFIED. See `COORDINATION.md` for sources and irregularities.
+
+---
+
+## Backend dashboard + `site/` (session arena-406a2f21-demo2)
+
+A complementary **Node backend** and static dashboard were added in this session,
+in non-overlapping folders. The existing client-side site above is unchanged.
+
+- **`server/`** — Node backend that signs and calls the Kalshi demo REST/WebSocket
+  API (Ed25519/RSA), tracks events until resolution (YES/NO), executes V2 trades,
+  reads portfolio, categorizes trades, proposes strategies, and persists tracking
+  state to `.data/store.json` (gitignored). It also exposes a browser WebSocket hub
+  and polls Kalshi for live price updates.
+- **`site/`** — a clean dashboard with a landing page and category subpages
+  (gas/elections/culture/crypto/golf), a live-events board ranked by estimated
+  notional, a price-movement chart (X = time, Y = contract price, minute/hour/day
+  candles), an orderbook liquidity view (contracts available per price + cumulative
+  depth + spread), portfolio, trades, strategies, a reviewable Suggestions board,
+  and a Flagged for Review page. Every table row carries a source link to an
+  official Kalshi page; unverified values are left blank and flagged.
+- **`docs/`** — executive summary, questions/information/answers, suggestions, and
+  a verification log.
+
+### Run the backend
+
+```bash
+npm install
+# Optional: supply a Kalshi demo API key (never commit keys)
+# export KALSHI_ACCESS_KEY=<key-id>
+# export KALSHI_PRIVATE_KEY="$(cat kalshi.key)"
+npm start            # serves the dashboard + API on http://0.0.0.0:8080
+```
+
+The static `site/` is published to GitHub Pages alongside the existing site by the
+root-deploying `pages.yml` workflow (accessible at `/Demo2/site/index.html`). On a
+static host, `site/` calls Kalshi's public market-data endpoints directly from the
+browser; authenticated portfolio/trade features require the backend with a demo key.
+
+### Verification & flags (this session)
+
+See `docs/VERIFICATION.md` and `site/flagged.html`. Known flags: sandbox cannot
+reach `*.kalshi.co` (FLAG-01); no Kalshi demo API key present (FLAG-02); GitHub Pages
+is a static host (FLAG-03); category-to-topic mapping unverified (FLAG-04);
+settled-outcome payload fields unverified (FLAG-05). None block the merge.
