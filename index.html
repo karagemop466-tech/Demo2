@@ -1,13 +1,213 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kalshi Demo Dashboard</title><link rel="stylesheet" href="assets/style.css"></head><body>
-<header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="index.html">Dashboard</a><a href="pages/executive-summary.html">Executive Summary</a><a href="pages/gas.html">Gas</a><a href="pages/elections.html">Elections</a><a href="pages/culture.html">Culture</a><a href="pages/crypto.html">Crypto</a><a href="pages/golf.html">Golf</a><a href="pages/portfolio.html">Portfolio &amp; Trading</a><a href="pages/analysis.html">Analysis</a><a href="pages/suggestions.html">Suggestions</a><a href="pages/questions.html">Questions</a><a href="pages/verification.html">Verification</a><a href="pages/flagged.html">Flagged for Review</a><a href="pages/sources.html">Sources</a></nav></header>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalshi Demo Dashboard — live gas, elections, culture, crypto &amp; golf markets</title>
+<meta name="description" content="Live, source-linked dashboard for Kalshi demo markets limited to gas prices, elections, culture, crypto and golf. Price history, orderbook depth, resolution tracking, portfolio and trade tools.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="index.html"><span>KALSHI</span> DEMO<small>RESEARCH DASHBOARD</small></a>
+    <nav class="main">
+      <a href="index.html" class="active">Dashboard</a>
+      <a href="pages/executive-summary.html">Executive Summary</a>
+      <a href="pages/gas.html">Gas</a>
+      <a href="pages/elections.html">Elections</a>
+      <a href="pages/culture.html">Culture</a>
+      <a href="pages/crypto.html">Crypto</a>
+      <a href="pages/golf.html">Golf</a>
+      <a href="pages/portfolio.html">Portfolio &amp; Trading</a>
+      <a href="pages/analysis.html">Analysis</a>
+      <a href="pages/suggestions.html">Suggestions</a>
+      <a href="pages/questions.html">Questions</a>
+      <a href="pages/verification.html">Verification</a>
+      <a href="pages/flagged.html">Flagged for Review</a>
+      <a href="pages/repo-review.html">Repo Review</a>
+      <a href="pages/sources.html">Sources</a>
+    </nav>
+    <span class="tag">DEMO · NO REAL FUNDS</span>
+  </div>
+</header>
+
 <div class="wrap">
-<h1>Live Demo Dashboard — Highest-Dollar In-Scope Events</h1>
-<p class="muted">Scope: gas prices, elections, culture, crypto, golf only. Data is fetched live in your browser from the Kalshi <b>demo</b> API. Demo prices are not reflective of real markets. Source: <a href="https://docs.kalshi.com/getting_started/demo_env">Demo Environment docs</a>.</p>
-<div class="card"><div class="row"><button id="refreshBtn">Refresh now</button><span id="liveStatus" class="status">Loading…</span><span id="wsStatus" class="status muted"></span></div></div>
-<div class="grid" style="margin-top:14px">
-<div class="card"><h3>Price chart</h3><p class="muted">X = time · Y = contract price. Choose window:</p><div class="row"><select id="windowSel"><option value="60">Last 60 seconds</option><option value="300" selected>Last 5 minutes</option><option value="3600">Last 1 hour</option></select><input id="tickerInput" placeholder="Market ticker (auto = top market)"></div><canvas id="priceChart" class="chart" style="margin-top:10px"></canvas></div>
-<div class="card"><h3>Orderbook / Liquidity</h3><p class="muted">Contracts available at each price. <button id="loadObBtn" class="secondary">Load orderbook</button></p><div id="orderbookBox">Select a market, then load.</div></div>
+
+  <p class="eyebrow">Kalshi demo · trade-api v2</p>
+  <h1>Live demo dashboard for the five topics in scope</h1>
+  <p class="lede">
+    Every row below is read from the official Kalshi <b>demo</b> Trade API and links back to the exact
+    response it came from. Scope is limited to <b>gas prices, elections, culture, crypto and golf</b>.
+    Nothing on this site is inferred: a field that the API does not return is left blank and marked unverified.
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <button id="refreshBtn">Refresh now</button>
+      <span id="liveStatus" class="status">Loading…</span>
+      <span id="wsStatus" class="status muted"></span>
+      <span class="grow"></span>
+      <a class="btn secondary" href="pages/sources.html">Sources</a>
+      <a class="btn secondary" href="pages/verification.html">Verification</a>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <b>Read this before using any number.</b>
+    <span>
+      This is the Kalshi <b>demo</b> environment with mock funds; Kalshi states demo prices and behaviour
+      may not reflect real markets. The API exposes market <i>volume</i> in contracts and no dollar-turnover
+      field, so the ranking below uses <code>volume_fp × last_price_dollars</code> and labels it an estimate.
+      Demo data also contains synthetic markets (for example <code>1+1 = 3</code> and “demo strike” contracts).
+      See <a href="pages/flagged.html">Flagged for Review</a>.
+    </span>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h3>1 · Highest-dollar in-scope markets</h3>
+      <p class="muted small">
+        Ranked by estimated dollar turnover (<code>volume_fp × last_price_dollars</code>). Click a ticker to
+        open its official API response; the chart and orderbook below follow your selection.
+      </p>
+      <div class="row" style="margin-bottom:10px">
+        <div>
+          <label for="topicFilter">Topic</label>
+          <select id="topicFilter">
+            <option value="">All five topics</option>
+            <option value="gas-prices">Gas prices</option>
+            <option value="elections">Elections</option>
+            <option value="culture">Culture</option>
+            <option value="crypto">Crypto</option>
+            <option value="golf">Golf</option>
+          </select>
+        </div>
+        <div class="grow">
+          <label for="searchBox">Search title or ticker</label>
+          <input id="searchBox" placeholder="e.g. Bitcoin, Masters, Senate">
+        </div>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Ticker</th><th>Title</th><th>Topic</th>
+              <th class="num">Last $</th><th class="num">YES bid</th><th class="num">YES ask</th>
+              <th class="num">Volume (contracts)</th><th class="num">Est. $ turnover</th><th>Close (UTC)</th>
+            </tr>
+          </thead>
+          <tbody id="marketsBody"><tr><td colspan="9" class="muted">Loading…</td></tr></tbody>
+        </table>
+      </div>
+      <p class="muted small" id="rowNote"></p>
+    </div>
+
+    <div class="card">
+      <h3>2 · Price movement</h3>
+      <p class="muted small">
+        X axis = time · Y axis = current contract price ($ per YES contract). Choose the graph length in
+        seconds, minutes or hours. Long windows use the official candlestick endpoint; seconds use live polling.
+      </p>
+      <div class="row" style="margin-bottom:10px">
+        <div class="grow">
+          <label for="tickerSelect">Market</label>
+          <select id="tickerSelect"><option value="">Select a market…</option></select>
+        </div>
+        <div>
+          <label for="windowSel">Graph length</label>
+          <select id="windowSel">
+            <option value="60">Last 60 seconds</option>
+            <option value="300" selected>Last 5 minutes</option>
+            <option value="900">Last 15 minutes</option>
+            <option value="3600">Last 1 hour</option>
+            <option value="21600">Last 6 hours</option>
+            <option value="86400">Last 24 hours</option>
+            <option value="604800">Last 7 days</option>
+          </select>
+        </div>
+        <div>
+          <label for="pollSel">Poll interval</label>
+          <select id="pollSel">
+            <option value="5">5 seconds</option>
+            <option value="15" selected>15 seconds</option>
+            <option value="30">30 seconds</option>
+            <option value="60">60 seconds</option>
+          </select>
+        </div>
+      </div>
+      <div class="chartbox">
+        <canvas id="priceChart" class="chart"></canvas>
+        <div class="chartlegend">
+          <span>Selected: <b id="selectedTicker">—</b></span>
+          <span>Title: <b id="selectedTitle">—</b></span>
+          <span>Last: <b id="selectedLast">—</b></span>
+          <span>Bid: <b id="selectedBid">—</b></span>
+          <span>Ask: <b id="selectedAsk">—</b></span>
+        </div>
+      </div>
+      <p class="muted small" id="chartNote"></p>
+      <div class="row">
+        <button id="orderbookBtn" class="secondary">Refresh orderbook</button>
+        <button id="tradeBtn" class="secondary">Trade this market →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>3 · Liquidity — contracts available at each price</h3>
+    <p class="muted small">
+      Kalshi returns <b>bids only</b>; the implied YES ask is <code>$1.00 − best NO bid</code> (official orderbook
+      guidance). Source: <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">orderbook responses</a>.
+    </p>
+    <div id="orderbookBox"><span class="muted">Select a market, then load the orderbook.</span></div>
+  </div>
+
+  <div class="card">
+    <h3>4 · Resolution tracking — how each event resolved</h3>
+    <p class="muted small">
+      Settled markets from the same API, with the official <code>result</code> value (YES or NO) and settlement
+      amount. Every settled in-scope market is tracked until it resolves. Source:
+      <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>
+      with <code>status=settled</code>.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Ticker</th><th>Title</th><th>Result</th><th class="num">Settlement $</th><th>Settled at (UTC)</th><th>Close (UTC)</th></tr></thead>
+        <tbody id="settledBody"><tr><td colspan="6" class="muted">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>5 · Everything else on this site</h3>
+    <div class="cards">
+      <div class="minicard"><h3>Category pages</h3><p>Verified tables for each topic, one row per market, each row linked to its API response.</p>
+        <a href="pages/gas.html">Gas</a> · <a href="pages/elections.html">Elections</a> · <a href="pages/culture.html">Culture</a> · <a href="pages/crypto.html">Crypto</a> · <a href="pages/golf.html">Golf</a></div>
+      <div class="minicard"><h3>Portfolio &amp; trading</h3><p>Connect a demo account, place orders, and log every trade with its outcome.</p>
+        <a href="pages/portfolio.html">Open</a></div>
+      <div class="minicard"><h3>Analysis</h3><p>Trade categorisation, strategy definitions and the metrics each strategy must clear.</p>
+        <a href="pages/analysis.html">Open</a></div>
+      <div class="minicard"><h3>Suggestions</h3><p>Improvement proposals with a review board — nothing is applied until it is chosen.</p>
+        <a href="pages/suggestions.html">Open</a></div>
+      <div class="minicard"><h3>Questions</h3><p>What is known, what is missing, and how each missing item can be discovered.</p>
+        <a href="pages/questions.html">Open</a></div>
+      <div class="minicard"><h3>Flagged for review</h3><p>Irregularities and unverified values, with sources, for your decision.</p>
+        <a href="pages/flagged.html">Open</a></div>
+    </div>
+  </div>
+
 </div>
-<div class="card" style="margin-top:14px"><h3>Top markets by notional (volume × last price)</h3><p class="muted">“Highest dollar amount” is proxied by <code>volume_fp × last_price_dollars</code> because the API exposes no single dollar-volume field. See <a href="pages/flagged.html">Flagged for Review</a>. Fields per <a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a>.</p><div style="overflow:auto"><table id="marketsTable"><thead><tr><th></th><th>Ticker</th><th>Title</th><th>Topic</th><th>Last $</th><th>Volume</th><th>Notional $</th><th>Yes bid/ask</th><th>Close</th></tr></thead><tbody></tbody></table></div></div>
-<div class="card" style="margin-top:14px"><h3>Resolved events (tracked until resolution)</h3><p class="muted">Settled markets show <code>result</code> = yes/no. Source: <a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> (<code>status=settled</code>).</p><div style="overflow:auto"><table id="resolvedTable"><thead><tr><th>Ticker</th><th>Title</th><th>Topic</th><th>Result</th><th>Settlement $</th><th>Settled at</th></tr></thead><tbody></tbody></table></div></div>
-</div><footer>Demo only. No real funds. Keys stay in your browser. <a href="pages/sources.html">Sources</a> · <a href="pages/verification.html">Verification</a></footer><script src="assets/app.js"></script></body></html>
+
+<footer class="site">
+  <div class="inner">
+    <span>Kalshi Demo Dashboard · demo environment only · no real funds · research, not advice</span>
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs</a>
+    <a href="pages/sources.html">All sources</a>
+    <a href="COORDINATION.md">Coordination log</a>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

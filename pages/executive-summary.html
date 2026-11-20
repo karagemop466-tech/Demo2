@@ -1,9 +1,159 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Executive Summary</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Executive Summary</h1>
-<p><b>Purpose.</b> This site collects, organizes, and analyzes Kalshi <b>demo</b> markets in five topics only — gas prices, elections, culture, crypto, golf — tracking live events until resolution (yes/no), visualizing price movement and liquidity, and supporting demo-account portfolio tracking and trade execution.</p>
-<div class="grid">
-<div class="card"><h3>What it does</h3><ul><li>Ranks open in-scope markets by notional (volume × last price) from <a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a>.</li><li>Charts contract price over time (seconds/minutes/hours) and shows orderbook depth via <a href="https://docs.kalshi.com/getting_started/quick_start_market_data">Get Market Orderbook</a>.</li><li>Tracks settled markets and their <code>result</code> (yes/no).</li><li>With demo API keys, loads balance/positions/fills and places limit orders (signed per <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Authenticated Requests</a>).</li><li>Categorizes fills and derives strategies only from observed data.</li></ul></div>
-<div class="card"><h3>What it does not do</h3><ul><li>No real-money trading. Demo only (<a href="https://docs.kalshi.com/getting_started/demo_env">demo env</a>).</li><li>No hard-coded market values — all numbers come live from the API or stay blank.</li><li>No strategy is recommended without fill data.</li></ul></div>
-<div class="card"><h3>Key risks</h3><ul><li>Demo prices “may not be reflective of those in real markets” (<a href="https://docs.kalshi.com/getting_started/demo_env">source</a>).</li><li>Topic mapping is keyword-based and heuristic — see Flagged for Review.</li><li>Trading requires your own demo API keys; keys never leave your browser.</li></ul></div>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive Summary · Kalshi Demo Dashboard</title>
+<meta name="description" content="Executive summary of the Kalshi demo dashboard: what was built, what the data shows, what is blocked and what needs deciding.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="../index.html"><span>KALSHI</span> DEMO<small>RESEARCH DASHBOARD</small></a>
+    <nav class="main">
+      <a href="../index.html">Dashboard</a>
+      <a href="executive-summary.html" class="active">Executive Summary</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio &amp; Trading</a>
+      <a href="analysis.html">Analysis</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions</a>
+      <a href="verification.html">Verification</a>
+      <a href="flagged.html">Flagged for Review</a>
+      <a href="repo-review.html">Repo Review</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+    <span class="tag">DEMO · NO REAL FUNDS</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="eyebrow">Executive summary</p>
+  <h1>A source-linked dashboard for five Kalshi demo topics</h1>
+  <p class="lede">
+    A live dashboard over the Kalshi <b>demo</b> Trade API, limited to <b>gas prices, elections, culture, crypto
+    and golf</b>. Every market row links back to the exact official API response it was read from; no value is
+    inferred, and any field the API does not return is left blank and marked unverified.
+  </p>
+
+  <h2 id="figures">1 · The data behind this site</h2>
+  <div class="card">
+    <!-- DATA:FIXTURES -->
+    <p class="muted small">
+      Figures come from the committed snapshot, refreshed automatically by
+      <a href="https://github.com/karagemop466-tech/Demo2/blob/main/.github/workflows/collect.yml">the scheduled collector</a>.
+      The full request log is in <code>data/collection_log.json</code>.
+    </p>
+  </div>
+
+  <h2 id="built">2 · What is built</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:26%">Capability</th><th style="width:40%">How it works</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Live market discovery</td><td>The browser calls <code>GET /markets?status=open</code> with full cursor pagination and filters to the five topics using the official series category and tags.</td><td><span class="pill yes">Live</span></td></tr>
+        <tr><td>Highest-dollar ranking</td><td>Ranked by <code>volume_fp × last_price_dollars</code>, labelled an estimate, because the API has no dollar-turnover field.</td><td><span class="pill yes">Live</span></td></tr>
+        <tr><td>Price graph</td><td>X axis time, Y axis contract price. Official candlesticks for the window length, live polling layered on top. Window selectable from 60 seconds to 7 days.</td><td><span class="pill yes">Live</span></td></tr>
+        <tr><td>Liquidity depth</td><td>Contracts available at every price from the official orderbook, with the implied YES ask derived from the best NO bid.</td><td><span class="pill yes">Live</span></td></tr>
+        <tr><td>Resolution tracking</td><td>Settled markets with the official <code>result</code> (YES/NO), settlement amount and settlement time.</td><td><span class="pill yes">Live</span></td></tr>
+        <tr><td>Category pages</td><td>Five generated pages, one row per market, each row linked to its API response, plus series, settlement sources and orderbook depth.</td><td><span class="pill yes">Live</span></td></tr>
+        <tr><td>Data refresh</td><td>A scheduled workflow pulls the demo API from a GitHub runner and commits the snapshot to <code>data/</code>; the page falls back to it when the browser cannot reach the API.</td><td><span class="pill yes">Automated</span></td></tr>
+        <tr><td>Trade execution</td><td>A signed command-line client and an opt-in in-browser signer; the signing format is verified offline against the official specification.</td><td><span class="pill flag">Built, not run — no account</span></td></tr>
+        <tr><td>Portfolio performance and strategy analysis</td><td>Categorises every fill from official fields (topic, side, price band, time to close, entry side) and measures each category once markets resolve.</td><td><span class="pill flag">Built, not run — no account</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="architecture">3 · How the data flows</h2>
+  <div class="card">
+    <ul class="tight">
+      <li><b>Collector</b> — <code>tools/collect_kalshi.py</code> calls the public demo endpoints (<code>/markets</code>, <code>/events</code>, <code>/series</code>, <code>/markets/{t}/orderbook</code>), follows the cursor to the end of each listing, classifies every market against the official category and tag taxonomy, and writes <code>data/*.json</code>. No authentication is used, so no secret ever enters the repository.</li>
+      <li><b>Scheduler</b> — <code>.github/workflows/collect.yml</code> runs the collector on a GitHub-hosted runner (the build sandbox has no outbound route to the Kalshi hosts) and commits the result.</li>
+      <li><b>Pages</b> — <code>tools/build_site.py</code> regenerates the category and verification pages from <code>data/</code>, so a published table can never disagree with the committed snapshot.</li>
+      <li><b>Browser</b> — <code>assets/app.js</code> tries the live API first. If the request fails (network or CORS) it switches to the committed snapshot and says so in the status line, rather than showing a stale value as if it were live.</li>
+      <li><b>Checks</b> — <code>tools/check_links.py</code> fails the build on a broken link or a data row without an official source link; <code>tools/test_signing.py</code> fails if the request signature stops matching the published specification.</li>
+    </ul>
+  </div>
+
+  <h2 id="findings">4 · The findings that matter</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:30%">Finding</th><th style="width:44%">Detail</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>The API has no dollar-turnover field</td><td>Volume, 24-hour volume and open interest are contract counts. Every dollar figure on this site is therefore an explicitly labelled estimate (<code>volume_fp × last_price_dollars</code>), and the contract volume is always shown next to it.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+        <tr><td>“Culture” is not an official category</td><td>The published taxonomy contains <b>Entertainment</b> and no “Culture” category; “Gas prices” is not a category either (it is <b>Commodities</b>/<b>Economics</b>), and “Golf” is a tag under <b>Sports</b>. The mapping is stated on every category page and shown per row.</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories" target="_blank" rel="noopener">taxonomy response</a></td></tr>
+        <tr><td>Resolution is a single official field</td><td>A settled market reports <code>result</code> = <code>yes</code> or <code>no</code> with <code>settlement_value_dollars</code> of $1.0000 or $0.0000. Tracking “how the event resolved” needs no interpretation.</td><td><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market settlement</a></td></tr>
+        <tr><td>The orderbook contains bids only</td><td>Implied YES asks come from the NO side (<code>$1.00 − best NO bid</code>). An empty book is a normal answer for an inactive market, not an error.</td><td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook responses</a></td></tr>
+        <tr><td>Demo data is synthetic in places</td><td>Contracts such as “1+1 = 3”, “Demo only” hourly crypto markets and “demo strike” contracts exist in the demo environment, and some series publish placeholder settlement sources. These rows are visible but must not be read as evidence about real events.</td><td><a href="flagged.html#f8">Flag F8</a> · <a href="flagged.html#f1">Flag F1</a></td></tr>
+        <tr><td>The documented status values do not match the responses</td><td>The <code>status</code> filter accepts <code>unopened</code>/<code>open</code>/<code>closed</code>/<code>settled</code>, while responses carry <code>active</code> and <code>finalized</code>.</td><td><a href="flagged.html#f4">Flag F4</a></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="limits">5 · Limits, and the one hard blocker</h2>
+  <div class="card">
+    <div class="callout bad">
+      <b>There is no Kalshi account, so there are no account numbers.</b>
+      <span>
+        Portfolio balance, positions, fills, settlements, executed trades and every performance statistic are blank
+        on this site, and no trade was executed. A demo account can only be created by a person at
+        <a href="https://demo.kalshi.co/sign-up" target="_blank" rel="noopener">demo.kalshi.co/sign-up</a> because it
+        needs an email address and a password. The trading, categorisation and analysis code is finished and its
+        signing is verified, so connecting a key fills the tables automatically. This is question
+        <a href="questions.html#q-demo-account">Q1</a>.
+      </span>
+    </div>
+    <ul class="tight">
+      <li><b>Demo prices are not real prices.</b> Kalshi states demo behaviour may not reflect real markets, and the demo environment contains synthetic contracts.</li>
+      <li><b>No fee-aware figures.</b> The Kalshi fee schedule has not been read in this session, so every P&amp;L figure is gross and labelled as such (question Q2).</li>
+      <li><b>Browser access is unverified.</b> If the published page cannot call the demo API directly, it says “Snapshot mode” and serves the committed snapshot instead; the freshness then depends on the scheduled collector.</li>
+      <li><b>Second-level ticks depend on polling.</b> The WebSocket feed is not used for data; the chart combines official candles with REST polling.</li>
+      <li><b>Nothing here is trading advice</b>, and the strategy categories on the Analysis page are labelling rules, not validated systems.</li>
+    </ul>
+  </div>
+
+  <h2 id="decide">6 · What needs a decision from you</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:8%">Priority</th><th style="width:26%">Decision</th><th style="width:36%">Why it is needed</th><th>Where</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Create the demo account and connect a key</td><td>It is the only thing standing between the current site and real portfolio performance, executed trades and per-trade results.</td><td><a href="questions.html#q-demo-account">Q1</a> · <a href="portfolio.html">Portfolio</a></td></tr>
+        <tr><td>2</td><td>Confirm the topic scope (especially gas and culture)</td><td>“Gas prices” and “Culture” are editorial labels, not official categories, so which series belong is a judgement call that changes every table.</td><td><a href="questions.html#q-gas-definition">Q3</a> · <a href="questions.html#q-culture-definition">Q4</a></td></tr>
+        <tr><td>3</td><td>Choose where credentials may live</td><td>The site currently offers a local command-line signer and an opt-in browser signer; a private server-side service is the strongest option if this ever moves beyond demo funds.</td><td><a href="suggestions.html">Suggestion S7</a> · <a href="questions.html#q-risk-limits">Q11</a></td></tr>
+        <tr><td>4</td><td>Choose the dollar ranking window and approve the fee work</td><td>Lifetime versus 24-hour turnover, and whether to make P&amp;L fee-aware, change the numbers the site publishes.</td><td><a href="questions.html#q-dollar-window">Q5</a> · <a href="questions.html#q-fees">Q2</a></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="map">7 · Where everything is</h2>
+  <div class="card">
+    <div class="cards">
+      <div class="minicard"><h3>Dashboard</h3><p>Live markets, chart, orderbook depth and resolution tracking.</p><a href="../index.html">Open</a></div>
+      <div class="minicard"><h3>Gas · Elections · Culture · Crypto · Golf</h3><p>Verified category tables with a source link on every row.</p><a href="gas.html">Gas</a> · <a href="elections.html">Elections</a> · <a href="culture.html">Culture</a> · <a href="crypto.html">Crypto</a> · <a href="golf.html">Golf</a></div>
+      <div class="minicard"><h3>Portfolio &amp; Trading</h3><p>Connect a demo account, place orders, categorise trades.</p><a href="portfolio.html">Open</a></div>
+      <div class="minicard"><h3>Analysis</h3><p>How trades are categorised and what each strategy must clear.</p><a href="analysis.html">Open</a></div>
+      <div class="minicard"><h3>Suggestions</h3><p>Ten proposals with a review board.</p><a href="suggestions.html">Open</a></div>
+      <div class="minicard"><h3>Questions</h3><p>What is answered, what is missing and how to get it.</p><a href="questions.html">Open</a></div>
+      <div class="minicard"><h3>Verification</h3><p>Line-by-line verification log.</p><a href="verification.html">Open</a></div>
+      <div class="minicard"><h3>Flagged for Review</h3><p>Irregularities, constraints and repository issues.</p><a href="flagged.html">Open</a></div>
+      <div class="minicard"><h3>Repo Review</h3><p>Every file and every pull request, reviewed.</p><a href="repo-review.html">Open</a></div>
+      <div class="minicard"><h3>Sources</h3><p>Every official document and API response used.</p><a href="sources.html">Open</a></div>
+    </div>
+  </div>
 </div>
-<p>Next steps: review <a href="questions.html">Questions</a>, <a href="suggestions.html">Suggestions</a>, and <a href="flagged.html">Flagged for Review</a> before any decision.</p>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+
+<footer class="site">
+  <div class="inner">
+    <span>Kalshi Demo Dashboard · demo environment only · no real funds · research, not advice</span>
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs</a>
+    <a href="sources.html">All sources</a>
+    <a href="../COORDINATION.md">Coordination log</a>
+  </div>
+</footer>
+</body>
+</html>

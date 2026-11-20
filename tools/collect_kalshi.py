@@ -152,10 +152,16 @@ class Collector:
         return None
 
     def get_paged(self, path, params, key, max_pages=60, note=""):
-        """Follow the Kalshi cursor pagination and return (records, urls)."""
+        """Follow the Kalshi cursor pagination and return (records, urls).
+
+        Stops early if the API repeats a cursor (that means the listing is not
+        advancing) and de-duplicates records by their ticker so a listing that
+        shifts under a page boundary cannot create duplicates."""
         records, urls = [], []
+        seen_cursor = set()
+        seen_ids = set()
         cursor = ""
-        for _ in range(max_pages):
+        for page in range(max_pages):
             q = dict(params)
             if cursor:
                 q["cursor"] = cursor
@@ -164,12 +170,21 @@ class Collector:
             if not data:
                 break
             batch = data.get(key) or []
-            records.extend(batch)
+            for item in batch:
+                ident = item.get("ticker") or item.get("event_ticker") or json.dumps(item, sort_keys=True)
+                if ident in seen_ids:
+                    continue
+                seen_ids.add(ident)
+                records.append(item)
             urls.append(url)
-            cursor = data.get("cursor") or ""
-            if not cursor:
+            next_cursor = data.get("cursor") or ""
+            print("  page %d: %s -> %d new records (cursor %s)"
+                  % (page + 1, note or path, len(batch), (next_cursor or "none")[:12]), flush=True)
+            if not next_cursor or next_cursor in seen_cursor:
                 break
-            time.sleep(0.15)
+            seen_cursor.add(next_cursor)
+            cursor = next_cursor
+            time.sleep(0.1)
         return records, urls
 
 
@@ -226,7 +241,7 @@ def collect(out_dir):
 
     # 2. Official series list (carries category + tags + settlement sources)
     series_records, series_urls = c.get_paged(
-        "/series", {}, "series", max_pages=20, note="series catalogue"
+        "/series", {}, "series", max_pages=3, note="series catalogue"
     )
     if not series_records:
         # Fall back to per-category queries if an unfiltered /series call fails.
@@ -246,18 +261,18 @@ def collect(out_dir):
 
     # 3. Open markets (paginated)
     open_markets, open_urls = c.get_paged(
-        "/markets", {"status": "open", "limit": 1000}, "markets", max_pages=40,
+        "/markets", {"status": "open", "limit": 1000}, "markets", max_pages=20,
         note="open markets, full pagination",
     )
     # 4. Settled markets (paginated) - used for resolution tracking
     settled_markets, settled_urls = c.get_paged(
-        "/markets", {"status": "settled", "limit": 1000}, "markets", max_pages=40,
+        "/markets", {"status": "settled", "limit": 1000}, "markets", max_pages=20,
         note="settled markets, full pagination",
     )
 
     # 5. Open events (paginated) - event level category, volume, liquidity
     events, event_urls = c.get_paged(
-        "/events", {"status": "open", "limit": 200}, "events", max_pages=40,
+        "/events", {"status": "open", "limit": 200}, "events", max_pages=20,
         note="open events, full pagination",
     )
 

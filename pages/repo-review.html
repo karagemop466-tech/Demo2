@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repo Review · Kalshi Demo Dashboard</title>
+<meta name="description" content="Line-by-line review of every file in the repository, the pull requests other sessions opened, and the irregularities found.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="../index.html"><span>KALSHI</span> DEMO<small>RESEARCH DASHBOARD</small></a>
+    <nav class="main">
+      <a href="../index.html">Dashboard</a>
+      <a href="executive-summary.html">Executive Summary</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio &amp; Trading</a>
+      <a href="analysis.html">Analysis</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions</a>
+      <a href="verification.html">Verification</a>
+      <a href="flagged.html">Flagged for Review</a>
+      <a href="repo-review.html" class="active">Repo Review</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+    <span class="tag">DEMO · NO REAL FUNDS</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="eyebrow">Line-by-line</p>
+  <h1>Repository review</h1>
+  <p class="lede">
+    Every file in the repository, what it is for, and what was found in it. The links point at the exact file and
+    line ranges in the public repository, so each item can be checked directly.
+  </p>
+
+  <h2 id="layout">1 · Layout after this integration</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:30%">Path</th><th style="width:34%">Purpose</th><th>Review note</th></tr></thead>
+      <tbody>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/index.html">index.html</a></td><td>Landing page and live dashboard</td><td>Single source of the navigation block, reused by every generated page.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/pages/">pages/</a></td><td>Subpages: executive summary, five category pages, portfolio, analysis, suggestions, questions, verification, sources, flagged, repo review</td><td>The five category pages are generated from the collected snapshot by <code>tools/build_site.py</code> so their rows cannot drift from the data.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/assets/style.css">assets/style.css</a></td><td>The only stylesheet</td><td>One rule set for the whole site; no CDN, no external fonts, no build step.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/assets/app.js">assets/app.js</a></td><td>Live dashboard logic</td><td>Live REST first, committed snapshot as fallback. Never invents a value: a failed request leaves the previous cell untouched.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/assets/portfolio.js">assets/portfolio.js</a></td><td>Account connection, order entry, trade log, strategy categorisation</td><td>The key is imported into WebCrypto in the page and never sent anywhere; the trade log lives in local storage only.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/assets/suggestions.js">assets/suggestions.js</a></td><td>Suggestion review board</td><td>Decisions are local and exportable as JSON.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/data/">data/</a></td><td>Collected demo snapshot</td><td>Every row keeps the API URL it came from; <code>collection_log.json</code> lists every request made.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/tools/collect_kalshi.py">tools/collect_kalshi.py</a></td><td>Collector</td><td>Standard library only. Classification rules are declared in one place and are echoed into <code>data/meta.json</code>.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/tools/build_site.py">tools/build_site.py</a></td><td>Generates the category and verification pages</td><td>Renders blanks for missing fields instead of substituting a default.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/tools/check_links.py">tools/check_links.py</a></td><td>Link and row-source checker</td><td>Fails the build on a broken internal link, a missing anchor or a data row with no official source link.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/tools/kalshi_trade.py">tools/kalshi_trade.py</a></td><td>Command-line signed API client</td><td>Signs with <code>openssl</code> only, so no third-party package is needed; the private key never leaves the machine.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/tools/test_signing.py">tools/test_signing.py</a></td><td>Offline verification of the signing implementation</td><td>Generates throw-away keys, signs and verifies against the matching public key.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/.github/workflows/collect.yml">.github/workflows/collect.yml</a></td><td>Scheduled data collection</td><td>Runs on a GitHub-hosted runner, which has the outbound access the build sandbox lacks.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/.github/workflows/pages.yml">.github/workflows/pages.yml</a></td><td>GitHub Pages deployment</td><td>Uploads the repository root as the Pages artifact.</td></tr>
+        <tr><td class="mono"><a href="https://github.com/karagemop466-tech/Demo2/blob/main/COORDINATION.md">COORDINATION.md</a></td><td>Shared task board and verification log</td><td>Keeps every session's claims, sources, verification notes and irregularity list.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="history">2 · Pull requests reviewed</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:8%">PR</th><th style="width:24%">Title</th><th style="width:26%">What it changed</th><th>Disposition</th></tr></thead>
+      <tbody>
+        <tr><td>#1</td><td>Kalshi demo dashboard — live markets, trading, analysis, verification</td><td>First dashboard, executive summary, category pages, suggestions, questions, verification, sources, flagged</td><td>Superseded by the consolidated site; its page structure and content were carried forward.</td></tr>
+        <tr><td>#3</td><td>Build Kalshi demo market monitor</td><td>Root-level <code>analysis.html</code>, <code>portfolio.html</code>, <code>review.html</code>, <code>app.js</code>, <code>style.css</code></td><td>Superseded; the read-only posture it adopted is kept on the <a href="portfolio.html">Portfolio</a> page, and the account path is now the local CLI.</td></tr>
+        <tr><td>#5</td><td>Verified-data subsite with row-level sources</td><td>The <code>verified/</code> subsite: row-linked category tables, flagged register, questions, suggestions, live chart</td><td>Content carried forward into <code>pages/</code> and <code>data/</code>; the duplicate subsite was removed so the site has one authoritative copy of each table (flag R2).</td></tr>
+        <tr><td>#6</td><td>Disable unsafe browser-side trading credentials</td><td>Removed in-browser key entry and order signing from the static site</td><td>Accepted as a security requirement. The current site restores an <b>opt-in</b> in-browser signer and adds the local CLI as the primary path, with the trade-off recorded as suggestion S7 and flag R1.</td></tr>
+        <tr><td>#9</td><td>Kalshi demo dashboard site + coordination board</td><td>A parallel site under <code>docs/</code> (later <code>dashboard/</code>) with a candlestick chart, an orderbook page and a hand-curated snapshot</td><td>Its findings F1–F15 and U1–U8 were carried into the <a href="flagged.html">Flagged for Review</a> page, and the candlestick approach was adopted in the consolidated chart. The duplicate site was removed (flag R2).</td></tr>
+        <tr><td>#10</td><td>Register the Kalshi demo data collector workflow</td><td>Adds the collector and its workflow so the snapshot can be refreshed automatically</td><td>Merged; this is the change that made live, source-linked data possible.</td></tr>
+        <tr><td>#12</td><td>Rebuild <code>verified/</code> on the merged tree; add F-23</td><td>Another regeneration of the subsite plus a note about two parallel sites</td><td>Its F-23 observation is the reason for flag R2 and for the consolidation in this change set.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="findings">3 · Findings in the code</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:9%">ID</th><th style="width:22%">Where</th><th style="width:36%">Finding</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>C1</td><td><code>assets/app.js</code> (previous revision)</td><td>The chart was fed only from browser polling, so it showed nothing before the page was opened and could not render a multi-day view.</td><td>Replaced with the official candlestick endpoint plus live polling (suggestion S2).</td></tr>
+        <tr><td>C2</td><td><code>assets/app.js</code> (previous revision)</td><td>Several API fields were read from names that do not exist in the current demo response (<code>volume</code>, <code>last_price</code>, <code>yes_bid</code>, <code>liquidity</code>), so cells rendered blank even when the response carried the value.</td><td>Now reads the fixed-point field names actually present in the response (<code>volume_fp</code>, <code>last_price_dollars</code>, <code>yes_bid_dollars</code>, <code>liquidity_dollars</code>).</td></tr>
+        <tr><td>C3</td><td><code>assets/app.js</code> (previous revision)</td><td>On a failed API call the table was replaced with an error message that also cleared the page of previously loaded rows.</td><td>The failure path now keeps the last good data and reports the failure in the status line only.</td></tr>
+        <tr><td>C4</td><td><code>assets/app.js</code> (previous revision)</td><td>The chart canvas was sized from a fixed pixel height while the CSS gave it a percentage height, so the drawing surface did not match the displayed box on high-density screens.</td><td>The canvas is now sized from its client box and scaled by the device pixel ratio.</td></tr>
+        <tr><td>C5</td><td><code>pages/portfolio.html</code>, <code>assets/app.js</code> (previous revision)</td><td>A public page offered a text box for the Kalshi private key and signed requests with it in the page.</td><td>Key handling moved to an opt-in, memory-only, acknowledgement-gated flow, and the recommended path is the local CLI (flag R1).</td></tr>
+        <tr><td>C6</td><td><code>pages/suggestions.html</code> (previous revision)</td><td>Suggestion cards were rendered from a JavaScript string, so their text was not in the HTML and could not be reviewed or searched without running the script.</td><td>Suggestions are now plain HTML with a small script that only attaches the decision buttons.</td></tr>
+        <tr><td>C7</td><td><code>tools/</code> (previous revision)</td><td>The link checker only inspected the <code>verified/</code> subsite and only checked the five category pages, so a broken link anywhere else would not fail the build.</td><td>The checker now walks the whole site and requires an official source link on every data row.</td></tr>
+        <tr><td>C8</td><td><code>COORDINATION.md</code></td><td>Two sessions appended to the file at the same time, which produced a merge conflict when this branch was rebased.</td><td>The conflict was resolved by keeping both sides; the board now has one section per session (flag R5).</td></tr>
+        <tr><td>C9</td><td><code>tools/collect_kalshi.py</code></td><td>The first version matched single-word keywords with a plain substring test, so “eth” would have matched “something”.</td><td>Single-word keywords now match on word boundaries; multi-word keywords match as substrings.</td></tr>
+        <tr><td>C10</td><td><code>tools/kalshi_trade.py</code></td><td>The first version detected the key type by looking for the word “RSA” in the openssl text output, which that output does not contain.</td><td>The key type is now taken from the algorithm identifier in the SubjectPublicKeyInfo DER.</td></tr>
+        <tr><td>C11</td><td>Repository root</td><td>A Python bytecode cache was committed by accident.</td><td>Removed and ignored through <code>.gitignore</code>.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="checks">4 · Checks that run before publication</h2>
+  <div class="card">
+    <ul class="tight">
+      <li><code>python3 tools/check_links.py</code> — every internal link and anchor in the site resolves, and every data row on a category page carries a link to the Kalshi API response it came from.</li>
+      <li><code>python3 tools/test_signing.py</code> — the request-signing implementation matches the official specification, verified offline against generated Ed25519 and RSA keys.</li>
+      <li><code>node --check</code> on every script in <code>assets/</code>.</li>
+      <li><code>python3 tools/build_site.py</code> regenerates the data-driven pages from <code>data/</code>, so a stale table cannot be published.</li>
+      <li>The Pages workflow fails the deployment if any of the above fails.</li>
+    </ul>
+    <p class="muted small">
+      The run outputs are recorded in <a href="verification.html">Verification</a> and in
+      <a href="../COORDINATION.md">COORDINATION.md</a>.
+    </p>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="inner">
+    <span>Kalshi Demo Dashboard · demo environment only · no real funds · research, not advice</span>
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs</a>
+    <a href="sources.html">All sources</a>
+    <a href="../COORDINATION.md">Coordination log</a>
+  </div>
+</footer>
+</body>
+</html>

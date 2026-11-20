@@ -1,10 +1,234 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Flagged for Review</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Flagged for Review</h1>
-<table><tr><th>#</th><th>Irregularity / gap</th><th>Impact</th><th>What we did</th><th>Source</th></tr>
-<tr><td>F1</td><td>Sandbox cannot reach Kalshi API (TLS SSL_ERROR_SYSCALL). Live data unverified from sandbox.</td><td>Dashboard fetches in visitor browser; sandbox preview shows fetch errors.</td><td>No values fabricated; empty/error states shown.</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td></tr>
-<tr><td>F2</td><td>“Highest dollar amount” has no single API field.</td><td>Ranking is a proxy.</td><td>Use volume×last price, labeled everywhere. Awaiting Q1 answer.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td></tr>
-<tr><td>F3</td><td>Topic mapping is keyword heuristic, not series_ticker allowlist.</td><td>Some in-scope markets may be missed/mislabeled.</td><td>Documented on each category page; Suggestion S1 proposes allowlist.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">quick_start</a></td></tr>
-<tr><td>F4</td><td>Demo prices not reflective of real markets.</td><td>Strategies from demo may not transfer.</td><td>Warning on every page; no real-money claims.</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td></tr>
-<tr><td>F5</td><td>Browser CORS to demo API not confirmed from sandbox.</td><td>Live tables may fail in some browsers.</td><td>Error states + Suggestion S3 (proxy) for review.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">quick_start</a></td></tr>
-<tr><td>F6</td><td>No demo API keys in repo (by design).</td><td>Portfolio/trading blank until user pastes keys locally.</td><td>Secure in-browser signing; keys never committed.</td><td><a href="https://docs.kalshi.com/getting_started/api_keys">api_keys</a></td></tr>
-</table>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flagged for Review · Kalshi Demo Dashboard</title>
+<meta name="description" content="Irregularities in the official Kalshi data, constraints that could not be resolved, and repository issues — each with a source link.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="../index.html"><span>KALSHI</span> DEMO<small>RESEARCH DASHBOARD</small></a>
+    <nav class="main">
+      <a href="../index.html">Dashboard</a>
+      <a href="executive-summary.html">Executive Summary</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio &amp; Trading</a>
+      <a href="analysis.html">Analysis</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions</a>
+      <a href="verification.html">Verification</a>
+      <a href="flagged.html" class="active">Flagged for Review</a>
+      <a href="repo-review.html">Repo Review</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+    <span class="tag">DEMO · NO REAL FUNDS</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="eyebrow">Review list</p>
+  <h1>Flagged for review</h1>
+  <p class="lede">
+    Irregularities found in the official Kalshi demo data and documentation, constraints that could not be resolved
+    from this environment, and issues found in the repository. Nothing here blocks the site, and nothing here has
+    been silently corrected — each item keeps the value that was actually observed.
+  </p>
+
+  <h2 id="data">A · Irregularities in the official data or documentation</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:7%">ID</th><th style="width:15%">Area</th><th style="width:34%">What was observed</th><th style="width:22%">Why it matters</th><th style="width:14%">Source</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr id="f1"><td>F1</td><td>Settlement sources</td>
+          <td>Placeholder text left in source names, for example “official government sources of ”, “local news outlets with verifiable mastheads in ”, “their official campaigns or representatives”, each pointing at <code>https://kalshi.com/</code>.</td>
+          <td>The named resolution source is unclear, so the outcome of those markets cannot be independently checked.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">/series</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f2"><td>F2</td><td>Settlement sources</td>
+          <td>Some demo series list search-engine results and unrelated data pages as settlement sources — for example a Google search link and an energy-information page attached to a market about banning a product.</td>
+          <td>A search page is not a primary source for a contract's outcome.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">/series</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f3"><td>F3</td><td>Demo vs production</td>
+          <td>The same series shows different metadata in the two environments: the demo <code>fee_type</code> is <code>quadratic</code> while production is <code>quadratic_with_maker_fees</code>; the demo <code>contract_url</code> points at a staging S3 bucket while production points at <code>assets.kalshi.com</code>; last-updated dates differ.</td>
+          <td>Fee assumptions and contract documents taken from one environment may not hold in the other.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASM" target="_blank" rel="noopener">demo /series/KXAAAGASM</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f4"><td>F4</td><td>Documentation</td>
+          <td><code>GET /markets</code> documents the <code>status</code> filter values as <code>unopened</code>, <code>open</code>, <code>closed</code>, <code>settled</code>, while the market schema documents <code>initialized</code>, <code>inactive</code>, <code>active</code>, <code>closed</code>, <code>determined</code>, <code>disputed</code>, <code>amended</code>, <code>finalized</code>. Actual responses carry <code>active</code> and <code>finalized</code>.</td>
+          <td>Filtering on a documented response value can return nothing; the site filters on the documented query values instead.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f5"><td>F5</td><td>Price data</td>
+          <td>A market reported <code>last_price_dollars</code> of $0.50 while its live quote was a $0.23 YES bid and a $0.24 YES ask — the $0.50 print came from an earlier candle.</td>
+          <td>Last price can be stale; using it as an entry or mark would mislead.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">candlesticks</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f6"><td>F6</td><td>Liquidity</td>
+          <td>One market showed large open interest with a one-sided quote (best YES bid $0.00, best YES ask $1.00).</td>
+          <td>Entry and exit are difficult when the book is one-sided; such markets are not good candidates for a strategy.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000" target="_blank" rel="noopener">/markets</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f7"><td>F7</td><td>Missing metadata</td>
+          <td>Some crypto series have an empty <code>contract_url</code>, a null <code>settlement_sources</code>, and a <code>contract_terms_url</code> with no file name.</td>
+          <td>Incomplete contract documentation for those series.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">/series</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f8"><td>F8</td><td>Demo-only data</td>
+          <td>The demo environment contains synthetic contracts: “1+1 = 3”, “Demo only” BTC one-minute markets, and markets whose strike is literally “demo strike”, with close dates in 2099.</td>
+          <td>Demo outcomes are not evidence about real events, and these rows would distort any statistic computed from demo fills.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=1000" target="_blank" rel="noopener">/markets?status=settled</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f9"><td>F9</td><td>Category mapping</td>
+          <td>“Gas prices” and “Golf” are not API categories. Gas maps to <b>Commodities</b> (tag “Oil &amp; Gas”) and <b>Economics</b> (tag “Oil and energy”); Golf is the tag “Golf” under <b>Sports</b>; “Culture” is not a published category and maps to <b>Entertainment</b>.</td>
+          <td>The topic names in the request are editorial labels, not official ones. Every row on the category pages states which basis was used.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories" target="_blank" rel="noopener">taxonomy</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f10"><td>F10</td><td>Dollar amounts</td>
+          <td>There is no dollar-turnover field. <code>volume_fp</code>, <code>volume_24h_fp</code> and <code>open_interest_fp</code> are contract counts.</td>
+          <td>“Highest dollar amount” cannot be read directly; the site uses the labelled estimate <code>volume_fp × last_price_dollars</code> everywhere it ranks.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f11"><td>F11</td><td>Titles</td>
+          <td>Some market titles contain Markdown bold markers, for example “Will average **gas prices** be above $4.18?”.</td>
+          <td>Cosmetic only; titles are shown as the API returns them rather than being rewritten.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&limit=10" target="_blank" rel="noopener">/markets</a></td>
+          <td><span class="pill grey">Minor</span></td></tr>
+        <tr id="f12"><td>F12</td><td>Timing</td>
+          <td>A gas contract closes at 03:59 UTC on the measurement date, so trading stops before the published AAA reading is taken for that day.</td>
+          <td>Any timing or "trade to the print" strategy has to account for it.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&limit=10" target="_blank" rel="noopener">/markets</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f13"><td>F13</td><td>Settlement sources</td>
+          <td>An event and its series list the same source name with different URLs (for example “The Washington Post” pointing at a different publisher's domain), and the event list also contains a URL that does not match its name.</td>
+          <td>Name and link disagree, and event and series disagree.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=200" target="_blank" rel="noopener">/events</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f14"><td>F14</td><td>API reliability</td>
+          <td>One market request returned HTTP 502 during an earlier collection and was not retried successfully.</td>
+          <td>There can be gaps in a snapshot for that series; the collection log records every attempt and status.</td>
+          <td><a href="https://github.com/karagemop466-tech/Demo2/blob/main/data/collection_log.json" target="_blank" rel="noopener">collection_log.json</a></td>
+          <td><span class="pill grey">Minor</span></td></tr>
+        <tr id="f15"><td>F15</td><td>Link hygiene</td>
+          <td>A settlement URL in a crypto series carries a marketing tracking parameter.</td>
+          <td>Cosmetic; the link is reproduced as published.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">/series</a></td>
+          <td><span class="pill grey">Minor</span></td></tr>
+        <tr id="f16"><td>F16</td><td>Caching</td>
+          <td>Kalshi states that responses are cached for a short time, so prices, sizes and status can lag the exchange by several seconds, and filtered listings can lag longer than a single-market read.</td>
+          <td>The live table can be a few seconds behind the exchange — the chart is affected more than the table.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td>
+          <td><span class="pill grey">Noted</span></td></tr>
+        <tr id="f17"><td>F17</td><td>Historical coverage</td>
+          <td>Markets that settled before the historical cutoff are only available through <code>GET /historical/markets</code>, and candlesticks for them through <code>GET /historical/markets/{ticker}/candlesticks</code>.</td>
+          <td>The “resolved markets” table can only cover the recent window that the live endpoint returns.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noopener">Historical data</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+        <tr id="f18"><td>F18</td><td>Model semantics</td>
+          <td>Market records carry <code>notional_value_dollars</code> of $1.0000 and <code>expiration_value</code> of $0.0000. These are the contract's settlement values, not traded dollar volume.</td>
+          <td>Easy to mistake for a turnover figure; the site never ranks on them.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000" target="_blank" rel="noopener">/markets</a></td>
+          <td><span class="pill flag">Needs review</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="constraints">B · Constraints and unverified items</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:7%">ID</th><th style="width:30%">Item</th><th style="width:38%">State</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr id="u1"><td>U1</td><td>Portfolio, balance and trade execution</td>
+          <td>Require a Kalshi demo API key. No account existed in the build environment, so no account value was obtained and no trade was placed. The code path is implemented and its signing is verified offline; the page stays blank until a key is supplied. <a href="questions.html#q-account">See Q1</a>.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a></td></tr>
+        <tr id="u2"><td>U2</td><td>Demo account creation</td>
+          <td>Requires a person: <code>demo.kalshi.co/sign-up</code> asks for an email address and a password and a real mailbox is needed to finish. Mock personal details are allowed by Kalshi, but the mailbox is not optional, so it could not be automated.</td>
+          <td><a href="https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account" target="_blank" rel="noopener">demo account help</a></td></tr>
+        <tr id="u3"><td>U3</td><td>Outbound network access from the build sandbox</td>
+          <td>The Kalshi demo host resolves but the TLS handshake fails (<code>SSL_ERROR_SYSCALL</code>), so the sandbox cannot call the API directly. Collection is performed by a GitHub Actions runner instead, and the browser page tries a live fetch first with the committed snapshot as a labelled fallback.</td>
+          <td><a href="https://github.com/karagemop466-tech/Demo2/blob/main/.github/workflows/collect.yml" target="_blank" rel="noopener">collect.yml</a></td></tr>
+        <tr id="u4"><td>U4</td><td>Browser access (CORS) from the published site</td>
+          <td>Not verified from a browser. The dashboard status line reports which mode it is in, so the published page answers this question on its own.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">market data quick start</a></td></tr>
+        <tr id="u5"><td>U5</td><td>WebSocket authentication</td>
+          <td>Not confirmed in this session. The dashboard never depends on the socket: the chart is built from REST polling and the official candlestick endpoint, and the socket is used only as an optional status indicator.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">WebSocket quick start</a></td></tr>
+        <tr id="u6"><td>U6</td><td>Kalshi fee schedule</td>
+          <td>Not read in this session, so no net-of-fee figure is published anywhere. Every P&amp;L on the site is gross and labelled as such.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">fee rounding</a> · <a href="questions.html#q-fees">Q2</a></td></tr>
+        <tr id="u7"><td>U7</td><td>Rate limits</td>
+          <td>Not read in this session. The collector records the status of every request it makes, so a limit being hit would appear in <code>data/collection_log.json</code>.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">rate limits</a></td></tr>
+        <tr id="u8"><td>U8</td><td>Production (real-money) data</td>
+          <td>Not collected. The site is demo-only by design; the only production response ever read was a single series record used to compare fee metadata (F3).</td>
+          <td><a href="https://external-api.kalshi.com/trade-api/v2/series/KXAAAGASM" target="_blank" rel="noopener">production /series/KXAAAGASM</a></td></tr>
+        <tr id="u9"><td>U9</td><td>Third-party commentary</td>
+          <td>Not used anywhere. No news article, blog or aggregator is quoted on this site; every number comes from a Kalshi response.</td>
+          <td><a href="sources.html">Sources</a></td></tr>
+        <tr id="u10"><td>U10</td><td>Live trade performance of this strategy set</td>
+          <td>Not measured. No trade has been executed, so no win rate, P&amp;L or drawdown is claimed. The <a href="analysis.html">Analysis</a> page states the thresholds each figure must clear before it may be reported.</td>
+          <td><a href="analysis.html">Analysis</a></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="repo">C · Repository irregularities</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:7%">ID</th><th style="width:34%">What was found</th><th style="width:34%">Why it matters</th><th>Resolution</th></tr></thead>
+      <tbody>
+        <tr id="r1"><td>R1</td>
+          <td>Earlier versions of this repository contained a client-side page that pasted a Kalshi private key into a public GitHub Pages page and signed requests with it.</td>
+          <td>A private signing key entered into a publicly served page is a credential-exposure risk, whatever the transport encryption.</td>
+          <td>The current site offers a local command-line signer (<code>tools/kalshi_trade.py</code>) as the primary path, and the browser signer is opt-in, memory-only, and clearly labelled. Recorded as suggestion S7 and question Q1.</td></tr>
+        <tr id="r2"><td>R2</td>
+          <td>Two independent implementations of the dashboard existed in the repository at once (a root-level <code>index.html</code> with <code>app.js</code>/<code>style.css</code>, a <code>pages/</code> set with <code>assets/</code>, and a <code>verified/</code> subsite with its own stylesheet and scripts).</td>
+          <td>Duplicate navigation, two live dashboards and two sets of numbers on one public site invites confusion about which one is authoritative.</td>
+          <td>This integration session consolidated them into one site: root <code>index.html</code> plus <code>pages/</code> and <code>assets/</code>. The superseded copies are removed in the final change set, and their verified rows, flags and questions are carried forward here and on the other pages.</td></tr>
+        <tr id="r3"><td>R3</td>
+          <td>The <code>pages.yml</code> workflow published the whole repository root, so any file added to the repository root became publicly served.</td>
+          <td>Working files or credentials accidentally placed at the root would be published.</td>
+          <td>The workflow still publishes the root, but the root now contains only the site, the data snapshot, the tools and the coordination log; a <code>.gitignore</code> keeps bytecode caches out and no secret is stored in the repository.</td></tr>
+        <tr id="r4"><td>R4</td>
+          <td>README files in earlier sessions described different site layouts and different capabilities, and in one case documented a key-pasting flow that was later removed.</td>
+          <td>A README that disagrees with the code is a trap for the next person.</td>
+          <td>The README was rewritten to match the consolidated site, and the historical descriptions are preserved in <a href="../COORDINATION.md">COORDINATION.md</a> and in the git history.</td></tr>
+        <tr id="r5"><td>R5</td>
+          <td>Several sessions pushed branches and pull requests to the same repository at the same time, and <code>COORDINATION.md</code> was edited by more than one session.</td>
+          <td>Merge conflicts and duplicated or contradictory pages.</td>
+          <td>Every session's claim, verification record and irregularity list is kept in <code>COORDINATION.md</code>; this session rebased on <code>origin/main</code> before pushing and resolved the one conflict in that file by keeping both sides.</td></tr>
+        <tr id="r6"><td>R6</td>
+          <td>The scheduled collector commits directly to <code>main</code>, so a data refresh lands on the production branch without a review.</td>
+          <td>A bad snapshot would publish itself.</td>
+          <td>Accepted deliberately: the collector only writes <code>data/*.json</code>, it is idempotent, and every write is attributable to the bot commit. The alternative — a pull request per refresh — is offered as suggestion S5 for review.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="callout">
+    <b>How to use this page.</b>
+    <span>
+      Each row tells you what was seen, why it could matter and where to check it yourself. When you have decided what
+      should change, record it on the <a href="suggestions.html">Suggestions</a> board and, if it changes a number on
+      the site, state the rule that should replace the current one.
+    </span>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="inner">
+    <span>Kalshi Demo Dashboard · demo environment only · no real funds · research, not advice</span>
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs</a>
+    <a href="sources.html">All sources</a>
+    <a href="../COORDINATION.md">Coordination log</a>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,14 +1,128 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sources</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Sources</h1>
-<ul>
-<li><a href="https://docs.kalshi.com/welcome">Welcome / API Documentation</a></li>
-<li><a href="https://docs.kalshi.com/getting_started/demo_env">Demo Environment</a></li>
-<li><a href="https://docs.kalshi.com/getting_started/api_environments">API Environments and Endpoints</a></li>
-<li><a href="https://docs.kalshi.com/getting_started/making_your_first_request">Making Your First Request</a></li>
-<li><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">Quick Start: Market Data</a></li>
-<li><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Quick Start: Authenticated Requests</a></li>
-<li><a href="https://docs.kalshi.com/getting_started/api_keys">API Keys</a></li>
-<li><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></li>
-<li><a href="https://demo.kalshi.co/">Kalshi Demo (demo.kalshi.co)</a></li>
-</ul>
-<p>Only official Kalshi documentation and the demo API are cited. No third-party values are used.</p>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sources · Kalshi Demo Dashboard</title>
+<meta name="description" content="Every official Kalshi document and API response used by this dashboard, with links for manual review.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="../index.html"><span>KALSHI</span> DEMO<small>RESEARCH DASHBOARD</small></a>
+    <nav class="main">
+      <a href="../index.html">Dashboard</a>
+      <a href="executive-summary.html">Executive Summary</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio &amp; Trading</a>
+      <a href="analysis.html">Analysis</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions</a>
+      <a href="verification.html">Verification</a>
+      <a href="flagged.html">Flagged for Review</a>
+      <a href="repo-review.html">Repo Review</a>
+      <a href="sources.html" class="active">Sources</a>
+    </nav>
+    <span class="tag">DEMO · NO REAL FUNDS</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="eyebrow">Provenance</p>
+  <h1>Sources</h1>
+  <p class="lede">
+    Every value on this site comes from one of the official Kalshi sources listed below. Nothing is taken from
+    news articles, blogs, aggregators or search results. The live API responses can be opened and checked directly.
+  </p>
+
+  <h2>Official Kalshi documentation</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:38%">Document</th><th style="width:34%">Used for</th><th>Link</th></tr></thead>
+      <tbody>
+        <tr><td>Test in the demo environment</td><td>Demo REST and WebSocket roots; the warning that demo prices may not reflect real markets</td><td><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">docs.kalshi.com/getting_started/demo_env</a></td></tr>
+        <tr><td>API environments and endpoints</td><td>Full endpoint list, demo and production</td><td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">docs.kalshi.com/getting_started/api_environments</a></td></tr>
+        <tr><td>Welcome / overview</td><td>Top-level API documentation index</td><td><a href="https://docs.kalshi.com/welcome" target="_blank" rel="noopener">docs.kalshi.com/welcome</a></td></tr>
+        <tr><td>Get Markets</td><td>Market fields, <code>status</code> filter values, paging and ordering rules</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">docs.kalshi.com/api-reference/market/get-markets</a></td></tr>
+        <tr><td>Get Market</td><td>Single-market lookup used to refresh a selected market</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market" target="_blank" rel="noopener">docs.kalshi.com/api-reference/market/get-market</a></td></tr>
+        <tr><td>Get Market Orderbook</td><td>Orderbook endpoint used for the liquidity tables</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">docs.kalshi.com/api-reference/market/get-market-orderbook</a></td></tr>
+        <tr><td>Get Market Candlesticks</td><td>Official price history behind the chart</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">docs.kalshi.com/api-reference/market/get-market-candlesticks</a></td></tr>
+        <tr><td>Get Events</td><td>Event-level metadata and event ticker links</td><td><a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">docs.kalshi.com/api-reference/events/get-events</a></td></tr>
+        <tr><td>Get Series</td><td>Series category, tags and settlement sources</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">docs.kalshi.com/api-reference/series/get-series</a></td></tr>
+        <tr><td>Orderbook responses</td><td>Bid-only structure, implied asks, spread calculation</td><td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">docs.kalshi.com/getting_started/orderbook_responses</a></td></tr>
+        <tr><td>Market settlement</td><td>YES pays $1, NO pays $0; how a market resolves</td><td><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">docs.kalshi.com/getting_started/market_settlement</a></td></tr>
+        <tr><td>Fixed-point representation</td><td>Why <code>_fp</code> and <code>_dollars</code> values are strings</td><td><a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">docs.kalshi.com/getting_started/fixed_point_migration</a></td></tr>
+        <tr><td>API keys</td><td>Key types, the signed message, header names, 30-second tolerance</td><td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">docs.kalshi.com/getting_started/api_keys</a></td></tr>
+        <tr><td>Quick start: authenticated requests</td><td>Complete signed-request example</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">docs.kalshi.com/getting_started/quick_start_authenticated_requests</a></td></tr>
+        <tr><td>Quick start: create an order</td><td>Order lifecycle used by the trading page</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noopener">docs.kalshi.com/getting_started/quick_start_create_order</a></td></tr>
+        <tr><td>Quick start: market data</td><td>Which endpoints need no authentication</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">docs.kalshi.com/getting_started/quick_start_market_data</a></td></tr>
+        <tr><td>Quick start: WebSockets</td><td>Streaming channels (not required by the site)</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">docs.kalshi.com/getting_started/quick_start_websockets</a></td></tr>
+        <tr><td>Rate limits</td><td>Request budget for polling and collection</td><td><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">docs.kalshi.com/getting_started/rate_limits</a></td></tr>
+        <tr><td>Fee rounding</td><td>Rounding rules for fee computation</td><td><a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">docs.kalshi.com/getting_started/fee_rounding</a></td></tr>
+        <tr><td>Historical data</td><td>Where pre-cutoff settled markets and candles live</td><td><a href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noopener">docs.kalshi.com/getting_started/historical_data</a></td></tr>
+        <tr><td>Changelog</td><td>Recent API changes</td><td><a href="https://docs.kalshi.com/changelog" target="_blank" rel="noopener">docs.kalshi.com/changelog</a></td></tr>
+        <tr><td>Creating and using a demo account</td><td>How a demo account is created and funded with mock funds</td><td><a href="https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account" target="_blank" rel="noopener">help.kalshi.com — demo account</a></td></tr>
+        <tr><td>Demo sign-up</td><td>The one step that needs a person</td><td><a href="https://demo.kalshi.co/sign-up" target="_blank" rel="noopener">demo.kalshi.co/sign-up</a></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2>Official Kalshi demo API responses</h2>
+  <div class="card">
+    <p class="muted small">These are live endpoints. Opening them shows the exact JSON the site reads.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:38%">Response</th><th style="width:34%">Used for</th><th>Link</th></tr></thead>
+      <tbody>
+        <tr><td>Tag taxonomy by category</td><td>Mapping the five topics to official categories and tags</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories" target="_blank" rel="noopener">/trade-api/v2/search/tags_by_categories</a></td></tr>
+        <tr><td>Series list</td><td>Series category, tags, fee type and settlement sources</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">/trade-api/v2/series</a></td></tr>
+        <tr><td>Open markets</td><td>The live dashboard table and the category tables</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000" target="_blank" rel="noopener">/trade-api/v2/markets?status=open</a></td></tr>
+        <tr><td>Settled markets</td><td>Resolution tracking (result yes/no)</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=1000" target="_blank" rel="noopener">/trade-api/v2/markets?status=settled</a></td></tr>
+        <tr><td>Open events</td><td>Event-level rows and event links</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=200" target="_blank" rel="noopener">/trade-api/v2/events?status=open</a></td></tr>
+        <tr><td>Single market</td><td>Refreshing the selected market</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26OCT31-4.18" target="_blank" rel="noopener">/trade-api/v2/markets/{ticker}</a></td></tr>
+        <tr><td>Orderbook</td><td>Contracts available at each price</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26OCT31-4.18/orderbook" target="_blank" rel="noopener">/trade-api/v2/markets/{ticker}/orderbook</a></td></tr>
+        <tr><td>Candlesticks</td><td>Official price history for the chart</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASM/markets/KXAAAGASM-26OCT31-4.18/candlesticks?start_ts=0&end_ts=4102444800&period_interval=60" target="_blank" rel="noopener">/trade-api/v2/series/{s}/markets/{t}/candlesticks</a></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2>Committed data in this repository</h2>
+  <div class="card">
+    <p class="muted small">
+      The scheduled collector writes these files; they are the fallback when a browser cannot reach the API.
+      Each row inside them carries the API URL it was read from.
+    </p>
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:38%">File</th><th>Contents</th></tr></thead>
+      <tbody>
+        <tr><td><code>data/meta.json</code></td><td>Collection metadata, scope rules, counts and the API base used</td></tr>
+        <tr><td><code>data/markets_open.json</code></td><td>Every in-scope open market, with its source URL</td></tr>
+        <tr><td><code>data/markets_settled.json</code></td><td>Every in-scope settled market with its official result</td></tr>
+        <tr><td><code>data/events_open.json</code></td><td>Event-level rows</td></tr>
+        <tr><td><code>data/series_scope.json</code></td><td>Series with category, tags, fee parameters and settlement sources</td></tr>
+        <tr><td><code>data/orderbooks.json</code></td><td>Orderbook snapshots for the highest-notional markets</td></tr>
+        <tr><td><code>data/taxonomy.json</code></td><td>The official tag taxonomy as returned</td></tr>
+        <tr><td><code>data/collection_log.json</code></td><td>Every request the collector made: URL, status, timestamp, byte count</td></tr>
+      </tbody>
+    </table></div>
+    <p class="muted small">
+      Collector source: <a href="https://github.com/karagemop466-tech/Demo2/blob/main/tools/collect_kalshi.py">tools/collect_kalshi.py</a> ·
+      workflow: <a href="https://github.com/karagemop466-tech/Demo2/blob/main/.github/workflows/collect.yml">.github/workflows/collect.yml</a> ·
+      signing test: <a href="https://github.com/karagemop466-tech/Demo2/blob/main/tools/test_signing.py">tools/test_signing.py</a>
+    </p>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="inner">
+    <span>Kalshi Demo Dashboard · demo environment only · no real funds · research, not advice</span>
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs</a>
+    <a href="../COORDINATION.md">Coordination log</a>
+  </div>
+</footer>
+</body>
+</html>

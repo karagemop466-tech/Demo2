@@ -1,10 +1,154 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trade Analysis & Strategies</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Trade Analysis & Strategies</h1>
-<p>Analysis is computed <b>only</b> from your demo fills (Portfolio page → Load). Categories: topic (gas/elections/culture/crypto/golf/other), side (yes/no), and outcome once settled (win/loss vs <code>result</code>). Strategies are generated from observed patterns only; with no fills the correct output is “no strategy”.</p>
-<table><tr><th>Analysis</th><th>Method</th><th>Source</th></tr>
-<tr><td>Fill count by topic</td><td>Keyword map on fill ticker/title</td><td>Your fills via <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">portfolio/fills</a></td></tr>
-<tr><td>Win rate by topic/side</td><td>Join fills to settled <code>result</code></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets (settled)</a></td></tr>
-<tr><td>P&amp;L</td><td>Settlement value − entry price × count</td><td>Your fills + settled markets</td></tr>
-<tr><td>Strategy candidates</td><td>Only if ≥5 fills in a category; else “insufficient data”</td><td>Derived — no external source</td></tr>
-</table>
-<p class="muted">No backtest or strategy is shown until real demo fills exist. See <a href="questions.html">Questions</a> for what data is still missing.</p>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trade Analysis &amp; Strategies · Kalshi Demo Dashboard</title>
+<meta name="description" content="How trades are categorised, which metrics each strategy must clear, and the analysis framework for the Kalshi demo portfolio.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="../index.html"><span>KALSHI</span> DEMO<small>RESEARCH DASHBOARD</small></a>
+    <nav class="main">
+      <a href="../index.html">Dashboard</a>
+      <a href="executive-summary.html">Executive Summary</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio &amp; Trading</a>
+      <a href="analysis.html" class="active">Analysis</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions</a>
+      <a href="verification.html">Verification</a>
+      <a href="flagged.html">Flagged for Review</a>
+      <a href="repo-review.html">Repo Review</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+    <span class="tag">DEMO · NO REAL FUNDS</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="eyebrow">Method</p>
+  <h1>Trade analysis and strategy framework</h1>
+  <p class="lede">
+    The categorisation rules below are fixed <b>before</b> any outcome is known, and every input comes from an official
+    Kalshi field. No result is reported until the underlying market has actually resolved, and no strategy is
+    described as working until the measured numbers say so.
+  </p>
+
+  <div class="callout">
+    <b>Nothing here is a validated trading strategy.</b>
+    <span>
+      These are labelling rules and a measurement framework for a demo portfolio. They have not been tested
+      out-of-sample, they ignore the fee schedule unless a fee is supplied, and they are not investment advice.
+      Kalshi demo outcomes are generated from mock data.
+    </span>
+  </div>
+
+  <div class="card">
+    <h3>1 · What the demo API gives us to analyse</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Input</th><th>Official endpoint</th><th>Used for</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Balance</td><td class="mono"><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">GET /portfolio/balance</a></td><td>Cash available for demo orders</td><td><span class="pill flag">Needs a demo account</span></td></tr>
+        <tr><td>Positions</td><td class="mono"><a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">GET /portfolio/positions</a></td><td>Open exposure per market</td><td><span class="pill flag">Needs a demo account</span></td></tr>
+        <tr><td>Fills</td><td class="mono"><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">GET /portfolio/fills</a></td><td>Entry price, size, side and time of every trade</td><td><span class="pill flag">Needs a demo account</span></td></tr>
+        <tr><td>Settlements</td><td class="mono"><a href="https://docs.kalshi.com/api-reference/portfolio/get-settlements" target="_blank" rel="noopener">GET /portfolio/settlements</a></td><td>Revenue when a market resolves</td><td><span class="pill flag">Needs a demo account</span></td></tr>
+        <tr><td>Market resolution</td><td class="mono"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">GET /markets?status=settled</a></td><td>The official YES/NO outcome and settlement amount</td><td><span class="pill yes">Public — used already</span></td></tr>
+        <tr><td>Book at entry</td><td class="mono"><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">GET /markets/{ticker}/orderbook</a></td><td>Whether the trade took the bid, the mid or the offer</td><td><span class="pill yes">Public — used already</span></td></tr>
+        <tr><td>Price history</td><td class="mono"><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">GET /series/{s}/markets/{t}/candlesticks</a></td><td>Entry timing, momentum and volatility features</td><td><span class="pill yes">Public — used already</span></td></tr>
+        <tr><td>Time to close</td><td class="mono">close_time on the market record</td><td>Holding-period bucketing</td><td><span class="pill yes">Public — used already</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="muted small">
+      Settlement mechanics: a YES contract pays $1 if the event resolves YES and $0 otherwise
+      (<a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">market settlement</a>).
+      Prices and sizes are fixed-point strings
+      (<a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">fixed-point migration</a>).
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>2 · How a trade is categorised</h3>
+    <p class="muted small">
+      Each fill is given one label per dimension. The dimensions are chosen from official fields only, and they are
+      applied at entry time — before the market resolves — so they cannot be tuned to the answer.
+    </p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Dimension</th><th>Values</th><th>Official field used</th></tr></thead>
+      <tbody>
+        <tr><td>Topic</td><td>gas-prices · elections · culture · crypto · golf</td><td>Series <code>category</code> / <code>tags</code>, else the category page</td></tr>
+        <tr><td>Side</td><td>yes · no</td><td>Fill <code>side</code></td></tr>
+        <tr><td>Price band</td><td>longshot (&lt;25¢) · mid (25–60¢) · favourite (&gt;60¢)</td><td>Fill price in dollars</td></tr>
+        <tr><td>Horizon</td><td>short-dated (&lt;2 days) · medium (2–30 days) · long (&gt;30 days)</td><td>Market <code>close_time</code> minus fill time</td></tr>
+        <tr><td>Entry side of the book</td><td>at-bid · at-mid · at-offer</td><td>Fill price against the orderbook at entry</td></tr>
+      </tbody>
+    </table></div>
+    <p class="muted small">
+      The combination of the five values is the strategy label shown on the
+      <a href="portfolio.html">Portfolio &amp; Trading</a> page, for example
+      <code>crypto · YES · favourite (&gt;60¢) · short-dated (&lt;2d) · at-offer</code>.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>3 · Metrics each category must clear</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Metric</th><th>Definition</th><th>Minimum evidence before a claim</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Win rate</td><td>resolved YES contracts ÷ resolved contracts, per category</td><td>≥ 30 resolved trades in the category</td><td><span class="pill flag">Not measured — no account</span></td></tr>
+        <tr><td>Net P&amp;L per contract</td><td>(settlement $ − entry $) per contract, net of any fee supplied</td><td>≥ 30 resolved trades, and the fee schedule confirmed</td><td><span class="pill flag">Not measured — no account</span></td></tr>
+        <tr><td>Return over holding period</td><td>net P&amp;L ÷ capital at risk, annualised only if the holding period is known</td><td>Same, plus the fee schedule</td><td><span class="pill flag">Not measured — no account</span></td></tr>
+        <tr><td>Maximum drawdown</td><td>largest peak-to-trough fall of the cumulative net P&amp;L curve</td><td>Full fill history, not a filtered window</td><td><span class="pill flag">Not measured — no account</span></td></tr>
+        <tr><td>Slippage</td><td>fill price − book price at the moment of the order</td><td>orderbook snapshot taken within the same second as the order</td><td><span class="pill flag">Not measured — no account</span></td></tr>
+        <tr><td>Concentration</td><td>share of open exposure and of resolved P&amp;L per topic, series and market</td><td>Positions and fills</td><td><span class="pill flag">Not measured — no account</span></td></tr>
+        <tr><td>Resolution accuracy</td><td>share of trades whose outcome matched the pre-registered expectation</td><td>A recorded expectation per trade</td><td><span class="pill flag">Not measured — no account</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h3>4 · What the public data already supports</h3>
+    <p class="muted small">
+      These statements are supported by data on this site today and need no account:
+    </p>
+    <ul class="tight">
+      <li><b>Volume is denominated in contracts.</b> The API returns <code>volume_fp</code> and <code>volume_24h_fp</code> as contract counts; there is no dollar-turnover field, so every dollar figure on this site is a labelled estimate (<code>volume_fp × last_price_dollars</code>). <span class="muted">Flag F-10.</span></li>
+      <li><b>Outcome is binary and settled from the official result field.</b> A settled market reports <code>result</code> = <code>yes</code> or <code>no</code> plus <code>settlement_value_dollars</code>; this is what the resolution table shows. <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Source</a>.</li>
+      <li><b>Liquidity is observable but one-sided.</b> The API publishes bids only; the implied offer is <code>$1.00 − best NO bid</code>, and an empty book is a normal response for an inactive market. <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Source</a>.</li>
+      <li><b>Price history exists officially.</b> Candlesticks are available per market at 1-minute, 1-hour or 1-day resolution, up to 5,000 periods per request. <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Source</a>.</li>
+      <li><b>Demo data is synthetic.</b> Markets such as “1+1 = 3” and “demo strike” contracts exist, and demo settlement outcomes are not evidence about real events. <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Source</a>.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>5 · Comparison discipline</h3>
+    <p class="muted small">
+      When results do arrive, each category is compared against the portfolio as a whole and against a
+      <b>do-nothing baseline</b> (the average entry price of every trade in the portfolio), so a category is only
+      credited with the spread between its own result and that baseline. Results are read in settlement order, not
+      in the order that looks best, and trades are not removed from a losing category after the fact.
+      The comparison table is filled from the account; until then it stays empty rather than illustrative.
+    </p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Category</th><th class="num">Trades</th><th class="num">Win rate</th><th class="num">Net P&amp;L</th><th class="num">vs portfolio baseline</th><th class="num">Max drawdown</th></tr></thead>
+      <tbody><tr><td colspan="6" class="muted">Empty — populated automatically from Kalshi demo fills and settlements once a demo account is connected. No illustrative numbers are shown.</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="inner">
+    <span>Kalshi Demo Dashboard · demo environment only · no real funds · research, not advice</span>
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs</a>
+    <a href="sources.html">All sources</a>
+    <a href="../COORDINATION.md">Coordination log</a>
+  </div>
+</footer>
+</body>
+</html>

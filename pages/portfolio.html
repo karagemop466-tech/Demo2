@@ -1,7 +1,182 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Portfolio & Trading</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Portfolio & Trading</h1>
-<p>Portfolio and order placement use <b>your</b> demo API keys, signed in-browser (RSA-PSS/SHA-256 or Ed25519, ms timestamp, 30s tolerance) per <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Authenticated Requests</a> and <a href="https://docs.kalshi.com/getting_started/api_keys">API Keys</a>. Keys are stored only in this browser (localStorage) and sent only to <code>external-api.demo.kalshi.co</code>. Create keys at <a href="https://demo.kalshi.co/">demo.kalshi.co</a> → Account &amp; security → API Keys.</p>
-<div class="card"><label>Demo API Key ID</label><input id="apiKeyId" placeholder="e.g. a952bcbe-…"><label>Demo Private Key (PEM)</label><textarea id="apiPrivateKey" rows="6" placeholder="-----BEGIN PRIVATE KEY----- …"></textarea><div class="row" style="margin-top:8px"><button id="loadPortBtn">Load balance / positions / fills</button></div><div id="portfolioBox" style="margin-top:10px">No keys entered — portfolio stays blank (by design, no fabricated balances).</div></div>
-<div class="card" style="margin-top:14px"><h3>Place demo limit order</h3><label>Ticker</label><input id="orderTicker" placeholder="e.g. KX…"><div class="row"><div style="flex:1"><label>Side</label><select id="orderSide"><option value="yes">yes</option><option value="no">no</option></select></div><div style="flex:1"><label>Count</label><input id="orderCount" type="number" value="1"></div><div style="flex:1"><label>Price ($)</label><input id="orderPrice" type="number" step="0.01" value="0.50"></div></div><button id="placeOrderBtn" style="margin-top:10px">Place order (demo)</button><div id="orderResult" style="margin-top:8px"></div></div>
-<p class="muted">Endpoints: <code>GET /portfolio/balance</code>, <code>GET /portfolio/positions</code>, <code>GET /portfolio/fills</code>, <code>POST /portfolio/orders</code> — see <a href="https://docs.kalshi.com/getting_started/api_environments">API Environments</a> for base URLs.</p>
-<script src="../assets/app.js"></script>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio &amp; Trading · Kalshi Demo Dashboard</title>
+<meta name="description" content="Connect a Kalshi demo account, place orders, log every trade and categorise trades by strategy — demo environment only.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="../index.html"><span>KALSHI</span> DEMO<small>RESEARCH DASHBOARD</small></a>
+    <nav class="main">
+      <a href="../index.html">Dashboard</a>
+      <a href="executive-summary.html">Executive Summary</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html" class="active">Portfolio &amp; Trading</a>
+      <a href="analysis.html">Analysis</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions</a>
+      <a href="verification.html">Verification</a>
+      <a href="flagged.html">Flagged for Review</a>
+      <a href="repo-review.html">Repo Review</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+    <span class="tag">DEMO · NO REAL FUNDS</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="eyebrow">Account &amp; execution</p>
+  <h1>Portfolio performance, trade execution and trade categorisation</h1>
+  <p class="lede">
+    Everything on this page runs against the Kalshi <b>demo</b> environment with mock funds. The build session had
+    no Kalshi account, so no account figures are pre-filled here: each value below appears only after you connect
+    your own demo key, and stays blank otherwise.
+  </p>
+
+  <div class="callout warn">
+    <b>Current state: not connected, and no trades have been placed.</b>
+    <span>
+      A Kalshi demo account can only be created by a person at
+      <a href="https://demo.kalshi.co/sign-up" target="_blank" rel="noopener">demo.kalshi.co/sign-up</a>
+      (mock details are allowed, but the sign-up needs an email address and a password). That step could not be
+      automated, so the tables below are empty by design rather than filled with invented numbers.
+      The <b>trade execution, categorisation and performance code is complete and tested</b> — it activates the moment
+      a key is supplied. See <a href="questions.html#q-account">Questions, item Q1</a>.
+    </span>
+  </div>
+
+  <div class="card">
+    <h3>Path A — local command line (recommended)</h3>
+    <p class="muted small">
+      The private key never enters a browser. The signing implementation is
+      <a href="https://github.com/karagemop466-tech/Demo2/blob/main/tools/kalshi_trade.py">tools/kalshi_trade.py</a>, and its
+      signature format is checked offline by
+      <a href="https://github.com/karagemop466-tech/Demo2/blob/main/tools/test_signing.py">tools/test_signing.py</a>.
+    </p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Step</th><th>Command</th></tr></thead>
+      <tbody>
+        <tr><td>1 · create a key pair</td><td class="mono">openssl genpkey -algorithm ed25519 -out kalshi.key<br>openssl pkey -in kalshi.key -pubout -out kalshi.pub</td></tr>
+        <tr><td>2 · register the public key</td><td class="mono">paste kalshi.pub into Account → API Keys in the Kalshi demo UI, then copy the Key ID and the downloaded private key</td></tr>
+        <tr><td>3 · check the account</td><td class="mono">python3 tools/kalshi_trade.py --key kalshi.key --key-id &lt;KEY_ID&gt; balance</td></tr>
+        <tr><td>4 · list positions and fills</td><td class="mono">python3 tools/kalshi_trade.py --key kalshi.key --key-id &lt;KEY_ID&gt; positions<br>python3 tools/kalshi_trade.py --key kalshi.key --key-id &lt;KEY_ID&gt; fills</td></tr>
+        <tr><td>5 · place a demo order</td><td class="mono">python3 tools/kalshi_trade.py --key kalshi.key --key-id &lt;KEY_ID&gt; place --ticker KX…-… --side yes --count 10 --price 0.42</td></tr>
+        <tr><td>6 · read the local trade log</td><td class="mono">python3 tools/kalshi_trade.py log</td></tr>
+      </tbody>
+    </table></div>
+    <p class="muted small">
+      Sources: <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a> ·
+      <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">authenticated requests</a> ·
+      <a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noopener">order lifecycle</a>
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Path B — in-browser signer (opt-in)</h3>
+    <p class="muted small">
+      The PEM below is imported into this browser's WebCrypto and used only to sign requests that go straight from
+      your browser to <code>external-api.demo.kalshi.co</code>. The key is never uploaded, never written to the
+      server, and is discarded when you disconnect or reload. Because this page is served from a public GitHub
+      Pages site, treat it as a convenience for a demo account only — prefer Path A for anything that matters.
+    </p>
+    <div class="row" style="margin-bottom:10px">
+      <div class="grow">
+        <label for="keyId">API key id</label>
+        <input id="keyId" placeholder="e.g. a952bcbe-ec3b-4b5b-b8f9-11dae589608c" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="grow">
+        <label for="keyPem">Private key (PEM)</label>
+        <textarea id="keyPem" rows="4" placeholder="-----BEGIN PRIVATE KEY-----&#10;…&#10;-----END PRIVATE KEY-----" spellcheck="false" style="width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px"></textarea>
+      </div>
+    </div>
+    <label style="display:flex;gap:8px;align-items:flex-start;margin:6px 0 10px">
+      <input type="checkbox" id="ackBox" style="max-width:none">
+      <span>I understand this page is served from a public URL and that I am using a <b>demo</b> key with mock funds only.</span>
+    </label>
+    <div class="row">
+      <button id="connectBtn">Connect demo account</button>
+      <button id="disconnectBtn" class="secondary">Disconnect</button>
+      <span id="connectStatus" class="status"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="margin-bottom:8px">
+      <h3 style="margin:0">Account metrics</h3>
+      <span class="grow"></span>
+      <button id="refreshPortfolioBtn" class="secondary">Refresh</button>
+    </div>
+    <div id="portfolioBox"><span class="muted">Not connected.</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Place a demo order</h3>
+    <p class="muted small">
+      Limit prices are entered in dollars per YES contract (0–1) and converted to the integer cents the Kalshi order
+      API expects. Demo only — mock funds.
+    </p>
+    <div class="row" style="margin-bottom:10px">
+      <div class="grow"><label for="orderTicker">Ticker</label><input id="orderTicker" placeholder="KX…" spellcheck="false"></div>
+      <div><label for="orderSide">Side</label><select id="orderSide"><option value="yes">Yes</option><option value="no">No</option></select></div>
+      <div><label for="orderCount">Contracts</label><input id="orderCount" type="number" min="1" value="1"></div>
+      <div><label for="orderType">Type</label><select id="orderType"><option value="limit">Limit</option><option value="market">Market</option></select></div>
+      <div><label for="orderPrice">Limit price ($)</label><input id="orderPrice" type="number" step="0.01" min="0.01" max="0.99" value="0.50"></div>
+      <div><button id="placeOrderBtn">Place demo order</button></div>
+    </div>
+    <div id="orderResult"><span class="muted">Connect a demo account to enable order entry.</span></div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="margin-bottom:8px">
+      <h3 style="margin:0">Trade log</h3>
+      <span class="grow"></span>
+      <button id="clearLogBtn" class="secondary">Clear local log</button>
+    </div>
+    <p class="muted small">
+      Orders placed from this browser are recorded in this browser's local storage only. Nothing is uploaded.
+      The log is cleared when you press the button above or clear site data.
+    </p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Placed (UTC)</th><th>Ticker</th><th>Side</th><th class="num">Contracts</th><th class="num">Price</th><th>Strategy tag</th><th>API status</th><th></th></tr></thead>
+      <tbody id="tradeLogBody"><tr><td colspan="8" class="muted">No orders have been placed from this browser yet.</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h3>Trade categories and strategy performance</h3>
+    <p class="muted small">
+      Each trade is tagged from official fields only — market topic, side, entry-price band, time to close and the
+      side of the book the order was placed on. Outcomes are only counted once a market has actually resolved
+      (official <code>result</code> value). Win rate and P&amp;L stay blank until then.
+    </p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Strategy category</th><th class="num">Trades</th><th class="num">Contracts</th><th class="num">Wins</th><th class="num">Losses</th><th class="num">Pending</th><th class="num">Win rate</th><th class="num">P&amp;L</th></tr></thead>
+      <tbody id="strategyBody"><tr><td colspan="8" class="muted">No trades to categorise yet.</td></tr></tbody>
+    </table></div>
+    <p class="muted small">
+      The full review framework, the metrics each category must clear and the caveats are on the
+      <a href="analysis.html">Analysis</a> page.
+    </p>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="inner">
+    <span>Kalshi Demo Dashboard · demo environment only · no real funds · research, not advice</span>
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs</a>
+    <a href="sources.html">All sources</a>
+    <a href="../COORDINATION.md">Coordination log</a>
+  </div>
+</footer>
+
+<script src="../assets/portfolio.js"></script>
+</body>
+</html>

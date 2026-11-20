@@ -1,17 +1,199 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Suggestions — Review & Choose</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Suggestions — Review & Choose</h1>
-<p>Review each suggestion, then mark <b>Choose</b> (best path) or <b>Defer</b>. Choices persist in your browser only and do not change code until you approve. Nothing here is implemented automatically.</p>
-<div id="sugList"></div>
-<script>
-const SUGS=[
- {id:"s1",t:"Add series-ticker allowlist",d:"Replace keyword matching with explicit series_ticker filters per topic (e.g. gas series) for exact scoping. Needs series discovery via Get Series.",s:"https://docs.kalshi.com/getting_started/quick_start_market_data"},
- {id:"s2",t:"WebSocket-first streaming",d:"Use wss demo feed for tick/orderbook updates instead of 15s polling; keep REST fallback.",s:"https://docs.kalshi.com/getting_started/api_environments"},
- {id:"s3",t:"Server-side proxy for CORS",d:"If browser CORS blocks the API, add a small proxy that forwards demo REST/WS. Requires hosting decision.",s:"https://docs.kalshi.com/getting_started/demo_env"},
- {id:"s4",t:"Paper-trade simulator",d:"Clearly-labeled simulator when no API keys exist, so analysis UI can be tested without claiming real trades.",s:"https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"},
- {id:"s5",t:"Resolution alerts",d:"Notify when a tracked market settles and record yes/no outcome automatically.",s:"https://docs.kalshi.com/api-reference/market/get-markets"},
- {id:"s6",t:"Export CSV of fills + outcomes",d:"One-click export for offline review; no new data collection.",s:"https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"}
-];
-const saved=JSON.parse(localStorage.getItem("sugVotes")||"{}");
-document.getElementById("sugList").innerHTML=SUGS.map(s=>"<div class='card' style='margin-bottom:10px'><h3>"+s.t+"</h3><p>"+s.d+"</p><p class='muted'>Source: <a href='"+s.s+"'>"+s.s+"</a></p><div class='row'><button data-id='"+s.id+"' data-v='choose'>Choose as best path</button><button class='secondary' data-id='"+s.id+"' data-v='defer'>Defer</button><span>"+(saved[s.id]||"No decision yet")+"</span></div></div>").join("");
-document.querySelectorAll("button[data-id]").forEach(b=>b.onclick=()=>{saved[b.dataset.id]=b.dataset.v;localStorage.setItem("sugVotes",JSON.stringify(saved));location.reload();});
-</script>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suggestions — review before implementing · Kalshi Demo Dashboard</title>
+<meta name="description" content="Improvement proposals for the Kalshi demo dashboard with a review board: approve, defer or reject before anything is changed.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="../index.html"><span>KALSHI</span> DEMO<small>RESEARCH DASHBOARD</small></a>
+    <nav class="main">
+      <a href="../index.html">Dashboard</a>
+      <a href="executive-summary.html">Executive Summary</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio &amp; Trading</a>
+      <a href="analysis.html">Analysis</a>
+      <a href="suggestions.html" class="active">Suggestions</a>
+      <a href="questions.html">Questions</a>
+      <a href="verification.html">Verification</a>
+      <a href="flagged.html">Flagged for Review</a>
+      <a href="repo-review.html">Repo Review</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+    <span class="tag">DEMO · NO REAL FUNDS</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="eyebrow">Review board</p>
+  <h1>Suggestions — review and choose before anything changes</h1>
+  <p class="lede">
+    Each suggestion states the problem, the proposed change, the evidence behind it and the cost of doing it.
+    Record a decision with <b>Approve / Defer / Reject</b>. Decisions are stored in this browser only; the site is
+    not modified by a decision, and nothing listed here has been implemented unless it is marked
+    <span class="pill yes">implemented</span>.
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <span id="decisionSummary" class="status">No decisions recorded yet.</span>
+      <span class="grow"></span>
+      <button id="exportDecisions" class="secondary">Export decisions (JSON)</button>
+      <button id="resetDecisions" class="secondary">Reset decisions</button>
+    </div>
+  </div>
+
+  <div id="suggestionList">
+
+    <div class="card" data-suggestion="S1">
+      <h3>S1 · Give the dashboard a real dollar-turnover ranking <span class="pill flag">proposed</span></h3>
+      <p><b>Problem.</b> The request is for “highest dollar amount” markets, but the API reports volume in contracts
+        (<code>volume_fp</code>) and exposes no dollar-turnover field, so the current ranking uses the estimate
+        <code>volume_fp × last_price_dollars</code>.</p>
+      <p><b>Proposal.</b> Rank by <code>volume_24h_fp × last_price_dollars</code> as a second column, and show both
+        24-hour and lifetime volume so a single quiet day cannot hide an active market. Label both as estimates.</p>
+      <p class="muted small"><b>Evidence.</b> <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> field list. <b>Cost.</b> Low — one extra column and one sort.</p>
+      <div class="decision"><button data-value="approve">Approve</button><button data-value="defer" class="secondary">Defer</button><button data-value="reject" class="secondary">Reject</button><span class="decision-state muted small"></span></div>
+    </div>
+
+    <div class="card" data-suggestion="S2">
+      <h3>S2 · Turn the chart into a real history, not only live points <span class="pill yes">implemented</span></h3>
+      <p><b>Problem.</b> A chart built only from browser polling has no history before the page was opened, and
+        cannot show anything at seconds resolution.</p>
+      <p><b>Proposal.</b> Use the official candlestick endpoint for the selected market — 1-minute, 1-hour or 1-day
+        candles depending on the window — and layer live polled points on top. This is already implemented on the
+        <a href="../index.html">dashboard</a>.</p>
+      <p class="muted small"><b>Evidence.</b> <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a> — period intervals 1, 60 and 1,440 minutes, max 5,000 periods per request. <b>Cost.</b> Done.</p>
+      <div class="decision"><button data-value="approve">Approve</button><button data-value="defer" class="secondary">Defer</button><button data-value="reject" class="secondary">Reject</button><span class="decision-state muted small"></span></div>
+    </div>
+
+    <div class="card" data-suggestion="S3">
+      <h3>S3 · Record the orderbook at the moment of every order <span class="pill flag">proposed</span></h3>
+      <p><b>Problem.</b> Slippage and “did we take the offer or the bid” cannot be answered from fills alone, because
+        the book changes between the order and the fill.</p>
+      <p><b>Proposal.</b> When an order is placed from the browser, save the orderbook snapshot returned by
+        <code>GET /markets/{ticker}/orderbook</code> at that instant alongside the trade, and compute the entry side
+        of the book from it.</p>
+      <p class="muted small"><b>Evidence.</b> <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook responses</a> — bids only; implied ask = $1.00 − best NO bid. <b>Cost.</b> Low.</p>
+      <div class="decision"><button data-value="approve">Approve</button><button data-value="defer" class="secondary">Defer</button><button data-value="reject" class="secondary">Reject</button><span class="decision-state muted small"></span></div>
+    </div>
+
+    <div class="card" data-suggestion="S4">
+      <h3>S4 · Confirm the Kalshi fee schedule and make P&amp;L fee-aware <span class="pill flag">proposed</span></h3>
+      <p><b>Problem.</b> Every P&amp;L figure computed from entry price and settlement value is gross. Kalshi charges
+        a fee that depends on the series' <code>fee_type</code> and <code>fee_multiplier</code>, so two markets with
+        the same price move can have different net results.</p>
+      <p><b>Proposal.</b> Read the fee schedule from the official fee documentation, reproduce the formula per
+        <code>fee_type</code>, and report net P&amp;L alongside gross.</p>
+      <p class="muted small"><b>Evidence.</b> <code>fee_type</code> and <code>fee_multiplier</code> are present on the
+        <a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">series records</a>;
+        the fee schedule itself has not been read in this session (see <a href="questions.html#q-fees">Q8</a>). <b>Cost.</b> Medium.</p>
+      <div class="decision"><button data-value="approve">Approve</button><button data-value="defer" class="secondary">Defer</button><button data-value="reject" class="secondary">Reject</button><span class="decision-state muted small"></span></div>
+    </div>
+
+    <div class="card" data-suggestion="S5">
+      <h3>S5 · Store the snapshot history so "resolved" can be tracked over time <span class="pill flag">proposed</span></h3>
+      <p><b>Problem.</b> The site shows markets that have already settled, but it cannot show <i>when</i> a market
+        that was open yesterday resolved, because each collection only records the current state.</p>
+      <p><b>Proposal.</b> The scheduled collector already commits a snapshot every two hours. Keep the history
+        (one file per collection, compressed) and diff consecutive snapshots to produce a genuine
+        “open → resolved YES/NO” timeline per market.</p>
+      <p class="muted small"><b>Evidence.</b> <code>.github/workflows/collect.yml</code> already commits <code>data/</code>
+        on a schedule. <b>Cost.</b> Low to medium — needs retention policy and storage budget.</p>
+      <div class="decision"><button data-value="approve">Approve</button><button data-value="defer" class="secondary">Defer</button><button data-value="reject" class="secondary">Reject</button><span class="decision-state muted small"></span></div>
+    </div>
+
+    <div class="card" data-suggestion="S6">
+      <h3>S6 · Replace the topic keyword fallback with an explicit, reviewed scope <span class="pill flag">proposed</span></h3>
+      <p><b>Problem.</b> Markets are matched to a topic by their series category and tags first, but a keyword
+        fallback is used when a market carries no series metadata. That fallback is a judgement call and can pull in
+        an unrelated market.</p>
+      <p><b>Proposal.</b> Show every keyword-matched row with a visible <em>basis</em> column (already added), and
+        keep a reviewed allow/deny list of series tickers per topic that overrides the keyword rule.</p>
+      <p class="muted small"><b>Evidence.</b> The basis column and the classification rule are visible on the category
+        pages and recorded in <code>tools/collect_kalshi.py</code>. <b>Cost.</b> Low.</p>
+      <div class="decision"><button data-value="approve">Approve</button><button data-value="defer" class="secondary">Defer</button><button data-value="reject" class="secondary">Reject</button><span class="decision-state muted small"></span></div>
+    </div>
+
+    <div class="card" data-suggestion="S7">
+      <h3>S7 · Decide where account credentials are allowed to live <span class="pill flag">needs your decision</span></h3>
+      <p><b>Problem.</b> Trade execution needs a Kalshi API key. A public static site cannot hold a server-side
+        secret, and a browser-side signer means the key is loaded into a page served from a public URL.</p>
+      <p><b>Proposal (three options).</b> (a) local command line only, as shipped in
+        <a href="https://github.com/karagemop466-tech/Demo2/blob/main/tools/kalshi_trade.py">tools/kalshi_trade.py</a>;
+        (b) browser signer behind an explicit acknowledgement, as shipped on the
+        <a href="portfolio.html">Portfolio</a> page; (c) a private server-side service with the key in a secret
+        manager, reachable only by you — the strongest option if this ever leaves the demo environment.</p>
+      <p class="muted small"><b>Cost.</b> (a) zero, (b) zero, (c) requires hosting and a secret manager.
+        This is the one item where the site currently offers more than one behaviour and only you can pick.</p>
+      <div class="decision"><button data-value="approve">Approve</button><button data-value="defer" class="secondary">Defer</button><button data-value="reject" class="secondary">Reject</button><span class="decision-state muted small"></span></div>
+    </div>
+
+    <div class="card" data-suggestion="S8">
+      <h3>S8 · Separate synthetic demo markets from the analysis <span class="pill flag">proposed</span></h3>
+      <p><b>Problem.</b> The demo environment contains markets such as “1+1 = 3”, “Demo only” crypto hourly markets and
+        contracts with a “demo strike” field. They resolve deterministically and would otherwise dominate any
+        win-rate calculation.</p>
+      <p><b>Proposal.</b> Tag every market whose title, rules or strike type indicate a synthetic contract, and
+        exclude those rows from category statistics while keeping them visible and labelled.</p>
+      <p class="muted small"><b>Evidence.</b> Observed in the demo responses, e.g. the “Demo only. YES if the Coinbase
+        Exchange BTC-USD one-minute candle …” rule text and <code>strike_type: custom</code> with a “demo strike”
+        value. <b>Cost.</b> Low.</p>
+      <div class="decision"><button data-value="approve">Approve</button><button data-value="defer" class="secondary">Defer</button><button data-value="reject" class="secondary">Reject</button><span class="decision-state muted small"></span></div>
+    </div>
+
+    <div class="card" data-suggestion="S9">
+      <h3>S9 · Add settlement-source quality scoring to the category tables <span class="pill flag">proposed</span></h3>
+      <p><b>Problem.</b> Some demo series publish placeholder settlement sources (free-text names with a
+        <code>kalshi.com</code> link) or a search-engine URL, which makes the resolution hard to verify afterwards.</p>
+      <p><b>Proposal.</b> Score each series' settlement sources (named official source · third-party data site ·
+        placeholder · search engine) and show the score, so markets whose outcome cannot be independently checked
+        are visible before they are traded.</p>
+      <p class="muted small"><b>Evidence.</b> Settlement source lists are captured per series in
+        <code>data/series_scope.json</code> and rendered on the category pages; the observed irregularities are listed
+        on the <a href="flagged.html">Flagged for Review</a> page. <b>Cost.</b> Low.</p>
+      <div class="decision"><button data-value="approve">Approve</button><button data-value="defer" class="secondary">Defer</button><button data-value="reject" class="secondary">Reject</button><span class="decision-state muted small"></span></div>
+    </div>
+
+    <div class="card" data-suggestion="S10">
+      <h3>S10 · Put the whole thing behind a read-only default <span class="pill yes">implemented</span></h3>
+      <p><b>Problem.</b> A live site that can place orders can be surprising.</p>
+      <p><b>Proposal.</b> Order entry is only reachable after an explicit connection step, and the dashboard itself is
+        read-only. Implemented on the <a href="portfolio.html">Portfolio</a> page.</p>
+      <p class="muted small"><b>Cost.</b> Done.</p>
+      <div class="decision"><button data-value="approve">Approve</button><button data-value="defer" class="secondary">Defer</button><button data-value="reject" class="secondary">Reject</button><span class="decision-state muted small"></span></div>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <h3>How a decision is used</h3>
+    <p class="muted small">
+      A decision is a review input, not an automation. “Approve” means the change should be implemented and
+      re-verified against the official API before the site is updated; “Defer” means the proposal stays open;
+      “Reject” means the proposal is closed with your reason recorded in
+      <a href="../COORDINATION.md">COORDINATION.md</a>. The exported JSON file is the hand-off to the next session.
+    </p>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="inner">
+    <span>Kalshi Demo Dashboard · demo environment only · no real funds · research, not advice</span>
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs</a>
+    <a href="sources.html">All sources</a>
+    <a href="../COORDINATION.md">Coordination log</a>
+  </div>
+</footer>
+
+<script src="../assets/suggestions.js"></script>
+</body>
+</html>

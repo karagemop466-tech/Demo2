@@ -1,11 +1,172 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Questions, Information & Answers Needed</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Questions, Information & Answers Needed</h1>
-<table><tr><th>#</th><th>Question</th><th>What we know (verified)</th><th>What is missing</th><th>How to discover it</th><th>Source</th></tr>
-<tr><td>Q1</td><td>What is “highest dollar amount”?</td><td>API exposes volume_fp, last_price_dollars, open_interest_fp, notional_value_dollars per market.</td><td>Whether to rank by volume, open interest, or notional.</td><td>Confirm definition with stakeholder; dashboard currently uses volume×last price and labels it.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></td></tr>
-<tr><td>Q2</td><td>Which series_tickers map to the 5 topics?</td><td>Public market-data endpoints need no auth; series endpoint exists.</td><td>Authoritative series list per topic.</td><td>Call Get Series / list series and confirm with Kalshi docs; replace keyword map (Suggestion S1).</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">Quick Start</a></td></tr>
-<tr><td>Q3</td><td>Demo account + API keys available?</td><td>Demo env exists with mock funds; keys are per-environment, signed requests required.</td><td>Your demo Key ID + private key (never shared in repo).</td><td>Create at demo.kalshi.co → API Keys; paste into Portfolio page.</td><td><a href="https://docs.kalshi.com/getting_started/api_keys">API Keys</a></td></tr>
-<tr><td>Q4</td><td>Browser CORS to demo API?</td><td>Docs show browser fetch examples for public endpoints.</td><td>Whether demo host allows CORS from GitHub Pages origin.</td><td>Test live in browser; if blocked, approve proxy (Suggestion S3).</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">Quick Start</a></td></tr>
-<tr><td>Q5</td><td>Order types, fees, limits for demo trading?</td><td>Limit orders via POST /portfolio/orders; signing rules documented.</td><td>Fee schedule, max order size, rate limits for your tier.</td><td>Check Rate Limits + fee docs; test small demo order.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Auth Quick Start</a></td></tr>
-<tr><td>Q6</td><td>Resolution rules per market?</td><td>Each market has rules_primary/rules_secondary + result field.</td><td>Per-market settlement source and edge cases.</td><td>Read rules on each market detail page before trading.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></td></tr>
-<tr><td>Q7</td><td>Strategy success criteria?</td><td>We can compute win rate/P&amp;L from fills + settled results.</td><td>Minimum fills, risk limits, benchmark.</td><td>Define thresholds in Suggestions; no strategy without data.</td><td>Derived — see Analysis</td></tr>
-</table>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questions, information and answers needed · Kalshi Demo Dashboard</title>
+<meta name="description" content="What is already known and verified, what is still missing, how each missing item can be discovered, and what each one blocks.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="../index.html"><span>KALSHI</span> DEMO<small>RESEARCH DASHBOARD</small></a>
+    <nav class="main">
+      <a href="../index.html">Dashboard</a>
+      <a href="executive-summary.html">Executive Summary</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio &amp; Trading</a>
+      <a href="analysis.html">Analysis</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html" class="active">Questions</a>
+      <a href="verification.html">Verification</a>
+      <a href="flagged.html">Flagged for Review</a>
+      <a href="repo-review.html">Repo Review</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+    <span class="tag">DEMO · NO REAL FUNDS</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="eyebrow">Decision register</p>
+  <h1>Questions, information and answers needed before deciding</h1>
+  <p class="lede">
+    Part A is what has already been confirmed against official sources. Part B is what is still missing, why each
+    missing item matters, and the concrete way to obtain it. Part C lists the questions that turned out not to be
+    open. Every row is either answered with a source link or explicitly marked unresolved.
+  </p>
+
+  <h2 id="part-a">Part A — Answered from verified official sources</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:22%">Question</th><th style="width:34%">Answer</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr id="q-env"><td>Which API do we use?</td>
+          <td>The Kalshi <b>demo</b> environment. REST root <code>https://external-api.demo.kalshi.co/trade-api/v2</code> (also supported: <code>https://demo-api.kalshi.co/trade-api/v2</code>). WebSocket root <code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code> (also supported: <code>wss://demo-api.kalshi.co/trade-api/ws/v2</code>).</td>
+          <td><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Test in the demo environment</a> · <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments</a></td></tr>
+        <tr><td>Does the sandbox reach the API?</td>
+          <td>No. DNS resolves, but the TLS handshake fails (<code>SSL_ERROR_SYSCALL</code>), so data is collected by a GitHub Actions runner and committed to <code>data/</code>; the page then tries a direct browser fetch and falls back to that snapshot.</td>
+          <td>Observed in this environment; the collector and its log are in <code>tools/collect_kalshi.py</code> and <code>data/collection_log.json</code></td></tr>
+        <tr id="q-scope"><td>Which official categories map to the five topics?</td>
+          <td>Gas prices → category <b>Commodities</b> (tag “Oil &amp; Gas”) and <b>Economics</b> (tag “Oil and energy”). Elections → category <b>Elections</b>. Culture → category <b>Entertainment</b> (there is <b>no</b> “Culture” category in the published taxonomy). Crypto → category <b>Crypto</b>. Golf → tag <b>Golf</b> under category <b>Sports</b>.</td>
+          <td><a href="https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories" target="_blank" rel="noopener">Official tag taxonomy response</a> · <a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">series records</a></td></tr>
+        <tr id="q-dollar"><td>How is “highest dollar amount” measured?</td>
+          <td>It cannot be read directly. The API returns market volume in contracts (<code>volume_fp</code>, <code>volume_24h_fp</code>) and open interest in contracts; no dollar-turnover field exists. The site therefore ranks by the labelled estimate <code>volume_fp × last_price_dollars</code> and shows the contract volume beside it.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> · <a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">Fixed-point representation</a></td></tr>
+        <tr id="q-resolution"><td>How does an event resolve, and how is that recorded?</td>
+          <td>Binary contracts settle YES or NO. A settled market reports <code>result</code> = <code>yes</code> or <code>no</code>, <code>settlement_value_dollars</code> ($1.0000 for YES, $0.0000 for NO) and <code>settlement_ts</code>. The resolution table on the dashboard and the category pages read exactly these fields.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market settlement</a> · <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+        <tr><td>How is liquidity reported?</td>
+          <td><code>GET /markets/{ticker}/orderbook</code> returns <code>orderbook_fp.yes_dollars</code> and <code>orderbook_fp.no_dollars</code>, each a list of <code>[price_dollars, count_fp]</code> pairs sorted ascending. Only bids are published: a NO bid at $Y is an implied YES ask at $1.00 − $Y. An empty book is a valid response.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook responses</a></td></tr>
+        <tr><td>How is a request signed?</td>
+          <td>The signed message is <code>timestamp(ms) + HTTP method + path without query parameters</code>. Ed25519 keys sign the message directly; RSA keys use RSA-PSS with SHA-256, MGF1-SHA-256 and salt length equal to the digest length. The signature is base64 and sent in <code>KALSHI-ACCESS-SIGNATURE</code>; the timestamp must be within 30 seconds of Kalshi's clock.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a> · <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">Quick start: authenticated requests</a>. This implementation is checked offline by <code>tools/test_signing.py</code>.</td></tr>
+        <tr id="q-account"><td>Can the portfolio be read without an account?</td>
+          <td>No. Balance, positions, fills, settlements and order placement all require a signed request with a Kalshi API key, and a key can only be issued to a logged-in account.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a> · <a href="https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account" target="_blank" rel="noopener">Creating and using a demo account</a></td></tr>
+        <tr><td>Is there official price history?</td>
+          <td>Yes. <code>GET /series/{series_ticker}/markets/{ticker}/candlesticks</code> returns 1-minute, 1-hour or 1-day candles with OHLC in dollars, up to 5,000 periods per request. Timestamps are in seconds.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td></tr>
+        <tr><td>Is the demo data real?</td>
+          <td>No. Kalshi states that prices and behaviour in the demo environment may not reflect real markets, and the demo contains synthetic contracts (“1+1 = 3”, “Demo only” hourly markets, “demo strike” contracts).</td>
+          <td><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment</a> · observed demo responses in <code>data/</code></td></tr>
+        <tr><td>Which status values are valid for filtering?</td>
+          <td>The documented <code>status</code> filter values for <code>GET /markets</code> are <code>unopened</code>, <code>open</code>, <code>closed</code> and <code>settled</code>. Responses use different values (<code>active</code>, <code>finalized</code>), which is an inconsistency worth flagging (F4).</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="part-b">Part B — Still missing, and how to discover it</h2>
+  <p class="muted">Each item states what is known, what is missing, why it blocks a decision, and the concrete way to get it.</p>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:16%">ID / topic</th><th style="width:26%">What is missing</th><th style="width:28%">How to discover it</th><th>What it blocks</th></tr></thead>
+      <tbody>
+        <tr id="q-demo-account"><td><b>Q1 · Demo account</b></td>
+          <td>A Kalshi demo account, an API key id and the matching private key. None exist in this environment.</td>
+          <td>Sign up at <a href="https://demo.kalshi.co/sign-up" target="_blank" rel="noopener">demo.kalshi.co/sign-up</a> (mock personal details are allowed; an email address and password are still required, so it cannot be automated). Then create a key and run <code>python3 tools/kalshi_trade.py --key &lt;key.pem&gt; --key-id &lt;KEY_ID&gt; balance</code>.</td>
+          <td>Every account figure: balance, positions, fills, settlements, executed trades and all per-trade performance numbers. This is the only hard blocker on the site.</td></tr>
+        <tr id="q-fees"><td><b>Q2 · Fee schedule</b></td>
+          <td>The official Kalshi fee formula and the per-series parameters that feed it.</td>
+          <td>Read the fee documentation linked from the API reference, and read <code>fee_type</code> / <code>fee_multiplier</code> on each series (both are already captured in <code>data/series_scope.json</code>).</td>
+          <td>Net P&amp;L, win-rate versus return comparison, and any claim that one strategy is better than another. Until this is read, every P&amp;L on the site is gross and labelled as such.</td></tr>
+        <tr id="q-gas-definition"><td><b>Q3 · “Gas prices” definition</b></td>
+          <td>Whether crude-oil and refined-product contracts (Commodities “Oil &amp; Gas”) belong in scope alongside retail gasoline and diesel contracts (Economics “Oil and energy”).</td>
+          <td>List the matching series on the <a href="gas.html">gas page</a> (each row links to its series record) and mark the ones to keep. The category pages already show the exact basis used for every row.</td>
+          <td>Which rows belong on the gas page and therefore in the “highest dollar amount” ranking.</td></tr>
+        <tr id="q-culture-definition"><td><b>Q4 · “Culture” definition</b></td>
+          <td>Whether “culture” means only the Entertainment category, or also celebrity/politics markets that a reader would call cultural.</td>
+          <td>Same method as Q3, on the <a href="culture.html">culture page</a>. The published taxonomy contains <b>Entertainment</b> and no “Culture” category, which is why the mapping is explicit on the page.</td>
+          <td>The culture page contents and the topic split of the ranking.</td></tr>
+        <tr id="q-dollar-window"><td><b>Q5 · Dollar window</b></td>
+          <td>Whether “highest dollar amount” means lifetime turnover or the last 24 hours.</td>
+          <td>Both columns are already collected (<code>volume_fp</code> and <code>volume_24h_fp</code>). Suggestion S1 proposes showing both and sorting by the 24-hour estimate by default.</td>
+          <td>The default sort order of the dashboard table.</td></tr>
+        <tr id="q-rate-limits"><td><b>Q6 · Rate limits</b></td>
+          <td>The published request limits for the demo API.</td>
+          <td>Read <a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">the rate-limit documentation</a>. The collector already records the status of every request it made in <code>data/collection_log.json</code>, which would show a 429 immediately.</td>
+          <td>Safe polling cadence for the live dashboard and for the scheduled collector.</td></tr>
+        <tr id="q-websocket-auth"><td><b>Q7 · WebSocket authentication</b></td>
+          <td>Whether the ticker channel requires an authenticated handshake even for public markets.</td>
+          <td>Read <a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">the WebSocket quick start</a>. The dashboard does not depend on it — the chart works from REST polling plus candlesticks — but a confirmation would let the site use the streaming feed for second-level updates.</td>
+          <td>Whether second-resolution live ticks can be added without credentials.</td></tr>
+        <tr id="q-cors"><td><b>Q8 · Browser access (CORS)</b></td>
+          <td>Whether a page on <code>karagemop466-tech.github.io</code> can read the demo API directly.</td>
+          <td>Open the published dashboard and read the status line: it states either “Live: …” or “Snapshot mode: …”. If it reports snapshot mode, the published pages are serving the committed snapshot instead.</td>
+          <td>Nothing is blocked — the snapshot fallback exists — but it changes how fresh the page is.</td></tr>
+        <tr id="q-synthetic"><td><b>Q9 · Synthetic demo contracts</b></td>
+          <td>Which demo markets are synthetic and should be excluded from any statistic.</td>
+          <td>Rule-based detection on <code>rules_primary</code>, title and <code>strike_type</code> (suggestion S8), then a reviewed allow/deny list kept in the repository.</td>
+          <td>Any win-rate or P&amp;L statistic computed from demo fills.</td></tr>
+        <tr id="q-settlement-quality"><td><b>Q10 · Settlement-source quality</b></td>
+          <td>Which settlement sources are good enough to trade a market whose outcome cannot otherwise be checked.</td>
+          <td>Score the settlement source lists already captured per series (suggestion S9). The observed placeholder and search-engine links are listed on the <a href="flagged.html">Flagged for Review</a> page.</td>
+          <td>Whether a market is eligible for the dashboard’s “tradeable” shortlist.</td></tr>
+        <tr id="q-risk-limits"><td><b>Q11 · Risk limits</b></td>
+          <td>The maximum contracts per order, per topic and in total, and the maximum time a position may be held.</td>
+          <td>A decision only the account owner can make. Suggested starting values are given on the <a href="suggestions.html">Suggestions</a> page; they are not applied by the site.</td>
+          <td>Safe operation of the order form once an account is connected.</td></tr>
+        <tr id="q-resolution-history"><td><b>Q12 · Resolution timeline</b></td>
+          <td>When each market moved from open to settled, not just that it is settled now.</td>
+          <td>Keep the scheduled collector's snapshots and diff them (suggestion S5). The collector already commits <code>data/</code> every two hours.</td>
+          <td>“Tracked until the event resolved” over time, rather than a single end state.</td></tr>
+        <tr id="q-clock"><td><b>Q13 · Clock synchronisation</b></td>
+          <td>Confirmation that the machine running the CLI is within 30 seconds of Kalshi's clock.</td>
+          <td>Run <code>date -u</code> against a time service, or simply run the CLI once: a <code>401 header_timestamp_expired</code> response means the clock is off.</td>
+          <td>Order submission from the command line.</td></tr>
+        <tr id="q-hosting"><td><b>Q14 · Where the site is served from</b></td>
+          <td>Whether the final site lives at the repository root or under a <code>docs/</code> folder, and whether the Pages workflow should publish the built site or the raw repository.</td>
+          <td>Both layouts exist in the repository history. The current Pages workflow publishes the repository root, which is where the consolidated site lives.</td>
+          <td>The final URL and the links between pages.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="part-c">Part C — Questions that are not open</h2>
+  <div class="card">
+    <ul class="tight">
+      <li><b>Does the demo environment use real money?</b> No. Demo and production credentials are separate and the demo uses mock funds. <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Source</a></li>
+      <li><b>Can a market be both open and settled?</b> No — the <code>status</code> filter separates them (<code>open</code> versus <code>settled</code>), and the response <code>status</code> is <code>active</code> or <code>finalized</code>. <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Source</a></li>
+      <li><b>Do we need to pay for market data?</b> No authentication is required for <code>GET /markets</code>, <code>GET /events</code>, <code>GET /series</code>, <code>GET /markets/{ticker}</code>, <code>GET /markets/{ticker}/orderbook</code> or the candlesticks endpoint. <a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">Market data quick start</a></li>
+      <li><b>Is the ranking in dollars or contracts?</b> It is a documented estimate, labelled as such on every table that shows it, because the API has no dollar-turnover field (Q5, F-10).</li>
+    </ul>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="inner">
+    <span>Kalshi Demo Dashboard · demo environment only · no real funds · research, not advice</span>
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs</a>
+    <a href="sources.html">All sources</a>
+    <a href="../COORDINATION.md">Coordination log</a>
+  </div>
+</footer>
+</body>
+</html>
