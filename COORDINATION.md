@@ -864,3 +864,38 @@ and names the integration session as the only owner of shared outputs.
 
 **Non-overlap:** I do not rewrite `pages/`, `verified/`, `dashboard/`, `site/`, `intelligence/`,
 `instrument-panel/` or `live/` content; where the landing page indexes them I only add links.
+
+### Session `6332d7d3` — findings so far (evidence, 2026-11-20 13:00 → 14:00 UTC)
+
+Every item below was reproduced this session; none is inferred.
+
+| # | Finding | How it was established | Status |
+|---|---|---|---|
+| Z-A | The deployed root dashboard rendered **"Snapshot none yet / 0 in-scope markets"** | fetched https://karagemop466-tech.github.io/Demo2/ ; page's own error text: `data/snapshot.json → HTTP 404` | fixed: `data/snapshot.json` now exists (first successful run 13:08 UTC) |
+| Z-B | `data/snapshot.json` had **never** been committed on any branch | `git log --all -- data/snapshot.json` (empty); no remote branch contained it | fixed by Z-A run |
+| Z-C | Root cause 1: scope was derived from one `/events?status=open` stream, which is dominated by MVE combo events whose event tickers have no series prefix | run 44740868702 output: 1,556 rows, `per_topic` all zero, 16k+ unmapped; plus live API inspection (`KXMVECROSSCATEGORY-…` tickers) | fixed: scope re-based on `GET /markets?series_ticker=…` per in-scope series |
+| Z-D | Root cause 2: resolutions mapped by event-ticker prefix → 0 rows | same run: `resolved_in_scope: 0` with 60+ settled pages read | fixed: per-series settled fetch + rolling `data/resolutions_log.json` |
+| Z-E | 36/422 requests returned **429**; the collector retried but never slowed down | `data/snapshot.json → api_log` after the 13:08 run | fixed: global pacing (0.30 s, ×1.6 on 429, ×0.99 on success) |
+| Z-F | A failed series request was indistinguishable from an empty topic | same log: 28 × 429 on `/markets?series_ticker=…` appeared as missing markets | fixed: `failed_series` + `series_read` / `series_failed` per topic, shown on the topic pages and on Verification |
+| Z-G | Culture has **2 series in the entire demo catalogue and 0 open markets**; gas has 2 series (`AAAGASD`, `AAAGASM`) | `data/series_index.json` (3,310 series fetched live) + `GET /markets?series_ticker=…&status=open` | reported as an absence of markets, with the catalogue counts shown — not a data failure |
+| Z-H | `main`'s **CI was red** at the "regenerating produced a diff" gate | run 44740172764, step 6 failure; a hand edit to `index.html` had added a card that the generator did not produce | fixed: the card is restored **in `tools/build_site.py`**, so regeneration is a no-op |
+| Z-I | The sharp-jump card's link was wrong from the site root (`pages/causes.html` → `/pages/pages/…`) | `tools/check.py` | fixed by prefix substitution in the generator |
+| Z-J | Four dashboards + a monitor were published side by side with no single entry point | directory listing + `gh pr list` | fixed: `/` is now a **Start here** page; the live dashboard is `/dashboard.html` |
+| Z-K | `tools/check_live_links.py` reported two false positives as "unfinished placeholder" (API URL templates in `href`s and visible endpoint labels) | running it | fixed at the checker (brace-bearing attribute values are patterns) **and** by marking the two visible labels as `<code>`; no guard was loosened |
+| Z-L | A full ~3,000-series sweep cannot finish inside the job window (23 min run died before the commit step) | run 44741984184: step 5 success, step 8 (commit) failure | fixed: `--series-per-topic` (default 90) with **rotation every run**, clock check per series, and the cap published in the snapshot |
+
+**Sources re-read this session** (official only):
+`docs.kalshi.com/getting_started/demo_env` (endpoint table, "prices may not be reflective"),
+`api-reference/market/get-market-candlesticks` (period_interval 1/60/1440, `price`/`yes_bid`/
+`yes_ask` objects), `api-reference/market/get-market-orderbook` (`orderbook_fp`, depth 0–100,
+yes/no bid ladders), `api-reference/market/get-markets`, `events/get-events`,
+`getting_started/{market_lifecycle,rate_limits,market_settlement}`.
+Live responses read this session: `/exchange/status` (trading_active true),
+`/series?category=Culture` (exactly 2 series), `/markets?series_ticker=KXXBANNEDGROK&status=open`
+(0 markets), `/markets?series_ticker=KXBNB15M&status=open` (live 15-minute crypto market),
+`/series?category=Crypto&limit=5`, `/markets?status=open&limit=1` (MVE combo market shape).
+
+**Offline verification added:** `tools/test_collector.py` — 43 checks, no network, wired into
+CI. It covers topic mapping from official fields, verbatim value copying (an absent field stays
+absent), 24-hour dollars from trade prints, order-book normalisation, rolling-log persistence,
+and that a rate-limited series reports "0 markets AND 1 failed series".
