@@ -143,7 +143,9 @@ resolves <b>yes</b> or <b>no</b>.</p>
 <a href="verified/index.html">Verified rows</a> · <a href="dashboard/index.html">Dashboard</a> ·
 <a href="site/index.html">Site</a> · <a href="intelligence/index.html">Intelligence</a> ·
 <a href="analysis.html">Analysis (root)</a> · <a href="portfolio.html">Portfolio status (root)</a> ·
-<a href="review.html">Review (root)</a></p>
+<a href="review.html">Review (root)</a> ·
+<a href="dashboard.html">Live dashboard (preserved variant)</a> ·
+<a href="pages/causes.html">Cause channels</a></p>
 <div id="metaBar"></div>
 <noscript><div class="notice">JavaScript is required for the live panels. The static
 tables on the category, resolution and verification pages still work without it.</div></noscript>
@@ -634,8 +636,10 @@ high-ROI. Markets are watched until they resolve <b>yes</b> or <b>no</b>; resolu
 appear in the feed.</p>
 <p class="small muted">Related: the <a href="pages/live-alerts.html">collected jump chat</a>
 renders the snapshot-based trade-print moves (tunable rule filter) as the same two-chat layout;
-this page is the browser-live version. See <a href="pages/flagged.html">Flagged</a> for the
-audit rows on that page.</p>
+this page is the browser-live version. A third, <a href="pages/alerts.html">history-seeded
+variant</a> (session b7bc848c) seeds every ≥ $0.10 move from the collector's own
+candlestick/tick history on load, with a documented two-tier rule model. See
+<a href="pages/flagged.html">Flagged</a> for the audit rows on those pages.</p>
 <div id="stalenessAlerts"></div>
 
 <div class="kpis" id="alertsKpis">

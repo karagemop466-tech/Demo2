@@ -1,0 +1,96 @@
+name: Desk verification and jump monitor
+
+# Keeps the consolidated desk honest:
+#   1. detect sharp moves of $0.10 or more from the official Kalshi demo API
+#   2. audit every data row in the repository for an official source URL and
+#      re-check a sample of markets against the live official API
+#   3. rebuild the desk pages from the fresh data
+#   4. refuse to publish if any internal link is broken
+#
+# The runner has the outbound access the authoring sandbox does not, which is
+# why the live checks live here.
+
+on:
+  schedule:
+    - cron: "41 */2 * * *"   # every 2 hours, off the top of the hour
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "desk/**"
+      - ".github/workflows/desk-verify.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  # Shared key with every other job that commits data to main (R12 fix): two runs
+  # must never push at the same time. Taken over by session b7bc848c with this
+  # alignment so the desk refresh cannot race the market-data refresh.
+  group: kalshi-data-writers
+  cancel-in-progress: false
+
+jobs:
+  desk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Detect sharp moves from the official demo API
+        run: python3 desk/tools/jump_detect.py
+
+      - name: Audit every data row and re-check a sample against the live API
+        run: python3 desk/tools/verify.py
+
+      - name: Rebuild the desk pages
+        run: python3 desk/tools/build_desk.py
+
+      - name: Internal link check
+        run: python3 scripts/check_links.py
+
+      - name: Keep the reports as an artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: desk-reports
+          path: desk/data
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Commit the refreshed desk
+        # Only a run on main may write to main. A run started from a feature
+        # branch publishes its report as an artifact and leaves the branch alone.
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set +e
+          exec 2>&1
+          git config user.name "kalshi-desk-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add desk
+          if git diff --cached --quiet; then
+            echo "No desk changes to commit."
+            exit 0
+          fi
+          MSG="desk: refresh verification, jump monitor and pages $(date -u +%Y-%m-%dT%H:%MZ)"
+          git commit -m "$MSG"
+          # Push-retry pattern shared with refresh-data.yml (session eeb796d7):
+          # on rejection, soft-reset onto the new tip and re-commit our outputs.
+          for attempt in 1 2 3 4; do
+            out=$(git push origin HEAD:main 2>&1)
+            rc=$?
+            if [ $rc -eq 0 ]; then
+              echo "desk pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "::warning::desk push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -10 | tr '\n' '|')"
+            git fetch origin main 2>&1 | tail -1
+            git reset --soft origin/main
+            git add desk
+            git commit --allow-empty -m "$MSG"
+            sleep $((attempt * 5))
+          done
+          echo "::error::could not push desk refresh after 4 attempts"
+          exit 1

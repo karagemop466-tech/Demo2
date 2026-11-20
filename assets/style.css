@@ -150,3 +150,18 @@ dl.kv dd{margin:.1em 0 0}
 .chatbody { font-size: 0.95em; }
 .chatlinks { margin-top: 4px; font-size: 0.85em; }
 .chatlinks a { margin-right: 2px; }
+
+/* ---------------- live alert chats (pages/alerts.html, preserved variant) ---------------- */
+.chatgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0}
+@media (max-width:900px){.chatgrid{grid-template-columns:1fr}}
+.chat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px}
+.chat h3{margin:2px 4px 8px}
+.chatfeed{height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px}
+.msg{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.msg.model{border-color:var(--accent)}
+.msg .msg-t{display:flex;gap:8px;align-items:center;margin-bottom:3px}
+.msg .msg-p{font-weight:700;font-size:.95rem}
+.msg .up{color:var(--ok)}
+.msg .down{color:var(--bad)}
+.flagpill{border:1px solid var(--warn);color:var(--warn);border-radius:999px;padding:0 7px;font-size:.72rem}
+.emptyp{color:var(--muted);padding:14px;font-size:.85rem}

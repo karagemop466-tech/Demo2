@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cause channels · Kalshi Demo Dashboard</title>
+<meta name="description" content="Where a sharp Kalshi price move can be checked: the settlement sources Kalshi itself names, and the steps to line a move up against the news.">
+<link rel="stylesheet" href="../assets/style.css">
+</head><body>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../alerts.html">Live Alerts</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<div class="wrap">
+
+<h1>Cause channels — where a sharp price move can be checked</h1>
+<p class="lead">The dashboard marks every move of <b>$0.10 or more</b> between two consecutive
+contract prices. Kalshi's API returns the price, the volume and the time of that move — it does
+<b>not</b> return the news behind it, and this site will not invent one.</p>
+
+<div class="notice"><b>What is and is not claimed here.</b> Nothing on this page says an article
+<i>caused</i> a move. Each row is a <b>channel to check</b>, published by Kalshi itself as the
+settlement source for that contract, together with the market's own page so the move can be lined
+up against its timestamp. Verifying a cause is left to the reader, because the only authoritative
+statement of a cause would have to come from the source that settles the contract.</div>
+
+<h2>1. The official settlement sources, per contract</h2>
+<p class="muted">Every Kalshi series record carries a <code>settlement_sources</code> array
+(<a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get
+Series List</a>). Those are the publications the exchange itself names as authoritative for the
+contract, which makes them the right places to look first. They come from
+<a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&amp;limit=5" target="_blank" rel="noopener">the
+API</a> — not from a keyword search.</p>
+<div id="srcTable"></div>
+
+<h2>2. How to line a move up against the news</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Step</th><th>What to do</th><th>Why that is the correct order</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Read the move's timestamp on the dashboard (UTC to the second).</td>
+<td>The chart's points are timestamped by the exchange; a cause must be at or before the move.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Candlesticks</a> (end_period_ts)</td></tr>
+<tr><td>2</td><td>Open the market's own page and check its rules text.</td>
+<td>The rules define exactly which event would move the contract, so you know what to look for.</td>
+<td><a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">Market lifecycle</a></td></tr>
+<tr><td>3</td><td>Look at the settlement sources listed for that series.</td>
+<td>Kalshi names these as authoritative for the contract; other outlets are commentary.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a></td></tr>
+<tr><td>4</td><td>Check whether the move coincides with a trade print at that price.</td>
+<td>A jump with volume is a traded repricing; a jump with no volume is a quote change.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a></td></tr>
+<tr><td>5</td><td>Record the link, the timestamp and the source. If nothing matches, leave it blank.</td>
+<td>An unmatched move stays "cause unverified" — the site never guesses.</td>
+<td><a href="flagged.html">Flagged for Review</a></td></tr>
+</tbody></table></div>
+
+<h2>3. Suggested reading — channels, not conclusions</h2>
+<p class="muted">These are general newsrooms that Kalshi's own <code>settlement_sources</code> lists
+for in-scope series. They are <b>suggestions of where to look</b>, not evidence about any specific
+move, and no publication is claimed to have reported any specific jump.</p>
+<div id="newsTable"></div>
+
+<h2>4. What would make this automatic</h2>
+<p class="muted">Two things are missing before a jump could be annotated automatically, and both are
+recorded rather than worked around: Kalshi publishes no news or event feed keyed to price moves, and
+its public API returns no field describing <i>why</i> a price changed. Until one exists, this page
+stays a checklist. See <a href="suggestions.html">Suggestions</a> and
+<a href="flagged.html">Flagged for Review</a> (F13).</p>
+
+</div>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a> · <a href="../monitor/index.html">Read-only Monitor</a></div></div></footer>
+<script src="../assets/site.js"></script>
+
+<script>
+(async function(){
+  const $ = id => document.getElementById(id);
+  try{
+    const meta = await KR.getJSON("data/dashboard_meta.json");
+    const cat = meta.topic_catalog || {};
+    $('scopeNote') && ($('scopeNote').textContent = Object.keys(cat).length + " topics in scope");
+  }catch(e){}
+
+  // 1. settlement sources per in-scope series, read from the collector's snapshot
+  try{
+    const s = await KR.getJSON("data/series_index.json");
+    const topics = ["gas","elections","culture","crypto","golf"];
+    const rows = [];
+    const seen = new Set();
+    for(const [ticker, series] of Object.entries(s.series || {})){
+      const topic = series._topic || series.topic;
+      if(!topics.includes(topic)) continue;
+      for(const src of (series.settlement_sources || [])){
+        const key = ticker + "|" + (src.name||"");
+        if(seen.has(key)) continue;
+        seen.add(key);
+        rows.push({ticker, topic, name: src.name, url: src.url, title: series.title});
+      }
+    }
+    rows.sort((a,b)=> (a.topic.localeCompare(b.topic)) || String(a.name).localeCompare(String(b.name)));
+    KR.renderTable($('srcTable'), [
+      {label:'Topic', get:r=>KR.topicPill(r.topic)},
+      {label:'Series', get:r=>`<b>${KR.esc(r.title||r.ticker)}</b><br><span class="muted small">${KR.esc(r.ticker)}</span>`},
+      {label:'Settlement source named by Kalshi', get:r=>KR.esc(r.name||'—')},
+      {label:'Link', get:r=>r.url?KR.link(r.url,'open'):'— <span class="pill flag">no URL in API</span>'},
+      {label:'Source', get:r=>KR.esc(`GET ${KR.DEMO_REST}/series/${r.ticker}`)}
+    ], rows.slice(0,400), 'No settlement sources in the snapshot yet.');
+  }catch(e){
+    $('srcTable').innerHTML = `<div class="notice bad">data/series_index.json could not be loaded: ${KR.esc(e.message)}</div>`;
+  }
+
+  // 3. generic news channels named by Kalshi as settlement sources, most frequent first
+  try{
+    const s = await KR.getJSON("data/series_index.json");
+    const counts = new Map();
+    for(const series of Object.values(s.series || {})){
+      for(const src of (series.settlement_sources || [])){
+        if(!src.url || !src.name) continue;
+        if(!/^https?:/.test(src.url)) continue;
+        const k = src.name + "|" + src.url;
+        counts.set(k, (counts.get(k)||0) + 1);
+      }
+    }
+    const rows = [...counts.entries()]
+      .map(([k,n])=>{const [name,url]=k.split("|"); return {name,url,n};})
+      .sort((a,b)=>b.n-a.n);
+    KR.renderTable($('newsTable'), [
+      {label:'Channel', get:r=>`<b>${KR.esc(r.name)}</b>`},
+      {label:'Link', get:r=>KR.link(r.url,'open')},
+      {label:'Named as a settlement source by Kalshi for', num:true, get:r=>r.n + ' series'},
+      {label:'Source', get:r=>`<a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">settlement_sources</a>`}
+    ], rows.slice(0,60), 'No settlement sources in the snapshot yet.');
+  }catch(e){
+    $('newsTable').innerHTML = `<div class="notice bad">data/series_index.json could not be loaded: ${KR.esc(e.message)}</div>`;
+  }
+})();
+</script>
+
+</body></html>

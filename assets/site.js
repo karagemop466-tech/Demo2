@@ -17,6 +17,8 @@
   /* ---------------- fetch helpers ---------------- */
   KR.getJSON = function (path) {
     if (KR.cache[path]) return KR.cache[path];
+    path = path.charAt(0) === "/" ? path.slice(1) : path;
+    path = KR.dataURL ? KR.dataURL(path) : path;
     var url = path + (path.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
     var p = fetch(url, { cache: "no-store" }).then(function (r) {
       if (!r.ok) throw new Error(path + " → HTTP " + r.status);
@@ -77,6 +79,19 @@
     if (h < 24) return h + " h ago";
     return Math.round(h / 24) + " d ago";
   };
+
+  /* ---------------- data paths ----------------
+   * The static pages under pages/ are one directory below the repo root, but data/
+   * lives at the root. Resolving from document.baseURI makes one loader correct for
+   * every page depth, so a page can never 404 on its own data because of its folder.
+   */
+  KR.DATA_ROOT = (function () {
+    var p = location.pathname;
+    var i = p.indexOf("/pages/");
+    if (i >= 0) return p.slice(0, i) + "/";       // …/pages/x.html  -> site root
+    return p.replace(/[^/]*$/, "");               // …/x.html        -> site root
+  })();
+  KR.dataURL = function (path) { return KR.DATA_ROOT + path; };
 
   /* ---------------- data loaders ---------------- */
   KR.snapshot = function () { return KR.getJSON("data/snapshot.json"); };
@@ -179,10 +194,16 @@
     var t0 = series[0].t, t1 = series[series.length - 1].t;
     if (t1 === t0) t1 = t0 + 1000;
     var vals = series.map(function (d) { return d.v; });
+    var sec = opts.secondary || [];
+    sec.forEach(function (d) { vals.push(d.v); });
     var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
     if (hi === lo) { hi = lo + 0.02; lo = Math.max(0, lo - 0.02); }
     var padY = (hi - lo) * 0.12;
-    lo = Math.max(0, lo - padY); hi = Math.min(1, hi + padY);
+    /* A contract price is bounded by $0-$1; a contract-count series is not, so the
+       clamp only applies when the caller says the axis is a price axis. */
+    if (opts.priceAxis !== false) { lo = Math.max(0, lo - padY); hi = Math.min(1, hi + padY); }
+    else { lo = Math.max(0, lo - padY); hi = hi + padY; }
+    var unit = opts.unit || "$";
 
     function X(t) { return padL + plotW * ((t - t0) / (t1 - t0)); }
     function Y(v) { return padT + plotH * (1 - (v - lo) / (hi - lo)); }
@@ -194,7 +215,7 @@
       var v = lo + ((hi - lo) * i) / 4;
       var y = Y(v);
       ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + plotW, y); ctx.stroke();
-      ctx.fillText("$" + v.toFixed(2), 6, y + 4);
+      ctx.fillText(unit + (unit === "$" ? v.toFixed(2) : Math.round(v).toLocaleString()), 6, y + 4);
     }
     /* x labels */
     var spans = opts.spanSeconds || ((t1 - t0) / 1000);
@@ -209,6 +230,16 @@
       ctx.fillText(fmt(tt), X(tt), H - 12);
     }
     ctx.textAlign = "left";
+
+    /* secondary series (e.g. contracts offered next to contracts bid) */
+    if (sec.length > 1) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.strokeStyle = "#f59e0b"; ctx.lineWidth = 1.6; ctx.setLineDash([5, 4]);
+      sec.forEach(function (d, k) { var x = X(d.t), y = Y(d.v); k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.stroke();
+      ctx.restore();
+    }
 
     /* area + line */
     ctx.beginPath();

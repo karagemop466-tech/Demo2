@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live Alerts · Kalshi Demo Dashboard</title>
+<meta name="description" content="Scrolling alert chats for every >= $0.10 contract-price swing on in-scope Kalshi demo markets, with a rule-based high-ROI filter, live trade-print polling and sourced links.">
+<link rel="stylesheet" href="../assets/style.css">
+</head><body>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../alerts.html">Live Alerts</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<div class="wrap">
+
+<h1>Live alerts — sharp price moves</h1>
+<p class="lead">A simplified scrolling chat for every move of <b>$0.10 or more</b> between two
+consecutive contract prices, in either direction, on in-scope markets (gas, elections, culture,
+crypto, golf). Two chats: <b>everything</b>, and a <b>rule-filtered “high-ROI” view</b> of the
+same swings. Each message links the market's own API page so a move can be checked against its
+timestamp; the cause of a move is never guessed — see
+<a href="causes.html">Cause channels</a> for where to look.</p>
+<div id="alertStatus" class="card">Loading alert feeds…</div>
+<div class="chatgrid">
+  <div class="chat"><h3>All in-scope events</h3><div id="chatAll" class="chatfeed"></div></div>
+  <div class="chat"><h3>Model picks — high ROI <span class="pill flag">rule-based</span></h3>
+    <p class="small muted" style="margin:0 4px 6px">The model is a documented two-tier rule over
+    the same swings, not a learned system: <b>Tier A · high ROI</b> — swing ≥ $0.10 that lands at
+    a price between $0.15 and $0.85 (room to run in both directions); <b>Tier B · traded snap</b> —
+    swing ≥ $0.30 that lands at ≤ $0.05 or ≥ $0.95 on a market with volume ≥ 1,000 contracts
+    (conviction repricing on real flow). <b>Not</b> financial advice; no backtested performance is
+    claimed. Criteria and trade categorisation live on
+    <a href="analysis.html">Analysis</a>.</p>
+    <div id="chatModel" class="chatfeed"></div></div>
+</div>
+<p class="small muted">Where the messages come from: (1) on load, every ≥ $0.10 move inside the
+collector's official candlesticks and tick history (<code>data/history.json</code>) is seeded into
+the chat, labelled <i>collector history</i>; (2) after load the page polls
+<code>GET /markets/trades</code> on the demo API every 25 seconds (market-data endpoints need no
+authentication — <a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">docs</a>)
+and turns new trade prints into alerts, labelled <i>live trade print</i>. If the browser cannot
+reach the API (offline, rate-limited), the chats keep the seeded history and the status card says
+so. Alerts persist in this browser only (localStorage); “Clear” empties them. Up to 200 are kept.</p>
+<div class="card"><button id="alertClear" class="pill">Clear alerts</button>
+<span class="small muted"> Source of each row:
+<a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a>
+(demo environment, mock funds).</span></div>
+
+</div>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a> · <a href="../monitor/index.html">Read-only Monitor</a></div></div></footer>
+<script src="../assets/site.js"></script>
+
+<script>
+(async function(){
+  const $ = id => document.getElementById(id);
+  const DEMO = KR.DEMO_REST;
+  const STORE = "kalshi_alerts_v2";
+  const SWING = 0.10;
+  const topics = ["gas","elections","culture","crypto","golf"];
+  const tracked = new Map();
+  for (const t of topics) {
+    try {
+      const d = await KR.getJSON("data/topic-" + t + ".json");
+      (d.markets || []).forEach(m => { if (m && m.market_ticker) tracked.set(m.market_ticker, m); });
+    } catch (e) {}
+  }
+  const last = {};
+  tracked.forEach((m, t) => {
+    const p = Number(m.last_price_dollars);
+    if (m.last_price_dollars !== null && m.last_price_dollars !== "" && isFinite(p)) last[t] = p;
+  });
+  let alerts = [];
+  try { alerts = JSON.parse(localStorage.getItem(STORE)) || []; } catch (e) {}
+  const prints = {};
+
+  function esc(s){ return KR.esc(String(s === undefined || s === null ? "" : s)); }
+  function emptyMsg(txt){ return '<div class="emptyp">' + esc(txt) + '</div>'; }
+
+  function msgHTML(a) {
+    const dir = a.change > 0 ? "up" : "down";
+    const arrow = a.change > 0 ? "▲" : "▼";
+    return '<div class="msg' + (a.model ? " model" : "") + '">' +
+      '<div class="msg-t"><span class="pill ' + esc(a.topic || "") + '">' + esc(a.topic || "unmapped") + '</span>' +
+      (a.tier ? '<span class="pill ok" title="documented rule that selected this pick">tier ' + esc(a.tier) + '</span>' : "") +
+      '<span class="muted small">' + esc(a.time) + ' · ' + esc(a.origin) + '</span></div>' +
+      '<div><b>' + esc(a.title || a.ticker) + '</b></div>' +
+      '<div class="msg-p">' + KR.usd(a.fromV, 2) + ' → ' + KR.usd(a.toV, 2) +
+      ' <span class="' + dir + '">' + arrow + ' ' + KR.usd(Math.abs(a.change), 2) + '</span></div>' +
+      '<div class="small"><span class="muted">' + esc(a.ticker) + '</span> · ' +
+      KR.link(a.url || "#", "market API") + ' · ' +
+      '<span class="flagpill" title="The Kalshi API does not return causes; nothing here claims what moved the price">cause unverified</span></div>' +
+      '</div>';
+  }
+
+  function render() {
+    const model = alerts.filter(a => a.model);
+    $("chatAll").innerHTML = alerts.length
+      ? alerts.slice(0, 80).map(msgHTML).join("")
+      : emptyMsg("No ≥ $0.10 moves recorded yet. The chat fills from collector history on load and live trade prints after that.");
+    $("chatModel").innerHTML = model.length
+      ? model.slice(0, 80).map(msgHTML).join("")
+      : emptyMsg("No swings passed the model rules yet (Tier A: swing ≥ $0.10 landing between $0.15 and $0.85 · Tier B: ≥ $0.30 snap to an extreme on ≥ 1,000 contracts of volume).");
+  }
+
+  function pushAlert(a) {
+    alerts.unshift(a);
+    if (alerts.length > 200) alerts.length = 200;
+    try { localStorage.setItem(STORE, JSON.stringify(alerts)); } catch (e) {}
+  }
+
+  function consider(ticker, price, timeStr, origin) {
+    const row = tracked.get(ticker);
+    if (!row || !isFinite(price)) return;
+    const prev = last[ticker];
+    last[ticker] = price;
+    if (prev === undefined || prev === null) return;
+    const change = price - prev;
+    if (Math.abs(change) + 1e-9 < SWING) return;
+    prints[ticker] = (prints[ticker] || 0) + 1;
+    /* Two documented tiers (see the page text). Tier A: the swing lands mid-band.
+       Tier B: a >= $0.30 snap to an extreme on a market with real volume. */
+    let tier = null;
+    if (price >= 0.15 && price <= 0.85) tier = "A";
+    else if (Math.abs(change) >= 0.30 && (price <= 0.05 || price >= 0.95) &&
+             Number(row.volume_fp) >= 1000) tier = "B";
+    pushAlert({
+      ticker: ticker, title: row.market_title, topic: row.topic,
+      fromV: prev, toV: price, change: Math.round(change * 100) / 100,
+      time: timeStr, origin: origin, model: tier !== null, tier: tier,
+      url: row.market_url || (DEMO + "/markets/" + encodeURIComponent(ticker))
+    });
+  }
+
+  function hhmmss(unixSec) {
+    try { return new Date(unixSec * 1000).toISOString().slice(11, 19) + "Z"; }
+    catch (e) { return ""; }
+  }
+
+  /* Seed from the collector's own history (official API values): tick points first,
+     then 1-minute candlesticks. Chronological per ticker so `last` ends at the newest. */
+  try {
+    const h = await KR.getJSON("data/history.json");
+    Object.keys(h.points || {}).forEach(ticker => {
+      const arr = (h.points[ticker] || []).slice().sort((a, b) => (a.t || 0) - (b.t || 0));
+      arr.forEach(p => {
+        const v = Number(p.last);
+        if (isFinite(v)) consider(ticker, v, hhmmss(p.t || 0), "collector history");
+      });
+    });
+  } catch (e) {}
+  try {
+    const snap = await KR.getJSON("data/snapshot.json");
+    Object.keys(snap.candles || {}).forEach(ticker => {
+      const per = snap.candles[ticker] || {};
+      const set = per["1m"] || per["1h"] || per["1d"] || {};
+      const arr = (set.candles || []).slice().sort((a, b) => (a.ts || 0) - (b.ts || 0));
+      arr.forEach(c => {
+        const v = Number(c.close);
+        if (isFinite(v)) consider(ticker, v, hhmmss(c.ts || 0), "collector candle");
+      });
+    });
+  } catch (e) {}
+
+  /* Live poll: recent public trade prints across the demo exchange. */
+  let livePrints = 0, lastPoll = null;
+  async function poll() {
+    try {
+      const r = await fetch(DEMO + "/markets/trades?limit=1000", { cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const j = await r.json();
+      (j.trades || []).forEach(tr => {
+        const v = Number(tr.yes_price_dollars);
+        if (!isFinite(v)) return;
+        livePrints++;
+        consider(tr.ticker, v, String(tr.created_time || "").slice(11, 19) + "Z", "live trade print");
+      });
+      lastPoll = new Date().toISOString().slice(11, 19) + "Z";
+      $("alertStatus").innerHTML = '<span class="pill ok">live</span> ' +
+        'polling <code>GET /markets/trades</code> every 25 s · ' +
+        KR.num(tracked.size, 0) + ' tracked markets in 5 topics · ' +
+        KR.num(livePrints, 0) + ' trade prints processed · last poll ' + esc(lastPoll);
+    } catch (e) {
+      $("alertStatus").innerHTML = '<span class="pill flag">fallback</span> ' +
+        'live fetch unavailable (' + esc(String(e)) + ') — chats show the seeded collector ' +
+        'history only. The demo API is reachable from a normal browser; this sandbox or ' +
+        'connection is not.';
+    }
+    render();
+  }
+
+  $("alertClear").addEventListener("click", function () {
+    alerts = [];
+    try { localStorage.removeItem(STORE); } catch (e) {}
+    render();
+  });
+
+  render();
+  poll();
+  setInterval(poll, 25000);
+})();
+</script>
+
+</body></html>

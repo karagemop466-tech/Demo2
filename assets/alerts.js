@@ -205,7 +205,13 @@
     var t = S.selected;
     if (!t) return;
     var snap = S.snapshot || {};
-    var candles = (snap.candles || {})[t] || [];
+    // candles[t] is { "1m": {candles: [...]}, "1h": ..., "1d": ... } (the collector's
+    // shape); older code expected a bare array and crashed on .forEach (fixed here by
+    // session b7bc848c's render gate). The arrays carry `ts` + `close`, which
+    // KR.buildSeries accepts for the "close_dollars" field via its `c.close` fallback.
+    var per = (snap.candles || {})[t] || {};
+    var candles = Array.isArray(per) ? per
+      : (((per["1m"] || per["1h"] || per["1d"] || {}).candles) || []);
     var hist = ((snap.history || {}).points || {})[t] || [];
     var series = KR.buildSeries(candles, hist, "close_dollars");
     var now = Date.now(), cutoff = now - S.win * 1000;
