@@ -13,8 +13,10 @@ Design constraints taken from the brief:
 from __future__ import annotations
 
 import datetime as dt
+import html
 import json
 from pathlib import Path
+from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = "https://docs.kalshi.com"
@@ -34,6 +36,7 @@ NAV = [
     ("instrument-panel/site/index.html", "Instrument Panel", "inst"),
     ("live/index.html", "Live Console", "live"),
     ("jumps/index.html", "Price Jumps", "jumps"),
+    ("pages/live-alerts.html", "Live Alerts", "alerts"),
     ("pages/resolutions.html", "Resolutions", "res"),
     ("pages/portfolio.html", "Portfolio", "port"),
     ("pages/analysis.html", "Analysis", "an"),
@@ -659,6 +662,323 @@ def build_live_pages() -> None:
     page(path="pages/resolutions.html", title="Resolutions", active="res",
          body=RES_BODY, extra_js=RES_JS,
          desc="In-scope Kalshi demo markets tracked until resolution, with the official yes/no result.")
+
+    build_alerts_page(snap)
+
+
+def p_esc(s):
+    return html.escape(str(s if s is not None else ""))
+
+def p_usd(v, dp=2):
+    if v is None or v == "" or v == "—":
+        return "—"
+    try:
+        n = float(v)
+    except (TypeError, ValueError):
+        return "—"
+    if n != n:
+        return "—"
+    return "$" + format(n, f".{dp}f")
+
+def p_num(v, dp=2):
+    if v is None or v == "" or v == "—":
+        return "—"
+    try:
+        n = float(v)
+    except (TypeError, ValueError):
+        return "—"
+    if n != n:
+        return "—"
+    return format(n, f",.{dp}f")
+
+def p_when(iso):
+    if not iso:
+        return "—"
+    try:
+        t = dt.datetime.fromisoformat(str(iso).replace("Z", "+00:00"))
+    except ValueError:
+        return p_esc(iso)
+    return t.strftime("%Y-%m-%d %H:%M:%S UTC")
+
+def p_topic_pill(t):
+    t = t or "unmapped"
+    return '<span class="pill ' + p_esc(t) + '">' + p_esc(t) + "</span>"
+
+
+def build_alerts_page(snap: dict) -> None:
+    """Live alerts: two scrolling chat panels for price swings >= $0.10.
+
+    Panel 1 (All alerts): every >= $0.10 swing collected in data/jumps.json.
+    Panel 2 (High ROI): a transparent rule-based filter - move magnitude >= a
+    floor (default $0.15) AND estimated dollar volume >= a floor (default $5,000).
+    Clearly labelled as a rule, not a predictive model; thresholds are tunable on the page.
+    Every alert carries official source links; causes are left blank and marked unverified.
+    """
+    gen = snap.get("generated_at_utc") or ""
+    markets = snap.get("markets", []) or []
+    mkt_by_ticker = {m.get("market_ticker"): m for m in markets if m.get("market_ticker")}
+
+    # Read collected jump data (machine-readable, every value sourced).
+    jumps_path = ROOT / "data" / "jumps.json"
+    trade_moves = []
+    snap_moves = []
+    jumps_gen = ""
+    try:
+        jdata = json.loads(jumps_path.read_text())
+        trade_moves = jdata.get("trade_print_moves", []) or []
+        snap_moves = jdata.get("snapshot_moves", []) or []
+        jumps_gen = jdata.get("generated_from", {}).get("snapshot_generated_at", "")
+    except (OSError, json.JSONDecodeError):
+        pass
+
+    def market_ctx(ticker):
+        m = mkt_by_ticker.get(ticker, {})
+        return {
+            "topic": m.get("topic", ""),
+            "title": m.get("market_title") or m.get("market_ticker") or ticker,
+            "series": m.get("series_ticker", ""),
+            "volume": m.get("volume_fp", ""),
+            "est_vol": m.get("est_dollar_volume", ""),
+            "market_url": m.get("market_url", ""),
+        }
+
+    def alert_rows(moves):
+        rows = []
+        for mv in moves:
+            ticker = mv.get("ticker", "")
+            ctx = market_ctx(ticker)
+            direction = mv.get("direction", "")
+            arrow = "\u25b2" if direction == "up" else "\u25bc"
+            dir_cls = "up" if direction == "up" else "down"
+            rows.append({
+                "time": mv.get("to_time", ""),
+                "topic": ctx["topic"],
+                "title": ctx["title"],
+                "ticker": ticker,
+                "series": ctx["series"],
+                "from_price": mv.get("from_price", ""),
+                "to_price": mv.get("to_price", ""),
+                "delta": mv.get("delta", ""),
+                "arrow": arrow,
+                "dir_cls": dir_cls,
+                "from_size": mv.get("from_size", "") or "\u2014",
+                "to_size": mv.get("to_size", "") or "\u2014",
+                "trade_source": mv.get("trade_source", ""),
+                "market_source": mv.get("market_source", ""),
+                "volume": ctx["volume"],
+                "est_vol": ctx["est_vol"],
+            })
+        rows.sort(key=lambda r: r["time"], reverse=True)
+        return rows
+
+    all_rows = alert_rows(trade_moves + snap_moves)
+
+    def row_html(r, idx):
+        from_p = p_usd(r["from_price"], 4) if r["from_price"] not in (None, "", "\u2014") else "\u2014"
+        to_p = p_usd(r["to_price"], 4) if r["to_price"] not in (None, "", "\u2014") else "\u2014"
+        delta = r["delta"]
+        delta_disp = delta if delta and delta not in ("", "\u2014") else "\u2014"
+        time_disp = p_when(r["time"]) if r["time"] else "\u2014"
+        series_link = ""
+        if r["series"]:
+            series_link = '<a href="https://kalshi.com/markets/' + p_esc(r["series"].lower()) + \
+                '" target="_blank" rel="noopener">Kalshi series page</a>'
+        src_links = []
+        if r["trade_source"]:
+            src_links.append('<a href="' + p_esc(r["trade_source"]) +
+                             '" target="_blank" rel="noopener">trade prints</a>')
+        if r["market_source"]:
+            src_links.append('<a href="' + p_esc(r["market_source"]) +
+                             '" target="_blank" rel="noopener">market</a>')
+        if series_link:
+            src_links.append(series_link)
+        vol_disp = p_num(r["volume"], 2) if r["volume"] not in (None, "", "\u2014") else "\u2014"
+        est_disp = (p_usd(r["est_vol"], 0) + ' <span class="pill flag">est.</span>' \
+                    if r["est_vol"] not in (None, "", "\u2014") else "\u2014")
+        ctx_q = quote((r["title"] or r["ticker"]) + " Kalshi")
+        news_link = ('<a href="https://news.google.com/search?q=' + ctx_q +
+                     '" target="_blank" rel="noopener">news search</a> ' +
+                     '<span class="pill flag">not an official source</span>')
+        return ('<div class="alertrow" id="alert-' + str(idx) + '">'
+                + '<div class="at">' + p_esc(time_disp) + '</div>'
+                + '<div class="topic">' + p_topic_pill(r["topic"]) + '</div>'
+                + '<div class="mkt"><b>' + p_esc(r["title"]) + '</b>'
+                + '<span class="ticker small muted"> ' + p_esc(r["ticker"]) + '</span></div>'
+                + '<div class="move">' + p_esc(from_p) + ' \u2192 ' + p_esc(to_p) + ' '
+                + '<span class="dir ' + r["dir_cls"] + '">' + r["arrow"] + ' ' +
+                p_esc(delta_disp) + '</span></div>'
+                + '<div class="size">' + p_esc(r["from_size"]) + ' \u2192 ' +
+                p_esc(r["to_size"]) + ' contracts</div>'
+                + '<div class="vol">vol ' + vol_disp + ' \u00b7 est. $' + est_disp + '</div>'
+                + '<div class="src">(' + " \u00b7 ".join(src_links) if src_links else "\u2014" + ')</div>'
+                + '<div class="ctx">' + news_link + '</div>'
+                + '</div>')
+
+    style = ("<style>.scrollchat{height:470px;overflow-y:auto;border:1px solid #d1d5db;"
+             "border-radius:8px;background:#fff;padding:8px 10px;"
+             "display:flex;flex-direction:column;gap:6px}"
+             ".alertrow{border-bottom:1px solid #e5e7eb;padding:7px 2px;font-size:0.92rem;"
+             "display:grid;grid-template-columns:44px 56px 1fr 130px 70px 90px 150px 140px;"
+             "gap:6px;align-items:center}"
+             ".alertrow:last-child{border-bottom:none}"
+             ".at{font-size:0.8rem;color:#6b7280;font-variant-numeric:tabular-nums}"
+             ".topic{font-size:0.78rem}"
+             ".mkt b{font-size:0.94rem;display:block}.ticker{font-size:0.8rem;color:#4b5563}"
+             ".move{font-size:0.94rem;font-variant-numeric:tabular-nums}"
+             ".dir{font-weight:700}.dir.up{color:#16a34a}.dir.down{color:#dc2626}"
+             ".size{font-size:0.85rem;color:#374151}.vol{font-size:0.8rem;color:#6b7280}"
+             ".src{font-size:0.8rem}.src a{font-size:0.78rem}"
+             ".ctx{font-size:0.8rem;color:#6b7280}.pill{font-size:0.72rem}</style>")
+
+    js = r"""
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const THRESHOLD_DEFAULT = 0.15;
+  const MINVOL_DEFAULT = 5000;
+  let allRows = [];
+  const chatAll = $('chatAll');
+  const chatRoi = $('chatRoi');
+  const thrInp = $('roiThreshold');
+  const volInp = $('roiMinVol');
+  thrInp.value = '' + THRESHOLD_DEFAULT;
+  volInp.value = '' + MINVOL_DEFAULT;
+
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function usd(v,dp){if(v==null||v===''||v==='\u2014')return '\u2014';const n=Number(v);if(!isFinite(n))return '\u2014';return '$'+n.toFixed(dp===undefined?2:dp);}
+  function num(v,dp){if(v==null||v===''||v==='\u2014')return '\u2014';const n=Number(v);if(!isFinite(n))return '\u2014';return n.toLocaleString(undefined,{minimumFractionDigits:dp||0,maximumFractionDigits:dp===undefined?2:dp});}
+  function when(iso){if(!iso)return '\u2014';const d=new Date(iso);if(isNaN(d.getTime()))return esc(iso);return d.toISOString().replace('T',' ').replace('Z',' UTC');}
+  function topicPill(t){return '<span class="pill '+esc(t||'unmapped')+'">'+esc(t||'unmapped')+'</span>';}
+  function mkLink(url,text){var a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';a.textContent=text;return a;}
+
+  function buildRow(r,i){
+    var div=document.createElement('div');div.className='alertrow';div.id='alert-'+i;
+    var at=document.createElement('div');at.className='at';at.textContent=when(r.time);div.appendChild(at);
+    var tp=document.createElement('div');tp.className='topic';tp.innerHTML=topicPill(r.topic);div.appendChild(tp);
+    var mkt=document.createElement('div');mkt.className='mkt';
+    var b=document.createElement('b');b.textContent=esc(r.title);mkt.appendChild(b);
+    var tk=document.createElement('span');tk.className='ticker small muted';tk.textContent=' '+esc(r.ticker);mkt.appendChild(tk);div.appendChild(mkt);
+    var fromP=(r.from_price&&r.from_price!=='\u2014')?usd(r.from_price,4):'\u2014';
+    var toP=(r.to_price&&r.to_price!=='\u2014')?usd(r.to_price,4):'\u2014';
+    var delta=(r.delta&&r.delta!=='\u2014')?r.delta:'\u2014';
+    var arrow=r.direction==='up'?'\u25b2':'\u25bc';
+    var dirCls=r.direction==='up'?'up':'down';
+    var mv=document.createElement('div');mv.className='move';
+    mv.textContent=fromP+' \u2192 '+toP+' ';
+    var dspan=document.createElement('span');dspan.className='dir '+dirCls;dspan.textContent=arrow+' '+esc(delta);mv.appendChild(dspan);div.appendChild(mv);
+    var sz=document.createElement('div');sz.className='size';sz.textContent=esc(r.from_size)+' \u2192 '+esc(r.to_size)+' contracts';div.appendChild(sz);
+    var vd=(r.volume&&r.volume!=='\u2014')?num(r.volume,2):'\u2014';
+    var ed=(r.est_vol&&r.est_vol!=='\u2014')?usd(r.est_vol,0)+' <span class="pill flag">est.</span>':'\u2014';
+    var vl=document.createElement('div');vl.className='vol';vl.innerHTML='vol '+vd+' \u00b7 est. $'+ed;div.appendChild(vl);
+    var src=document.createElement('div');src.className='src';
+    var first=true;
+    function add(u,label){if(!u){return;}if(!first){var s=document.createTextNode(' \u00b7 ');src.appendChild(s);}first=false;src.appendChild(mkLink(u,label));}
+    add(r.trade_source,'trade prints');
+    add(r.market_source,'market');
+    if(r.series){add('https://kalshi.com/markets/'+esc(r.series).toLowerCase(),'Kalshi series page');}
+    if(src.children.length===0){var t=document.createTextNode('\u2014');src.appendChild(t);}
+    div.appendChild(src);
+    var ctxQ=encodeURIComponent((r.title||r.ticker)+' Kalshi');
+    var cx=document.createElement('div');cx.className='ctx';
+    cx.innerHTML='<a href="https://news.google.com/search?q='+ctxQ+'" target="_blank" rel="noopener">news search</a> <span class="pill flag">not an official source</span>';
+    div.appendChild(cx);
+    return div;
+  }
+
+  function render(rows, el){
+    el.innerHTML='';
+    if(rows.length===0){el.appendChild(document.createTextNode(''));var empty=document.createElement('div');empty.className='small muted';empty.style.padding='10px';empty.textContent='No alerts match this filter in the current data.';el.appendChild(empty);return;}
+    rows.forEach(function(r,i){el.appendChild(buildRow(r,i));});
+  }
+  function apply(){
+    var thr=parseFloat(thrInp.value)||THRESHOLD_DEFAULT;
+    var minv=parseFloat(volInp.value)||MINVOL_DEFAULT;
+    var roi=allRows.filter(function(r){
+      var d=Math.abs(parseFloat(r.delta)||0);
+      var e=parseFloat((r.est_vol||'').replace(/[^0-9.]/g,'')||'0');
+      return d>=thr && e>=minv;
+    });
+    $('alertCountAll').textContent=allRows.length+' alert'+(allRows.length!==1?'s':'')+' \u00b7 \u2265 $0.10';
+    $('alertCountRoi').textContent=roi.length+' alert'+(roi.length!==1?'s':'')+' \u00b7 \u2265 $'+thr.toFixed(2)+' and est. vol \u2265 $'+minv.toLocaleString();
+    render(allRows, chatAll);
+    render(roi, chatRoi);
+  }
+
+  Promise.all([
+    fetch('data/snapshot.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);}),
+    fetch('data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
+  ]).then(function(res){
+    var snap=res[0], jdata=res[1];
+    var markets=(snap.markets||[]);
+    var mktByTicker={};
+    markets.forEach(function(m){if(m.market_ticker)mktByTicker[m.market_ticker]=m;});
+    var trades=(jdata.trade_print_moves||[]);
+    var snaps=(jdata.snapshot_moves||[]);
+    allRows=(trades.concat(snaps)).map(function(mv){
+      var ticker=mv.ticker||'';
+      var m=mktByTicker[ticker]||{};
+      return {
+        time:mv.to_time||'', topic:m.topic||'',
+        title:m.market_title||m.market_ticker||ticker, ticker:ticker,
+        series:m.series_ticker||'',
+        from_price:mv.from_price||'', to_price:mv.to_price||'',
+        delta:mv.delta||'', direction:mv.direction||'',
+        from_size:mv.from_size||'\u2014', to_size:mv.to_size||'\u2014',
+        trade_source:mv.trade_source||'', market_source:mv.market_source||'',
+        volume:m.volume_fp||'', est_vol:m.est_dollar_volume||'',
+      };
+    }).sort(function(a,b){return (b.time||'').localeCompare(a.time||'');});
+    apply();
+  }).catch(function(e){
+    chatAll.innerHTML='<div class="notice bad">Could not load alert data: '+esc(String(e))+'. The snapshot is produced by .github/workflows/refresh-data.yml.</div>';
+    chatRoi.innerHTML='';
+  });
+  thrInp.addEventListener('input', apply);
+  volInp.addEventListener('input', apply);
+})();
+</script>
+"""
+    body = style + f"""
+<h1>Live alerts — price swings ≥ $0.10</h1>
+<p class="lead">A scrolling alert feed for Kalshi <b>demo</b> markets in the five in-scope
+topics (gas prices, elections, culture, crypto, golf). Every contract-price move of ten cents or
+more in either direction appears in "All alerts"; "High ROI" shows the subset a transparent
+rule-based filter flags as higher-conviction (a larger move in a more liquid market). Thresholds
+are tunable on the page — this is a rule, not a predictive model, and nothing is inferred about
+why a move happened.</p>
+<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Snapshot {gen or "none yet"}</div></div></div>
+<div class="card tight" style="margin-top:8px">
+  <div class="row" style="margin:0;gap:10px;align-items:flex-end;flex-wrap:wrap">
+    <div><label for="roiThreshold">High-ROI move floor ($)</label>
+      <input id="roiThreshold" type="number" step="0.05" min="0.10" max="1.00" value="0.15" style="width:90px"></div>
+    <div><label for="roiMinVol">Min est. $ volume for High ROI</label>
+      <input id="roiMinVol" type="number" step="1000" value="5000" style="width:110px"></div>
+    <div class="small muted">High ROI = move ≥ floor AND est. dollar volume ≥ min. Rule-based, not a model; causes blank &amp; unverified.</div>
+  </div>
+</div>
+<div id="alertCountAll" class="small muted" style="margin:4px 0 2px"></div>
+<div id="alertCountRoi" class="small muted" style="margin:0 0 8px"></div>
+<div class="grid two" style="margin-top:4px">
+  <div class="card">
+    <h3>All alerts <span class="muted">— every ≥ $0.10 swing, newest first</span></h3>
+    <div id="chatAll" class="scrollchat"></div>
+  </div>
+  <div class="card">
+    <h3>High ROI <span class="muted">— rule-based filter, tunable above</span></h3>
+    <div id="chatRoi" class="scrollchat"></div>
+  </div>
+</div>
+<p class="small muted" style="margin-top:8px">Sources: trade prints and market snapshots from the official Kalshi demo Trade API
+(<a href="https://docs.kalshi.com/api-reference/market/get-trades">get-trades</a>,
+<a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>). Market links point to the
+Kalshi series page pattern (checked against the live site); cause is never inferred — each row links to the
+market's own trade/market API responses and is flagged <span class="pill flag">cause unverified</span>.
+Data as of {jumps_gen or "not collected yet"}; the collector runs every 10 minutes via
+<a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>.</p>
+"""
+    page(path="pages/live-alerts.html", title="Live Alerts", active="alerts", body=body, extra_js=js,
+         desc="Live alerting feed: scrolling chats for Kalshi demo price swings of $0.10 or more, all-events and a high-ROI filter.")
+    print("  wrote pages/live-alerts.html")
 
 
 if __name__ == "__main__":
