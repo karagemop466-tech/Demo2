@@ -20,7 +20,10 @@ SKIP_DIRS = {".git", "node_modules", "verified", "data"}
 HREF = re.compile(r'(?:href|src)\s*=\s*"([^"]+)"')
 # API path templates such as /markets/{ticker} are legitimate, so a brace
 # preceded by a slash or underscore is not treated as an unfinished placeholder.
-PLACEHOLDER = re.compile(r"(?<![/_])\{[A-Za-z_]+\}|TODO|FIXME|Lorem ipsum|XXXX")
+# Double braces {{...}} are the demo API's own title templating appearing verbatim
+# in copied data (e.g. "How {{high_low}} will Bitcoin get this year?") - data, not
+# our unfinished markup.
+PLACEHOLDER = re.compile(r"(?<![/_\{])\{[A-Za-z_]+\}|TODO|FIXME|Lorem ipsum|XXXX")
 # Bodies of <script>, <code> and <pre> are not markup: template literals and code
 # samples there would otherwise look like broken links or unfinished placeholders.
 # The opening <script src="..."> tag is kept so asset references are still checked.
@@ -37,7 +40,7 @@ def strip_code(text: str) -> str:
 # and it is exactly the defect this checker missed on its first run.
 # Require whitespace *before* the full stop: "listed on ." is broken, while
 # "each value is filled in." is ordinary English.
-DANGLING = re.compile(r"\b(?:on|in|at|from|per|as|see|below|above)\s+\.|<\s*\.|>\s*\(\s*\)")
+DANGLING = re.compile(r"\b(?:on|in|at|from|per|as|see|below|above)\s+\.(?![\w/])|<\s*\.|>\s*\(\s*\)")
 
 
 def check_dangling(rel, scan, problems):

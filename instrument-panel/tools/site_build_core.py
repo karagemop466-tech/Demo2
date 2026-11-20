@@ -28,6 +28,9 @@ import urllib.parse  # noqa: E402  (link policy in ext() needs urlparse)
 # They stay visible as text for manual review; never invented replacements.
 KNOWN_DEAD_URLS = {
     "https://www.crunchyroll.com/en/animeawards/": "2026-11-20",
+    # PAULTEST1 is a test series present in the demo catalogue; its contract
+    # terms PDF does not exist (404). Kept visible as text, never invented.
+    "https://assets.kalshi.com/contract_terms/PAULTEST1.pdf": "2026-11-20",
 }
 
 NAV = [

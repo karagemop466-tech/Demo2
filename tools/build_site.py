@@ -182,6 +182,17 @@ tables on the category, resolution and verification pages still work without it.
   </div>
 
   <div class="card">
+    <h3>Sharp price moves <span class="muted">— jumps ≥ $0.10 between consecutive price points</span></h3>
+    <p class="muted" style="margin-top:0">Each red marker on the chart is a move of $0.10 or more
+      between two consecutive points. The API returns price and volume but not the news or event
+      behind a move, so the cause is not inferred — each row links to the market's own page on
+      Kalshi and is flagged <span class="pill flag">cause unverified</span>. The
+      <span class="pill flag">possible context</span> column is only a news-search link that
+      <i>may</i> be related; it is not an official source and asserts nothing.</p>
+    <div id="jumpTable"></div>
+  </div>
+
+  <div class="card">
     <h3>Liquidity <span class="muted">— contracts available at each price</span></h3>
     <p class="small muted" style="margin-top:0">Raw bids from
       <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook">Get Market Orderbook</a>.
@@ -201,7 +212,11 @@ tables on the category, resolution and verification pages still work without it.
 <div class="notice info"><b>What "highest dollar amount" means here.</b> The Trade API has no
   single dollar-volume field. Every row therefore shows the raw official fields
   (<code>volume_fp</code>, <code>open_interest_fp</code>, <code>last_price_dollars</code>) and
-  one clearly-labelled <b>estimate</b>: <code>volume_fp × last_price_dollars</code>. See
+  one clearly-labelled <b>estimate</b>: <code>volume_fp × last_price_dollars</code>.
+  Rows missing lifetime <code>volume_fp</code> (top-event lead markets) show a blank there and a
+  labelled 24h estimate beside it. Coverage note: the snapshot unions every source-linked market
+  set and is <b>not a complete enumeration</b> of the exchange (see the <code>adapter.coverage</code>
+  field in <code>data/snapshot.json</code>). See
   <a href="pages/flagged.html">Flagged F2</a> and <a href="pages/questions.html">Q1</a>.</div>
 <div class="row" style="margin:10px 0">
   <div><label for="topicFilter">Topic</label>
@@ -321,8 +336,10 @@ DASH_JS = r"""
                                   yes_ask_close:c.yes_ask_close, derived_mid:c.derived_mid}));
     const series = KR.buildSeries(candles, hist, fieldMap[state.field])
       .filter(p=>p.t >= Date.now()-state.window*1000 && p.t <= Date.now()+60000);
+    const jumps = KR.detectJumps(series, 0.10);
     KR.drawChart(document.getElementById('chart'), series, {
       spanSeconds: state.window,
+      jumps: jumps,
       emptyMessage: state.window<=300
         ? 'No ticks inside this window yet. The collector samples every 10 minutes, so a 60-second or 5-minute window only fills when a run has just completed.'
         : 'No price points in this window. Candlestick price objects are empty in periods with no trade - try the quoted-mid series or a longer window.'
@@ -332,7 +349,20 @@ DASH_JS = r"""
       : state.field==='close' ? 'last traded price - empty in periods with no trade'
       : state.field==='yes_bid_close' ? 'yes bid close' : 'yes ask close';
     $('chartNote').innerHTML = `${series.length} points · ${tickCount} collector ticks + ${srcCount} candlesticks `
-      + `(period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`;
+      + `(period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`
+      + (jumps.length ? ` · ${jumps.length} sharp move${jumps.length!==1?'s':''} ≥ $0.10` : '');
+
+    const m = (state.snap.markets||[]).find(x=>x.market_ticker===state.ticker) || {};
+    const ctxQ = encodeURIComponent((m.market_title||m.market_ticker||'Kalshi market') + ' Kalshi');
+    KR.renderTable($('jumpTable'), [
+      {label:'When (UTC)', get:j=>`<span class="small">${KR.when(new Date(j.toTime).toISOString())}</span>`},
+      {label:'From → To', num:true, get:j=>`${KR.usd(j.fromV,4)} → ${KR.usd(j.toV,4)}`},
+      {label:'Change', num:true, get:j=>(j.change>0?'▲ ':'▼ ')+KR.usd(Math.abs(j.change),4)},
+      {label:'Direction', get:j=>`<span class="pill ${j.dir==='up'?'up':'down'}">${j.dir}</span>`},
+      {label:'Market', get:j=>`<b>${KR.esc(m.market_title||m.market_ticker||'—')}</b><br><span class="muted small">${KR.esc(m.market_ticker||'—')}</span>`},
+      {label:'Source', get:j=>KR.link(m.market_url||'','Kalshi market')+' <span class="pill flag">cause unverified</span>'},
+      {label:'Possible context (unverified)', get:j=>`<a href="https://news.google.com/search?q=${ctxQ}" target="_blank" rel="noopener">news search</a> <span class="pill flag">not an official source</span>`}
+    ], jumps, 'No sharp moves (≥ $0.10 between consecutive points) in this window. A blank table means the price moved in smaller steps — nothing is inferred.');
   }
 
   async function renderLiquidity(){

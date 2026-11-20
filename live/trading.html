@@ -89,6 +89,16 @@
   <h2 style="margin:26px 0 10px">Mode B · Live demo account (your key)</h2>
 
   <div class="notice warn">
+    <b>Disabled on this public deployment (integration fix, PR #6 policy).</b> A public GitHub Pages
+    site cannot protect a pasted private signing key, so the credential form below is switched off
+    on the deployed copy. Reads and orders run through the gated GitHub&nbsp;Actions path instead
+    (repository secrets + <code>KALSHI_TRADING_ENABLED</code> + dry-run default — see
+    <code>tools/execute_strategy.py</code> and README). To use Mode&nbsp;B, run this page locally
+    and remove the <code>disabled</code> attributes, or serve it from a private backend such as
+    <code>server/</code>. Flagged as F14 on <a href="../pages/flagged.html">Flagged for Review</a>.
+  </div>
+
+  <div class="notice warn">
     <b>Before you paste anything.</b> Use a key created on <a href="https://demo.kalshi.co/">demo.kalshi.co</a> only —
     never a production key. The key is sent from your browser straight to
     <code>external-api.demo.kalshi.co</code> and is kept in <code>sessionStorage</code> for this tab only, so closing the
@@ -99,11 +109,11 @@
     <section class="card">
       <h2>Credentials</h2>
       <label for="apiKeyId">Demo API Key ID</label>
-      <input id="apiKeyId" placeholder="a952bcbe-ec3b-4b5b-b8f9-11dae589608c" autocomplete="off" spellcheck="false">
+      <input id="apiKeyId" placeholder="a952bcbe-ec3b-4b5b-b8f9-11dae589608c" autocomplete="off" spellcheck="false" disabled>
       <label for="apiPrivateKey">Demo private key (PEM)</label>
-      <textarea id="apiPrivateKey" rows="6" placeholder="Paste your demo private key here (PEM text, including the BEGIN and END lines)" autocomplete="off" spellcheck="false"></textarea>
+      <textarea id="apiPrivateKey" rows="6" placeholder="Disabled on the public deployment — run locally or use the Actions path (see notice above)" autocomplete="off" spellcheck="false" disabled></textarea>
       <div class="row" style="margin-top:12px">
-        <button class="primary" id="loadPortBtn" onclick="KD.loadPortfolio()">Load account</button>
+        <button class="primary" id="loadPortBtn" onclick="KD.loadPortfolio()" disabled>Load account</button>
         <button class="ghost" onclick="document.getElementById('apiPrivateKey').value='';sessionStorage.clear();location.reload()">Forget key</button>
       </div>
       <div id="portfolioResult"></div>
