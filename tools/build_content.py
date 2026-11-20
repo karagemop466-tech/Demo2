@@ -1072,7 +1072,7 @@ makes. This is the provenance for every figure in the dashboard tables.</p>
 <tr><td>WebSocket handshake requires authentication</td><td>&quot;WebSocket connections require authentication during the connection handshake&rdquo;; the public channels (<code>ticker</code>, <code>trade</code>) add no channel-level authorisation but still need the signed handshake</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets">quick start websockets</a></td><td>Read on 2026-11-20 - the reason the browser polls REST instead of streaming</td></tr>
 <tr><td>Unauthenticated public requests have their own limits</td><td>&quot;Unauthenticated public requests are subject to separate limits. Authenticate requests where supported and back off on <code>429</code>.&quot;</td><td><a href="https://docs.kalshi.com/getting_started/rate_limits">rate limits</a></td><td>Read on 2026-11-20 - the live feeds poll every 30 s and show the error instead of retrying tightly</td></tr>
 <tr><td>Alert threshold is inclusive at $0.10</td><td>Prices carry four decimals, so the move is rounded before the comparison; an exact $0.10 move fires</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Boundary case found by <code>tests/live_alerts.test.js</code> (0.60 - 0.50 = 0.09999999999999998 in binary floating point) and fixed</td></tr>
-<tr><td>Published subset rule</td><td>Per topic: all markets of the top 120 events by estimated dollar volume, plus the 250 highest-value individual markets</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Implemented in <code>tools/collector.py:select_published</code>, measured on the committed snapshot (10,241 markets seen, 1,257 published, 2,498,831 bytes)</td></tr>
+<tr><td>Published subset rule</td><td>Per topic: all markets of the top 120 events by estimated dollar volume, plus the 250 highest-value individual markets</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Implemented in <code>tools/collector.py:select_published</code>, measured on the committed snapshot: 10,241 markets seen, 1,257 published (329 whole events), projected 5.0 MB against the committed 47,263,413-byte file</td></tr>
 <tr><td>Order books of the top demo markets are empty</td><td><code>yes_bids: []</code> and <code>no_bids: []</code> for all 12 books in the committed snapshot</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/KXECCOMPACT-30/orderbook?depth=25">live order book request</a></td><td>Read from <code>data/snapshot.json</code> on 2026-11-20 - the reason the liquidity panel can now fetch a book live</td></tr>
 </tbody></table></div>
 """
@@ -1235,10 +1235,11 @@ FLAGGED = [
   "2026-11-20T14:10:44Z while every later run failed the same way.",
   "The &quot;live&quot; part of the site was not live: no new prices, no new resolutions, no new "
   "price history, and the alert feeds had nothing new to show.",
-  "Fixed 2026-11-20 (session 441151f5): the collector publishes a bounded subset (2,498,831 bytes "
-  "measured against the 47,263,413-byte committed snapshot), <code>write_json</code> refuses to "
-  "write a file above 40 MB, and the workflow has a size-guard step that fails with a clear "
-  "annotation before the commit instead of a refused push.",
+  "Fixed 2026-11-20 (session 441151f5): the collector publishes a bounded subset - measured on the "
+  "committed snapshot, 1,257 of 10,241 seen markets, a projected 5.0 MB file against the committed "
+  "47,263,413-byte file - <code>write_json</code> refuses to write a file above 40 MB, and the "
+  "workflow has a size-guard step that fails with a clear annotation before the commit instead of "
+  "a refused push.",
   "getting_started/demo_env"),
 ]
 

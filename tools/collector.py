@@ -61,6 +61,9 @@ PUBLISH_EVENTS_PER_TOPIC = int(os.environ.get("KALSHI_PUBLISH_EVENTS_PER_TOPIC",
 PUBLISH_TOP_MARKETS_PER_TOPIC = int(os.environ.get("KALSHI_PUBLISH_TOP_MARKETS", "250"))
 # Hard ceiling for one published file. Comfortably below GitHub's 100 MB limit.
 MAX_FILE_BYTES = 40 * 1024 * 1024
+# The per-topic files are published as well; they are kept smaller still so a
+# single huge topic cannot take the whole publish step down with it.
+MAX_TOPIC_FILE_BYTES = 20 * 1024 * 1024
 
 # API request log: (url, http_status, ok, note). Written to data/api_log.json so the
 # site can prove which request produced which rows.
@@ -443,6 +446,11 @@ def implied_dollar_volume_24h(m: dict) -> float | None:
     return round(v * p, 2)
 
 
+def projected_bytes(payload: Any) -> int:
+    """Size the file write_json would produce, without writing it."""
+    return len((json.dumps(payload, indent=1, sort_keys=False) + "\n").encode())
+
+
 def select_published(rows: list[dict],
                      events_per_topic: int = PUBLISH_EVENTS_PER_TOPIC,
                      top_markets: int = PUBLISH_TOP_MARKETS_PER_TOPIC) -> tuple[list[dict], dict]:
@@ -730,13 +738,20 @@ def main() -> int:
     # GitHub's 100 MB per-file limit.
     published: list[dict] = []
     subset: dict = {}
-    for cap in (PUBLISH_EVENTS_PER_TOPIC, 60, 30, 15, 8):
+    cap = PUBLISH_EVENTS_PER_TOPIC
+    for cap in (PUBLISH_EVENTS_PER_TOPIC, 90, 60, 40, 25, 15, 8):
         published, subset = select_published(rows, events_per_topic=cap)
-        approx = len(json.dumps(published)) * 2  # markets + by_topic
-        if approx <= MAX_FILE_BYTES:
+        # The snapshot carries the rows twice (markets + by_topic), so both are
+        # projected with the same encoder that writes the file.
+        approx = projected_bytes(published) * 2 + 200_000
+        topic_max = max(
+            (projected_bytes([r for r in published if r.get("topic") == t]) for t in TOPICS),
+            default=0,
+        )
+        if approx <= MAX_FILE_BYTES and topic_max <= MAX_TOPIC_FILE_BYTES:
             break
-        print(f"published rows would be ~{approx} bytes; retrying with {cap} events per topic",
-              file=sys.stderr)
+        print(f"published rows would be ~{approx} bytes (largest topic file ~{topic_max} bytes); "
+              f"retrying with {cap} events per topic", file=sys.stderr)
     subset["events_per_topic_cap"] = cap
 
     books = {} if args.scope_only else collect_orderbooks(published, signer)

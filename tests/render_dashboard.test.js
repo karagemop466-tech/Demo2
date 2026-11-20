@@ -105,11 +105,15 @@ async function boot(pageRel) {
     }
     throw new Error('timed out waiting for ' + label);
   };
-  return { dom, window, errors, wait };
+  /* jsdom windows keep their timers alive, and the dashboard schedules a
+     polling interval, so every test must close its window or the test runner
+     never exits. */
+  const close = () => { try { window.close(); } catch (e) { /* already closed */ } };
+  return { dom, window, errors, wait, close };
 }
 
 test('the dashboard renders, populates its panels and raises a live alert', { skip }, async () => {
-  const { window, errors, wait } = await boot('index.html');
+  const { window, errors, wait, close } = await boot('index.html');
   const doc = window.document;
   await wait(() => doc.querySelectorAll('#mktTable table tbody tr').length > 0, 'the markets table');
   await wait(() => /Live feed|Starting|Live —/.test(doc.querySelector('#liveStatus').textContent),
@@ -133,10 +137,11 @@ test('the dashboard renders, populates its panels and raises a live alert', { sk
   await wait(() => doc.querySelectorAll('#chatAll .ln').length > 0, 'a chat line');
   assert.match(doc.querySelector('#liveStatus').textContent, /Live/);
   assert.deepEqual(errors, [], 'no JavaScript error may be raised while polling');
+  close();
 });
 
 test('the chart is drawn and the live sample is appended to the series', { skip }, async () => {
-  const { window, errors, wait } = await boot('index.html');
+  const { window, errors, wait, close } = await boot('index.html');
   const doc = window.document;
   await wait(() => doc.querySelectorAll('#mktTable table tbody tr').length > 0, 'the markets table');
   const canvas = doc.querySelector('#chart');
@@ -145,10 +150,11 @@ test('the chart is drawn and the live sample is appended to the series', { skip 
   assert.ok(doc.querySelector('#chartNote').textContent.includes('points'),
     'the chart note reports the number of points');
   assert.deepEqual(errors, []);
+  close();
 });
 
 test('the Live Alerts page loads its data from the right path', { skip }, async () => {
-  const { window, errors, wait } = await boot('pages/live-alerts.html');
+  const { window, errors, wait, close } = await boot('pages/live-alerts.html');
   const doc = window.document;
   await wait(() => doc.querySelector('#chatAll').children.length > 0 ||
     doc.querySelector('#chatAll .notice.bad'), 'the alert rows');
@@ -157,4 +163,5 @@ test('the Live Alerts page loads its data from the right path', { skip }, async 
   assert.ok(doc.querySelectorAll('#chatAll .alertrow').length > 0,
     'the page must render alert rows');
   assert.deepEqual(errors, [], 'no JavaScript error may be raised on the Live Alerts page');
+  close();
 });
