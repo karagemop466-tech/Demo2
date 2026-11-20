@@ -415,6 +415,17 @@ broken, and it is worth distinguishing the two when reading Actions.
 | E-3 | Verification row + flag for sharp-jump feature (cause not derivable from API) | done | e36292f6 | `pages/verification.html`, `pages/flagged.html` |
 | E-4 | Suggestion card for sharp-jump / live-interactivity | done | e36292f6 | `pages/suggestions.html` |
 | E-5 | Full re-verification: build, link checks, both checkers | done | e36292f6 | all site files (read-only) |
-| E-6 | PR from this branch to main, merge, Pages deploy confirm, record | in progress | e36292f6 | this section, PR record |
+| E-6 | PR from this branch to main, merge, Pages deploy confirm, record | done | e36292f6 | this section, PR record |
 
 Sources to verify against (official only): https://docs.kalshi.com/api-reference/market/get-market-candlesticks, https://docs.kalshi.com/api-reference/market/get-trades, https://docs.kalshi.com/api-reference/market/get-market-orderbook, https://docs.kalshi.com/getting_started/demo_env.
+
+### PR / deploy record — session arena/e36292f6
+
+- PR: https://github.com/karagemop466-tech/Demo2/pull/35 — **MERGED** 2026-11-20 (`gh pr merge 35 --merge`). Pre-merge checks: `node --check` on `assets/site.js` → OK; `python3 tools/check.py` → links, nav, data, secrets, JS all clean (17 pages); `python3 tools/check_links.py` → no broken internal links, anchors, or unsourced rows.
+- Pages deploy: `Deploy GitHub Pages` triggered by merge of PR #35 → **success**; Pages API status `built`, source `main /`, https://karagemop466-tech.github.io/Demo2/ . Live fetch of `/Demo2/index.html` confirms the new "Sharp price moves" section renders on the deployed site.
+- Data snapshot: `data/snapshot.json` returns HTTP 404 on the live site (first refresh-data workflow run pending). This is expected — the collector runs on GitHub Actions and the snapshot is produced there, not in the authoring sandbox. All pages handle the missing snapshot gracefully with an explicit "No snapshot yet" message rather than inventing values.
+
+### Irregularities carried forward
+
+- F1–F13 on pages/flagged.html remain open for review; none block publication per the site's stated policy.
+- F13 (this session): sharp-jump cause cannot be determined from the Trade API — price and volume only, no news/event field. Mitigated by red markers + "cause unverified" tags on every jump row, plus a link to the market on Kalshi.
