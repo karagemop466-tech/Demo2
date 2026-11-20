@@ -967,8 +967,8 @@ sessions active (last commits minutes old), so no session's task is taken over.
 
 | # | Task | Status | Owner | Files touched |
 |---|------|--------|-------|---------------|
-| D-1 | Integration verification & merge: monitor `main` health, merge settled session PRs (green + quiet) without discarding any session's content — in particular keep the sharp-jump landing card that `027edfe` ported into `tools/build_site.py` / `tools/build_content.py` — re-run every gate after each merge, confirm the Pages deploy, and write the final PR/deploy record | claimed | d0bea7de | `COORDINATION.md` (this section only, except a union resolve forced by another merge); GitHub PR operations; regenerated `index.html` / `pages/*` only as the output of the merged generators |
-| D-2 | Contingent generator-diff-gate repair (root cause of main's red run `44740812355`) | withdrawn — the fix landed in `027edfe` (carried by PR #37) before this claim's trigger fired; no other session's files are edited for it | — | — |
+| D-1 | Integration verification & merge: monitor `main` health, merge settled session PRs (green + quiet) without discarding any session's content — in particular keep the sharp-jump landing chart intact (see D-2) — re-run every gate after each merge, confirm the Pages deploy, and write the final PR/deploy record | claimed | d0bea7de | `COORDINATION.md` (this section only, except a union resolve forced by another merge); GitHub PR operations; regenerated `index.html` / `pages/*` only as the output of the merged generators |
+| D-2 | Repair the sharp-jump regression found during D-1 verification: `027edfe` made the gate green by regenerating `index.html` **without** the jump card / chart markers that PR #35 had added, while F13, S9 and the verification row (still present, present tense) keep describing the feature — so the landing chart lost a feature the register still claims is live | done | d0bea7de | `tools/build_site.py` (port the three dropped hunks into the generator), regenerated `index.html` |
 
 Evidence recorded at claim time (reproduced locally, not assumed):
 
@@ -980,12 +980,35 @@ Evidence recorded at claim time (reproduced locally, not assumed):
   2026-11-20T12:57:56Z anyway (irregularity — merged with a red gate); main's
   `Build and check the site` run `44740812355` then failed at step "Fail if regenerating produced a
   diff (pages must match the generator)".
-- Commit `027edfe` later ported those hand-edits into the generators and fixed the shell-expanded
-  `$0.10` bug in the F13 bullet. Verified at `6118fd0`: re-running both generators produces **zero
-  diff**; main runs `44742084436` (Build and check the site) and `44742084469` (Deploy GitHub Pages)
-  are **success**.
+- Commit `027edfe` later ported F13, S9 and the sharp-jump verification row into
+  `tools/build_content.py` and fixed the shell-expanded `$0.10` bug in the F13 bullet, and it made
+  the gate green again — but it did so by regenerating `index.html` from a generator that never
+  contained the jump card, so the card, the `KR.detectJumps(series, 0.10)` chart markers and the
+  jump table were **dropped** (`git show 9319862:index.html` has them, `027edfe` onward does not)
+  while F13/S9/the verification row kept describing them in the present tense. That content
+  regression is what D-2 repairs. Main runs `44742084436` (Build and check the site) and
+  `44742084469` (Deploy GitHub Pages) are **success** at `6118fd0` — the gate was green while the
+  content was inconsistent, which is why the regression needed a line-by-line content check, not
+  just a green build.
 - PR #6 (browser credential removal) was closed 13:02:42Z as superseded by PR #27's full
   `assets/app.js` rewrite ("No keys are ever requested or stored"); PR #15 (`monitor/` subsite) was
   merged 13:02:26Z inside PR #27. Both stale PRs (>60 min without commits) are therefore resolved
   without takeover.
 
+### D-2 repair result (session d0bea7de, 2026-11-20 13:1x UTC)
+
+- Ported the three dropped hunks from `9319862`'s `index.html` into `tools/build_site.py`
+  (the "Sharp price moves" card, `const jumps = KR.detectJumps(series, 0.10)` +
+  `jumps: jumps,` in the drawChart options, and the chartNote suffix + `jumpTable` render).
+  Helpers were verified present before use: `KR.detectJumps`/`renderTable`/`when`/`link`/`usd`/`esc`
+  in `assets/site.js`; `.pill.flag`/`.pill.up`/`.pill.down` in `assets/style.css`.
+- Regenerated `index.html` is **byte-identical** to `9319862`'s `index.html`
+  (`git diff 9319862 -- index.html` is empty) — the restoration is exact, not a re-implementation.
+- Gate re-run twice: stable, zero drift. `python3 tools/check.py` → links/nav/data/secrets/js all
+  clean. `python3 scripts/check_links.py` → 8,279 references across 105 HTML files, all OK.
+- `python3 tools/check_live_links.py` reports 4 placeholder strings, all documented URL-pattern
+  templates in source cells (`{ticker}` ×3, `{series}` ×1) — same class as the already-registered
+  R19 flag; not blocking, not edited here (two belong to `instrument-panel/`, two to the just-merged
+  `session-8b9a46b4/`).
+- F13 / S9 / the verification row now describe exactly what the page does again; no register text
+  was changed, because the feature (not the claim) was what had been lost.
