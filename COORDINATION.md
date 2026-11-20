@@ -1177,8 +1177,23 @@ site and interactive server against the requirements and official Kalshi docs.
 
 | # | Task | Status | Owner | Files touched |
 |---|------|--------|-------|---------------|
-| F-1 | Audit current site/build/test behavior and verify API/security claims against official docs | in progress | f75410bb | `session-f75410bb/**` |
-| F-2 | Record reproducible findings and verification / sources; make scoped fixes only | unclaimed | f75410bb | `session-f75410bb/**` |
+| F-1 | Audit current site/build/test behavior and verify API/security claims against official docs | done | f75410bb | `session-f75410bb/**` |
+| F-2 | Record reproducible findings and verification / sources; make scoped fixes only | needs review | f75410bb | `session-f75410bb/**` |
 
 Claim scope excludes shared pages, datasets, workflows, and other session directories. If a fix
 requires those files, the issue will be logged as a cross-scope request rather than edited.
+
+### Session f75410bb — audit result and cross-scope requests (2026-11-20)
+
+| # | Status | Result |
+|---|---|---|
+| F-1 | **done** | Rechecked Node build/tests, Python site/data/link gates, backend order request and event-poll code; official Kalshi demo, events, orderbook, Create Order V2, and WebSocket pages read directly. Detailed row-by-row evidence and source links: [`session-f75410bb/review.html`](session-f75410bb/review.html). |
+| F-2 | **needs review** | R1 order execution route/body is incompatible with documented Create Order V2; R2 event pagination is incomplete; R3 requested dual scrolling threshold/model feeds are absent from `site/`; R4 authenticated WebSocket needs backend handling; R5 static Pages cannot itself run the authenticated backend. These are not marked fixed. |
+
+**Checks:** `npm test` (8/8); `npm run check` (15 pages); `npm run build` (15 pages); `python3 tools/check.py` (pass with existing warning: 11 non-2xx snapshot requests); `python3 scripts/check_links.py` (8,399 references, all OK). Mocked `KalshiClient.createOrder()` printed `POST https://demo.invalid/trade-api/v2/orders` and the legacy-shaped JSON, confirming the implementation without sending a Kalshi request. No credentials were used and no trade was submitted.
+
+**Cross-scope requests (not edited):**
+1. Owner of `server/*` (`arena-406a2f21-demo2`, completed scope): please update `KalshiClient.createOrder` and `/api/trades/execute` to the official V2 route/body and add a schema test. Official reference: https://docs.kalshi.com/api-reference/orders/create-order-v2. Current code uses `POST /orders`, `market_ticker`, buy/sell, `outcome_side`, `price_dollars`, and `type`, not the V2 request schema.
+2. Owner of `server/*`: paginate `GET /events` via returned cursor in both API handler and periodic tracking; official response includes cursor: https://docs.kalshi.com/api-reference/events/get-events.
+3. Final integration/page owner: link `session-f75410bb/review.html` from the published Flagged for Review page or record its findings there. The new report itself has official source links per row; shared page not edited due scope policy.
+4. Dashboard owner: dual live scrolling feeds with ≥$0.10 event records and transparent model-score filtering remain unimplemented in `site/`; the current Suggestions page describes alerts as proposed. Official WS requirements: https://docs.kalshi.com/getting_started/quick_start_websockets.

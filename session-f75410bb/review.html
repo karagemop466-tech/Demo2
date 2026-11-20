@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Implementation audit · Kalshi Demo</title>
+  <style>
+    :root{color-scheme:light;--ink:#172b3b;--muted:#526576;--line:#dbe4e8;--paper:#fff;--bg:#f3f7f8;--accent:#126b60;--warn:#8a4d00;--bad:#a12b2b}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+    header{background:#102a37;color:white;padding:2rem max(1rem,calc((100% - 1100px)/2))}header p{color:#d6e4e8;max-width:75ch}
+    main{max-width:1100px;margin:1.5rem auto;padding:0 1rem 3rem}.panel{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:1.2rem;margin:1rem 0;box-shadow:0 2px 8px #1831440c}
+    h1{margin:.15rem 0;font-size:clamp(1.8rem,4vw,2.6rem)}h2{font-size:1.25rem;margin:.1rem 0 .7rem}.eyebrow{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#b9d9d3;font-weight:700}
+    .status{display:inline-block;border-radius:99px;padding:.13rem .55rem;font-size:.8rem;font-weight:700;background:#fff1db;color:var(--warn)}
+    .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.7rem}.stat{border:1px solid var(--line);border-radius:9px;padding:.85rem}.stat b{display:block;font-size:1.3rem}
+    table{border-collapse:collapse;width:100%;font-size:.94rem}th,td{text-align:left;vertical-align:top;padding:.72rem;border-bottom:1px solid var(--line)}th{background:#edf3f4}td:first-child{white-space:nowrap;font-weight:700}a{color:#075e92}code{background:#eef2f4;padding:.1rem .25rem;border-radius:3px;overflow-wrap:anywhere}.muted{color:var(--muted)}
+    ul{padding-left:1.25rem}li{margin:.4rem 0}.notice{border-left:4px solid var(--warn);padding:.6rem .9rem;background:#fff7e9}footer{color:var(--muted);font-size:.9rem;padding:1rem 0}
+    @media(max-width:700px){table,tbody,tr,td{display:block}thead{display:none}tr{border:1px solid var(--line);border-radius:8px;margin:.7rem 0;padding:.25rem}td{border:0;padding:.35rem .6rem}td:first-child{white-space:normal}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Supplemental audit · 20 November 2026</div>
+  <h1>Kalshi Demo implementation review</h1>
+  <p>Reproducible review of the existing dashboard code against the requested live alerts, full event tracking, liquidity, resolutions, simulated/real demo trades, and official API requirements. Findings below distinguish implemented behavior from gaps; no market values or causes have been inferred.</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>Executive summary</h2>
+    <div class="summary">
+      <div class="stat"><b>8 / 8</b><span>Node tests passed</span></div>
+      <div class="stat"><b>15 pages</b><span>Node site checker passed</span></div>
+      <div class="stat"><b>107 pages</b><span>Repository link/data/script checks passed</span></div>
+      <div class="stat"><b>Needs review</b><span>Trade execution request is incompatible with current V2 contract</span></div>
+    </div>
+    <p class="notice"><strong>Important:</strong> checks validate the existing code and static build; they do not demonstrate successful authenticated trading or a live Kalshi connection. No demo credentials were loaded or used for this audit, and no order was submitted.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Verified findings and irregularities</h2>
+    <table>
+      <thead><tr><th>ID / status</th><th>Code evidence and impact</th><th>Official source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>R1<br><span class="status">Needs review · blocker</span></td>
+          <td><code>server/index.js</code> builds a legacy-shaped order object (<code>market_ticker</code>, <code>buy/sell</code>, <code>outcome_side</code>, <code>price_dollars</code>, <code>type</code>); <code>server/kalshiClient.js</code> POSTs it to <code>/orders</code>. A mocked fetch reproduced that exact URL and JSON body. The documented Create Order (V2) route is <code>POST /portfolio/events/orders</code> and its body uses <code>ticker</code>, <code>side: bid|ask</code>, <code>price</code>, and <code>time_in_force</code>. The current backend's real order path/body therefore does not match the official V2 API; successful execution is not verified and should not be represented as working until corrected and tested with a demo account.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2">Create Order (V2)</a></td>
+        </tr>
+        <tr>
+          <td>R2<br><span class="status">Needs review · coverage</span></td>
+          <td><code>server/index.js</code> calls <code>getEvents</code> with a fixed limit of 200 and does not iterate or return the event cursor. The official response includes a <code>cursor</code>; the live backend's top-event list and automatic tracker therefore cannot claim complete enumeration when more pages exist. Handle pagination before treating rankings or tracked events as a full list.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/events/get-events">Get Events</a></td>
+        </tr>
+        <tr>
+          <td>R3<br><span class="status">Needs review · requested feature</span></td>
+          <td>The <code>site/</code> dashboard has no two-pane scrolling alert/chat feed or model-selected high-ROI feed. Its own Suggestions page proposes threshold alerts (S9); the server's current poll broadcasts sampled prices, not a confirmed threshold-event record or selective ROI stream. A separate root chart marks jumps from its collected series, which is not equivalent to the requested real-time chat. This is a product gap, not a Kalshi API fact.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets">WebSocket quick start</a></td>
+        </tr>
+        <tr>
+          <td>R4<br><span class="status">Needs review · coverage</span></td>
+          <td>The backend requests only one page in its periodic event poll. WebSocket market-data channels can provide updates, but the official handshake is authenticated; a static browser cannot safely hold the private signing key. Use a secured backend for an authenticated WebSocket, with explicit REST fallback/staleness state. This audit did not verify the current demo account's WS connectivity.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets">WebSocket handshake and channels</a></td>
+        </tr>
+        <tr>
+          <td>R5<br><span class="status">Needs review · deployment boundary</span></td>
+          <td>The project contains several independently built dashboard trees and workflows (documented in the repository coordination log). GitHub Pages serves static files only; it does not run <code>server/index.js</code>. Authenticated portfolio and trade features require separately deployed backend infrastructure and demo-only credentials. No credentials were added or used here; account balances and live order execution remain unverified.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/demo_env">Demo environment</a> · <a href="https://docs.kalshi.com/getting_started/api_keys">API keys</a></td>
+        </tr>
+        <tr>
+          <td>R6<br><span class="status">Verified caveat</span></td>
+          <td>Orderbook outputs are bid ladders for YES and NO. The dashboard derives implied asks using binary-price parity; derived asks are not observed ask-side depth. UI labels and tests explicitly distinguish those derived values. Keep this distinction visible to avoid presenting an inferred ask as resting liquidity.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook">Get Market Orderbook</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h2>Verification performed</h2>
+    <ul>
+      <li><code>npm test</code>: 8/8 tests passed (topic filters, active/resolved market selection, orderbook arithmetic and derived asks, resolution labels, HTML escaping, chart timestamps/missing points).</li>
+      <li><code>npm run check</code>: 15 HTML pages; local references resolved; source-linked rows, unique IDs, and no inline handlers.</li>
+      <li><code>npm run build</code>: generated 15 static pages.</li>
+      <li><code>python3 tools/check.py</code>: links/nav/data/secrets/scripts passed; it reported 11 non-2xx snapshot API requests (the existing Verification page is the indicated evidence location; this audit did not re-fetch or reclassify each one).</li>
+      <li><code>python3 scripts/check_links.py</code>: 8,399 internal references across 107 HTML files, all resolved.</li>
+      <li>Kalshi demo, event-list, orderbook, candlestick, order V2, and WebSocket documentation pages were read directly. A mocked request confirmed what the backend currently emits; no private key, live account, or order call was used.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Recommended follow-up</h2>
+    <ol>
+      <li>Update the backend order route and request shape against Create Order (V2); add a mocked contract test and require explicit demo-only configuration before any execution.</li>
+      <li>Paginate event discovery using the official cursor and show completeness/last-refresh state.</li>
+      <li>Implement two distinct scrolling feeds: all confirmed threshold moves and a transparently scored model shortlist. Label the ROI score as experimental; do not call it predictive without out-of-sample evidence.</li>
+      <li>Preserve original price points and publish each alert's ticker, direction, delta, timestamp, source link, and cause as blank/unverified unless separately confirmed.</li>
+      <li>Consolidate navigation to one primary dashboard, while retaining the audited historical research pages as clearly identified supporting material.</li>
+    </ol>
+  </section>
+  <footer>Demo environment only. Mock funds and prices may not reflect real markets. This is a software audit, not financial advice. Source facts link directly to official Kalshi documentation.</footer>
+</main>
+</body>
+</html>
