@@ -1165,3 +1165,20 @@ endpoint `GET /trade-api/v2/markets/{ticker}`. All matched exactly; nothing infe
 - Sandbox bash egress to `*.kalshi.co` is blocked (TLS handshake fails — flagged F1); live source
   checks above were done with the fetch tool, which can reach the demo host and docs. GitHub
   Actions runners have normal egress, so the collection workflows run there.
+
+---
+
+## Session `f75410bb` — current branch `arena/f75410bb-demo2` (claim, 2026-11-20)
+
+Platform branch rules require using this current branch; no separate `session-*` branch is created.
+The existing tree already contains multiple dashboard/site implementations. To avoid duplicate
+work and conflicting shared outputs, this session claims a scoped audit of the canonical root
+site and interactive server against the requirements and official Kalshi docs.
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| F-1 | Audit current site/build/test behavior and verify API/security claims against official docs | in progress | f75410bb | `session-f75410bb/**` |
+| F-2 | Record reproducible findings and verification / sources; make scoped fixes only | unclaimed | f75410bb | `session-f75410bb/**` |
+
+Claim scope excludes shared pages, datasets, workflows, and other session directories. If a fix
+requires those files, the issue will be logged as a cross-scope request rather than edited.
