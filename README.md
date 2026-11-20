@@ -54,6 +54,21 @@ Orders use `POST /portfolio/events/orders` with the documented V2 body. The lega
 `POST /portfolio/orders` is **not** used: it returns `410 Gone`
 ([Create Order (V2)](https://docs.kalshi.com/api-reference/orders/create-order-v2)).
 
+## Publishing
+
+GitHub Pages serves `main` from the repository root (build type: legacy). Every workflow in this
+repository commits to `main` and rebases before pushing, so a data refresh and a page change cannot
+clobber each other:
+
+- `Refresh Kalshi demo data` — every 10 minutes, commits `data/`
+- `Demo portfolio, analysis and (optional) execution` — hourly, commits reporting artefacts
+- `Build and check the site` — on every push and PR; fails on a broken link, an out-of-date page,
+  a bad snapshot, a leaked key or a JS syntax error
+- `Deploy GitHub Pages` — publishes the repository as-is when Pages is set to the GitHub Actions
+  source; with the current legacy source GitHub's own build publishes `main` instead
+
+A `.nojekyll` file is present so no asset is filtered out by Jekyll processing.
+
 ## Local development
 
 ```bash
