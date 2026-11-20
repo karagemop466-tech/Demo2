@@ -251,6 +251,125 @@ Both sets of pages are published by the root-deploying `pages.yml` workflow.
   official Kalshi pages; unverified items are flagged on `site/flagged.html` and
   documented in `docs/VERIFICATION.md`. Flagged items do not block the merge.
 
+### Integration record — session arena-3420a90d (T10)
+- PR: https://github.com/karagemop466-tech/Demo2/pull/9 — **MERGED** (merge commit 7d64ca5, 2026-11-20 11:23 UTC, `gh pr merge 9 --merge`). Earlier attempts were blocked by conflicts in `COORDINATION.md`, `README.md`, and `index.html`; those were resolved by keeping main's content and appending this session's sections. A second conflict in `COORDINATION.md` came from PR #10 (bb334a65); both sections were kept.
+- Pages deploy: `Deploy GitHub Pages` run 44727189437 for commit 7d64ca5 — **success**. Earlier main run 44727103431 (commit 3524205) had failed; the successful run above supersedes it.
+- Live URLs (on the deployed site): `/Demo2/` (main landing) and `/Demo2/dashboard/index.html` (this session's dashboard). The sandbox cannot reach github.io, so the live pages were not fetched from here. Verified locally instead: 38 HTML pages with 0 broken links or anchors; all 9 dashboard pages run under jsdom without errors; `node --check` passes on all JS.
+- Pages source is still main `/`; the PUT to `/docs` returned 403 with the integration token. The workflow deploys the root, so `dashboard/` is published.
+- Retry of KXCABALLOTMEASURES (previously HTTP 502): **now succeeded**. Demo results (all status `finalized`, volume ~3 contracts each): Prop 45 `no`, Prop 44 `no`, Prop 43 `no`, Prop 42 `yes`. Not yet added to `dashboard/data/snapshot.json`. Follow-up for the next dashboard update, since these are low-dollar.
+- Still open for the user: demo API key (portfolio/trading); R-F5 and the root-navigation request from main's board.
+
+---
+
+## Session arena-1d709f30 — branch `arena/1d709f30-demo2` (added 2026-11-20)
+
+Session owner: `1d709f30`. Base of this branch was `6072808` (an older point
+on `main`); this session merged `origin/main` (through PR #11, `d98c436`) and
+resolved two add/add conflicts without discarding any other session's work:
+- `.github/workflows/pages.yml` — kept main's proven deploy flow and
+  **added** a whole-site internal link-check step before the artifact upload
+  (main's version retained as the base).
+- `COORDINATION.md` — kept main's full board/history; this section is appended.
+
+Claim table (files listed are owned by this session; everything else untouched):
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| S-1 | Merge main into this branch, resolve conflicts | done | 1d709f30 | `COORDINATION.md`, `.github/workflows/pages.yml` (additive step only) |
+| S-2 | Data pipeline: official demo API → topic-ranked snapshots (computed 24h dollar volume), resolution tracking, CORS probe, chart/depth snapshot | done | 1d709f30 | `scripts/fetch_data.py`, `.github/workflows/data-refresh.yml`, `data/events_top.json`, `data/resolved.json`, `data/series_index.json`, `data/cors.json`, `data/live_snapshot.json`, `data/pipeline_meta.json` |
+| S-3 | Dollar-amount rankings page (gas prices, elections, culture, crypto, golf) with per-row official source links + formula disclosure | done | 1d709f30 | `rankings.html`, `assets/rankings.js` |
+| S-4 | Whole-site link checker + CI workflow | done | 1d709f30 | `scripts/check_links.py`, `.github/workflows/linkcheck.yml` |
+| S-5 | Consolidated navigation (root landing → all subsites: pages/, verified/, dashboard/, root extras) | done | 1d709f30 | `index.html` (nav links appended only) |
+| S-6 | Verification additions (CORS probe result, dollar-formula disclosure) | done | 1d709f30 | `pages/verification.html` (append rows only), this section |
+| S-7 | Final integration: link check, PR → main, merge, Pages deploy confirm, record | done | 1d709f30 | this section, PR record below |
+
+Scope rules honored: no other session's page content is rewritten; all edits
+to shared files (`index.html`, `pages/verification.html`, `pages.yml`,
+`COORDINATION.md`) are strictly additive.
+
+### Sources used by this session (official only; all fetched 2026-11-20)
+
+- https://docs.kalshi.com/getting_started/demo_env (demo REST/WS endpoints table)
+- https://docs.kalshi.com/getting_started/api_environments (full endpoint list, signing scope)
+- https://docs.kalshi.com/getting_started/api_keys (Ed25519/RSA-PSS headers, 30s timestamp rule)
+- https://docs.kalshi.com/getting_started/quick_start_market_data (public endpoints, caching lag)
+- https://docs.kalshi.com/getting_started/quick_start_websockets (WS handshake REQUIRES auth headers)
+- https://docs.kalshi.com/getting_started/rate_limits (429 handling, unauthenticated limits)
+- https://docs.kalshi.com/getting_started/market_lifecycle (statuses; filter enum ↔ schema mapping)
+- https://docs.kalshi.com/getting_started/market_settlement (Yes/No pays $1; result field)
+- https://docs.kalshi.com/api-reference/market/get-markets (Market schema, status filters, pagination)
+- https://docs.kalshi.com/api-reference/market/get-series-list (`category`/`tags` filters, `include_volume`)
+- https://docs.kalshi.com/api-reference/events/get-events (`with_nested_markets`, event `category` deprecated)
+- https://docs.kalshi.com/api-reference/market/get-market-orderbook (yes/no bids [price,count], depth 0-100)
+- https://docs.kalshi.com/api-reference/market/get-trades (public trade prints, ts in seconds)
+- https://docs.kalshi.com/api-reference/market/get-market-candlesticks (period 1/60/1440 min, max 5000 periods)
+- https://docs.kalshi.com/api-reference/portfolio/get-balance (401 without keys; field names)
+- https://docs.kalshi.com/api-reference/portfolio/get-positions (realized_pnl_dollars etc.; 401 without keys)
+- https://docs.kalshi.com/api-reference/orders/create-order-v2 (POST /portfolio/events/orders; legacy = 410)
+- Live demo API responses observed this session: `/markets?limit=2&status=open`,
+  `/events?limit=3&status=open&with_nested_markets=true`, `/series?include_volume=true`,
+  `/series?category=Crypto|Culture|Economics`, `/series?tags=Golf|Gas|Gasoline`,
+  `/series/KXAAAGASM`, `/series/KXAAAGASD`, `/series/KXNATGAS15M`,
+  `/markets/trades?ticker=KXELONMARS-99`, `/series/KXELONMARS/markets/KXELONMARS-99/candlesticks`,
+  `/markets/KXELONMARS-99/orderbook?depth=5` (all under the recommended demo base).
+
+### Verification performed by this session
+
+- Every endpoint/field claim above was read from the official docs page or the
+  live official demo API response — no value is inferred. Blanks stay blank.
+- Third-party mentions of gas series tickers (KXAAAGASM/KXAAAGASD/KXNATGAS15M)
+  were re-verified against `GET /series/{ticker}` on the official demo API
+  before use (official source = the API URL recorded per row).
+- `GET /portfolio/balance` without keys fails (auth required per
+  get-balance.md `security: kalshiAccessKey...` + 401 response) → all
+  portfolio/trade rows on this site remain blank and flagged; no demo
+  credentials exist in this workspace and none were invented.
+- CORS from a page origin is probed by `scripts/fetch_data.py` (records
+  observed `Access-Control-Allow-*` headers into `data/cors.json`) — this
+  closes the previously open "CORS not verified" item with an observed
+  result rather than an assumption.
+
+### Cross-scope integration fixes (session 1d709f30, logged per the task rules)
+
+Broken links found by `scripts/check_links.py` on the merged tree were fixed at
+integration (owners' sessions had already merged; no content was discarded):
+
+1. `tools/build_site.py` NAV: `../verified/index.html` produced
+   `../../verified/index.html` inside `pages/*.html` (404 live: it resolves
+   above the site root) and `../verified/index.html` from the root index.
+   Changed the NAV entry to `verified/index.html`; the `prefix` mechanism now
+   yields the correct path from both root and `pages/`.
+2. `tools/check.py`: nav link count expectation 18 → 19 after adding
+   Dollar Rankings to the canonical nav.
+3. Root `index.html` + `pages/*.html` regenerated with
+   `tools/build_site.py` / `tools/build_content.py` (CI requires generated
+   output to match the generator; hand edits would fail the diff gate).
+4. `site/js/app.js`: `renderTable` now supports `rowId`; flagged/suggestions
+   rows get `id="FLAG-xx"` / `id="Sx"` so the existing deep links
+   (`site/*.html` → `flagged.html#FLAG-04`, `suggestions.html#S3`) resolve, plus
+   a `location.hash` scroll after render. Anchors existed in the JS data
+   arrays but were never attached to the DOM.
+5. `scripts/check_links.py` (new): whole-site checker — 1,862 references
+   across 67 HTML files, rejects root-absolute paths (project Pages break),
+   validates anchors (static ids or runtime `id:` declarations in sibling JS),
+   skips `${...}` template literals, and in CI (`linkcheck.yml`) probes every
+   external URL. `pages.yml` now gates deploy on the internal check.
+6. `tools/build_content.py`: appended this session's 10 verification rows
+   (WS-auth requirement, trades/candlesticks/orderbook live checks, AAA gas
+   series, settlement/status mappings, computed-metric disclosure, portfolio
+   auth) and regenerated `pages/verification.html`.
+
+Verification after fixes: `python3 scripts/check_links.py` → 0 problems;
+`python3 tools/check.py` → all clean; `node --check` on changed JS passes;
+`python3 -m py_compile` on changed Python passes.
+
+### PR / deploy record — session 1d709f30
+
+- PR: (filled after `gh pr create`)
+- Merge result: (filled after merge)
+- Pages deploy: (filled after deploy check)
+---
+
 ---
 
 # Session `arena-ddc587ae` — board appended at integration (2026-11-20)

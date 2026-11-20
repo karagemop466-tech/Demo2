@@ -28,6 +28,7 @@ NAV = [
     ("pages/crypto.html", "Crypto", "crypto"),
     ("pages/golf.html", "Golf", "golf"),
     ("verified/index.html", "Verified Data", "verified"),
+    ("rankings.html", "Dollar Rankings", "rank"),
     ("live/index.html", "Live Console", "live"),
     ("pages/resolutions.html", "Resolutions", "res"),
     ("pages/portfolio.html", "Portfolio", "port"),
@@ -125,6 +126,11 @@ DASH_BODY = r"""
 elections, culture, crypto, golf</b>. Ranked by <i>estimated</i> dollar volume, charted by
 contract price over time, with order-book liquidity at each price, tracked until the market
 resolves <b>yes</b> or <b>no</b>.</p>
+<p class="lead" style="font-size:.95em">All sections: <a href="rankings.html">Dollar Rankings</a> ·
+<a href="verified/index.html">Verified rows</a> · <a href="dashboard/index.html">Dashboard</a> ·
+<a href="site/index.html">Site</a> · <a href="intelligence/index.html">Intelligence</a> ·
+<a href="analysis.html">Analysis (root)</a> · <a href="portfolio.html">Portfolio status (root)</a> ·
+<a href="review.html">Review (root)</a></p>
 <div id="metaBar"></div>
 <noscript><div class="notice">JavaScript is required for the live panels. The static
 tables on the category, resolution and verification pages still work without it.</div></noscript>

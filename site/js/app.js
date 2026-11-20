@@ -231,7 +231,9 @@
         const val = c.render ? c.render(r, i) : esc(r[c.key]);
         return `<td class="${c.num ? 'num' : ''}">${val}</td>`;
       }).join('');
-      return `<tr>${tds}</tr>`;
+      // Optional row id so deep links like flagged.html#FLAG-04 land on the row.
+      const rid = o.rowId ? ` id="${esc(String(o.rowId(r, i)))}"` : '';
+      return `<tr${rid}>${tds}</tr>`;
     }).join('');
     container.innerHTML = `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
   }
@@ -603,7 +605,8 @@
         return ['proposed', 'reviewing', 'accepted', 'implemented'].map((s) => `<button class="btn" data-i="${i}" data-s="${s}" ${s === stat ? 'disabled' : ''}>${s}</button>`).join(' ');
       } },
     ];
-    renderTable(el, cols, items, { empty: 'No suggestions.' });
+    renderTable(el, cols, items, { empty: 'No suggestions.', rowId: (r) => r.id });
+    if (location.hash) { const t = document.querySelector(location.hash); if (t) t.scrollIntoView({ block: 'center' }); }
     if (!backendDecisions) {
       const note = document.createElement('div');
       note.className = 'note';
@@ -646,7 +649,8 @@
         { label: 'Status', render: (r) => `<span class="badge decision-${esc(r.status)}">${esc(r.status)}</span>` },
         { label: 'Source', render: (r) => srcLink(r.source, 'source') },
       ];
-      renderTable(el, cols, flags, { empty: 'No flags.' });
+      renderTable(el, cols, flags, { empty: 'No flags.', rowId: (r) => r.id });
+      if (location.hash) { const t = document.querySelector(location.hash); if (t) t.scrollIntoView({ block: 'center' }); }
     } catch (err) {
       el.innerHTML = `<div class="note danger">Flagged list unavailable: ${esc(err.message)}</div>`;
     }
