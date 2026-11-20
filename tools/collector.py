@@ -452,7 +452,26 @@ def collect_trade_volume(rows: list[dict], signer: Signer | None,
     as computed rather than raw.
     """
     cutoff = dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=hours)
-    ranked = sorted(rows, key=lambda r: (implied_dollar_volume(r) or 0), reverse=True)
+
+    def activity(r: dict) -> tuple:
+        """Prefer markets that actually traded in the last 24 h.
+
+        `volume_24h_fp` is an official market field (contracts), so it is the right
+        selector for "where is turnover happening". Ranking by the lifetime estimate
+        instead picked markets that traded long ago and had nothing inside the window,
+        which is why only one of twelve picks produced a measured dollar figure.
+        """
+        try:
+            v24 = float(r.get("volume_24h_fp") or 0)
+        except (TypeError, ValueError):
+            v24 = 0.0
+        try:
+            px = float(r.get("last_price_dollars") or 0)
+        except (TypeError, ValueError):
+            px = 0.0
+        return (1 if v24 > 0 else 0, v24 * px, implied_dollar_volume(r) or 0)
+
+    ranked = sorted(rows, key=activity, reverse=True)
     # Always include a spread over all five topics so no topic is invisible.
     picks: list[dict] = []
     seen: set[str] = set()
@@ -515,7 +534,8 @@ def collect_orderbook_history(rows: list[dict], signer: Signer | None,
     to sample it. Each point stores the full bid ladder, so "how many contracts at a
     given price" is answerable for any past sample inside the window as well as now.
     """
-    ranked = sorted(rows, key=lambda r: (implied_dollar_volume(r) or 0), reverse=True)
+    ranked = sorted(rows, key=lambda r: (1 if float(r.get("volume_24h_fp") or 0) > 0 else 0,
+                                         implied_dollar_volume(r) or 0), reverse=True)
     picks: list[dict] = []
     seen: set[str] = set()
     for topic in TOPICS:  # one per topic first, so every topic gets a liquidity series
