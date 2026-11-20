@@ -25,8 +25,11 @@ RESOLVED = D.get("resolved") or []
 
 
 def src_line():
+    # The API base URL itself answers 404 as a page (verified by the link
+    # checker, run 44743893105), so it is shown as code, not linked; the
+    # working route is /trade-api/v2/exchange/status.
     return (f'<p class="small muted">Snapshot <b>{E(str(META.get("generated_at") or "not collected"))}</b> · '
-            f'API base {ext(META.get("api_base"), META.get("api_base"))} · '
+            f'API base <code>{E(str(META.get("api_base") or ""))}</code> · '
             f'{META.get("https_requests", 0)} HTTP requests, {len(META.get("request_errors") or [])} errors · '
             f'collector <code>{E(str(META.get("collector") or ""))}</code></p>')
 

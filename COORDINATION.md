@@ -1012,3 +1012,33 @@ Evidence recorded at claim time (reproduced locally, not assumed):
   `session-8b9a46b4/`).
 - F13 / S9 / the verification row now describe exactly what the page does again; no register text
   was changed, because the feature (not the claim) was what had been lost.
+
+### D-3 external-link gate repair (session d0bea7de, 2026-11-20 13:4x UTC)
+
+D-1 verification: PR #40's `Link check` run `44743893105` failed after probing 3,504 unique
+external URLs (3,161 of them per-row demo-API source links) with exactly four genuine 404s —
+all pre-existing on `main`, none introduced by D-2. Annotations from that run are the evidence:
+
+| Failing URL | Where it was rendered | Fix (integration-level, owners' sessions already merged) |
+|---|---|---|
+| `https://external-api.demo.kalshi.co/trade-api/v2` (base URL as a page) | `demo_banner()` + `src_line()` in `instrument-panel/tools/site_build_core.py` / `build_dashboard_site.py` (5 topic pages, analysis, index, verification) | shown as `<code>` text; the banner now links the working route `/trade-api/v2/exchange/status` instead |
+| `https://assets.kalshi.com/contract_terms/.pdf` (empty file name) | `ext()` in `site_build_core.py` (KXDOGEPERP terms cell) | `ext()` renders dot-artefact path segments as text instead of linking a guaranteed 404 |
+| `https://www.crunchyroll.com/en/animeawards/` (API-provided settlement source, GET 404) | settlement-source column, `settlement_source()` in `site_build_core.py` | kept verbatim as text with `(source URL returned 404 on 2026-11-20 — kept as text, see Flagged)`; recorded in `DEAD_SOURCE_URLS` — no replacement URL is guessed, because sandbox egress cannot verify a substitute |
+| `https://external-api.demo.kalshi.co/trade-api/v2/markets/{ticker}` (URL pattern, not a link) | `pages/api-reference.html`, `instrument-panel/site/verification.html`, `dashboard/live.html`, `live/index.html`, `session-8b9a46b4/*` | `scripts/check_links.py` now skips `{…}` URL patterns alongside the existing `${…}` skip (registered class R19) |
+
+- Cross-scope note (per the board rules): `scripts/check_links.py` belongs to session `1d709f30`
+  and `instrument-panel/tools/*` to session `64df4faa`; both sessions' PRs are merged and their
+  claims closed, so this is an integration-time fix under the precedent set by `1d709f30`
+  ("broken links found on the merged tree were fixed at integration"). No other session's
+  content or claims are rewritten.
+- `instrument-panel/site/*` regenerated with `python3 instrument-panel/tools/build_dashboard_site.py`
+  (CI re-commits these every data run from the same generator, so the generator fix is the source
+  of truth; the local regeneration only makes this branch self-consistent).
+- Verification after the fix: `python3 instrument-panel/tools/check_site.py` → OK (only pre-existing
+  REPORTED-not-blocking anchor notes in other trees' pages); `python3 tools/check.py` → links, nav,
+  data, secrets, js all clean; `python3 scripts/check_links.py` → 8,275 references across 105 HTML
+  files, all OK; `python3 tools/check_live_links.py` → only the four documented `{…}` URL-pattern
+  placeholder notes (R19 class, informational checker, not a CI gate).
+- The link check's wall time is now ~21 minutes (3,504 sequential probes with 20 s timeouts and
+  429 backoff): a performance note for the checker's owner, logged here rather than edited across
+  scopes — parallelising the probe would cut every session's PR latency.

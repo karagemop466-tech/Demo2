@@ -64,6 +64,10 @@ def main():
                 continue
             if "${" in url:
                 continue  # JS template literal, resolved at runtime
+            if "{" in url and "}" in url:
+                # URL pattern shown as documentation (e.g. /markets/{ticker},
+                # ?series_ticker={series}) — never a real link, so not probed.
+                continue
             if url.startswith(("http://", "https://")):
                 external_urls.add(url)
                 continue

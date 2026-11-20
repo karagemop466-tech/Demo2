@@ -100,7 +100,29 @@ def count(v, dash="—"):
 def ext(url, label=None):
     if not url:
         return ""
+    # A final path segment that is only a dot-artefact (e.g. the demo API's
+    # .../contract_terms/.pdf with no file name) is metadata noise, not a
+    # resolvable page: show it as text instead of linking to a guaranteed 404.
+    seg = url.split("?", 1)[0].split("#", 1)[0].rstrip("/").rsplit("/", 1)[-1]
+    if seg.startswith("."):
+        return E(label or url)
     return f'<a href="{E(url, quote=True)}" target="_blank" rel="noopener">{E(label or url)}</a>'
+
+
+# Settlement-source URLs observed to answer GET 404 in the whole-site link
+# checker (run 44743893105, 2026-11-20) while the demo API still returns them
+# verbatim. Shown as text with the reason rather than linked or silently dropped.
+DEAD_SOURCE_URLS = {
+    "https://www.crunchyroll.com/en/animeawards/",
+}
+
+
+def settlement_source(x):
+    u, n = x.get("url"), x.get("name")
+    if u in DEAD_SOURCE_URLS:
+        return (f'{E(n or u)} <span class="small muted">(source URL returned 404 on '
+                f'2026-11-20 — kept as text, see Flagged)</span>')
+    return ext(u, n or u)
 
 
 def liquidity(m):
@@ -144,7 +166,8 @@ def top_nav_html(active=None):
 def demo_banner():
     return ('<div class="notice warn"><h4>Demo environment data — not real markets</h4>'
             'Every price, volume and resolution below comes from Kalshi\'s <b>demo</b> exchange '
-            '(<a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co</a>). '
+            '(<code>external-api.demo.kalshi.co</code> — the API base itself answers 404 as a page; '
+            'the working route is <a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">/trade-api/v2/exchange/status</a>). '
             'Kalshi states that demo prices and behaviour “may not be reflective of those in real markets”. '
             'See <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a>. '
             'No real money is involved anywhere on this site.</div>')
@@ -260,7 +283,7 @@ def series_table(rows, show_topic=False):
     out = []
     for s in rows:
         ss = s.get("settlement_sources") or []
-        ss_html = "<br>".join(ext(x.get("url"), x.get("name") or x.get("url")) for x in ss[:4])
+        ss_html = "<br>".join(settlement_source(x) for x in ss[:4])
         if len(ss) > 4:
             ss_html += f'<div class="small muted">+{len(ss) - 4} more (see API)</div>'
         out.append(
