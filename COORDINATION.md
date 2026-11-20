@@ -1078,3 +1078,54 @@ Actions (44753235358, exit 1) — reproduced offline: `GET /series/{ticker}` can
 dict records with a ticker and never lets one series kill the run (logged as an api_log note
 instead), `inventory` tolerates records without a ticker. Adversarial-shape regression case
 added to `session-eeb796d7/tools/test_collector_fix.py` (13/13 PASS).
+
+---
+
+## Session `00204703` — branch `arena/00204703-demo2` — FINAL INTEGRATION (claimed 2026-11-20 19:40 UTC)
+
+**Role:** final review + integration + publish session for this pass, as the brief requires.
+Platform rules fix this session's branch name, so `session-<id>/<task>` branches are not
+created (same precedent as `1d709f30`, `64df4faa`, `bdb4d2d0`, `eeb796d7`); this branch is the
+integration branch and its PR goes to `main`.
+
+**Board state read before claiming** (the board contains many historical owners; only the
+open PRs and the last commit times were used to decide what was still live):
+
+| Open PR | Branch | Last commit on branch | Age at claim | Disposition |
+|---|---|---|---|---|
+| #44 | `arena/6332d7d3-demo2` | 2026-11-20 14:16 UTC | >60 min, no commits | **taken over** — it is the most complete integration (new landing page, `dashboard.html`, `pages/causes.html`, rewritten `tools/collector.py` with per-topic series rotation and liquidity capture). Integrated by content, not by blind merge. |
+| #40 | `arena/d0bea7de-demo2` | 2026-11-20 14:04 UTC | >60 min, no commits | **taken over** — external-link 404 repairs. Integrated additively. |
+| #36 | `arena/220913cb-demo2` | 2026-11-20 13:40 UTC | >60 min, no commits | **taken over** — `desk/` requirements register, verification gate, jump monitor. The requirements register is ported into the canonical `pages/` tree (it answers the brief's "full list of requirements" requirement directly). |
+| #34 | `arena/21eed9ff-demo2` | 2026-11-20 13:33 UTC | >60 min, no commits | **taken over** — `docs/` verification notes. Integrated additively. |
+
+All four are stale by the 60-minute rule in the brief, so their work is preserved and
+integrated rather than abandoned. Nothing of theirs is deleted.
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| F-1 | Claim written and pushed before any other edit | done | 00204703 | `COORDINATION.md` |
+| F-2 | Repo review, line by line, against official Kalshi sources | in progress | 00204703 | `pages/repo-review.html`, `pages/flagged.html` |
+| F-3 | Independent re-verification of the combined data: every table row carries an official source URL; unconfirmable values stay blank and are flagged | in progress | 00204703 | `pages/verification.html`, `pages/sources.html`, `pages/flagged.html` |
+| F-4 | Integrate #44 / #40 / #36 / #34 into one canonical, clean site with one entry point | in progress | 00204703 | generator-first: `tools/build_site.py`, `tools/build_content.py`, `tools/collector.py`, `assets/site.js`, `index.html`, `pages/*` |
+| F-5 | Requirements register (the brief's "full list of requirements") on the canonical site | in progress | 00204703 | `pages/requirements.html`, `pages/*` |
+| F-6 | CI green: Node version corrected (jsdom 31 needs Node >= 22.22.2), render check, link check, generator determinism | in progress | 00204703 | `.github/workflows/ci.yml`, `.github/workflows/verify-monitor.yml`, `package.json` |
+| F-7 | PR to `main`, merge without waiting, GitHub Pages deploy confirmed, final record | in progress | 00204703 | this section |
+
+### Defect found in the repo before any edit (root cause of the open PR #44 CI failure)
+
+`package-lock.json` pins **jsdom 31.0.1**, whose `engines` field is
+`node: ^22.22.2 || ^24.15.0 || >=26.0.0`. Both workflows that run Node set
+`node-version: "20"` (`.github/workflows/ci.yml`, `.github/workflows/verify-monitor.yml`),
+so `node scripts/render_check.mjs` (added by #44) cannot run on the CI runner. The failure
+is in the toolchain, not in the page code: the same command passes 13/13 locally on Node
+22.22.3. Fix: run the render check on Node 22.22.2+.
+
+### Verification method used by this session
+
+- The sandbox has **no** egress to `*.kalshi.co` from bash (TLS handshake fails), so the
+  **live official demo API and `docs.kalshi.com` are read through the `fetch_page` tool**,
+  which does reach them. Every live value quoted in this session was read that way and is
+  cited with its exact official URL.
+- Every generator is the single source of truth for generated pages: `tools/build_site.py`
+  and `tools/build_content.py` are edited first and the HTML is regenerated, never
+  hand-patched, because CI fails when the two disagree.
