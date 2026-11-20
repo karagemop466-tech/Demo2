@@ -10,3 +10,7 @@ _site/
 .env
 .env.*
 *.log
+
+# Full collected universe: evidence trail kept as the Actions run artifact, never
+# committed (it is what blew through GitHub's 100 MB per-file push limit on 2026-11-20).
+/data/out/

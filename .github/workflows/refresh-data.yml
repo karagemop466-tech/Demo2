@@ -47,6 +47,17 @@ jobs:
           KALSHI_DEMO_PRIVATE_KEY: ${{ secrets.KALSHI_DEMO_PRIVATE_KEY }}
         run: python tools/collector.py
 
+      - name: Simulated strategy desk (paper trades on the collected prices)
+        # Places, marks and settles SIMULATED orders for each strategy from this run's
+        # snapshot, then appends to data/paper_ledger.json. No exchange order is sent:
+        # this needs no key and must not be confused with the demo account.
+        run: python3 tools/paper_trade.py
+
+      - name: Guard published file sizes (GitHub declines pushes with a >100 MB file)
+        # Fails here, in one second, with the offending file named — instead of six
+        # rejected pushes later (see session 7085e643 note in COORDINATION.md).
+        run: python3 tools/guard_sizes.py --max-mb 95 data
+
       - name: Show result summary
         run: |
           python - <<'PY'
@@ -72,6 +83,17 @@ jobs:
               print("::error::Collector returned zero in-scope markets; keeping previous data.")
               sys.exit(1)
           PY
+
+      - name: Keep the full collected universe as a run artifact
+        # data/out/ is gitignored; the artifact is the audit trail behind the counts the
+        # site publishes (universe vs published), not a second copy in git.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kalshi-full-universe
+          path: data/out/
+          retention-days: 14
+          if-no-files-found: warn
 
       - name: Commit snapshot
         run: |
