@@ -120,6 +120,32 @@
     return out;
   };
 
+  /* ---------------- sharp-jump detection ---------------- */
+  /* Scans a sorted price series for adjacent-point moves of at least `threshold`
+     dollars (default 0.10) in either direction. Returns one record per jump.
+     The cause of each jump is not derivable from the Kalshi API alone, so each
+     record links only to the market's own page on Kalshi and is flagged
+     "cause unverified" — see pages/flagged.html. */
+  KR.detectJumps = function (series, threshold) {
+    if (!series || series.length < 2) return [];
+    var thr = threshold === undefined ? 0.10 : Number(threshold);
+    if (!isFinite(thr) || thr <= 0) thr = 0.10;
+    var jumps = [];
+    for (var i = 1; i < series.length; i++) {
+      var a = series[i - 1], b = series[i];
+      if (a.v === null || a.v === undefined || b.v === null || b.v === undefined) continue;
+      var change = b.v - a.v;
+      if (Math.abs(change) >= thr) {
+        jumps.push({
+          t: b.t, fromV: a.v, toV: b.v, change: change,
+          dir: change > 0 ? 'up' : 'down',
+          fromTime: a.t, toTime: b.t
+        });
+      }
+    }
+    return jumps;
+  };
+
   /* ---------------- chart ---------------- */
   /* Pure canvas, no external libs, so the page works offline and cannot break on a CDN. */
   KR.drawChart = function (canvas, series, opts) {
@@ -192,6 +218,23 @@
     var g = ctx.createLinearGradient(0, padT, 0, padT + plotH);
     g.addColorStop(0, "rgba(0,195,137,.28)"); g.addColorStop(1, "rgba(0,195,137,0)");
     ctx.fillStyle = g; ctx.fill();
+
+    /* sharp-jump markers: vertical dashed lines at each ≥ $0.10 move */
+    var jumps = opts.jumps || [];
+    if (jumps.length) {
+      ctx.save();
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 4]);
+      ctx.fillStyle = '#ef4444';
+      jumps.forEach(function (j) {
+        var x = X(j.t);
+        ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, padT + plotH); ctx.stroke();
+        ctx.beginPath(); ctx.arc(x, Y(j.toV), 4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.restore();
+    }
 
     /* last point marker */
     var last = series[series.length - 1];
