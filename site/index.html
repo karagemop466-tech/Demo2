@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kalshi Demo Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="landing">
+  <header class="topbar">
+    <div class="brand"><span class="logo">K</span> Kalshi Demo Dashboard</div>
+    <nav class="nav">
+      <a href="index.html" class="active">Dashboard</a>
+      <a href="events.html">Live Events</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="trades.html">Trades</a>
+      <a href="strategies.html">Strategies</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+    </nav>
+    <span id="conn-status" class="status-pill"><span class="dot"></span><span>Connecting…</span></span>
+  </header>
+
+  <main>
+    <h1>Kalshi Demo Dashboard</h1>
+    <p class="subtitle">
+      Live, interactive tracking of Kalshi prediction markets across <b>gas prices, elections, culture,
+      crypto, and golf</b> — with price-movement charts, liquidity depth, portfolio performance,
+      trade categorization, strategies, and a reviewable suggestions board.
+    </p>
+
+    <div id="landing-stats" class="cards"></div>
+
+    <div class="note info">
+      <b>Data sources.</b> All endpoints and signing are verified from the official Kalshi API
+      documentation (<a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a>).
+      Every table row carries a source link. Values that cannot be confirmed from an official source are
+      left blank and flagged as unverified — never inferred.
+    </div>
+
+    <h2>Top in-scope events (by estimated notional)</h2>
+    <div class="panel">
+      <div id="landing-top"></div>
+    </div>
+
+    <h2>Topics</h2>
+    <div class="cards">
+      <a class="card" href="gas.html"><h3>Gas Prices</h3><p>Fuel, energy, and oil markets.</p></a>
+      <a class="card" href="elections.html"><h3>Elections</h3><p>Candidate, vote, and poll markets.</p></a>
+      <a class="card" href="culture.html"><h3>Culture</h3><p>Film, music, awards, and entertainment.</p></a>
+      <a class="card" href="crypto.html"><h3>Crypto</h3><p>Bitcoin, ETH, and coin markets.</p></a>
+      <a class="card" href="golf.html"><h3>Golf</h3><p>PGA and major championship markets.</p></a>
+    </div>
+
+    <h2>Executive summary</h2>
+    <div class="panel">
+      <p>The dashboard is a two-part system: a Node backend that signs and calls the Kalshi demo REST/WebSocket
+      API, executes trades, and tracks events until resolution (<span class="badge yes">YES</span> /
+      <span class="badge no">NO</span>); and this clean static site for GitHub Pages that works standalone on
+      public market data. See <a href="../docs/EXECUTIVE_SUMMARY.md" target="_blank" rel="noopener">docs/EXECUTIVE_SUMMARY.md</a>
+      and the <a href="suggestions.html">Suggestions</a> board for improvement paths.</p>
+      <p class="src">Sources:
+        <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment</a> ·
+        <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a> ·
+        <a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a> ·
+        <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Orderbook</a> ·
+        <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Candlesticks</a>
+      </p>
+    </div>
+  </main>
+
+  <footer>
+    Kalshi Demo Dashboard · data verified from <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a> ·
+    <a href="flagged.html">Flagged for Review</a>
+  </footer>
+  <script src="js/app.js"></script>
+</body>
+</html>
