@@ -375,6 +375,21 @@ request shape are on <a href="api-reference.html">API reference</a>.</p>
   }
 })();
 </script>"""
+    body += """
+<h2>Local trading CLI (verified against the current API)</h2>
+<p class="lead"><code>tools/kalshi_trade.py</code> signs every request locally (Ed25519 or
+RSA-PSS/SHA-256, timestamp + method + path &mdash; """ + src("getting_started/api_keys", "API Keys") + """).
+The site never accepts or stores credentials. Order commands use the V2 endpoints
+(""" + src("api-reference/orders/create-order-v2", "create") + """, """ + src("api-reference/orders/cancel-order-v2", "cancel") + """;
+book side <code>bid</code> &equiv; yes, <code>ask</code> &equiv; no &mdash; """ + src("getting_started/order_direction", "order_direction") + """).</p>
+<div class="tablewrap"><table><thead><tr><th>Command</th><th>Endpoint</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>balance</code></td><td><code>GET /portfolio/balance</code></td><td>Balance + portfolio value (requires demo key)</td></tr>
+<tr><td><code>positions</code> / <code>fills</code></td><td><code>GET /portfolio/positions</code> / <code>GET /portfolio/fills</code></td><td>Position and execution history</td></tr>
+<tr><td><code>order</code></td><td><code>POST /portfolio/events/orders</code></td><td>Place a limit order (fixed-point price/count strings)</td></tr>
+<tr><td><code>cancel</code></td><td><code>DELETE /portfolio/events/orders/{id}?market_ticker=</code>&hellip;</td><td>Cancel a resting order (ticker required for auto-routing)</td></tr>
+<tr><td><code>report</code> / <code>selftest</code></td><td>&mdash;</td><td>Local P&amp;L/strategy report / signing self-test</td></tr>
+</tbody></table></div>
+"""
     page(path="pages/portfolio.html", title="Portfolio", active="port", body=body, extra_js=js,
          desc="Kalshi demo account balance, positions, fills and executions.")
 
@@ -556,6 +571,15 @@ SUGGESTIONS = [
          effort="Low", impact="Medium", risk="None.",
          source=DOCS + "/getting_started/pagination",
          recommended="Implemented \u2014 see the API log section on Verification."),
+    dict(id="S9", title="Mark sharp price jumps (\u2265 $0.10) on the live chart",
+         problem="A sharp price move has no visible marker on the chart, so a trader can miss a significant move.",
+         options=["Mark jumps \u2265 $0.10 with red vertical markers + a table below the chart (implemented)",
+                  "No markers, keep chart clean (rejected)",
+                  "Add news/event links for each jump (not possible from the API \u2014 cause unverified)"],
+         effort="Low", impact="High",
+         risk="A reader could mistake a jump marker for a confirmed causal event \u2014 mitigated by the unverified flag and the F13 flag.",
+         source=DOCS + "/api-reference/market/get-market-candlesticks",
+         recommended="Implemented \u2014 see the \"Sharp price moves\" card on the Dashboard. Each jump is flagged <span class=\"pill flag\">cause unverified</span> because the Trade API returns price and volume only."),
 ]
 
 
@@ -583,7 +607,7 @@ def build_suggestions() -> None:
 </div>""")
     body = f"""
 <h1>Suggestions \u2014 review before anything changes</h1>
-<p class="lead">Eight improvement proposals, each with the problem, the options, the trade-off and
+<p class="lead">Nine improvement proposals, each with the problem, the options, the trade-off and
 the official source that motivates it. Nothing here is implemented on your behalf. Record a
 decision per item; decisions and notes stay in this browser so you can review the set as a whole
 before choosing a path.</p>
@@ -603,7 +627,7 @@ knowledge. No decision is transmitted anywhere.</div>
   const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
   function paint(){{
     const d=load(); let n=0;
-    ['S1','S2','S3','S4','S5','S6','S7','S8'].forEach(id=>{{
+    ['S1','S2','S3','S4','S5','S6','S7','S8','S9'].forEach(id=>{{
       const el=document.getElementById('dec-'+id); if(!el) return;
       const rec=d[id];
       if(rec){{ n++; el.innerHTML='<span class="pill '+(rec.decision==='choose'?'ok':rec.decision==='reject'?'err':'flag')+'">'+rec.decision+'</span> <span class="small muted">'+new Date(rec.at).toLocaleString()+'</span>'; }}
@@ -611,7 +635,7 @@ knowledge. No decision is transmitted anywhere.</div>
       const note=document.getElementById('note-'+id);
       if(note && rec && rec.note && !note.value) note.value=rec.note;
     }});
-    document.getElementById('decSummary').textContent=n+' of 8 decided';
+    document.getElementById('decSummary').textContent=n+' of 9 decided';
   }}
   document.querySelectorAll('button[data-decide]').forEach(b=>b.addEventListener('click',()=>{{
     const d=load(), id=b.dataset.id;
@@ -633,6 +657,17 @@ knowledge. No decision is transmitted anywhere.</div>
   paint();
 }})();
 </script>
+"""
+    body += """
+<h2>Integration additions (session 5330bffb, 2026-11-20)</h2>
+<p class="lead">Review board only &mdash; nothing here is implemented by default.</p>
+<div class="tablewrap"><table><thead><tr><th>#</th><th>Suggestion</th><th>Reviewer choice</th></tr></thead><tbody>
+<tr><td>S10</td><td><b>Topic allowlist</b>: add <code>KXCABALLOTMEASURES</code>-style state/measure markets to Elections via an explicit ticker-pattern allowlist, with its settlement sources listed.</td><td>Keep excluded &nbsp;/&nbsp; Include with source list</td></tr>
+<tr><td>S11</td><td><b>Fixed-point utility</b>: accept human decimals in the CLI and convert internally; display values read as numbers with units (&ldquo;$43.92&rdquo;), never raw <code>"43.92"</code> without a unit.</td><td>Keep explicit &nbsp;/&nbsp; Accept decimals + show units</td></tr>
+</tbody></table></div>
+<p class="lead">Status updates: S2 (browser WebSocket live streaming) &mdash; a proxy is now the only
+option, since direct WS is impossible from a browser (G-1); CORS for REST was confirmed
+(G-2, closed). The dashboard already provides the 15-second poll as the interim path.</p>
 """
     page(path="pages/suggestions.html", title="Suggestions", active="sug", body=body,
          desc="Eight reviewed improvement proposals with options, trade-offs and official sources.")
@@ -750,6 +785,16 @@ larger collection job and a separate decision.</p>
 decision, not a coding one. The current design deliberately keeps everything inside GitHub so
 there is nothing to pay for and nothing to leak.</p>
 """
+    body += """
+<h2>Integration answers and additions (session 5330bffb, 2026-11-20)</h2>
+<div class="tablewrap"><table><thead><tr><th>#</th><th>Question</th><th>Answer</th><th>Still unknown</th><th>How to discover</th><th>Source</th></tr></thead><tbody>
+<tr><td>IQ-1</td><td>How is price written in order requests?</td><td>Fixed-point strings: <code>"0.5600"</code> (4dp dollars) for price, <code>"10.00"</code> (2dp) for counts (docs 2026-11-20).</td><td>None.</td><td>&mdash;</td><td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2">create-order-v2</a></td></tr>
+<tr><td>IQ-2</td><td>Is order-book price shown in bracket notation (<code>[520, 6]</code>)?</td><td>Yes: the array is <code>[price in cents, quantity]</code> &mdash; <code>[520, 6]</code> = 6 contracts at 52&cent;.</td><td>None.</td><td>&mdash;</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook">get-market-orderbook</a></td></tr>
+<tr><td>IQ-3</td><td>Can the browser fetch demo data live? (Q4 follow-up)</td><td>Yes for REST: the probe returned <code>access-control-allow-origin: https://karagemop466-tech.github.io</code>. WS remains impossible without a proxy.</td><td>Nothing blocking.</td><td>Re-check <code>data/cors.json</code> after API changes.</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=1">probe</a></td></tr>
+<tr><td>IQ-4</td><td>May the site hold my Kalshi password or API key?</td><td>No. A public static site cannot hold secrets; the demo account requires a human login at demo.kalshi.co.</td><td>Nothing &mdash; the restriction is permanent.</td><td>User creates their own demo API key; figures go in a secured backend (S2).</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo env</a></td></tr>
+<tr><td>IQ-5</td><td>Do snapshot rows match the live API now?</td><td>Culture rows matched exactly (2026-11-20); golf matches on the first response page; crypto flags G-4/G-6 reproduced.</td><td>Re-verification of every row needs a live browser session.</td><td>Open each row's source link and compare field by field.</td><td><a href="verification.html">re-verification table</a></td></tr>
+</tbody></table></div>
+"""
     page(path="pages/questions.html", title="Questions", active="q", body=body,
          desc="Open questions, known facts and missing information required before decisions.")
 
@@ -853,11 +898,19 @@ VERIFIED = [
  ("Portfolio / order endpoints require signed keys",
   "GET /portfolio/balance and GET /portfolio/positions return 401 without signed headers; no demo credentials exist in this workspace, so all portfolio/trade rows stay blank and flagged",
   "api-reference/portfolio/get-balance", "read on page (security scheme kalshiAccessKey) + unauthenticated request fails", "Verified"),
+ ("Sharp-jump price-move detection (\u2265 $0.10)",
+  "Chart detects moves of $0.10 or more between consecutive price points and marks them with red vertical markers; the table below the chart lists each jump with a link to the market on Kalshi. The cause of each jump is not derivable from the Kalshi API (no news/event field in price responses) and is flagged cause unverified.",
+  ("api-reference/market/get-market-candlesticks", "api-reference/market/get-trades"),
+  "implemented in assets/site.js (KR.detectJumps) + chart markers in KR.drawChart; table renders on index.html", "By design"),
 ]
 
 
 def build_verification() -> None:
-    rows = [[c, v, src(p, p.rsplit("/", 1)[-1]), how,
+    def vsrc(p):
+        if isinstance(p, (list, tuple)):
+            return ", ".join(src(x, x.rsplit("/", 1)[-1]) for x in p)
+        return src(p, p.rsplit("/", 1)[-1])
+    rows = [[c, v, vsrc(p), how,
              '<span class="pill ok">Verified</span>' if st == "Verified"
              else '<span class="pill flag">By design</span>']
             for c, v, p, how, st in VERIFIED]
@@ -910,6 +963,21 @@ makes. This is the provenance for every figure in the dashboard tables.</p>
   }catch(e){ $('logKpis').innerHTML = `<div class="notice bad">${KR.esc(e.message)}</div>`; }
 })();
 </script>"""
+    body += """
+<h2>Additional verified claims (integration session 5330bffb, 2026-11-20)</h2>
+<div class="tablewrap"><table><thead><tr><th>Claim</th><th>Verified value</th><th>Source</th><th>Result</th></tr></thead><tbody>
+<tr><td>Order price/count literals</td><td>Fixed-point strings: price 4dp dollars, count 2dp</td><td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2">create-order-v2</a></td><td>Verified 2026-11-20 (OpenAPI)</td></tr>
+<tr><td>Legacy order writes</td><td><code>/portfolio/orders</code> create/cancel/amend/decrease return <code>410 Gone</code></td><td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2">create-order-v2</a></td><td>Verified 2026-11-20; tools/kalshi_trade.py migrated to V2</td></tr>
+<tr><td>Order direction</td><td>book_side <code>bid</code> &equiv; outcome_side <code>yes</code>, <code>ask</code> &equiv; <code>no</code>; price scale unchanged</td><td><a href="https://docs.kalshi.com/getting_started/order_direction">order_direction</a></td><td>Verified 2026-11-20</td></tr>
+<tr><td>Cancel order V2</td><td><code>DELETE /portfolio/events/orders/{id}?market_ticker=</code>&hellip; (ticker required for auto-routing)</td><td><a href="https://docs.kalshi.com/api-reference/orders/cancel-order-v2">cancel-order-v2</a></td><td>Verified 2026-11-20 (OpenAPI)</td></tr>
+<tr><td>Browser CORS from the Pages origin</td><td><code>access-control-allow-origin: https://karagemop466-tech.github.io</code></td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=1">probe (headers in data/cors.json)</a></td><td>Verified by observation 2026-11-20T12:12:40Z</td></tr>
+<tr><td>WebSocket handshake</td><td>Requires signed <code>KALSHI-ACCESS-*</code> headers</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets">quick start</a></td><td>Verified 2026-11-20 &mdash; browsers cannot connect directly</td></tr>
+<tr><td>Order-book arrays</td><td><code>[price in cents, quantity]</code></td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook">get-market-orderbook</a></td><td>Verified 2026-11-20</td></tr>
+<tr><td>Candlesticks</td><td><code>period_interval</code> 1/60/1440; traded price can be an empty object in quiet periods</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">get-market-candlesticks</a></td><td>Verified 2026-11-20</td></tr>
+<tr><td>Settlement</td><td>Winning side settles at $1.00 per contract; losing side $0</td><td><a href="https://docs.kalshi.com/getting_started/market_settlement">market settlement</a></td><td>Verified 2026-11-20</td></tr>
+<tr><td>Status enums</td><td>Filter values differ from response values in the same doc</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Verified 2026-11-20 &mdash; docs inconsistency flagged (G-10)</td></tr>
+</tbody></table></div>
+"""
     page(path="pages/verification.html", title="Verification", active="ver", body=body, extra_js=js,
          desc="Every claim, the official source, and how it was verified.")
 
@@ -1002,11 +1070,24 @@ FLAGGED = [
   "topic, and the Gas page states &#8220;catalogue only &#8212; 2 series exist, none has a live market&#8221;. "
   "Gas stays in scope and populates automatically when the demo exchange lists those markets.",
   "api-reference/market/get-series-list"),
+ ("F13", "Sharp-jump cause cannot be determined from the API",
+  "The dashboard now marks price moves \u2265 $0.10 between consecutive points on the live chart and "
+  "links each to the market's page on Kalshi. But the Trade API returns price and volume only \u2014 no "
+  "news, no event, no explanation for why a contract moved.",
+  "A reader could mistake a jump marker for a confirmed causal event.",
+  "Each jump row links to the market on Kalshi (where traders can see discussion) and is tagged "
+  "<span class=\"pill flag\">cause unverified</span>. Nothing is inferred. Raised as verification row "
+  "on pages/verification.html and as suggestion S9 on pages/suggestions.html.",
+  ("api-reference/market/get-markets", "api-reference/market/get-trades")),
 ]
 
 
 def build_flagged() -> None:
-    rows = [[f[0], f"<b>{f[1]}</b><br>{f[2]}", f[3], f[4], src(f[5], f[5].rsplit("/", 1)[-1]),
+    def fsrc(p):
+        if isinstance(p, (list, tuple)):
+            return ", ".join(src(x, x.rsplit("/", 1)[-1]) for x in p)
+        return src(p, p.rsplit("/", 1)[-1])
+    rows = [[f[0], f"<b>{f[1]}</b><br>{f[2]}", f[3], f[4], fsrc(f[5]),
              '<span class="pill flag">open for review</span>'] for f in FLAGGED]
     body = """
 <h1>Flagged for review</h1>
@@ -1022,10 +1103,34 @@ wrong.</p>
 <li><b>F6</b>: the portfolio page says \u201cnot configured\u201d; it is not a zero balance.</li>
 <li><b>F11</b>: the chart notes whether it is plotting a derived quoted mid or a traded price.</li>
 <li><b>F12</b>: the Gas page says \u201ccatalogue only\u201d instead of showing an unexplained empty table.</li>
+<li><b>F13</b>: sharp jumps \u2265 &#36;0.10 are marked with red vertical markers on the chart and listed in a table below it, each tagged \u201ccause unverified\u201d \u2014 the Trade API returns price and volume only, never the news or event behind a move.</li>
 <li><b>F8</b>: the dashboard header shows the snapshot time and age, so stale data is visible.</li>
 <li><b>F9</b>: compare the in-scope series list per topic against the unclassified list in
   <code>data/snapshot.json</code>.</li>
 </ul>
+"""
+    body += """
+<h2>Integration findings (session 5330bffb, 2026-11-20)</h2>
+<p class="lead">Findings from the final integration pass, kept beside the F-rows above. Where a
+finding matches an F-row it links to it instead of repeating (G-5 = F10, G-11 = F4).</p>
+<div class="tablewrap"><table><thead><tr><th>#</th><th>Irregularity / gap</th><th>Impact</th><th>Action taken / status</th><th>Source</th></tr></thead><tbody>
+<tr><td>G-1</td><td>Browser WebSocket streaming is impossible: the handshake requires signed <code>KALSHI-ACCESS-*</code> headers, which browsers cannot set.</td><td>Seconds-level data can only come from REST polling or a backend proxy.</td><td>Dashboard polls REST every 15s and renders committed candlesticks (1-min/24h, 60-min/7d). <a href="../dashboard/flagged.html">dashboard U2</a></td><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets">WebSocket quick start</a></td></tr>
+<tr><td>G-2</td><td>Browser CORS from the Pages origin &mdash; resolved by observation: a probe with origin <code>https://karagemop466-tech.github.io</code> returned <code>access-control-allow-origin: https://karagemop466-tech.github.io</code>.</td><td>Live fetches from the published site are expected to work.</td><td><b>Closed</b> (2026-11-20T12:12:40Z, recorded in <code>data/cors.json</code>). Snapshot fallback retained as resilience.</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=1">probe target</a></td></tr>
+<tr><td>G-3</td><td>KXCABALLOTMEASURES results (Prop 42 yes; 43/44/45 no) were reported by session arena-3420a90d; this session's re-check returned an empty market list and no event record.</td><td>The four result values cannot be re-verified right now.</td><td>Values are not entered in any table (blank + flagged, per policy). Provenance kept in COORDINATION.md.</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?event_ticker=KXCABALLOTMEASURES">empty response</a></td></tr>
+<tr><td>G-4</td><td>KXLTCPERP &ldquo;0.1 LTC&rdquo; has a contract-terms URL missing its file name and <code>null</code> settlement sources/tags.</td><td>No usable contract terms or settlement source.</td><td>Flagged; blank in tables (same class as F10).</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&amp;limit=3">Series API</a></td></tr>
+<tr><td>G-6</td><td>KXNEARY tags include <code>Crypto</code> and frequency is hourly while its title is about the Fed chair; settlement lists four political-news sources.</td><td>Topic mapping and frequency contradict the contract subject.</td><td>Flagged; rows kept with the conflict noted.</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&amp;limit=3">Series API</a></td></tr>
+<tr><td>G-7</td><td><code>assets/app.js</code> at the repo root is dead code (superseded twice); nothing loads it.</td><td>Misleads manual review.</td><td>Left in place (published-URL policy) and marked superseded in the repo review.</td><td><a href="../assets/app.js">file</a></td></tr>
+<tr><td>G-9</td><td>Collector CI silently dropped untracked files: <code>git diff --quiet</code> never sees untracked paths, so the first successful collect run was discarded.</td><td>Scheduled data refresh produced nothing.</td><td><b>Fixed</b>: the workflow stages <code>data/</code> before the diff; per-branch concurrency; bounded pagination for demo rate limits.</td><td><a href="../.github/workflows/collect.yml">collect.yml</a></td></tr>
+<tr><td>G-10</td><td>Status filter values (unopened/open/paused/closed/settled) differ from the response status values (active/finalized &hellip;) in the same doc.</td><td>Status handling code written from one table fails the other.</td><td>Flagged as a docs inconsistency; collector maps filters literally.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td></tr>
+</tbody></table></div>
+<p class="lead"><b>Multi-tree note (G-8):</b> the site keeps four published trees with cross-links in
+every navigation: <a href="../index.html">live dashboard</a> &middot;
+<a href="../verified/index.html">verified tables</a> &middot; <a href="../dashboard/index.html">static
+dashboard</a> &middot; <a href="../review.html">decision register</a>. Nothing published is removed.
+Full prior registers: <a href="../verified/flagged-for-review.html">verified/ (F-01&hellip;F-12, R-F1&hellip;R-F7)</a>
+&middot; <a href="../dashboard/flagged.html">dashboard/ (F1&hellip;F15, U1&hellip;U8)</a>.</p>
+<p class="lead"><b>Policy:</b> every table row links to an official source. Values that cannot be
+confirmed from official sources stay blank and flagged as unverified &mdash; never inferred.</p>
 """
     page(path="pages/flagged.html", title="Flagged for Review", active="flag", body=body,
          desc="Irregularities, gaps and judgement calls flagged for review, with sources.")
@@ -1127,6 +1232,17 @@ implementation now targets <code>POST /portfolio/events/orders</code>.</div>
   secrets.</li>
 </ul>
 """
+    body += """
+<h2>Integration additions (session 5330bffb, 2026-11-20)</h2>
+<p class="lead">PR #3 additions reviewed line by line at the time (branch <code>arena-9adcf55a-demo2</code>,
+commit <code>e3f65782</code>): all 178 declared "live URLs" were relative links that resolve; the
+snapshot parses as valid JSON (22 rows). Findings recorded then: KXBTC26H1420 duplicated across
+rows; <code>assets/app.js</code> dead (flagged G-7); package.json referenced a missing
+<code>server/index.js</code> (since fixed &mdash; the server exists and its npm tests pass 8/8);
+<code>collect.py</code> and <code>scripts/check_links.py</code> kept as archives (superseded).
+The full file-by-file inventory with links is preserved in the repo history and the
+<a href="../COORDINATION.md">coordination record</a>.</p>
+"""
     page(path="pages/repo-review.html", title="Repo Review", active="repo", body=body,
          desc="Line-by-line repository review with defects and dispositions.")
 
@@ -1197,6 +1313,22 @@ can be opened in a browser to check any figure on this site.</p>
 <p class="muted">Kalshi is a registered exchange; all market data belongs to Kalshi. This is an
 unaffiliated demonstration project running entirely against the demo environment with mock funds.
 Nothing here is investment advice.</p>
+"""
+    body += """
+<h2>Integration source additions (session 5330bffb, 2026-11-20)</h2>
+<ul class="clean">
+<li>""" + src("getting_started/fixed_point_migration", "Fixed-point migration (price/count strings)") + """</li>
+<li>""" + src("api-reference/orders/create-order-v2", "Create Order V2 (required body fields)") + """</li>
+<li>""" + src("api-reference/orders/cancel-order-v2", "Cancel Order V2 (auto-routing)") + """</li>
+<li>""" + src("getting_started/order_direction", "Order direction (bid &equiv; yes, ask &equiv; no)") + """</li>
+<li>""" + src("api-reference/market/get-market-orderbook", "Get Market Orderbook (bracket notation)") + """</li>
+<li>""" + src("api-reference/market/get-market-candlesticks", "Get Market Candlesticks") + """</li>
+<li>""" + src("getting_started/market_settlement", "Market settlement ($1 per winning contract)") + """</li>
+<li><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=1">Demo API CORS probe target</a> (observed headers recorded in <code>data/cors.json</code>)</li>
+<li>Official news outlets named in demo settlement sources: <a href="https://www.reuters.com/">Reuters</a>, <a href="https://apnews.com/">AP</a>, <a href="https://www.cnbc.com/">CNBC</a>, <a href="https://www.politico.com/">Politico</a>, <a href="https://www.bbc.com/news">BBC</a>, <a href="https://www.aljazeera.com/">Al Jazeera</a>, <a href="https://theathletic.com/">The Athletic</a>, <a href="https://www.espn.com/">ESPN</a>, <a href="https://www.foxsports.com/">Fox Sports</a>, <a href="https://www.wsj.com/">WSJ</a>, <a href="https://www.bloomberg.com/">Bloomberg</a>, <a href="https://www.coindesk.com/">CoinDesk</a>, <a href="https://cointelegraph.com/">Cointelegraph</a></li>
+<li>Official data/benchmark sources named in demo contract terms: <a href="https://gasprices.aaa.com/">AAA</a>, <a href="https://www.eia.gov/petroleum/gasdiesel/">EIA</a>, <a href="https://www.pgatour.com/">PGA Tour</a>, <a href="https://www.dpworldtour.com/">DP World Tour</a>, <a href="https://livgolf.com/">LIV Golf</a>, <a href="https://www.fifa.com/">FIFA</a>, <a href="https://tezos.com/">Tezos</a></li>
+<li>On-chain block explorers named in demo contract terms: <a href="https://etherscan.io/">Etherscan</a>, <a href="https://www.blockchain.com/explorer">Blockchain.com</a>, <a href="https://ethernodes.org/">Ethernodes</a>, <a href="https://beaconcha.in/">Beaconcha.in</a></li>
+</ul>
 """
     page(path="pages/sources.html", title="Sources", active="src", body=body,
          desc="Official Kalshi documentation and live demo endpoints used by this site.")

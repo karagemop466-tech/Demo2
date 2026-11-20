@@ -1,0 +1,196 @@
+{
+  "collected_at": "2026-11-20T13:02:32Z",
+  "collected_at_utc": "2026-11-20T13:02:32Z",
+  "collector": "tools/collect_kalshi.py",
+  "environment": "Kalshi DEMO",
+  "api_base": "https://external-api.demo.kalshi.co/trade-api/v2",
+  "api_base_alternate": "https://demo-api.kalshi.co/trade-api/v2",
+  "websocket_base": "wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2",
+  "demo_env_doc": "https://docs.kalshi.com/getting_started/demo_env",
+  "api_environments_doc": "https://docs.kalshi.com/getting_started/api_environments",
+  "fixed_point_doc": "https://docs.kalshi.com/getting_started/fixed_point_migration",
+  "get_markets_doc": "https://docs.kalshi.com/api-reference/market/get-markets",
+  "get_market_doc": "https://docs.kalshi.com/api-reference/market/get-market",
+  "get_orderbook_doc": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
+  "get_events_doc": "https://docs.kalshi.com/api-reference/events/get-events",
+  "get_series_doc": "https://docs.kalshi.com/api-reference/series/get-series",
+  "taxonomy_url": "https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories",
+  "counts": {
+    "open_markets_returned": 6000,
+    "settled_markets_returned": 4000,
+    "events_returned": 600,
+    "series_returned": 16643,
+    "in_scope_open": 1540,
+    "in_scope_settled": 382,
+    "in_scope_events": 444,
+    "in_scope_series": 7149,
+    "orderbooks": 1540,
+    "candlesticks": 0
+  },
+  "scope": {
+    "gas-prices": "Gas prices",
+    "elections": "Elections",
+    "culture": "Culture",
+    "crypto": "Crypto",
+    "golf": "Golf"
+  },
+  "scope_rules": {
+    "gas-prices": {
+      "label": "Gas prices",
+      "series_categories": [
+        "Commodities",
+        "Economics"
+      ],
+      "series_tags_any": [
+        "Oil & Gas",
+        "Oil and energy"
+      ],
+      "title_keywords": [
+        "gasoline",
+        "gas price",
+        "gas prices",
+        "diesel",
+        "heating oil",
+        "crude oil",
+        "crude",
+        "wti",
+        "brent",
+        "gas tax",
+        "gasoline price"
+      ]
+    },
+    "elections": {
+      "label": "Elections",
+      "series_categories": [
+        "Elections"
+      ],
+      "series_tags_any": [],
+      "title_keywords": [
+        "election",
+        "elections",
+        "primary",
+        "ballot",
+        "nominee",
+        "nominations",
+        "senate",
+        "governor",
+        "house control",
+        "presidential winner",
+        "mayor",
+        "referendum",
+        "vote for"
+      ]
+    },
+    "culture": {
+      "label": "Culture",
+      "series_categories": [
+        "Entertainment",
+        "Culture"
+      ],
+      "series_tags_any": [
+        "Movies",
+        "Music",
+        "Awards",
+        "Television",
+        "People",
+        "Music charts",
+        "Video games",
+        "Live Music",
+        "Reality TV",
+        "Oscars",
+        "Grammys",
+        "Critics Choice Awards",
+        "Golden Globes",
+        "The Game Awards",
+        "Art",
+        "Food",
+        "Music Streams",
+        "Movie Charts",
+        "TV Charts",
+        "Achievements",
+        "Collectibles",
+        "Music Industry",
+        "Rotten Tomatoes",
+        "Views",
+        "Dancing with the Stars",
+        "The Voice",
+        "Pok\u00e9mon",
+        "Singles",
+        "Streamer Awards",
+        "New Music",
+        "Live Music"
+      ],
+      "title_keywords": [
+        "oscar",
+        "oscars",
+        "grammy",
+        "grammys",
+        "emmy",
+        "emmys",
+        "box office",
+        "movie",
+        "film",
+        "music",
+        "album",
+        "celebrity",
+        "tv show",
+        "netflix",
+        "spotify",
+        "billboard",
+        "hollywood",
+        "met gala",
+        "golden globe",
+        "super bowl halftime",
+        "album of the year",
+        "song of the year"
+      ]
+    },
+    "crypto": {
+      "label": "Crypto",
+      "series_categories": [
+        "Crypto"
+      ],
+      "series_tags_any": [],
+      "title_keywords": [
+        "bitcoin",
+        "btc",
+        "ethereum",
+        "ether",
+        "eth price",
+        "crypto",
+        "solana",
+        "sol price",
+        "doge",
+        "dogecoin",
+        "xrp",
+        "zec",
+        "bnb"
+      ]
+    },
+    "golf": {
+      "label": "Golf",
+      "series_categories": [],
+      "series_tags_any": [
+        "Golf"
+      ],
+      "title_keywords": [
+        "golf",
+        "pga",
+        "masters",
+        "ryder cup",
+        "lpga",
+        "us open golf",
+        "open championship",
+        "the open",
+        "golfers"
+      ]
+    }
+  },
+  "notes": [
+    "All values are copied from Kalshi demo API responses. Missing fields stay empty.",
+    "volume_fp is a contract count, not dollars.",
+    "dollar_turnover_estimate = volume_fp x last_price_dollars (a computed proxy, not an official field).",
+    "Kalshi states demo prices and behaviour may not reflect real markets.",
+    "Coverage is bounded (series 4 pages; open markets 6 pages; settled 4; events 3; orderbooks/candlesticks for the top 15 in-scope markets) because the demo API rate-limits anonymous clients. Every collected row still carries its source_url; re-run the collector to widen coverage."
+  ]
+}

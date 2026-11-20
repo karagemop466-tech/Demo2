@@ -1,0 +1,4 @@
+body{font-family:system-ui,sans-serif;max-width:1000px;margin:2rem auto;padding:0 1rem;color:#222}
+nav a{margin-right:.6rem} table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9rem}
+th,td{border:1px solid #ccc;padding:.35rem .5rem;text-align:left} th{background:#f2f2f2}
+.disc{color:#666;font-size:.85rem} canvas{border:1px solid #ccc;max-width:100%}
