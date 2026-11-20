@@ -36,14 +36,13 @@
     </div>
 
     <div class="warnbox" id="credBanner">
-      <b>Personal portfolio: awaiting demo credentials.</b> No keys were provided to this session (flag F-02 / Q1) — balance, positions, fills and settlements cannot be read, so every personal-account cell stays empty rather than estimated. Add keys on <a href="trading.html">Trading</a>, then press <b>Load performance</b>.
+      <b>Personal portfolio: unavailable from a static page — by design.</b> Balance, positions, fills and settlements require signed requests, and signing keys must not enter a public web page (F-17 / security decision D-05, aligned with the repo README and PR&nbsp;#6). No keys were provided to this session either (F-02), so every personal-account cell below stays <b>empty rather than estimated</b>. Approved path: run the repo's <code>server/</code> backend locally with environment keys (see README) or use the official docs playground — then the verified formulas here turn real records into performance numbers.
     </div>
 
     <div class="panel">
       <h2>Performance <span class="pill">GET /portfolio/balance · /positions · /fills · /settlements</span></h2>
       <div class="controls">
-        <button class="primary authOnly" id="loadBtn" disabled>↻ Load performance</button>
-        <span class="note" id="perfNote">keys required</span>
+        <span class="note" id="perfNote">static page: no credential path (see security note above) · metrics shown only when records are supplied through a secured source</span>
       </div>
       <div class="stat-row">
         <div class="stat"><div class="label">Available balance</div><div class="value" id="pBal">—</div><div class="note">balance_dollars (official field)</div></div>
@@ -106,18 +105,11 @@
   </main>
 </div>
 <script src="assets/app.js"></script>
-<script src="assets/auth.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 KDS.setModeBadge($("modeBadge"));
 
-function keyGate() {
-  const s = KAuth.getSession();
-  document.querySelectorAll(".authOnly").forEach(el => el.disabled = !s);
-  if (!s) $("perfNote").innerHTML = '<span class="badge flag">no keys — personal tables remain blank</span>';
-}
 window.addEventListener("DOMContentLoaded", async () => {
-  keyGate();
   // ---- public-feed categorisation demo ----
   const s = await KDS.getSnapshot();
   const tr = s.trades_sample || [];
@@ -136,48 +128,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   agg(tr.filter(t => Number(t.yes_price_dollars) > 0.50), "YES-leaning band", "price band", "> $0.50 (project threshold)");
   $("catBody").innerHTML = rows.join("") || '<tr><td colspan="6" class="note">no rows</td></tr>';
 
-  $("loadBtn").addEventListener("click", async () => {
-    $("perfNote").innerHTML = '<span class="spin"></span> loading…';
-    try {
-      const [bal, pos, fills, sett] = await Promise.all([
-        KAuth.apiAuth("/portfolio/balance"),
-        KAuth.apiAuth("/portfolio/positions?count_filter=position&settlement_status=all&limit=200"),
-        KAuth.apiAuth("/portfolio/fills?limit=200"),
-        KAuth.apiAuth("/portfolio/settlements?limit=200")
-      ]);
-      $("pBal").textContent = KDS.fmtPrice(bal.balance_dollars);
-      $("pVal").textContent = "$" + (Number(bal.portfolio_value) / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      const setts = sett.settlements || [];
-      let pnl = 0;
-      $("setBody").innerHTML = setts.map(x => {
-        const rev = (Number(x.revenue) || 0) / 100;
-        const cost = (Number(x.yes_total_cost_dollars) || 0) + (Number(x.no_total_cost_dollars) || 0) + (Number(x.fee_cost) || 0);
-        const profit = rev - cost; pnl += profit;
-        return `<tr><td class="mono">${KDS.esc(x.ticker)}</td><td>${KDS.resultPill(x.market_result)}</td>
-          <td class="num">${KDS.fmtInt(x.yes_count_fp)}</td><td class="num">${KDS.fmtPrice(x.yes_total_cost_dollars)}</td>
-          <td class="num">${KDS.fmtInt(x.no_count_fp)}</td><td class="num">${KDS.fmtPrice(x.no_total_cost_dollars)}</td>
-          <td class="num">${KDS.esc(String(x.revenue))}</td><td class="num">${KDS.fmtPrice(x.fee_cost)}</td>
-          <td class="num" style="color:${profit > 0 ? "#2dd4a7" : profit < 0 ? "#ff6b6b" : "inherit"}">${(profit >= 0 ? "+" : "") + profit.toFixed(4)}</td>
-          <td class="num">${KDS.fmtTs(x.settled_time)}</td>
-          <td><a class="src-link" href="${KDS.API}/portfolio/settlements?ticker=${encodeURIComponent(x.ticker)}" target="_blank" rel="noopener">source</a></td></tr>`;
-      }).join("") || '<tr><td colspan="11" class="note">no settlement records</td></tr>';
-      $("pRlz").textContent = (pnl >= 0 ? "+$" : "-$") + Math.abs(pnl).toFixed(2);
-      let exp = 0;
-      (pos.market_positions || []).forEach(p => exp += Math.abs(Number(p.market_exposure_dollars) || 0));
-      $("pExp").textContent = "$" + exp.toFixed(2);
-      $("posBody2").innerHTML = (pos.market_positions || []).map(p => `<tr><td class="mono">${KDS.esc(p.ticker)}</td>
-        <td class="num">${KDS.fmtInt(p.position_fp)}</td><td class="num">${KDS.fmtPrice(p.total_traded_dollars)}</td>
-        <td class="num">${KDS.fmtPrice(p.market_exposure_dollars)}</td><td class="num">${KDS.fmtPrice(p.realized_pnl_dollars)}</td>
-        <td class="num">${KDS.fmtPrice(p.fees_paid_dollars)}</td><td class="num">${KDS.fmtTs(p.last_updated_ts)}</td>
-        <td><a class="src-link" href="${KDS.API}/portfolio/positions?ticker=${encodeURIComponent(p.ticker)}" target="_blank" rel="noopener">source</a></td></tr>`).join("") ||
-        '<tr><td colspan="8" class="note">no positions</td></tr>';
-      $("credBanner").className = "okbox";
-      $("credBanner").innerHTML = "<b>Account data loaded from the official demo API.</b> All values verbatim from response fields; only P&amp;L$ is derived (formula above).";
-      $("perfNote").innerHTML = `<span class="badge live">loaded — ${setts.length} settlements, ${(fills.fills || []).length} fills</span>`;
-    } catch (e) {
-      $("perfNote").innerHTML = '<span class="badge err">' + KDS.esc(e.message) + "</span>";
-    }
-  });
 });
 </script>
 </body>

@@ -57,7 +57,7 @@
       <a class="card" href="dashboard.html"><span class="ico">📊</span><h3>Live Dashboard</h3><p>Highest-dollar live events per topic, price chart with seconds / minutes / hours zoom, and liquidity depth at every price.</p></a>
       <a class="card" href="events.html"><span class="ico">🎯</span><h3>Events &amp; Resolutions</h3><p>Live events tracked until they resolve — YES or NO — with settlement value, timestamp and official source links.</p></a>
       <a class="card" href="portfolio.html"><span class="ico">💼</span><h3>Portfolio &amp; Analysis</h3><p>Demo-account performance tracking, trade categorisation by topic and style, and strategy templates built on verified API capabilities.</p></a>
-      <a class="card" href="trading.html"><span class="ico">🧪</span><h3>Trading</h3><p>Execute orders against the demo API (V2 order shape, browser-side signing), view fills, and track resulting positions.</p></a>
+      <a class="card" href="trading.html"><span class="ico">🧪</span><h3>Trading</h3><p>Build Create Order (V2) requests + signed curl export; execution via secured backend or official docs playground — no credentials ever enter the browser.</p></a>
       <a class="card" href="suggestions.html"><span class="ico">💡</span><h3>Suggestions</h3><p>Improvements for better decision-making — each with effort/impact and a review → choose → implement workflow. Nothing ships without review.</p></a>
       <a class="card" href="questions.html"><span class="ico">❓</span><h3>Questions &amp; Answers</h3><p>What we know, what we don't know, and the exact information required before any decision can reasonably be made.</p></a>
       <a class="card" href="flagged.html"><span class="ico">🚩</span><h3>Flagged for Review</h3><p>Unverified values, API irregularities and project decisions that need a human look — with source links.</p></a>
@@ -92,7 +92,7 @@
     document.getElementById("statSeries").textContent = series.toLocaleString();
     document.getElementById("statEvents").textContent = (s.events || []).length;
     document.getElementById("statRes").textContent = (s.resolutions || []).length;
-    document.getElementById("statFlags").textContent = "16";
+    document.getElementById("statFlags").textContent = "17";
   }).catch(e => { console.error(e); });
 </script>
 </body>

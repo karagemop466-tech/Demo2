@@ -124,6 +124,7 @@
           <tr><td class="mono">D-02</td><td><b>REST polling at 60 s</b> rather than WebSocket or sub-second loops</td><td>WS impossible in-browser without proxy (S-01); REST responses officially cached seconds-lag; keeps request volume modest while numbers still change meaningfully.</td><td>2026-11-20 (build)</td></tr>
           <tr><td class="mono">D-03</td><td><b>Derived dollar estimator shown but never hidden as official</b></td><td>No-inference rule: estimator is useful for ranking only if its derived status is impossible to miss (column header, tooltip, F-01).</td><td>2026-11-20 (build)</td></tr>
           <tr><td class="mono">D-04</td><td><b>Topic watchlists curated with completeness flags</b> instead of crawling 500+ chunk categories during collection</td><td>Context/time budget trade-off recorded openly; S-03 offers the full crawl later. Flags appear on every affected table.</td><td>2026-11-20 (build)</td></tr>
+          <tr><td class="mono">D-05</td><td><b>No credentials in the browser</b> — key-paste/client-side signing removed from the Trading page at integration; execution only via secured backend or official docs playground</td><td>Aligned with repo README safety notice and open PR #6 (“Disable unsafe browser-side trading credentials”); demo-only keys still unlock a real (demo) account, so the anti-pattern stands. Recorded as flag F-17.</td><td>2026-11-20 (integration)</td></tr>
         </tbody>
       </table></div>
     </div>

@@ -32,7 +32,7 @@
         <h1>Flagged for Review</h1>
         <div class="sub">Everything unverified, derived, irregular or awaiting a decision — published openly rather than hidden. Flags are non-blocking for the site, but each one stays until it is resolved or explicitly accepted. Values shown are <b>exactly</b> what official responses returned; nothing was corrected or inferred.</div>
       </div>
-      <div class="badges"><span class="badge flag">16 open flags</span><span class="badge">last review 2026-11-20</span></div>
+      <div class="badges"><span class="badge flag">17 open flags</span><span class="badge">last review 2026-11-20</span></div>
     </div>
 
     <div class="panel">
@@ -144,10 +144,17 @@
         <tbody>
           <tr>
             <td class="mono">F-02</td><td>No demo credentials in this session</td>
-            <td>Portfolio read &amp; order write require signed requests; no keys exist in the environment/repo (checked at session start: only GitHub tokens present).</td>
+            <td>Portfolio read &amp; order write require signed requests; no keys exist in the environment/repo (checked at session start: only GitHub tokens present; repo gitignore excludes <code>*.key</code>/<code>*.pem</code>/<code>.env</code> by policy).</td>
             <td>Official auth requirement: 401 Unauthorized without KALSHI-ACCESS-* headers</td>
-            <td>Portfolio/trading pages ship fully wired but empty &amp; clearly flagged; no fabricated balances. Unblocks instantly via <a href="trading.html">Trading → keys</a> (Q1).</td>
+            <td>Portfolio/trading pages ship with verified metric formulas and empty personal tables (no fabricated balances). Execution paths: local <code>server/</code> backend with env keys, or official docs playground (Q1). Automated pre-execution by this session: impossible.</td>
             <td><a class="src-link" href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noopener">docs · authenticated requests</a></td>
+          </tr>
+          <tr>
+            <td class="mono">F-17</td><td>Browser-side credential entry removed (security alignment)</td>
+            <td>Repository policy on <code>main</code> forbids private keys in a public static site (README safety notice; open PR <a href="https://github.com/karagemop466-tech/Demo2/pull/6" target="_blank" rel="noopener">#6</a> “Disable unsafe browser-side trading credentials”). An early draft of this site's Trading page offered PEM paste + client-side signing.</td>
+            <td>Repo README: “Do not place private signing keys in a public static site… Do not enter credentials in a public GitHub Pages application.”</td>
+            <td>Key-paste UI and client-side auth module removed at integration; Trading page now builds the official V2 request body + signed-curl export (env placeholders) and documents secured execution paths. Signing knowledge itself remains documented (it is public official documentation).</td>
+            <td><a class="src-link" href="https://github.com/karagemop466-tech/Demo2/blob/main/README.md" target="_blank" rel="noopener">repo README</a> · <a href="https://github.com/karagemop466-tech/Demo2/pull/6" target="_blank" rel="noopener">PR #6</a> · <a href="https://docs.kalshi.com/getting_started/api_keys.md" target="_blank" rel="noopener">docs · API keys</a></td>
           </tr>
           <tr>
             <td class="mono">F-09</td><td>WebSocket unusable from a browser</td>
@@ -174,7 +181,7 @@
       </table></div>
     </div>
 
-    <div class="foot">16 flag IDs: 7 data-quality (F-03…F-07, F-10, F-13) · 5 derived/unverified (F-01, F-08, F-11, F-14, F-15) · 4 blocked/decisions (F-02, F-09, F-12, F-16) · review queue: <a href="suggestions.html">Suggestions</a> · <a href="questions.html">Q&amp;A</a></div>
+    <div class="foot">17 flag IDs: 7 data-quality (F-03…F-07, F-10, F-13) · 5 derived/unverified (F-01, F-08, F-11, F-14, F-15) · 5 blocked/decisions (F-02, F-09, F-12, F-16, F-17) · review queue: <a href="suggestions.html">Suggestions</a> · <a href="questions.html">Q&amp;A</a></div>
   </main>
 </div>
 </body>

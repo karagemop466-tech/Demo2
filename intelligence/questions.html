@@ -32,18 +32,18 @@
         <h1>Questions &amp; Answers</h1>
         <div class="sub">What we know, what we don't, and — most importantly — <b>which information is missing before which decision can be made</b>. Status pills: <span class="pill yes">answered</span> from official sources · <span class="pill">missing input</span> · <span class="pill no">blocking</span> an otherwise-ready feature.</div>
       </div>
-      <div class="badges"><span class="badge flag">3 open questions block feature activation</span></div>
+      <div class="badges"><span class="badge flag">open decisions: Q2, Q3 · automation gap: Q1</span></div>
     </div>
 
     <div class="panel">
       <h2>Blocking — needed before decisions can be made</h2>
 
       <div class="qa">
-        <div class="q">Q1 · Where do demo API credentials come from, and can this session get them? <span class="status blocking">blocking</span></div>
+        <div class="q">Q1 · Where do demo API credentials come from — and can they ever be entered in this site? <span class="status answered">answered (security) · automation gap remains</span></div>
         <div class="a">
-          <b>Answer (official):</b> log in to the demo environment <a href="https://demo.kalshi.co/" target="_blank" rel="noopener">demo.kalshi.co</a> → <i>Account &amp; security</i> → <i>API Keys</i> → <i>Create Key</i>; you receive an API Key ID and a downloadable PEM private key (it cannot be retrieved again after closing the page) — <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noopener">official instructions</a>. Demo funds are granted to demo accounts per <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo docs</a>.<br>
-          <b>Missing input:</b> no keys were provided to this session (verified: environment and repository contain none). <b>Decisions blocked:</b> portfolio values (F-02), executing sample orders, strategy effectiveness verdicts (S-05). <b>How to unblock:</b> add keys via the <a href="trading.html">Trading page</a> (session-only storage) — the whole pipeline activates without any site change.<br>
-          <b>Sub-question:</b> which subaccount should trade? Spec says <code>subaccount=0</code> is primary and keys may be subaccount-locked — <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2.md" target="_blank" rel="noopener">Create Order V2</a>.
+          <b>Answer (official + repo policy):</b> keys are created at <a href="https://demo.kalshi.co/" target="_blank" rel="noopener">demo.kalshi.co</a> → <i>Account &amp; security</i> → <i>API Keys</i> → <i>Create Key</i> (API Key ID + one-time PEM download) — <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noopener">official instructions</a>. <b>They must never be typed into a public web page</b> — repo README safety notice + open PR <a href="https://github.com/karagemop466-tech/Demo2/pull/6" target="_blank" rel="noopener">#6</a> (flag F-17, decision D-05). This site's credential-paste UI was removed at integration.<br>
+          <b>Approved execution paths:</b> (1) run the repo <code>server/</code> backend locally with environment variables (<code>KALSHI_ACCESS_KEY</code>/<code>KALSHI_PRIVATE_KEY</code> — gitignored), (2) official docs “Try it” console, (3) your own script using the official signing recipe. The <a href="trading.html">Trading page</a> now emits the exact V2 body + signed curl export for those paths.<br>
+          <b>Still-missing input (automation):</b> this build session has no keys anywhere in its environment, so no orders/fills/settlements could be pre-executed or pre-populated — personal portfolio tables stay blank by rule (F-02).
         </div>
       </div>
 
