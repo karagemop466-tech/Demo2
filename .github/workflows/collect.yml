@@ -42,5 +42,6 @@ jobs:
           else
             git add data
             git commit -m "chore(data): refresh Kalshi demo snapshot"
-            git push
+            git pull --rebase origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
           fi

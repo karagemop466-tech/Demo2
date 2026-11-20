@@ -19,6 +19,7 @@ an empty string and the site renders it blank and flags it as unverified.
 import argparse
 import json
 import os
+import re
 import ssl
 import sys
 import time
@@ -176,20 +177,20 @@ class Collector:
 # Classification
 # --------------------------------------------------------------------------
 def keyword_hit(text, keywords):
-    low = " " + re_word(text) + " "
+    """Case-insensitive keyword match; multi-word keywords match as substrings,
+    single-word keywords match on word boundaries."""
+    low = re_word(text)
     for kw in keywords:
         k = kw.lower()
         if " " in k:
             if k in low:
                 return kw
-        else:
-            if (" " + k + " ") in low or low.strip().endswith(" " + k):
-                return kw
+        elif re.search(r"\b" + re.escape(k) + r"\b", low):
+            return kw
     return None
 
 
 def re_word(text):
-    import re
     return re.sub(r"[^a-z0-9&+.\- ]+", " ", str(text or "").lower())
 
 
@@ -272,11 +273,6 @@ def collect(out_dir):
             topic, basis, detail = classify(info, m.get("title") or "", ticker)
             if not topic:
                 continue
-            series_url = None
-            for u in series_urls:
-                if st and ("category=" in u or True):
-                    series_url = u
-                    break
             src = "%s/markets/%s" % (API_BASE, urllib.parse.quote(ticker))
             row = {
                 "ticker": ticker,
