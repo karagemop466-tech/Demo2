@@ -56,3 +56,7 @@ Last updated: 2026-11-20
 - PR: (to be filled after `gh pr create`)
 - Merge result: (to be filled)
 - Pages deploy: (to be filled)
+
+## Update 2026-11-20 (post-merge)
+- PR #1: https://github.com/karagemop466-tech/Demo2/pull/1 — MERGED (merge commit acf8ef38292d7aaff1591a077742798b3a0ddde2)
+- Pages: https://karagemop466-tech.github.io/Demo2/ (legacy build from main /)
