@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dollar Rankings — Highest-Value Live Events</title><link rel="stylesheet" href="assets/style.css"></head>
+<body>
+<header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main">
+<a href="index.html">Dashboard</a><a href="rankings.html">Dollar Rankings</a><a href="pages/executive-summary.html">Executive Summary</a>
+<a href="pages/gas.html">Gas</a><a href="pages/elections.html">Elections</a><a href="pages/culture.html">Culture</a><a href="pages/crypto.html">Crypto</a><a href="pages/golf.html">Golf</a>
+<a href="pages/portfolio.html">Portfolio &amp; Trading</a><a href="pages/analysis.html">Analysis</a><a href="pages/suggestions.html">Suggestions</a>
+<a href="pages/questions.html">Questions</a><a href="pages/verification.html">Verification</a><a href="pages/flagged.html">Flagged</a><a href="pages/sources.html">Sources</a>
+</nav></header>
+<div class="wrap">
+<h1>Highest Dollar-Amount Live Events — focus topics only</h1>
+<p class="muted">Scope: <b>gas prices, elections, culture, crypto, golf</b> only. Live data comes from the official Kalshi <b>demo</b> Trade API in your browser; if the browser cannot reach it, the page falls back to the last CI-collected snapshot from <code>data/</code> (labelled with its fetch time). Demo prices are not reflective of real markets — <a href="https://docs.kalshi.com/getting_started/demo_env">Demo Environment docs</a>.</p>
+
+<div class="card"><div class="row">
+<button id="refreshBtn">Refresh live</button>
+<span id="rankStatus" class="status">Loading…</span>
+<span id="corsStatus" class="status muted"></span>
+</div>
+<div class="row" style="margin-top:8px" id="topicBtns">
+<button data-topic="all" class="secondary">All topics</button>
+<button data-topic="gas prices" class="secondary">Gas prices</button>
+<button data-topic="elections" class="secondary">Elections</button>
+<button data-topic="culture" class="secondary">Culture</button>
+<button data-topic="crypto" class="secondary">Crypto</button>
+<button data-topic="golf" class="secondary">Golf</button>
+</div></div>
+
+<div class="card"><h3>Method (read before interpreting numbers)</h3>
+<ul class="muted">
+<li><b>Ranking metric</b> — <code>est_dollar_volume_24h = Σ<sub>child markets</sub> volume_24h_fp × last_price_dollars</code>. This is a <b>computed estimate</b>, <i>not</i> an official API field: the API exposes 24h volume in <b>contracts</b> and a last price in dollars, but no dollar-turnover field (<a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a>). Official contract volumes are shown alongside, unmodified.</li>
+<li><b>Topic classification</b> — gas prices: series ticker <code>KXAAAGAS*</code> / scope <code>Gasoline</code> / title contains “gas price”; elections/culture/crypto: series or event <code>category</code>; golf: series <code>tags</code> contains <code>Golf</code> or title contains “golf”. Categories verified via <a href="https://docs.kalshi.com/api-reference/market/get-series-list">Get Series List</a>.</li>
+<li><b>Source per row</b> — every row links to the exact official API URL the data came from. Values that cannot be confirmed stay blank.</li>
+</ul></div>
+
+<div class="card"><h3>Top live events by estimated 24h dollar volume</h3>
+<div style="overflow:auto"><table id="rankTable"><thead><tr>
+<th>#</th><th>Event</th><th>Topic</th><th>Est. 24h $ <sup>ƒ</sup></th><th>24h vol (contracts)</th><th>Open int. (contracts)</th>
+<th>Lead market</th><th>Last $</th><th>Yes bid/ask</th><th>Close (UTC)</th><th>Source</th>
+</tr></thead><tbody></tbody></table></div>
+<p class="muted">ƒ = computed (formula above). All other values are official API fields. Blank = not confirmed.</p></div>
+
+<div class="card"><h3>Tracked to resolution — how each event resolved</h3>
+<p class="muted">Settled markets in scope from the last 7 days. <code>result</code> is the official determination (<code>yes</code>/<code>no</code>/<code>scalar</code>) — <a href="https://docs.kalshi.com/getting_started/market_settlement">Market Settlement</a>. Status <code>finalized</code> = paid out — <a href="https://docs.kalshi.com/getting_started/market_lifecycle">Market Lifecycle</a>.</p>
+<div style="overflow:auto"><table id="resolvedTable"><thead><tr>
+<th>Market</th><th>Event</th><th>Topic</th><th>Result</th><th>Status</th><th>Close (UTC)</th><th>Last $</th><th>Source</th>
+</tr></thead><tbody></tbody></table></div></div>
+
+<div class="card"><h3>Provenance</h3>
+<p class="muted" id="provenance">—</p></div>
+</div>
+<footer>Demo only. No real funds. <a href="pages/sources.html">Sources</a> · <a href="pages/verification.html">Verification</a> · <a href="pages/flagged.html">Flagged for Review</a> · <a href="COORDINATION.md">Coordination</a></footer>
+<script src="assets/rankings.js"></script>
+</body></html>
