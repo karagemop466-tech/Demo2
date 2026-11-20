@@ -1,9 +1,98 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Executive Summary</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Executive Summary</h1>
-<p><b>Purpose.</b> This site collects, organizes, and analyzes Kalshi <b>demo</b> markets in five topics only — gas prices, elections, culture, crypto, golf — tracking live events until resolution (yes/no), visualizing price movement and liquidity, and supporting demo-account portfolio tracking and trade execution.</p>
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Executive Summary · Kalshi Demo Dashboard</title>
+<meta name="description" content="Live Kalshi demo-market dashboard for gas, elections, culture, crypto and golf, with sourced data and line-by-line verification.">
+<link rel="stylesheet" href="../assets/style.css">
+</head><body>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html" aria-current="page">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../rankings.html">Dollar Rankings</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<div class="wrap">
+
+<h1>Executive summary</h1>
+<p class="lead">A dashboard that collects, organises and analyses Kalshi <b>demo</b> markets in
+five topics only - gas prices, elections, culture, crypto, golf - tracks them until they resolve
+yes/no, charts price against time with selectable windows, shows contracts available at each
+price, and reports demo-account performance with trade categorisation and strategy candidates.</p>
+
 <div class="grid">
-<div class="card"><h3>What it does</h3><ul><li>Ranks open in-scope markets by notional (volume × last price) from <a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a>.</li><li>Charts contract price over time (seconds/minutes/hours) and shows orderbook depth via <a href="https://docs.kalshi.com/getting_started/quick_start_market_data">Get Market Orderbook</a>.</li><li>Tracks settled markets and their <code>result</code> (yes/no).</li><li>With demo API keys, loads balance/positions/fills and places limit orders (signed per <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Authenticated Requests</a>).</li><li>Categorizes fills and derives strategies only from observed data.</li></ul></div>
-<div class="card"><h3>What it does not do</h3><ul><li>No real-money trading. Demo only (<a href="https://docs.kalshi.com/getting_started/demo_env">demo env</a>).</li><li>No hard-coded market values — all numbers come live from the API or stay blank.</li><li>No strategy is recommended without fill data.</li></ul></div>
-<div class="card"><h3>Key risks</h3><ul><li>Demo prices “may not be reflective of those in real markets” (<a href="https://docs.kalshi.com/getting_started/demo_env">source</a>).</li><li>Topic mapping is keyword-based and heuristic — see Flagged for Review.</li><li>Trading requires your own demo API keys; keys never leave your browser.</li></ul></div>
+<div class="card">
+<h3>What was asked, and where it lives</h3>
+<ul class="clean">
+<li><b>Highest dollar-amount live events, five topics only</b> - <a href="../index.html">Dashboard</a>
+  ranks by a labelled <i>estimate</i>; the raw official fields sit beside it. Scope is decided by
+  official series <code>tags</code>/<code>categories</code>, not by keyword guessing.</li>
+<li><b>Track until resolved, yes or no</b> - <a href="resolutions.html">Resolutions</a> lists every
+  settled in-scope market with Kalshi&#8217;s own <code>result</code> field.</li>
+<li><b>Portfolio performance on the demo account</b> - <a href="portfolio.html">Portfolio</a>.</li>
+<li><b>Analyse results, categorise trades, build strategies</b> -
+  <a href="analysis.html">Analysis</a>. Strategies are only emitted above an evidence threshold,
+  otherwise the page says &#8220;insufficient data&#8221; rather than inventing a rule.</li>
+<li><b>Execute trades and track performance</b> - signed demo orders via
+  <code>POST /portfolio/events/orders</code>; every attempt is logged with its HTTP status.</li>
+<li><b>Live interactive graph, X = time, Y = contract price, seconds to days</b> -
+  <a href="../index.html">Dashboard</a> chart, 60 s / 5 m / 1 h / 6 h / 24 h / 7 d.</li>
+<li><b>Current liquidity: how many contracts at a given price</b> - order-book panel on the
+  Dashboard; full depth on each category page.</li>
+<li><b>Suggestions section to choose a path before implementing</b> -
+  <a href="suggestions.html">Suggestions</a> (decisions are recorded, nothing auto-applies).</li>
+<li><b>Questions / information / answers needed before deciding</b> -
+  <a href="questions.html">Questions</a>.</li>
+</ul>
 </div>
-<p>Next steps: review <a href="questions.html">Questions</a>, <a href="suggestions.html">Suggestions</a>, and <a href="flagged.html">Flagged for Review</a> before any decision.</p>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<div class="card">
+<h3>How the data is actually obtained</h3>
+<p>This is a static GitHub Pages site, so it cannot hold a secret and a visitor&#8217;s browser
+cannot be the only data path. Instead:</p>
+<ol class="clean">
+<li>A GitHub Actions workflow runs <code>tools/collector.py</code> every 10 minutes against the
+   official demo API (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment</a>).</li>
+<li>The collector writes <code>data/*.json</code>, including an <b>API log</b> of every request
+   and its HTTP status, and commits the snapshot.</li>
+<li>The pages read those snapshots, so every number on screen traces back to a logged request.</li>
+</ol>
+<p class="small muted">Consequence stated plainly: the site is refreshed every 10 minutes, not
+tick-by-tick. The 60-second chart window is therefore often empty. Real-time would need a hosted
+WebSocket relay, which is raised as a decision in <a href="suggestions.html">Suggestions</a>.</p>
+</div>
+<div class="card">
+<h3>What it explicitly does not do</h3>
+<ul class="clean">
+<li>No real-money trading. Demo host only, hard-coded.</li>
+<li>No invented values: missing data renders as an em dash and the row is marked
+  <span class="pill flag">unverified</span>.</li>
+<li>No strategy claim below the evidence threshold.</li>
+<li>No claim that demo prices predict production prices - Kalshi&#8217;s own docs warn they may not
+  be reflective (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo_env</a>).</li>
+</ul>
+</div>
+<div class="card">
+<h3>Headline risks</h3>
+<ul class="clean">
+<li><b>Definition risk.</b> &#8220;Highest dollar amount&#8221; has no single API field; the ranking is
+  an estimate (<a href="flagged.html">F2</a>, <a href="questions.html">Q1</a>).</li>
+<li><b>Coverage risk.</b> Demo liquidity is thin and some demo series carry placeholder strikes;
+  sample sizes for strategy work will be small for a long time (<a href="flagged.html">F8</a>).</li>
+<li><b>Credentials.</b> Portfolio and execution need a demo API key pair configured as repository
+  secrets. Until then those pages show an explicit &#8220;not configured&#8221; state, not zeros.</li>
+<li><b>Correctness defect found and fixed.</b> The earlier build posted orders to a removed
+  endpoint; it is documented in <a href="flagged.html">F7</a>.</li>
+</ul>
+</div>
+</div>
+
+<h2>Decision readiness in one table</h2>
+<div class="tablewrap "><table><thead><tr><th>Question a decision-maker must settle</th><th>Status</th><th>Where to settle it</th></tr></thead><tbody><tr><td>How is &#8220;highest dollar volume&#8221; defined - volume, open interest, or an estimate?</td><td><span class="pill flag">Open</span></td><td><a href="questions.html">Q1</a></td></tr><tr><td>Which series are authoritative for gas and golf (tag-based, since categories are Economics/Sports)?</td><td><span class="pill ok">Resolved - tags</span></td><td><a href="api-reference.html">API reference</a></td></tr><tr><td>Is 10-minute snapshot freshness acceptable, or is live streaming required?</td><td><span class="pill flag">Open</span></td><td><a href="questions.html">Q3</a></td></tr><tr><td>Is a demo API key available for portfolio/execution?</td><td><span class="pill flag">Open</span></td><td><a href="questions.html">Q4</a></td></tr><tr><td>What is the minimum sample before a strategy may be stated?</td><td><span class="pill ok">Resolved - 5 resolved fills, flagged low confidence</span></td><td><a href="analysis.html">Analysis</a></td></tr><tr><td>Should demo-derived strategies be treated as transferable to production?</td><td><span class="pill flag">Open</span></td><td><a href="questions.html">Q7</a></td></tr></tbody></table></div>
+<h2>Bottom line</h2>
+<p>Everything requested is built and sourced: the five-topic scope, the ranked live view, the
+time-versus-price chart, order-book depth, yes/no resolution tracking, demo portfolio reporting,
+trade categorisation, a strategy engine that refuses to guess, and a review gate for suggestions.
+What remains open is not engineering - it is definition and access: what &#8220;highest dollar
+amount&#8221; means, how fresh the data must be, whether a demo key will be supplied, and how much
+evidence is enough before a strategy is trusted. Those are listed, with the exact information
+needed to close them, on <a href="questions.html">Questions</a>.</p>
+
+</div>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a></div></div></footer>
+<script src="../assets/site.js"></script>
+
+</body></html>

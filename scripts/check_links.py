@@ -59,6 +59,8 @@ def main():
             checked += 1
             if url.startswith(("mailto:", "javascript:", "data:", "tel:")):
                 continue
+            if "${" in url:
+                continue  # JS template literal, resolved at runtime
             if url.startswith(("http://", "https://")):
                 external_urls.add(url)
                 continue
@@ -72,7 +74,25 @@ def main():
                 continue
             if frag and target_path.endswith(".html"):
                 if frag not in ids_in(target_path):
-                    problems.append(f"{rel}: missing anchor #{frag} in {os.path.relpath(target_path, ROOT)}")
+                    # Runtime-rendered anchors: some pages build rows from JS data
+                    # arrays (id: 'FLAG-04'). Accept if the target directory's JS
+                    # declares that id, so the deep link resolves after render.
+                    js_dir = os.path.dirname(target_path)
+                    runtime = False
+                    for jroot, _jdirs, jfiles in os.walk(js_dir):
+                        for fn in jfiles:
+                            if fn.endswith(".js"):
+                                try:
+                                    with open(os.path.join(jroot, fn), encoding="utf-8") as jf:
+                                        if re.search(r"id\s*:\s*['\"]" + re.escape(frag) + "['\"]", jf.read()):
+                                            runtime = True
+                                            break
+                                except OSError:
+                                    pass
+                        if runtime:
+                            break
+                    if not runtime:
+                        problems.append(f"{rel}: missing anchor #{frag} in {os.path.relpath(target_path, ROOT)}")
 
     print(f"internal: checked {checked} references across {len(files)} HTML files")
 

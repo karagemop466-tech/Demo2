@@ -1,9 +1,127 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Culture</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Culture</h1>
-<p>Live markets whose title/ticker matches: <b>oscar, grammy, emmy, celebrity, movie, film, music, album</b>. Ranking and prices are live from the <a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> endpoint (demo base <a href="https://docs.kalshi.com/getting_started/demo_env">external-api.demo.kalshi.co</a>). Use the <a href="../index.html">Dashboard</a> filter — the dashboard applies this keyword map and sorts by notional. No values are pre-filled here; blank means “live only”.</p>
-<table><tr><th>Item</th><th>Value</th><th>Source</th></tr>
-<tr><td>Open markets in scope</td><td>Live — see Dashboard</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></td></tr>
-<tr><td>Top market by notional</td><td>Live — see Dashboard</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></td></tr>
-<tr><td>Resolution (yes/no)</td><td>Live — see Dashboard resolved table</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets (settled)</a></td></tr>
-</table>
-<p class="muted">Keyword mapping is a heuristic (titles vary). Unmapped markets are excluded, not mislabeled. See <a href="flagged.html">Flagged for Review</a>.</p>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Culture · Kalshi Demo Dashboard</title>
+<meta name="description" content="Culture markets on Kalshi demo, sourced from the official Trade API.">
+<link rel="stylesheet" href="../assets/style.css">
+</head><body data-topic="culture">
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html" aria-current="page">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../rankings.html">Dollar Rankings</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<div class="wrap">
+
+<h1>Culture</h1>
+<p class="lead">Culture and entertainment markets (awards, music, film, celebrity and similar). Official discovery category <code>Culture</code>.</p>
+<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Loading snapshot…</div></div></div>
+<div class="kpis" id="kpis"></div>
+<div class="card tight" style="margin-bottom:14px"><div class="status" id="catNote">Checking the series catalogue…</div></div>
+
+<h2>Live markets — highest estimated dollar volume first</h2>
+<p class="muted">Scope rule: a market is in this topic only if its <b>official</b> series record
+carries the matching <code>tags</code> or <code>categories</code> value from
+<a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a>
+(category/categories contain <code>Culture</code>). Nothing is matched on free-text guessing; unmapped series are listed on
+<a href="flagged.html">Flagged for Review</a> instead of being silently assigned.</p>
+<div id="liveTable"></div>
+
+<h2>Resolved — official yes / no</h2>
+<p class="muted">Rows move here when Kalshi sets the official <code>result</code> field. Empty
+until a market in this topic settles in the demo environment.</p>
+<div id="resTable"></div>
+
+<h2>Series in scope</h2>
+<p class="muted">Series tickers actually observed in this topic in the current snapshot, with
+their official contract-terms and product-certification links.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Series ticker</th><th>Primary category</th><th>Discovery categories</th><th>Contract terms</th><th>Certification</th></tr></thead>
+<tbody id="seriesList"><tr><td colspan="5" class="muted">Loading…</td></tr></tbody></table></div>
+
+</div>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a></div></div></footer>
+<script src="../assets/site.js"></script>
+
+<script>
+(async function(){
+  const TOPIC = document.body.dataset.topic;
+  const $ = id => document.getElementById(id);
+  try{
+    const d = await KR.topic(TOPIC);
+    KR.staleness($('staleness'), d.generated_at_utc);
+    const ms = d.markets||[];
+    // Whether the topic exists in Kalshi's catalogue at all is a different fact from
+    // whether it has live markets today. Say both, so "0 live" is never ambiguous.
+    let snap = null;
+    try { snap = await KR.snapshot(); } catch(e) {}
+    const cat = ((snap && snap.topic_catalog) || {})[TOPIC] || {};
+    const inCat = cat.series_in_catalog;
+    const withLive = (cat.series_with_live_markets || []).length;
+    const catBox = $('catNote');
+    if(catBox){
+      if(inCat === undefined){
+        catBox.innerHTML = '<span class="muted">Series-catalogue counts are not in this snapshot yet.</span>';
+      } else if(inCat === 0){
+        catBox.innerHTML = '<span class="pill flag">no series</span> The API returned no series tagged or categorised for this topic.';
+      } else if(withLive === 0){
+        catBox.innerHTML = '<span class="pill flag">catalogue only</span> <b>' + inCat + '</b> series exist for this topic in Kalshi&#8217;s catalogue (' +
+          (cat.series_tickers||[]).slice(0,6).map(t=>'<code>'+KR.esc(t)+'</code>').join(' ') +
+          ') but <b>none has a live market in the demo environment</b> right now. That is an absence of markets, not a data failure.';
+      } else {
+        catBox.innerHTML = '<span class="pill ok">live</span> <b>' + withLive + '</b> of <b>' + inCat + '</b> catalogued series for this topic have live markets in the demo environment.';
+      }
+    }
+    const highest = ms.slice().sort((a,b)=>(b.est_dollar_volume||0)-(a.est_dollar_volume||0));
+    const res = (d.resolutions||[]);
+    const live = ms.length, settled = res.length;
+    const yesN = res.filter(r=>(r.result||'')==='yes').length;
+    const noN = res.filter(r=>(r.result||'')==='no').length;
+    $('kpis').innerHTML = `
+      <div class="kpi-card"><div class="k">Live markets</div><div class="v">${live}</div><div class="s">status=open</div></div>
+      <div class="kpi-card"><div class="k">Resolved</div><div class="v">${settled}</div><div class="s">yes ${yesN} · no ${noN}</div></div>
+      <div class="kpi-card"><div class="k">Largest est. $ volume</div>
+        <div class="v">${highest.length?KR.usd(highest[0].est_dollar_volume,0):'—'}</div>
+        <div class="s">${highest.length?KR.esc((highest[0].market_title||'').slice(0,48)):'no markets'}</div></div>
+      <div class="kpi-card"><div class="k">Top 3 est. $ volume</div>
+        <div class="v">${KR.usd(highest.slice(0,3).reduce((s,m)=>s+(m.est_dollar_volume||0),0),0)}</div>
+        <div class="s">sum of three largest</div></div>`;
+
+    KR.renderTable($('liveTable'), [
+      {label:'#', num:true, get:m=>highest.indexOf(m)+1},
+      {label:'Market', get:m=>`<b>${KR.esc(m.market_title||m.market_ticker)}</b><br><span class="muted small">${KR.esc(m.market_ticker)} · series ${KR.esc(m.series_ticker)}</span>`},
+      {label:'Last $', num:true, get:m=>KR.usd(m.last_price_dollars,2)},
+      {label:'Yes bid / ask', num:true, get:m=>`${KR.usd(m.yes_bid_dollars,2)} / ${KR.usd(m.yes_ask_dollars,2)}`},
+      {label:'Contracts at best bid', num:true, get:m=>KR.num(m.yes_bid_size_fp,2)},
+      {label:'Contracts at best ask', num:true, get:m=>KR.num(m.yes_ask_size_fp,2)},
+      {label:'Volume', num:true, get:m=>KR.num(m.volume_fp,0)},
+      {label:'Open int.', num:true, get:m=>KR.num(m.open_interest_fp,0)},
+      {label:'Est. $ vol', num:true, get:m=>`${KR.usd(m.est_dollar_volume,0)} <span class="pill flag">est.</span>`},
+      {label:'Closes', get:m=>`<span class="small">${KR.when(m.close_time)}</span>`},
+      {label:'Rules', get:m=>m.rules_primary?`<span class="small" title="${KR.esc(m.rules_primary)}">${KR.esc(m.rules_primary.slice(0,90))}${m.rules_primary.length>90?'…':''}</span>`:'—'},
+      {label:'Source', get:m=>KR.link(m.market_url,'Kalshi market')}
+    ], highest, 'No live markets for this topic in the current snapshot.');
+
+    KR.renderTable($('resTable'), [
+      {label:'Result', get:r=>KR.resultPill(r.result)},
+      {label:'Market', get:r=>`<b>${KR.esc(r.title||r.market_ticker)}</b><br><span class="muted small">${KR.esc(r.market_ticker)}</span>`},
+      {label:'Settlement $', num:true, get:r=>KR.usd(r.settlement_value_dollars,2)},
+      {label:'Settled (UTC)', get:r=>`<span class="small">${KR.when(r.settlement_ts)}</span>`},
+      {label:'Expiration value', get:r=>KR.dash(r.expiration_value)},
+      {label:'Volume', num:true, get:r=>KR.num(r.volume_fp,0)},
+      {label:'Source', get:r=>`<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets (settled)</a>`}
+    ], res.slice(0,60), 'No resolved markets for this topic in the current snapshot.');
+
+    const ser = [...new Set(ms.map(m=>m.series_ticker))];
+    $('seriesList').innerHTML = ser.length
+      ? ser.map(s=>{
+          const ex = ms.find(m=>m.series_ticker===s);
+          return '<tr><td><code>' + KR.esc(s) + '</code></td><td>' + KR.esc(ex.series_category||'') +
+            '</td><td>' + KR.esc((ex.series_categories||[]).join(', ')) +
+            '</td><td>' + KR.link(ex.contract_terms_url,'terms') +
+            '</td><td>' + KR.link(ex.contract_url,'certification') + '</td></tr>';
+        }).join('')
+      : '<tr><td colspan="5" class="muted">No series in scope for this topic in the current snapshot.</td></tr>';
+  }catch(e){
+    $('kpis').innerHTML = `<div class="notice bad">Could not load data/topic-${topicsafe()}.json: ${KR.esc(e.message)}</div>`;
+  }
+  function topicsafe(){ return TOPIC; }
+})();
+</script>
+
+</body></html>
