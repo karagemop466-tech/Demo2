@@ -24,6 +24,16 @@ Last updated: 2026-11-20 (session e88eb254, after the merge with `fed802ba`'s wo
 | 19 | Line-by-line verification, sources, flagged, repo review | **done** | e88eb254 | `pages/{verification,sources,flagged,repo-review}.html` |
 | 20 | Integration: CI gate, link check, render test, PR, merge, deploy | **done** | e88eb254 | `.github/workflows/ci.yml`, `tools/check.py`, `tools/build_site.py`, `tools/build_content.py`, `README.md`, all pages |
 | 21 | Add demo API key secrets to enable portfolio + execution | **needs review (owner action)** | unclaimed | repository secrets only — see `pages/questions.html` Q4 |
+| 22 | Live alert chats (two scrolling feeds: all moves ≥ $0.10 + model high-ROI filter) | **in progress** | a23759ab | `pages/alerts.html`, `assets/alerts.js`, `assets/style.css`, `tools/alerts.py` |
+| 23 | Simulated (paper) trade engine + strategy comparison | **in progress** | a23759ab | `tools/simulate.py`, `data/simulations.json`, `pages/simulations.html` |
+| 24 | Collector fix: resolution coverage (`paginate` limit + series mapping) | **in progress** | a23759ab | `tools/collector.py` (resolution block only) |
+| 25 | Final integration: nav cleanup, regenerate pages, verify, PR, merge, deploy | **in progress** | a23759ab | `tools/build_site.py`, `tools/build_content.py`, `pages/*`, `index.html`, `COORDINATION.md` |
+
+Session `a23759ab` works on the branch Arena assigned to it (`arena/a23759ab-demo2`, base
+`e7fabd4` on `main`) and pushes there. Row 25 is the integration row: shared outputs
+(`index.html`, navigation, `data/`) are only touched by this session, as the brief requires.
+No other session's file is edited by hand; every shared page is regenerated from its generator
+so the CI diff gate stays green.
 
 Scope note: rows 12–20 re-own the filenames produced by `e3f65782` because a correctness defect was
 found in that output (order placement targeted an endpoint the official docs now return `410 Gone`
