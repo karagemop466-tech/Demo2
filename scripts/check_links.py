@@ -125,6 +125,9 @@ def main():
         print(f"\n{len(problems)} problem(s):")
         for p in problems:
             print(f"  FAIL {p}")
+            # GitHub Actions annotation so failures are readable via the API
+            # even when the raw log receiver is unreachable.
+            print(f"::error::{p}")
         return 1
     print("\nAll links OK.")
     return 0
