@@ -35,6 +35,7 @@ NAV = [
     ("live/index.html", "Live Console", "live"),
     ("jumps/index.html", "Price Jumps", "jumps"),
     ("pages/resolutions.html", "Resolutions", "res"),
+    ("pages/paper-trading.html", "Paper Trades", "paper"),
     ("pages/portfolio.html", "Portfolio", "port"),
     ("pages/analysis.html", "Analysis", "an"),
     ("pages/suggestions.html", "Suggestions", "sug"),
@@ -142,6 +143,40 @@ tables on the category, resolution and verification pages still work without it.
 
 <div class="kpis" id="kpis"></div>
 
+<h2>Live alert desk <span class="muted">— two scrolling chats of sudden price swings</span></h2>
+<p class="lead">Every line is an official <code>last_price_dollars</code> move of
+<b>&ge; $0.10</b> between two consecutive observations of the same market, in either
+direction. The two chats are: <b>all events</b>, and <b>model screen &mdash; high ROI</b>,
+the subset that passes a documented heuristic screen. Lines are newest first and scroll
+in real time; each one links to the market's own page on Kalshi and keeps tracking it
+until the official <code>result</code> (yes/no) lands.</p>
+<div class="notice info"><b>What is live, and what is not.</b> The <span class="pill ok">live poll</span>
+lines come from a direct poll of the official demo Trade API
+(<a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a>, the documented
+<code>tickers=</code> filter) every 20 seconds. The
+<span class="pill">snapshot</span> lines come from the collector's own tick history, which is sampled
+every 10 minutes &mdash; coarser, and labelled so it is never mistaken for the live stream. The API
+returns price and volume only: <b>it does not say what caused a move</b>, so the
+&ldquo;possible context&rdquo; link is a news search tagged
+<span class="pill flag">not an official source</span>, and the cause stays unverified
+(<a href="pages/flagged.html">F13</a>). Demo prices are not real prices
+(<a href="pages/flagged.html">F5</a>).</div>
+<p class="lead" style="font-size:.88em">Model screen: move &ge; $0.10, entry price &le; $0.45 on
+the side the move favours, <code>volume_24h_fp</code> &ge; 100 contracts, closes within 30 days
+&mdash; a heuristic over official fields, <b>not a forecast</b>. Potential ROI shown beside a passing
+line is the arithmetic payout if the favoured side resolves, not a prediction of the outcome.</p>
+<div id="alertStatus" class="chat-head" style="margin-bottom:8px"></div>
+<div class="grid two">
+  <div class="card" style="display:flex;flex-direction:column;gap:8px">
+    <div class="chat-head"><b>All events</b><span id="alertAllCount" class="muted"></span></div>
+    <div class="chat" id="alertAll"></div>
+  </div>
+  <div class="card" style="display:flex;flex-direction:column;gap:8px">
+    <div class="chat-head"><b>Model screen &mdash; high ROI</b><span id="alertModelCount" class="muted"></span></div>
+    <div class="chat" id="alertModel"></div>
+  </div>
+</div>
+
 <div class="grid two" style="margin-top:6px">
   <div class="card">
     <h3>Price movement <span class="muted">— X: time, Y: contract price ($)</span></h3>
@@ -243,6 +278,7 @@ official <code>result</code> field (<code>yes</code>/<code>no</code>) moves the 
 """
 
 DASH_JS = r"""
+<script src="../assets/alerts.js"></script>
 <script>
 (async function(){
   const $ = id => document.getElementById(id);
@@ -413,6 +449,11 @@ DASH_JS = r"""
   }));
   ['topicFilter','sortSel','qBox'].forEach(id=>$(id).addEventListener('input', ()=>renderTable(state.filtered)));
   window.addEventListener('resize', ()=>{ KR.drawChart(document.getElementById('chart'), [], {}); drawChart(); });
+
+  // Live alert desk: two scrolling chats (all events / model screen). Runs alongside the
+  // chart, on official prices only; see assets/alerts.js for the two data streams and the
+  // disclosed screen.
+  if (window.KR && KR.alerts) KR.alerts.init({ poll: true });
 })();
 </script>
 """

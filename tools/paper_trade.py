@@ -437,7 +437,7 @@ def summarise(ledger: dict, snap: dict, created: list[dict], closes: list[dict],
     }
 
 
-def run(snap: dict, ledger: dict, write: bool = True) -> tuple[dict, dict]:
+def run(snap: dict, ledger: dict, write: bool = True, quiet: bool = False) -> tuple[dict, dict]:
     """Advance the desk one run. Returns (summary, updated_ledger) — the caller's ledger
     is copied, so an unchanged input means a dry run really was side-effect free."""
     ledger = copy.deepcopy(ledger)
@@ -470,9 +470,15 @@ def run(snap: dict, ledger: dict, write: bool = True) -> tuple[dict, dict]:
             "fees_paid_dollars": ledger["fees_paid_dollars"],
         }
         LEDGER.write_text(json.dumps(out, indent=1) + "\n")
-        print(f"wrote {LEDGER.relative_to(ROOT)} ({LEDGER.stat().st_size:,} bytes) "
-              f"trades={len(out['trades'])} opened={len(created)} settled={len(closes)}")
-    else:
+        if not quiet:
+            # DATA may be relocated by a caller (tests, CI temp dirs): show the real path.
+            try:
+                shown = LEDGER.relative_to(ROOT)
+            except ValueError:
+                shown = LEDGER
+            print(f"wrote {shown} ({LEDGER.stat().st_size:,} bytes) "
+                  f"trades={len(out['trades'])} opened={len(created)} settled={len(closes)}")
+    elif not quiet:
         print(f"dry-run: would open {len(created)}, settle {len(closes)}, "
               f"mark {len(marks)}; equity ${summary['equity_dollars']:,.2f}")
     return summary, ledger
@@ -499,7 +505,7 @@ def selftest() -> int:
     }
     ledger = {"trades": [], "runs": [], "next_id": 1, "cash": 1000.0,
               "realized_pnl_dollars": 0.0, "fees_paid_dollars": 0.0}
-    s, ledger = run(snap, ledger, write=False)
+    s, ledger = run(snap, ledger, write=False, quiet=True)
     by_side = {x["side"]: x for x in ledger["trades"]}
     assert len(by_side) == 2, f"expected one YES and one NO fill, got {list(by_side)}"
     tr = by_side["yes"]

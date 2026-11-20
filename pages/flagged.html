@@ -5,7 +5,7 @@
 <meta name="description" content="Irregularities, gaps and judgement calls flagged for review, with sources.">
 <link rel="stylesheet" href="../assets/style.css">
 </head><body>
-<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html" aria-current="page">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/paper-trading.html">Paper Trades</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html" aria-current="page">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
 <div class="wrap">
 
 <h1>Flagged for review</h1>
@@ -29,6 +29,12 @@ wrong.</p>
 <li><b>F8</b>: the dashboard header shows the snapshot time and age, so stale data is visible.</li>
 <li><b>F9</b>: compare the in-scope series list per topic against the unclassified list in
   <code>data/snapshot.json</code>.</li>
+<li><b>N-1</b>: the snapshot states its own cap and its published-vs-universe counts; a topic at the
+  cap is bounded, not complete.</li>
+<li><b>N-3</b>: every fee is tagged as a model with the 0.07 constant, not as an exchange figure.</li>
+<li><b>N-4</b>: short-dated rows are tagged <code>source_pass: near_term</code> in the snapshot.</li>
+<li><b>N-7</b>: every alert line is tagged live poll or snapshot; the model screen is a filter with
+  printed thresholds, never a forecast.</li>
 </ul>
 
 <h2>Integration findings (session 5330bffb, 2026-11-20)</h2>
@@ -50,6 +56,74 @@ every navigation: <a href="../index.html">live dashboard</a> &middot;
 dashboard</a> &middot; <a href="../review.html">decision register</a>. Nothing published is removed.
 Full prior registers: <a href="../verified/flagged-for-review.html">verified/ (F-01&hellip;F-12, R-F1&hellip;R-F7)</a>
 &middot; <a href="../dashboard/flagged.html">dashboard/ (F1&hellip;F15, U1&hellip;U8)</a>.</p>
+
+<h2>Collector and desk findings (session 7085e643, 2026-11-20)</h2>
+<p class="lead">Findings from the collector bounds and the simulated desk work. Each row states what
+was changed and what is still a judgement call, so a reader can tell a bounded file from a complete
+one, and a modelled fee from an exchange-confirmed one.</p>
+<div class="tablewrap"><table><thead><tr><th>#</th><th>Irregularity / gap</th><th>Impact</th><th>Action taken / status</th><th>Source</th></tr></thead><tbody>
+<tr><td>N-1</td><td><b>The published snapshot is bounded, so it is not the full universe</b><br>The
+snapshot had grown to 111.97 MB, which GitHub rejected at the push step, so six consecutive
+refresh runs published nothing at all.</td><td>A reader could take the tables as the whole of the
+demo exchange, and no data was reaching the site.</td><td><b>Fixed.</b> The collector now applies a
+publish budget (rows per topic, then a byte budget with a halving loop) and the pre-push
+<code>tools/guard_sizes.py</code> fails the job before the commit step if any file is over budget. The
+snapshot carries <code>publish_policy</code> with its cap and <code>coverage</code> with
+<code>published_markets</code> vs <code>universe_markets</code>, and <code>complete_enumeration:
+false</code>. Dropped counts are published, not hidden.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td></tr>
+<tr><td>N-2</td><td><b>The <code>by_topic</code> copy duplicated the whole payload</b><br>
+20.23 MB of the 47.26 MB snapshot was a per-topic re-slicing of the same rows.</td><td>Nearly half of
+the published file was redundant, and the redundant copy doubled the push size that was already
+over GitHub's limit.</td><td><b>Removed.</b> No page reads it; the topic pages slice
+<code>data/snapshot.json</code> at render time. Do not re-add it.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td></tr>
+<tr><td>N-3</td><td><b>Fees are a model, not an exchange confirmation</b><br>The quadratic general
+form uses the constant <code>0.07</code>, which is not restated on the docs site, so the figure cannot
+be confirmed from a published document.</td><td>Every fee, and therefore every P&amp;L, is a
+calculation rather than a reported number.</td><td>Fees are computed in Decimal and rounded up to
+six decimals exactly as the fee-rounding page specifies, the multiplier is taken from the series' own
+<code>fee_multiplier</code>, and every ledger row is labelled <code>fee_basis: &ldquo;quadratic model,
+0.07 constant &mdash; not exchange-confirmed&rdquo;</code>. The page shows that label beside each fee
+instead of presenting it as a fact.</td><td><a href="https://docs.kalshi.com/getting_started/fee_rounding">fee rounding</a>, <a href="https://docs.kalshi.com/api-reference/market/get-series">get-series</a></td></tr>
+<tr><td>N-4</td><td><b>Near-term rows come from a different request than event rows</b><br>The event
+pagination never returned a market closing inside 90 days, so every time-to-close rule could never
+fire &mdash; the desk legitimately opened 0 trades on a complete-looking snapshot.</td><td>A short-dated
+market would have been invisible, and a 0-trade run would look like a strategy failure.</td><td>
+<b>Fixed.</b> A separate pass unions short-dated open markets in through the documented
+<code>GET /markets?status=open&amp;max_close_ts=&lt;now + window&gt;</code> filter. Rows from that pass
+are tagged <code>source_pass: &ldquo;near_term&rdquo;</code>, and the snapshot reports
+<code>near_term_markets_added</code> and <code>near_term_window_hours</code>. They are a different
+request, so they are disclosed as such rather than blended in.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td></tr>
+<tr><td>N-5</td><td><b>Resolution rows are gathered per series, so the count is a lower bound</b><br>
+The earlier global <code>status=settled</code> scan returned 0 in-scope rows for 5 hours and the
+snapshot reported <code>resolved_in_scope: 0</code>.</td><td>Resolved markets would have been
+recorded as unresolved, and the resolution table would have been silently empty.</td><td>
+<b>Fixed.</b> The collector now queries each in-scope series with the documented
+<code>series_ticker=&hellip;&amp;status=settled&amp;min_settled_ts=&hellip;</code> filter, and keeps a
+row only when its own <code>event_ticker</code> really belongs to the queried series. Remaining
+uncertainty: the list is capped per series, so <code>resolved_in_scope</code> is a lower bound and is
+labelled as such.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td></tr>
+<tr><td>N-6</td><td><b>A simulated fill assumes the full size is available</b><br>The desk takes the
+posted ask as executable for the whole simulated size.</td><td>A real order could be filled worse, or
+not at all, so P&amp;L is optimistic.</td><td>Stated on the page and in every ledger row; the
+alternative (consulting the order book) is noted as an open improvement, and the desk publishes how
+many rule matches produced no order and why, so an empty book is visible.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks">get-multiple-market-orderbooks</a></td></tr>
+<tr><td>N-7</td><td><b>The alert desk's two streams differ in granularity, and its screen is a
+heuristic</b><br>The dashboard now runs two scrolling chats of &ge; $0.10 swings: <i>all events</i> and
+<i>model screen &mdash; high ROI</i>. Lines come from a browser-side poll of the official demo Trade API
+(documented <code>tickers=</code> filter) every 20 s, plus a coarser stream derived from the
+collector's 10-minute tick history. The screen is a deterministic filter over official fields
+(entry price, 24 h volume, time to close), not a forecast.</td><td>A reader could read a
+&ldquo;high ROI&rdquo; line as a prediction, and could not tell which lines are live and which are
+sampled.</td><td>Every line is tagged <span class="pill ok">live poll</span> or
+<span class="pill">snapshot</span>, the screen thresholds are printed on the page, and the potential
+ROI shown is labelled arithmetic rather than a claim. If the live poll is blocked, the desk says so
+in the status banner and keeps the snapshot stream instead of pretending to be live. Swing
+comparisons use a 1e-9 tolerance, because <code>1.00 - 0.90</code> is
+<code>0.09999999999999998</code> in binary floating point and a real $0.10 move must not be dropped.
+The &ldquo;possible context&rdquo; link is a news search tagged <span class="pill flag">not an official
+source</span> (same class as F13).</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>, <a href="https://docs.kalshi.com/getting_started/quick_start_websockets">websockets quick start</a></td></tr>
+</tbody></table></div>
+
 <p class="lead"><b>Policy:</b> every table row links to an official source. Values that cannot be
 confirmed from official sources stay blank and flagged as unverified &mdash; never inferred.</p>
 

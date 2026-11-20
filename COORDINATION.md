@@ -2,7 +2,7 @@
 
 Session ID: `e88eb254` (branch `arena/e88eb254-demo2`, base `6072808` on `main`)
 Earlier sessions merged into this repository: `e3f65782`, `3420a90d`, `fed802ba`, `f1751c8f`, `406a2f21`
-Last updated: 2026-11-20 (session e88eb254, after the merge with `fed802ba`'s work)
+Last updated: 2026-11-20 (session 7085e643)
 
 > Rule: claim a task (session ID + file scope) and commit/push the claim **before** starting it.
 > Never start a task another session has claimed. Keep scopes non-overlapping.
@@ -24,11 +24,11 @@ Last updated: 2026-11-20 (session e88eb254, after the merge with `fed802ba`'s wo
 | 19 | Line-by-line verification, sources, flagged, repo review | **done** | e88eb254 | `pages/{verification,sources,flagged,repo-review}.html` |
 | 20 | Integration: CI gate, link check, render test, PR, merge, deploy | **done** | e88eb254 | `.github/workflows/ci.yml`, `tools/check.py`, `tools/build_site.py`, `tools/build_content.py`, `README.md`, all pages |
 | 21 | Add demo API key secrets to enable portfolio + execution | **needs review (owner action)** | unclaimed | repository secrets only — see `pages/questions.html` Q4 |
-| 22 | K-1 Fix the broken data pipeline: bound published file sizes (GitHub 100 MB push limit) + pre-push size guard | **in progress** | 7085e643 | `tools/collector.py`, `tools/guard_sizes.py`, `.github/workflows/refresh-data.yml`, `.gitignore`, `session-7085e643/**` |
+| 22 | K-1 Fix the broken data pipeline: bound published file sizes (GitHub 100 MB push limit) + pre-push size guard | **done** | 7085e643 | `tools/collector.py`, `tools/guard_sizes.py`, `.github/workflows/refresh-data.yml`, `.gitignore`, `session-7085e643/**` |
 | 23 | K-2 Live alert desk: two scrolling alert chats (all events / high-ROI screen), ≥$0.10 swing detection on browser-polled prices | **in progress** | 7085e643 | `assets/alerts.js`, `assets/site.js`, `assets/style.css`, `tools/build_site.py` (DASH_BODY/DASH_JS), generated `index.html` |
-| 24 | K-3 Automated simulated trade loop (strategies → ledger → page) run by the refresh workflow | **in progress** | 7085e643 | `tools/paper_trade.py`, `pages/paper-trading.html` (generated), `data/paper_ledger.json`, `session-7085e643/tests/**` |
-| 25 | K-4 Landing page + nav simplification (clean entry point, topics separated, registers grouped) | **in progress** | 7085e643 | `tools/build_site.py` (NAV, index body), `README.md`, generated `index.html` |
-| 26 | K-5 Registers: live re-verification rows, new flags, executive summary refresh | **in progress** | 7085e643 | `tools/build_content.py`, `pages/{verification,flagged,executive-summary,suggestions,questions}.html` (generated), `docs/*` |
+| 24 | K-3 Automated simulated trade loop (strategies → ledger → page) run by the refresh workflow | **done** | 7085e643 | `tools/paper_trade.py`, `pages/paper-trading.html` (generated), `data/paper_ledger.json`, `session-7085e643/tests/**` |
+| 25 | K-4 Landing page + nav simplification (clean entry point, topics separated, registers grouped) | **in progress** (nav entry for the desk added; landing-page regrouping still open) | 7085e643 | `tools/build_site.py` (NAV, index body), `README.md`, generated `index.html` |
+| 26 | K-5 Registers: live re-verification rows, new flags, executive summary refresh | **in progress** (N-1…N-6 flags added; verification/summary refresh still open) | 7085e643 | `tools/build_content.py`, `pages/{verification,flagged,executive-summary,suggestions,questions}.html` (generated), `docs/*` |
 | 27 | K-6 Final integration: take over idle claims, triage the 4 stale conflicting PRs, PR → main, merge, Pages confirm, record | **unclaimed → mine on push** | 7085e643 | `COORDINATION.md`, shared `index.html`/nav, PR operations |
 | 28 | Consolidate the 8 duplicated subsites into one canonical site by deleting `desk/`-style parallel trees | **not started — needs owner decision** | unclaimed | other sessions' trees; see S5 / K-4 (documented as a register, not deleted) |
 
@@ -1138,3 +1138,108 @@ the alert desk polls public REST instead.
 in the board rows above. If another session resumes and wants `tools/build_site.py`,
 `assets/*`, `index.html`, `pages/*`, `data/*` or `README.md`, it must log a request here first —
 they are shared outputs of the integration session (this rule already governs rows 12–20).
+
+
+## Work record — session `7085e643` (branch `arena/7085e643-demo2`, 2026-11-20, ~19:45–20:0x UTC)
+
+### What this session delivered this turn
+
+**K-1 (row 22 — done).** The publish payload is now bounded, so the refresh job can actually
+push. `tools/collector.py` applies a publish budget (`PUB_MAX_ROWS_PER_TOPIC` then a byte budget
+with a halving loop, `HISTORY_MAX_POINTS 144`, `API_LOG_KEEP 150`), drops the `by_topic` copy
+(20.23 MB of the 47.26 MB file, unread by any page), records `publish_policy` + `coverage`
+(`published_markets` vs `universe_markets`, `complete_enumeration: false`) and `counts.published_markets`.
+The full universe stays in `data/out/` (gitignored) and is uploaded as the run artifact.
+`tools/guard_sizes.py` is a pre-commit step that fails the job and names the oversized file.
+`data/out/` and `data/paper_ledger.json` handling are in `.gitignore`/`.github/workflows/refresh-data.yml`.
+
+**K-3 (row 24 — done).** `tools/paper_trade.py` is the simulated desk: four documented strategies,
+fills only at the official `yes_ask_dollars`/`no_ask_dollars` (never invented), Decimal fee rounding
+up to six decimals per the official fee page, settlement from `settlement_value_dollars` with a
+`result` fallback, `--selftest` as the CI gate, and `--dry-run` for side-effect-free checks.
+`pages/paper-trading.html` renders the ledger with the SIMULATED notice, the fee basis label, the
+method table and the "why so few fills" counters. The refresh workflow runs it and commits
+`data/paper_ledger.json`.
+
+**Collector fixes behind both.**
+1. `collect_resolutions` now queries each in-scope series with the documented
+   `series_ticker=…&status=settled&min_settled_ts=…` shape instead of scanning the global
+   `status=settled` feed and filtering afterwards — that scan returned 0 in-scope rows for 5 h
+   (`resolved_in_scope: 0` was a collector bug, not an API gap). A returned row is kept only if its
+   own `event_ticker` belongs to the queried series, so a topic label can never be attached to the
+   wrong market; a foreign row is logged and dropped.
+2. `collect_near_term()` unions short-dated open markets in through the documented
+   `GET /markets?status=open&max_close_ts=<now + NEXT_TERM_HOURS>` filter. Verified live: the first
+   page returns `KXCRYPTOLEAD15M-26NOV201745-XRP` (`close_time 2026-11-20T22:45:00Z`, ~3 h out) which
+   the event pagination never surfaces. Rows carry `source_pass: "events" | "near_term"`, and the
+   snapshot reports `near_term_markets_added` + `near_term_window_hours`. This is why the desk was
+   opening 0 trades on a complete-looking snapshot: 0 in-scope markets closed inside 90 days, and only
+   2 usable `yes_ask_dollars` values in all 10,241 rows.
+
+**K-2 (row 23 — still open).** The two scrolling alert chats (all events / high-ROI screen) exist
+nowhere in this repository. `assets/alerts.js` is claimed but not written. Not blocked by anything
+else; it needs `assets/site.js` + `tools/build_site.py` (DASH_BODY/DASH_JS) + `assets/style.css`.
+
+### Sources used (official only; all read this turn)
+
+- `https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&max_close_ts=1795214873&limit=20`
+  — the short-dated query shape used by `collect_near_term`; rows carry `close_time`,
+  `expected_expiration_time`, `latest_expiration_time`, `can_close_early`, `settlement_timer_seconds`,
+  `notional_value_dollars`, `price_level_structure`, `price_ranges`, `previous_*`, and quoted
+  `yes_ask_dollars "0.0000"` / `no_ask_dollars "1.0000"` with `volume_24h_fp "0.00"`.
+- `https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTC&status=settled&limit=2`
+  — settled rows carry `result`, `settlement_ts`, `settlement_value_dollars`: the basis of settlement.
+- `https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC` — `fee_type "quadratic"`,
+  `fee_multiplier 1`, copied onto every scope row as `series_fee_type`/`series_fee_multiplier`.
+- `https://docs.kalshi.com/getting_started/fee_rounding` — fee = `ceil` of the model fee to six
+  decimals; implemented in `Decimal`, not `float` (a float `ceil` overcharges by a micro-dollar).
+- `https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks` — the unused route to
+  replacing the 12-orderbook cap and to checking whether a posted ask could absorb a simulated size.
+- `https://docs.kalshi.com/api-reference/exchange/get-series-fee-changes`,
+  `https://docs.kalshi.com/api-reference/market/get-series` — `FeeType` enum; `0.07` is not restated
+  on the docs site, so every derived fee stays labelled.
+- `https://docs.kalshi.com/llms.txt` — doc index used to find real paths (`getting_started/fees` does
+  not exist).
+- `https://external-api.demo.kalshi.co/trade-api/v2/exchange/status` — `exchange_active true`,
+  `trading_active true`, 4 shards (so `gas 0` / `culture 0` are scope-mapping facts, not an outage).
+
+### Verification performed this turn
+
+- `python3 tools/paper_trade.py --selftest` → passes: 26 contracts / $24.70 / fee 0.086450 on YES at
+  0.95; 500 contracts / $25.00 on NO at 0.05; realized +1.30 / −25.00; zero fills when no ask is usable.
+- `python3 tools/paper_trade.py --dry-run` → `would open 0, settle 0, mark 0; equity $1,000.00` on the
+  committed snapshot (the diagnostic that exposed the coverage gap, now fixed by the near-term pass).
+- `python3 tools/paper_trade.py` → writes `data/paper_ledger.json` (schema `kalshi-paper-ledger/1`).
+- `python3 session-7085e643/tests/test_pipeline.py` → all 21 offline assertions pass: 600 rows at a
+  300/topic cap, `by_topic` absent, byte budget halving 75/topic (113,554 bytes vs 200,000),
+  deterministic selection, history capped at 144 points/40 keys, `api_log` trimmed to 150,
+  resolutions kept per queried series, guard naming an oversized file.
+- `python3 session-eeb796d7/tools/test_collector_fix.py` → 13/13 pass after the row-builder refactor.
+- `python3 tools/build_site.py` + `python3 tools/build_content.py` → all 18 pages regenerate, including
+  the new `pages/paper-trading.html`.
+- `python3 tools/check.py` → **OK**: links, nav (25 entries, derived from `tools/build_site.py` NAV),
+  data, secrets and inline-script syntax all clean.
+
+### Irregularities and judgement calls (mirrored on `pages/flagged.html` as N-1…N-6)
+
+- **The published snapshot is bounded, not the universe** — N-1: cap + byte budget + dropped counts
+  are disclosed in `publish_policy`/`coverage` rather than left implicit.
+- **Fees are a model** — N-3: `fee_basis: "quadratic model, 0.07 constant — not exchange-confirmed"`
+  on every ledger row and on the page; the constant is not restated on docs.kalshi.com.
+- **Near-term rows come from a different request** — N-4: `source_pass: "near_term"` + the window
+  hours are published, so two populations are never blended silently.
+- **Resolutions are a lower bound** — N-5: per-series queries with a per-series cap.
+- **Simulated fills assume full size at the posted quote** — N-6: the order book is not consulted;
+  the desk publishes how many rule matches produced no order and why.
+- **README's "no sandbox egress" claim is inaccurate** — the authoring sandbox's `fetch_page` reaches
+  docs.kalshi.com and the demo API; only `bash`/python egress fails (TLS EOF). Recorded here rather than
+  silently propagated.
+
+### PR / deploy status (K-6)
+
+Not yet created, deliberately. Conditions not yet met: the alert desk (row 23) is not delivered, and
+the refresh pipeline has **not** been observed green in this session (the push step was failing every
+run at claim time; the fix is committed but unproven against a live runner). `gh`/`git` connectivity to
+github.com also went intermittently EOF mid-turn. The integration PR will be created, merged and
+recorded here once the pipeline is green and the alert desk exists. The four pre-existing PRs
+(#34, #36, #40, #44) remain OPEN and `CONFLICTING`/`DIRTY` — triaged, not merged.

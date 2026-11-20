@@ -69,9 +69,39 @@ tools/collector.py  ──► data/*.json ──►  pages read the snapshot
    └─ writes an HTTP log per request      missing values render as "—"
 ```
 
-The authoring sandbox cannot reach `external-api.demo.kalshi.co` (TLS handshake fails), so
-collection runs where egress works and every snapshot carries the status code of every request.
-Nothing is hard-coded into the HTML.
+The authoring sandbox's own shell/python egress to `external-api.demo.kalshi.co` fails (TLS handshake
+dies), so collection runs on GitHub Actions, where egress works, and every snapshot carries the
+status code of every request. The sandbox's page-fetching tool *does* reach the demo API and
+docs.kalshi.com, so reads are verified from here and only writes are moved to the runner. Nothing is
+hard-coded into the HTML.
+
+### The simulated strategy desk
+
+`tools/paper_trade.py` runs on every refresh, after the collector and before the size guard. It places
+**simulated** orders against the collected official prices — entry at the posted
+`yes_ask_dollars`/`no_ask_dollars`, marks at `last_price_dollars`, settlement at
+`settlement_value_dollars` — and writes `data/paper_ledger.json`, which
+[`pages/paper-trading.html`](pages/paper-trading.html) renders. No order is sent to Kalshi, the order
+book is not consulted, and this is **not** the demo account's performance (the account needs the
+secrets in row 21 / Q4). Fees use the published quadratic general form with the series' own
+`fee_multiplier`, and every fee carries the label
+`fee_basis: "quadratic model, 0.07 constant — not exchange-confirmed"`. The desk's arithmetic is
+checked offline by `python3 tools/paper_trade.py --selftest`, which is its CI gate.
+
+### The live alert desk
+
+The dashboard's **Live alert desk** section renders two scrolling chats of sudden swings:
+**all events** and **model screen — high ROI**. Every line is an official `last_price_dollars` move
+of ≥ $0.10 between two consecutive observations of the same market. The primary stream is a browser
+poll of the official demo Trade API (`GET /markets?tickers=…`, the documented ticker filter) every
+20 s; lines built from the collector's 10-minute tick history are tagged `snapshot` so the two
+granularities are never confused. Each line links to the market's own page on Kalshi and keeps
+tracking it until the official `result` (yes/no) lands. The high-ROI chat is a disclosed heuristic
+screen over official fields — printed thresholds, arithmetic potential ROI, and a clear
+**not a forecast** label; the cause of a move is not returned by the API, so the "possible context"
+link is a news search tagged as not an official source (see `pages/flagged.html` N-7 / F13).
+Verified offline by `node session-7085e643/tests/test_alerts.cjs` (24 checks: screen cases, snapshot
+seeding, live polling, no duplicate alerts, sub-threshold moves, resolution, offline fallback).
 
 ## Trade execution
 

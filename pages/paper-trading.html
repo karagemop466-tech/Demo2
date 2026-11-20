@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Paper Trades · Kalshi Demo Dashboard</title>
+<meta name="description" content="Simulated strategy desk: rules, fills, settlement and P&L, with every assumption disclosed.">
+<link rel="stylesheet" href="../assets/style.css">
+</head><body>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/paper-trading.html" aria-current="page">Paper Trades</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<div class="wrap">
+<h1>Simulated strategy desk</h1>
+<div class="notice"><b>SIMULATED &mdash; not the demo account.</b> Every fill below was placed by this
+repository's own code at the <i>posted</i> quote taken from the collected snapshot. No order was sent
+to Kalshi, nothing was executed on the demo account, and <b>the order book was not consulted</b>, so
+execution at the full simulated size is an assumption. Fees are a model, not an exchange
+confirmation. The real account is reported separately on <a href="portfolio.html">Portfolio</a>.
+Details and the exact assumptions are in the method table below.</div>
+<p class="lead">Ledger <code>kalshi-paper-ledger/1</code> generated
+<b>2026-11-20T19:51:34+00:00</b> from snapshot
+<b>2026-11-20T14:10:44+00:00</b>. Start cash
+<b>$1,000.00</b> &rarr; cash <b>$1,000.00</b>,
+equity <b>$1,000.00</b> (cash + mark-to-market value of open positions (derived from last_price_dollars)). Realised P&amp;L
+<b>$0.00</b>, fees paid <b>$0.00</b>.
+<b>0</b> positions opened, <b>0</b> settled,
+<b>0</b> still open.</p><h2>Why so few (or no) fills</h2>
+<p class="lead">A rule that fires and produces no order is not the same as no opportunity. The ledger
+records how often that happened and why, so an empty book is visible rather than implied.</p>
+<div class="tablewrap"><table><thead><tr><th>Measure</th><th>This run</th><th>Meaning</th><th>Source</th></tr></thead><tbody>
+<tr><td>Rule screens that matched a market</td><td class="num">0</td>
+<td>a match with no order means the posted quote could not be taken at the simulated size; the desk never invents a fill price</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a></td></tr>
+<tr><td>Orders actually written</td><td class="num">0</td>
+<td>The desk never invents a fill price, so a quote that cannot be taken yields no order.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a></td></tr>
+<tr><td>Matches dropped: no usable ask</td><td class="num">0</td>
+<td>The side's official <code>yes_ask_dollars</code>/<code>no_ask_dollars</code> was not strictly inside (0, 1).</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a></td></tr>
+<tr><td>Matches dropped: size below one contract</td><td class="num">0</td>
+<td>Notional cap divided by the ask buys fewer than one 0.01-contract step.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a></td></tr>
+<tr><td>Matches dropped: insufficient paper cash</td><td class="num">0</td>
+<td>Cost plus fee exceeded the simulated cash balance.</td>
+<td><a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">fee rounding</a></td></tr>
+</tbody></table></div>
+<h2>Strategy performance</h2>
+<p class="lead">Each strategy is a pure screen over one market and its collected tick history. A
+verdict is withheld until at least 10 settled trades &mdash; below that the cell is left blank and flagged rather than described.</p><div class="tablewrap "><table><thead><tr><th>Strategy (rule in words)</th><th class="num">Matched</th><th class="num">Trades</th><th class="num">Settled</th><th class="num">Hit rate</th><th class="num">Realised P&amp;L</th><th class="num">Unrealised P&amp;L</th><th class="num">Fees</th><th class="num">ROI on cost</th><th>Verdict (blank = no claim yet)</th><th>Source</th></tr></thead><tbody><tr><td><b>fade_down_move</b><br><span class="mut">Buy YES at the posted ask after a >= $0.10 drop in the collected tick history, while the price is still <= $0.45.</span></td><td class="num"><span class="num"></span></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num"><span class="pill flag">unverified</span></span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num"><span class="pill flag">unverified</span></span></td><td><span class="mut">0 settled trades — too few to describe a pattern (threshold 10); nothing is claimed</span></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a>, <a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">fee rounding</a></td></tr><tr><td><b>ride_up_move</b><br><span class="mut">Buy YES at the posted ask after a >= $0.10 rise with meaningful 24h volume, capped at $0.90.</span></td><td class="num"><span class="num"></span></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num"><span class="pill flag">unverified</span></span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num"><span class="pill flag">unverified</span></span></td><td><span class="mut">0 settled trades — too few to describe a pattern (threshold 10); nothing is claimed</span></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a>, <a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">fee rounding</a></td></tr><tr><td><b>longshot_no_fade</b><br><span class="mut">Buy NO at the posted ask where YES is quoted at $0.90 or better and the market closes within 7 days.</span></td><td class="num"><span class="num"></span></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num"><span class="pill flag">unverified</span></span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num"><span class="pill flag">unverified</span></span></td><td><span class="mut">0 settled trades — too few to describe a pattern (threshold 10); nothing is claimed</span></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a>, <a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">fee rounding</a></td></tr><tr><td><b>converge_yes</b><br><span class="mut">Buy YES at the posted ask on a near-certain, high-volume market closing within 3 days (harvest the last cents).</span></td><td class="num"><span class="num"></span></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num"><span class="pill flag">unverified</span></span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num"><span class="pill flag">unverified</span></span></td><td><span class="mut">0 settled trades — too few to describe a pattern (threshold 10); nothing is claimed</span></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a>, <a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">fee rounding</a></td></tr></tbody></table></div>
+<h2>Trade ledger</h2>
+<p class="lead">Entry and exit prices are the official ask fields of the market at the moment of the
+run. A position is settled from the official settlement value when the market has resolved, and left
+open with a review flag otherwise &mdash; the desk does not guess a settlement.</p><div class="empty">No positions have been opened yet. On the published snapshot the desk matched no market whose posted ask was executable &mdash; see &ldquo;Why so few (or no) fills&rdquo; above.</div>
+<h2>Run history</h2><div class="tablewrap "><table><thead><tr><th class="num">Run</th><th>When (UTC)</th><th class="num">Opened</th><th class="num">Settled</th><th class="num">Cash</th><th class="num">Equity</th><th>Snapshot used</th></tr></thead><tbody><tr><td class="num"><span class="num">None</span></td><td></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num">0</span></td><td class="num"><span class="num">$0.00</span></td><td class="num"><span class="num">$0.00</span></td><td></td></tr></tbody></table></div>
+<h2>Method and assumptions</h2>
+<p class="lead">What the desk takes as given, and where each number comes from. Anything that
+cannot be confirmed is left blank and flagged above rather than estimated.</p>
+<div class="tablewrap"><table><thead><tr><th>Item</th><th>Basis used</th><th>Status</th><th>Source</th></tr></thead><tbody>
+<tr><td>Entry / exit price</td><td>The market's official <code>yes_ask_dollars</code> for a YES buy
+and <code>no_ask_dollars</code> for a NO buy, read straight from the collected snapshot. A side whose
+ask is not strictly inside (0, 1) is skipped &mdash; the desk never invents a price.</td>
+<td>Official field</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a></a></td></tr>
+<tr><td>Sizing</td><td>A fixed notional per position (see the tool), converted to whole contracts at the
+ask, so the number of contracts is derived arithmetic rather than a reported value.</td>
+<td>Derived</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a></a></td></tr>
+<tr><td>Fees</td><td><code>fee = ceil(0.07 &times; series fee_multiplier &times; contracts &times; p &times; (1 &minus; p))</code>
+to six decimals, where the multiplier is the series' own <code>fee_multiplier</code> captured by the
+collector. The 0.07 constant is the general quadratic schedule and is <b>not</b> restated on the docs
+site, so it is labelled a model wherever it appears.</td>
+<td><span class="pill flag">model, not exchange-confirmed</span><br>
+<code>fee_basis: &ldquo;quadratic model, 0.07 constant &mdash; not exchange-confirmed&rdquo;</code> &mdash;
+the label written on every ledger row</td>
+<td><a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener"><a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">fee rounding</a></a>,
+<a href="https://docs.kalshi.com/api-reference/market/get-series" target="_blank" rel="noopener"><a href="https://docs.kalshi.com/api-reference/market/get-series" target="_blank" rel="noopener">get-series</a></a></td></tr>
+<tr><td>Marking open positions</td><td><code>last_price_dollars</code>; a NO position is marked at
+<code>1 &minus; p</code>, which is the binary-market equivalence, and is labelled derived.</td>
+<td>Official field + derived side</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a></a></td></tr>
+<tr><td>Settlement</td><td>The market's official <code>settlement_value_dollars</code>, falling back to
+the official <code>result</code> field. A non-binary or absent result leaves the position open and sets
+<code>needs_review</code> instead of being guessed.</td>
+<td>Official field</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a></a></td></tr>
+<tr><td>Order book</td><td>Not consulted. Fills assume the full simulated size is available at the posted
+quote, which is optimistic; a real order could be filled worse or not at all.</td>
+<td><span class="pill flag">assumption</span></td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks" target="_blank" rel="noopener">get-multiple-market-orderbooks</a></td></tr>
+<tr><td>Demo-account performance</td><td>This ledger is separate from the real account. No demo API key
+exists in this repository, so the account itself stays &ldquo;not configured&rdquo;.</td>
+<td><span class="pill flag">not the demo account</span></td>
+<td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">api_keys</a></td></tr>
+<tr><td>Verification</td><td>The desk's arithmetic is checked by a hand-computed offline fixture
+(<code>python3 tools/paper_trade.py --selftest</code>), which is the CI gate for this page.</td>
+<td>Automated, offline</td><td><a href="../.github/workflows/refresh-data.yml">refresh-data.yml</a></td></tr>
+</tbody></table></div>
+<p class="lead">Reproduce: <code>python3 tools/paper_trade.py --dry-run</code> prints what the next run
+would do without writing anything; <code>python3 tools/paper_trade.py</code> advances the ledger and
+writes <code>data/paper_ledger.json</code>.</p>
+</div>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a> · <a href="../monitor/index.html">Read-only Monitor</a></div></div></footer>
+<script src="../assets/site.js"></script>
+
+</body></html>

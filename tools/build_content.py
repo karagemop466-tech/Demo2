@@ -1149,6 +1149,12 @@ wrong.</p>
 <li><b>F8</b>: the dashboard header shows the snapshot time and age, so stale data is visible.</li>
 <li><b>F9</b>: compare the in-scope series list per topic against the unclassified list in
   <code>data/snapshot.json</code>.</li>
+<li><b>N-1</b>: the snapshot states its own cap and its published-vs-universe counts; a topic at the
+  cap is bounded, not complete.</li>
+<li><b>N-3</b>: every fee is tagged as a model with the 0.07 constant, not as an exchange figure.</li>
+<li><b>N-4</b>: short-dated rows are tagged <code>source_pass: near_term</code> in the snapshot.</li>
+<li><b>N-7</b>: every alert line is tagged live poll or snapshot; the model screen is a filter with
+  printed thresholds, never a forecast.</li>
 </ul>
 """
     body += """
@@ -1171,11 +1177,278 @@ every navigation: <a href="../index.html">live dashboard</a> &middot;
 dashboard</a> &middot; <a href="../review.html">decision register</a>. Nothing published is removed.
 Full prior registers: <a href="../verified/flagged-for-review.html">verified/ (F-01&hellip;F-12, R-F1&hellip;R-F7)</a>
 &middot; <a href="../dashboard/flagged.html">dashboard/ (F1&hellip;F15, U1&hellip;U8)</a>.</p>
+
+<h2>Collector and desk findings (session 7085e643, 2026-11-20)</h2>
+<p class="lead">Findings from the collector bounds and the simulated desk work. Each row states what
+was changed and what is still a judgement call, so a reader can tell a bounded file from a complete
+one, and a modelled fee from an exchange-confirmed one.</p>
+<div class="tablewrap"><table><thead><tr><th>#</th><th>Irregularity / gap</th><th>Impact</th><th>Action taken / status</th><th>Source</th></tr></thead><tbody>
+<tr><td>N-1</td><td><b>The published snapshot is bounded, so it is not the full universe</b><br>The
+snapshot had grown to 111.97 MB, which GitHub rejected at the push step, so six consecutive
+refresh runs published nothing at all.</td><td>A reader could take the tables as the whole of the
+demo exchange, and no data was reaching the site.</td><td><b>Fixed.</b> The collector now applies a
+publish budget (rows per topic, then a byte budget with a halving loop) and the pre-push
+<code>tools/guard_sizes.py</code> fails the job before the commit step if any file is over budget. The
+snapshot carries <code>publish_policy</code> with its cap and <code>coverage</code> with
+<code>published_markets</code> vs <code>universe_markets</code>, and <code>complete_enumeration:
+false</code>. Dropped counts are published, not hidden.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td></tr>
+<tr><td>N-2</td><td><b>The <code>by_topic</code> copy duplicated the whole payload</b><br>
+20.23 MB of the 47.26 MB snapshot was a per-topic re-slicing of the same rows.</td><td>Nearly half of
+the published file was redundant, and the redundant copy doubled the push size that was already
+over GitHub's limit.</td><td><b>Removed.</b> No page reads it; the topic pages slice
+<code>data/snapshot.json</code> at render time. Do not re-add it.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td></tr>
+<tr><td>N-3</td><td><b>Fees are a model, not an exchange confirmation</b><br>The quadratic general
+form uses the constant <code>0.07</code>, which is not restated on the docs site, so the figure cannot
+be confirmed from a published document.</td><td>Every fee, and therefore every P&amp;L, is a
+calculation rather than a reported number.</td><td>Fees are computed in Decimal and rounded up to
+six decimals exactly as the fee-rounding page specifies, the multiplier is taken from the series' own
+<code>fee_multiplier</code>, and every ledger row is labelled <code>fee_basis: &ldquo;quadratic model,
+0.07 constant &mdash; not exchange-confirmed&rdquo;</code>. The page shows that label beside each fee
+instead of presenting it as a fact.</td><td><a href="https://docs.kalshi.com/getting_started/fee_rounding">fee rounding</a>, <a href="https://docs.kalshi.com/api-reference/market/get-series">get-series</a></td></tr>
+<tr><td>N-4</td><td><b>Near-term rows come from a different request than event rows</b><br>The event
+pagination never returned a market closing inside 90 days, so every time-to-close rule could never
+fire &mdash; the desk legitimately opened 0 trades on a complete-looking snapshot.</td><td>A short-dated
+market would have been invisible, and a 0-trade run would look like a strategy failure.</td><td>
+<b>Fixed.</b> A separate pass unions short-dated open markets in through the documented
+<code>GET /markets?status=open&amp;max_close_ts=&lt;now + window&gt;</code> filter. Rows from that pass
+are tagged <code>source_pass: &ldquo;near_term&rdquo;</code>, and the snapshot reports
+<code>near_term_markets_added</code> and <code>near_term_window_hours</code>. They are a different
+request, so they are disclosed as such rather than blended in.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td></tr>
+<tr><td>N-5</td><td><b>Resolution rows are gathered per series, so the count is a lower bound</b><br>
+The earlier global <code>status=settled</code> scan returned 0 in-scope rows for 5 hours and the
+snapshot reported <code>resolved_in_scope: 0</code>.</td><td>Resolved markets would have been
+recorded as unresolved, and the resolution table would have been silently empty.</td><td>
+<b>Fixed.</b> The collector now queries each in-scope series with the documented
+<code>series_ticker=&hellip;&amp;status=settled&amp;min_settled_ts=&hellip;</code> filter, and keeps a
+row only when its own <code>event_ticker</code> really belongs to the queried series. Remaining
+uncertainty: the list is capped per series, so <code>resolved_in_scope</code> is a lower bound and is
+labelled as such.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td></tr>
+<tr><td>N-6</td><td><b>A simulated fill assumes the full size is available</b><br>The desk takes the
+posted ask as executable for the whole simulated size.</td><td>A real order could be filled worse, or
+not at all, so P&amp;L is optimistic.</td><td>Stated on the page and in every ledger row; the
+alternative (consulting the order book) is noted as an open improvement, and the desk publishes how
+many rule matches produced no order and why, so an empty book is visible.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks">get-multiple-market-orderbooks</a></td></tr>
+<tr><td>N-7</td><td><b>The alert desk's two streams differ in granularity, and its screen is a
+heuristic</b><br>The dashboard now runs two scrolling chats of &ge; $0.10 swings: <i>all events</i> and
+<i>model screen &mdash; high ROI</i>. Lines come from a browser-side poll of the official demo Trade API
+(documented <code>tickers=</code> filter) every 20 s, plus a coarser stream derived from the
+collector's 10-minute tick history. The screen is a deterministic filter over official fields
+(entry price, 24 h volume, time to close), not a forecast.</td><td>A reader could read a
+&ldquo;high ROI&rdquo; line as a prediction, and could not tell which lines are live and which are
+sampled.</td><td>Every line is tagged <span class="pill ok">live poll</span> or
+<span class="pill">snapshot</span>, the screen thresholds are printed on the page, and the potential
+ROI shown is labelled arithmetic rather than a claim. If the live poll is blocked, the desk says so
+in the status banner and keeps the snapshot stream instead of pretending to be live. Swing
+comparisons use a 1e-9 tolerance, because <code>1.00 - 0.90</code> is
+<code>0.09999999999999998</code> in binary floating point and a real $0.10 move must not be dropped.
+The &ldquo;possible context&rdquo; link is a news search tagged <span class="pill flag">not an official
+source</span> (same class as F13).</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>, <a href="https://docs.kalshi.com/getting_started/quick_start_websockets">websockets quick start</a></td></tr>
+</tbody></table></div>
+
 <p class="lead"><b>Policy:</b> every table row links to an official source. Values that cannot be
 confirmed from official sources stay blank and flagged as unverified &mdash; never inferred.</p>
 """
     page(path="pages/flagged.html", title="Flagged for Review", active="flag", body=body,
          desc="Irregularities, gaps and judgement calls flagged for review, with sources.")
+
+
+# --------------------------------------------------------------------------- paper desk
+def build_paper_trading() -> None:
+    """Renders data/paper_ledger.json — the repository's own simulated strategy desk.
+
+    Every number here is produced by `tools/paper_trade.py` from official fields the
+    collector captured. The page says what was assumed, so a reader never mistakes a
+    simulation for the demo account.
+    """
+    led = {}
+    missing = False
+    p = ROOT / "data" / "paper_ledger.json"
+    if p.exists():
+        try:
+            led = json.loads(p.read_text())
+        except json.JSONDecodeError:
+            led = {}
+    else:
+        missing = True
+    s = led.get("summary") or {}
+    totals = s.get("totals") or {}
+    by_strategy = s.get("by_strategy") or {}
+    trades = led.get("trades") or []
+    runs = led.get("runs") or []
+    no_order = s.get("entry_rules_fired_but_no_order_this_run") or {}
+    fee_src = src("getting_started/fee_rounding", "fee rounding")
+    market_src = src("api-reference/market/get-markets", "get-markets")
+    series_src = src("api-reference/market/get-series", "get-series")
+
+    body = f"""<h1>Simulated strategy desk</h1>
+<div class="notice"><b>SIMULATED &mdash; not the demo account.</b> Every fill below was placed by this
+repository's own code at the <i>posted</i> quote taken from the collected snapshot. No order was sent
+to Kalshi, nothing was executed on the demo account, and <b>the order book was not consulted</b>, so
+execution at the full simulated size is an assumption. Fees are a model, not an exchange
+confirmation. The real account is reported separately on <a href="portfolio.html">Portfolio</a>.
+Details and the exact assumptions are in the method table below.</div>
+"""
+    if missing:
+        body += """<div class="empty">No ledger yet &mdash; <code>data/paper_ledger.json</code> is
+created by the first data-refresh run (<code>.github/workflows/refresh-data.yml</code>). Nothing is
+shown as zero: the desk simply has not run.</div>"""
+    else:
+        body += f"""<p class="lead">Ledger <code>{led.get('schema')}</code> generated
+<b>{led.get('generated_at_utc', 'n/a')}</b> from snapshot
+<b>{s.get('snapshot_generated_at_utc', 'n/a')}</b>. Start cash
+<b>${s.get('start_cash_dollars'):,.2f}</b> &rarr; cash <b>${s.get('cash_dollars'):,.2f}</b>,
+equity <b>${s.get('equity_dollars'):,.2f}</b> ({s.get('equity_definition')}). Realised P&amp;L
+<b>${s.get('realized_pnl_dollars'):,.2f}</b>, fees paid <b>${s.get('fees_paid_dollars'):,.2f}</b>.
+<b>{totals.get('trades', 0)}</b> positions opened, <b>{totals.get('settled', 0)}</b> settled,
+<b>{totals.get('open', 0)}</b> still open.</p>"""
+
+        if no_order:
+            body += f"""<h2>Why so few (or no) fills</h2>
+<p class="lead">A rule that fires and produces no order is not the same as no opportunity. The ledger
+records how often that happened and why, so an empty book is visible rather than implied.</p>
+<div class="tablewrap"><table><thead><tr><th>Measure</th><th>This run</th><th>Meaning</th><th>Source</th></tr></thead><tbody>
+<tr><td>Rule screens that matched a market</td><td class="num">{no_order.get('screened_and_matched')}</td>
+<td>{no_order.get('meaning', '')}</td><td><a href="{DOCS}/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a></td></tr>
+<tr><td>Orders actually written</td><td class="num">{no_order.get('orders_written')}</td>
+<td>The desk never invents a fill price, so a quote that cannot be taken yields no order.</td>
+<td><a href="{DOCS}/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a></td></tr>
+<tr><td>Matches dropped: no usable ask</td><td class="num">{no_order.get('reasons', {}).get('no_usable_ask')}</td>
+<td>The side's official <code>yes_ask_dollars</code>/<code>no_ask_dollars</code> was not strictly inside (0, 1).</td>
+<td><a href="{DOCS}/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a></td></tr>
+<tr><td>Matches dropped: size below one contract</td><td class="num">{no_order.get('reasons', {}).get('size_below_one_contract')}</td>
+<td>Notional cap divided by the ask buys fewer than one 0.01-contract step.</td>
+<td><a href="{DOCS}/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a></td></tr>
+<tr><td>Matches dropped: insufficient paper cash</td><td class="num">{no_order.get('reasons', {}).get('insufficient_paper_cash')}</td>
+<td>Cost plus fee exceeded the simulated cash balance.</td>
+<td><a href="{DOCS}/getting_started/fee_rounding" target="_blank" rel="noopener">fee rounding</a></td></tr>
+</tbody></table></div>"""
+
+        body += f"""
+<h2>Strategy performance</h2>
+<p class="lead">Each strategy is a pure screen over one market and its collected tick history. A
+verdict is withheld until at least 10 settled trades &mdash; below that the cell is left blank and flagged rather than described.</p>"""
+        rows = []
+        for name, sr in by_strategy.items():
+            hr = sr.get("hit_rate")
+            roi = sr.get("roi_on_cost")
+            hr_txt = ("" if hr is None else f"{100.0 * float(hr):.1f}%") or                      '<span class="pill flag">unverified</span>'
+            roi_txt = ("" if roi is None else f"{100.0 * float(roi):.1f}%") or                       '<span class="pill flag">unverified</span>'
+            rows.append([
+                f'<b>{name}</b><br><span class="mut">{sr.get("describe", "")}</span>',
+                f'<span class="num">{sr.get("screened_this_run", "")}</span>',
+                f'<span class="num">{sr.get("trades", 0)}</span>',
+                f'<span class="num">{sr.get("settled", 0)}</span>',
+                f'<span class="num">{hr_txt}</span>',
+                f'<span class="num">${sr.get("realized_pnl_dollars", 0):,.2f}</span>',
+                f'<span class="num">${sr.get("unrealized_pnl_dollars", 0):,.2f}</span>',
+                f'<span class="num">${sr.get("fees_dollars", 0):,.2f}</span>',
+                f'<span class="num">{roi_txt}</span>',
+                f'<span class="mut">{sr.get("verdict", "")}</span>',
+                f'<a href="{DOCS}/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets</a>, '
+                f'<a href="{DOCS}/getting_started/fee_rounding" target="_blank" rel="noopener">fee rounding</a>',
+            ])
+        body += table(["Strategy (rule in words)", "Matched", "Trades", "Settled", "Hit rate",
+                       "Realised P&amp;L", "Unrealised P&amp;L", "Fees", "ROI on cost",
+                       "Verdict (blank = no claim yet)", "Source"], rows,
+                      num_cols={1, 2, 3, 4, 5, 6, 7, 8})
+
+        body += """
+<h2>Trade ledger</h2>
+<p class="lead">Entry and exit prices are the official ask fields of the market at the moment of the
+run. A position is settled from the official settlement value when the market has resolved, and left
+open with a review flag otherwise &mdash; the desk does not guess a settlement.</p>"""
+        if trades:
+            rows = []
+            for t in trades:
+                u = t.get("source_url") or ""
+                link = (f'<a href="{u}" target="_blank" rel="noopener">{t.get("market_ticker", "")} on Kalshi</a>'
+                        if u and u.startswith("http") else
+                        '<span class="pill flag">source unverified</span>')
+                status = t.get("status") or ""
+                mark = t.get("mark_price_dollars")
+                rows.append([
+                    f'<span class="num">{t.get("id")}</span>',
+                    t.get("strategy", ""),
+                    t.get("topic", "") or '<span class="pill flag">unverified</span>',
+                    f'{t.get("market_ticker", "")}<br><span class="mut">{t.get("market_title", "") or "title unverified"}</span>',
+                    t.get("side", ""),
+                    f'<span class="num">{t.get("contracts", "")}</span>',
+                    f'<span class="num">${t.get("entry_price_dollars"):,.4f}</span> <span class="mut">{t.get("entry_field", "")}</span>',
+                    f'<span class="num">${t.get("cost_dollars", 0):,.2f}</span>',
+                    f'<span class="num">${t.get("fee_dollars", 0):,.6f}</span> <span class="mut">{t.get("fee_basis", "")}</span>',
+                    (f'<span class="num">${mark:,.4f}</span>' if mark is not None else
+                     '<span class="pill flag">no mark</span>'),
+                    status,
+                    t.get("close_time", "") or '<span class="pill flag">close time unverified</span>',
+                    t.get("reason", ""),
+                    link,
+                ])
+            body += table(["#", "Strategy", "Topic", "Market", "Side", "Contracts", "Entry",
+                           "Cost", "Fee (basis)", "Last mark", "Status", "Close time", "Rule trigger",
+                           "Source"], rows, num_cols={0, 5, 6, 7, 8, 9})
+        else:
+            body += ('<div class="empty">No positions have been opened yet. On the published snapshot '
+                     'the desk matched no market whose posted ask was executable &mdash; see '
+                     '&ldquo;Why so few (or no) fills&rdquo; above.</div>')
+
+        if runs:
+            body += """
+<h2>Run history</h2>"""
+            rows = [[f'<span class="num">{r.get("id")}</span>', r.get("run_at", ""),
+                     f'<span class="num">{r.get("opened", 0)}</span>',
+                     f'<span class="num">{r.get("settled", 0)}</span>',
+                     f'<span class="num">${r.get("cash", 0):,.2f}</span>',
+                     f'<span class="num">${r.get("equity", 0):,.2f}</span>',
+                     r.get("snapshot_generated_at_utc", "")]
+                    for r in runs[-20:]]
+            body += table(["Run", "When (UTC)", "Opened", "Settled", "Cash", "Equity",
+                           "Snapshot used"], rows, num_cols={0, 2, 3, 4, 5})
+
+    body += f"""
+<h2>Method and assumptions</h2>
+<p class="lead">What the desk takes as given, and where each number comes from. Anything that
+cannot be confirmed is left blank and flagged above rather than estimated.</p>
+<div class="tablewrap"><table><thead><tr><th>Item</th><th>Basis used</th><th>Status</th><th>Source</th></tr></thead><tbody>
+<tr><td>Entry / exit price</td><td>The market's official <code>yes_ask_dollars</code> for a YES buy
+and <code>no_ask_dollars</code> for a NO buy, read straight from the collected snapshot. A side whose
+ask is not strictly inside (0, 1) is skipped &mdash; the desk never invents a price.</td>
+<td>Official field</td><td><a href="{DOCS}/api-reference/market/get-markets" target="_blank" rel="noopener">{market_src}</a></td></tr>
+<tr><td>Sizing</td><td>A fixed notional per position (see the tool), converted to whole contracts at the
+ask, so the number of contracts is derived arithmetic rather than a reported value.</td>
+<td>Derived</td><td><a href="{DOCS}/api-reference/market/get-markets" target="_blank" rel="noopener">{market_src}</a></td></tr>
+<tr><td>Fees</td><td><code>fee = ceil(0.07 &times; series fee_multiplier &times; contracts &times; p &times; (1 &minus; p))</code>
+to six decimals, where the multiplier is the series' own <code>fee_multiplier</code> captured by the
+collector. The 0.07 constant is the general quadratic schedule and is <b>not</b> restated on the docs
+site, so it is labelled a model wherever it appears.</td>
+<td><span class="pill flag">model, not exchange-confirmed</span><br>
+<code>fee_basis: &ldquo;quadratic model, 0.07 constant &mdash; not exchange-confirmed&rdquo;</code> &mdash;
+the label written on every ledger row</td>
+<td><a href="{DOCS}/getting_started/fee_rounding" target="_blank" rel="noopener">{fee_src}</a>,
+<a href="{DOCS}/api-reference/market/get-series" target="_blank" rel="noopener">{series_src}</a></td></tr>
+<tr><td>Marking open positions</td><td><code>last_price_dollars</code>; a NO position is marked at
+<code>1 &minus; p</code>, which is the binary-market equivalence, and is labelled derived.</td>
+<td>Official field + derived side</td><td><a href="{DOCS}/api-reference/market/get-markets" target="_blank" rel="noopener">{market_src}</a></td></tr>
+<tr><td>Settlement</td><td>The market's official <code>settlement_value_dollars</code>, falling back to
+the official <code>result</code> field. A non-binary or absent result leaves the position open and sets
+<code>needs_review</code> instead of being guessed.</td>
+<td>Official field</td><td><a href="{DOCS}/api-reference/market/get-markets" target="_blank" rel="noopener">{market_src}</a></td></tr>
+<tr><td>Order book</td><td>Not consulted. Fills assume the full simulated size is available at the posted
+quote, which is optimistic; a real order could be filled worse or not at all.</td>
+<td><span class="pill flag">assumption</span></td>
+<td><a href="{DOCS}/api-reference/market/get-multiple-market-orderbooks" target="_blank" rel="noopener">get-multiple-market-orderbooks</a></td></tr>
+<tr><td>Demo-account performance</td><td>This ledger is separate from the real account. No demo API key
+exists in this repository, so the account itself stays &ldquo;not configured&rdquo;.</td>
+<td><span class="pill flag">not the demo account</span></td>
+<td><a href="{DOCS}/getting_started/api_keys" target="_blank" rel="noopener">api_keys</a></td></tr>
+<tr><td>Verification</td><td>The desk's arithmetic is checked by a hand-computed offline fixture
+(<code>python3 tools/paper_trade.py --selftest</code>), which is the CI gate for this page.</td>
+<td>Automated, offline</td><td><a href="../.github/workflows/refresh-data.yml">refresh-data.yml</a></td></tr>
+</tbody></table></div>
+<p class="lead">Reproduce: <code>python3 tools/paper_trade.py --dry-run</code> prints what the next run
+would do without writing anything; <code>python3 tools/paper_trade.py</code> advances the ledger and
+writes <code>data/paper_ledger.json</code>.</p>"""
+    page(path="pages/paper-trading.html", title="Paper Trades", active="paper", body=body,
+         desc="Simulated strategy desk: rules, fills, settlement and P&L, with every assumption disclosed.")
 
 
 # --------------------------------------------------------------------------- repo review
@@ -1438,6 +1711,7 @@ if __name__ == "__main__":
     build_questions()
     build_verification()
     build_flagged()
+    build_paper_trading()
     build_repo_review()
     build_sources()
     print("content pages built")

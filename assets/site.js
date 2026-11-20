@@ -135,7 +135,9 @@
       var a = series[i - 1], b = series[i];
       if (a.v === null || a.v === undefined || b.v === null || b.v === undefined) continue;
       var change = b.v - a.v;
-      if (Math.abs(change) >= thr) {
+      /* tolerant compare: 0.50 - 0.40 is 0.09999999999999998 in binary floats, and a
+         genuine $0.10 move must not be dropped from the chart markers because of it */
+      if (Math.abs(change) >= thr - 1e-9) {
         jumps.push({
           t: b.t, fromV: a.v, toV: b.v, change: change,
           dir: change > 0 ? 'up' : 'down',
