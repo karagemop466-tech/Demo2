@@ -564,6 +564,12 @@ def page_verification():
 {('<div class="tablewrap"><table><thead><tr><th>Request</th><th>Status</th><th>Detail</th></tr></thead><tbody>' + err_html + '</tbody></table></div>') if errs else '<p class="small">No request errors in this run.</p>'}
 <p class="small muted">{META.get("https_requests", 0)} requests issued.</p>
 
+<h2>Series breadth actually collected</h2>
+<p class="small muted">Each topic is capped at {META.get("limits", {}).get("max_series_per_topic", 40)} series per run so the job finishes inside a scheduled slot. Where a topic has more series than that, the number skipped is listed here — it is never silently dropped.</p>
+<div class="tablewrap"><table><thead><tr><th>Topic</th><th class="num">Series skipped</th></tr></thead><tbody>
+{''.join(f'<tr><td>{badge(TOPIC_META[t]["title"], TOPIC_META[t]["cls"])}</td><td class="num">{n}</td></tr>' for t, n in (D.get("series_truncated_per_topic") or {}).items() if t in TOPIC_META)}
+</tbody></table></div>
+
 <h2>What is not verified</h2>
 <table><tbody>
 <tr><td class="small">Authentication, portfolio endpoints, order placement</td><td class="small">No key exists, so none of these were exercised. Anything they return is unknown here. <a href="questions.html#Q16">Q16</a></td></tr>

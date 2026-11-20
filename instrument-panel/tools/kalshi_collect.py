@@ -14,6 +14,7 @@ import json
 import os
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -106,9 +107,11 @@ ADJACENT = {
 
 MAX_MARKETS_PER_TOPIC = 400          # metadata copies, per topic
 MAX_ORDERBOOKS_PER_TOPIC = 30        # live depth snapshots, per topic
-MAX_TRADE_MARKETS_PER_TOPIC = 10     # trade-history pulls, per topic
-MAX_RESOLVED_PER_TOPIC = 60          # settled markets, per topic
-REQUEST_PAUSE = 0.12                 # be polite: unauthenticated limits are unpublished
+MAX_TRADE_MARKETS_PER_TOPIC = 5      # trade-history pulls, per topic (largest markets)
+MAX_RESOLVED_PER_SERIES = 8          # settled markets copied per series
+REQUEST_PAUSE = 0.05                 # be polite: unauthenticated limits are unpublished
+MAX_SERIES_PER_TOPIC = 40            # cap the series breadth per topic (documented in meta)
+SERIES_WORKERS = 6                   # concurrent per-series fetches
 
 MARKET_FIELDS = [
     "ticker", "event_ticker", "market_type", "title", "yes_sub_title", "status",
@@ -380,15 +383,36 @@ def main():
     orderbooks = {}
     trade_history = {}
     event_titles = {}
+    truncated = {}
 
     for topic in SCOPE:
         tid = topic["id"]
         mkts = []
-        for s in found.get(tid, []):
+        series_list = found.get(tid, [])[:MAX_SERIES_PER_TOPIC]
+        truncated[tid] = max(0, len(found.get(tid, [])) - len(series_list))
+
+        def fetch_series(s):
+            """(series, open markets, settled markets, events, urls) for one series."""
+            st = s.get("ticker")
+            evs, ev_url = collect_events(st, "open")
+            om, om_url = collect_markets(st, "open")
+            sm, sm_url = collect_markets(st, "settled")
+            return s, om, sm, evs, om_url, sm_url, ev_url
+
+        results = []
+        with ThreadPoolExecutor(max_workers=SERIES_WORKERS) as pool:
+            futs = {pool.submit(fetch_series, s): s for s in series_list}
+            for f in as_completed(futs):
+                try:
+                    results.append(f.result())
+                except Exception as e:  # a single series failing never sinks the run
+                    _errors.append({"url": "series " + str(futs[f].get("ticker")), "status": None,
+                                    "detail": f"{type(e).__name__}: {e}"})
+
+        results.sort(key=lambda r: str(r[0].get("ticker")))
+        for s, om, sm, evs, om_url, sm_url, ev_url in results:
             st_ticker = s.get("ticker")
             series_rows.append(slim_series(s, tid))
-            # open markets
-            evs, ev_url = collect_events(st_ticker, "open")
             for e in evs:
                 event_titles[e.get("event_ticker")] = {
                     "title": e.get("title"),
@@ -397,14 +421,11 @@ def main():
                     "event_ticker": e.get("event_ticker"),
                     "source_url": ev_url,
                 }
-            om, om_url = collect_markets(st_ticker, "open")
-            # settled markets (resolution tracking)
-            sm, sm_url = collect_markets(st_ticker, "settled")
             for m in om:
                 m["_source_markets_url"] = om_url
                 m["_series"] = s
                 mkts.append(m)
-            for m in sm[:MAX_RESOLVED_PER_TOPIC]:
+            for m in sm[:MAX_RESOLVED_PER_SERIES]:
                 row = {k: m.get(k) for k in MARKET_FIELDS}
                 row.update(
                     {
@@ -524,6 +545,10 @@ def main():
             "request_errors": _errors,
             "endpoints": ENDPOINTS,
             "docs": DOCS,
+            "limits": {"max_series_per_topic": MAX_SERIES_PER_TOPIC, "max_markets_per_topic": MAX_MARKETS_PER_TOPIC,
+                    "max_orderbooks_per_topic": MAX_ORDERBOOKS_PER_TOPIC,
+                    "max_trade_markets_per_topic": MAX_TRADE_MARKETS_PER_TOPIC,
+                    "max_resolved_per_series": MAX_RESOLVED_PER_SERIES},
             "note": ("All values are copied from Kalshi DEMO Trade API responses or are arithmetic over copied "
                      "values. Kalshi states demo prices may not be reflective of real markets."),
         },
@@ -543,6 +568,7 @@ def main():
         "trades": trade_history,
         "events": event_titles,
         "calibration": calibration,
+        "series_truncated_per_topic": truncated,
         "counts": {
             "series_in_scope": len(series_rows),
             "open_markets_in_scope": sum(len(v) for v in markets_by_topic.values()),
