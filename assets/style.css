@@ -125,3 +125,28 @@ dl.kv dd{margin:.1em 0 0}
   nav.main.open{display:flex}
   canvas.chart{height:260px}
 }
+
+/* ---------------- live alert chats (alerts.html / assets/alerts.js) ---------------- */
+.chatfeed {
+  max-height: 420px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 2px;
+}
+.chatmsg {
+  border: 1px solid var(--line, #24344d);
+  border-left: 4px solid var(--muted, #93a4bd);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.chatmsg.up { border-left-color: #00c389; }
+.chatmsg.down { border-left-color: #ef4444; }
+.chatmsg.res { border-left-color: #3b82f6; }
+.chatmsg.sys { border-left-style: dashed; }
+.chatmeta { margin-bottom: 2px; }
+.chatbody { font-size: 0.95em; }
+.chatlinks { margin-top: 4px; font-size: 0.85em; }
+.chatlinks a { margin-right: 2px; }

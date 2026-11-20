@@ -917,13 +917,44 @@ VERIFIED = [
   "derivable from the Kalshi API (no news/event field in price responses) and is flagged cause unverified.",
   "api-reference/market/get-market-candlesticks|api-reference/market/get-trades",
   "implemented in assets/site.js (KR.detectJumps) + chart markers in KR.drawChart; table renders on index.html", "By design"),
+ ("Get Trades tape query (live alerts)",
+  "<code>GET /markets/trades?limit=1000&amp;min_ts=&lt;unix seconds&gt;</code> returns completed "
+  "trades with <code>ticker</code>, <code>yes_price_dollars</code>, <code>count_fp</code>, "
+  "<code>created_time</code>, <code>trade_id</code>",
+  "api-reference/market/get-trades",
+  "read on page + live 200 JSON; sample prints preserved in data/dashboard_instrument.json trade blocks", "Verified"),
+ ("Order book raw response shape",
+  "<code>orderbook_fp.yes_dollars</code> / <code>orderbook_fp.no_dollars</code>, arrays of "
+  "[price, size]; ask depth is derived as 1 &#8722; p and labelled &#8220;derived&#8221; everywhere",
+  "api-reference/market/get-market-orderbook",
+  "read on page + parsed live in tools/collector.py (collect_orderbooks) and assets/alerts.js", "Verified"),
+ ("Live alert chats (moves of $0.10+, all events + model filter)",
+  "alerts.html runs two scrolling chats over official trade prints and quote polls (15 s cadence, "
+  "60 s backoff on HTTP 429). Swing cause is flagged unverified (F13); the high-ROI filter is a "
+  "labelled local heuristic (F22); markets are watched until the official result posts yes/no.",
+  "api-reference/market/get-trades|api-reference/market/get-markets|getting_started/rate_limits",
+  "implemented in assets/alerts.js against the request shapes verified in this table; no value is invented", "By design"),
+ ("Snapshot file-size bounds (data pipeline)",
+  "collector publishes the top rows per topic by estimated dollar volume, writes compact JSON "
+  "and refuses any data file over 90 MB; GitHub rejects pushes containing a file over 100 MB, "
+  "which is what failed every Refresh Kalshi demo data run on 2026-11-20 (COORDINATION.md A-1)",
+  "https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github",
+  "regression-tested offline in tests/test_collector_output.py (52 assertions); workflow tripwire step added", "By design"),
 ]
 
 
 def src_multi(p) -> str:
-    # one row can cite several official pages: "|" string or tuple/list of paths
+    # one row can cite several official pages: "|" string or tuple/list of paths.
+    # Full https URLs are rendered as-is (used for non-Kalshi official sources such
+    # as docs.github.com); everything else is a docs.kalshi.com path.
     paths = p if isinstance(p, (tuple, list)) else p.split("|")
-    return ", ".join(src(x, x.rsplit("/", 1)[-1]) for x in paths)
+    out = []
+    for x in paths:
+        if x.startswith("http"):
+            out.append(f'<a href="{x}" target="_blank" rel="noopener">{x.split("//", 1)[1].split("/", 1)[0]}</a>')
+        else:
+            out.append(src(x, x.rsplit("/", 1)[-1]))
+    return ", ".join(out)
 
 
 def build_verification() -> None:
@@ -1113,6 +1144,17 @@ FLAGGED = [
   "Reversible by removing the <code>disabled</code> attributes when serving privately. "
   "Cross-scope request logged for session 6d75123b in COORDINATION.md.",
   "getting_started/api_keys"),
+ ("F22", "The high-ROI model is a transparent local heuristic, not an official measure",
+  "The Live Alerts page (alerts.html) filters one chat by a model score computed in the browser: "
+  "<code>score = 0.40&#183;liquidity + 0.30&#183;tightness + 0.30&#183;price action</code>, cutoff 0.60. "
+  "The Trade API exposes no ROI, edge or expected-return field (see the Market schema on Get Markets), "
+  "so the score is a labelled heuristic over official fields only (volume_fp, yes_bid/yes_ask, "
+  "and the count of observed $0.10+ swings this session).",
+  "A reader could mistake the model filter for a predictive, backtested or official ROI measure.",
+  "The formula and cutoff are printed beside the chat, every input is a visible column in the model "
+  "table, and the page states plainly that it is not financial advice and makes no outcome prediction. "
+  "Nothing is inferred from outside the API; detections themselves use only official prices.",
+  "api-reference/market/get-markets"),
 ]
 
 
