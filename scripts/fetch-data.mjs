@@ -129,6 +129,9 @@ let requestCount = 0;
  */
 async function get(path, { allow404 = false, retries = 6, note = '' } = {}) {
   const url = BASE + path;
+  // Be gentle: the demo API applies separate unauthenticated limits
+  // (https://docs.kalshi.com/getting_started/rate_limits).
+  await sleep(40);
   for (let attempt = 0; attempt <= retries; attempt += 1) {
     requestCount += 1;
     const started = Date.now();

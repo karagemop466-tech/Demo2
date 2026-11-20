@@ -8,8 +8,8 @@ name: Refresh Kalshi demo data snapshot
 #   GET /markets/{ticker}/orderbook
 # (see scripts/fetch-data.mjs header for the official doc links)
 #
-# After refreshing, the workflow re-deploys GitHub Pages so the published site
-# picks up the new snapshot.
+# Run diagnostics are posted to the GitHub issue "Kalshi data refresh log" so
+# they are readable without downloading workflow log archives.
 
 on:
   workflow_dispatch:
@@ -26,6 +26,7 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  issues: write
 
 concurrency:
   group: pages
@@ -66,14 +67,37 @@ jobs:
           node scripts/fetch-data.mjs 2>&1 | tee /tmp/fetch.log
           echo "exit_code=${PIPESTATUS[0]}" | tee -a /tmp/fetch.log
 
-      - name: Publish run diagnostics
-        if: always()
+      - name: Commit refreshed snapshot
+        id: commit
+        if: steps.fetch.outcome == 'success'
+        continue-on-error: true
         run: |
-          mkdir -p data
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data
+          if git diff --staged --quiet; then
+            echo "Snapshot unchanged - nothing to commit."
+          else
+            git commit -m "data: refresh Kalshi demo snapshot" || true
+            for attempt in 1 2 3 4; do
+              git pull --rebase origin "${GITHUB_REF_NAME}" || true
+              if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+                echo "Pushed snapshot."
+                exit 0
+              fi
+              echo "push attempt ${attempt} failed; retrying"
+              sleep 10
+            done
+            echo "::warning::Could not push the refreshed snapshot after 4 attempts."
+
+      - name: Publish run diagnostics to the tracking issue
+        if: always()
+        continue-on-error: true
+        run: |
           {
             echo "# refresh-data run diagnostics"
             echo
-            echo "- run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "- run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             echo "- commit: ${{ github.sha }}"
             echo "- branch: ${{ github.ref_name }}"
             echo "- finished (UTC): $(date -u)"
@@ -83,21 +107,24 @@ jobs:
             echo
             echo "## Snapshot harvest"
             cat /tmp/fetch.log 2>/dev/null || echo "(not run)"
-          } > data/last-run.md
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A data
-          if git diff --staged --quiet; then
-            echo "Nothing to commit."
+          } > /tmp/diagnostics.md
+          {
+            echo "<!-- kalshi-refresh-diagnostics -->"
+            echo
+            cat /tmp/diagnostics.md
+          } > /tmp/issue-body.md
+          EXISTING=$(gh issue list --state open --limit 100 --json number,title \
+            --jq '[.[] | select(.title == "Kalshi data refresh log")] | .[0].number' 2>/dev/null || echo "")
+          if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
+            gh issue comment "${EXISTING}" --body-file /tmp/issue-body.md || true
           else
-            git commit -m "data: refresh Kalshi demo snapshot"
-            git push
+            gh issue create --title "Kalshi data refresh log" --body-file /tmp/issue-body.md || true
           fi
 
       - name: Fail if harvest failed
         if: steps.fetch.outcome == 'failure'
         run: |
-          echo "::error::Snapshot harvest failed - see data/last-run.md"
+          echo "::error::Snapshot harvest failed - see the diagnostics issue"
           exit 1
 
       - name: Configure Pages
