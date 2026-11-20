@@ -1,1 +1,7 @@
-{"generated_at_utc":"2026-11-20T14:10:44+00:00","topic":"culture","count":0,"markets":[],"resolutions":[],"count_total":0,"capped":false,"cap_note":"Rows are capped at the top of the dollar-volume ranking so every published file stays under GitHub's 100 MB limit; count_total is the full in-scope count."}
+{
+ "generated_at_utc": "2026-11-20T14:10:44+00:00",
+ "topic": "culture",
+ "count": 0,
+ "markets": [],
+ "resolutions": []
+}

@@ -196,13 +196,13 @@ price, and reports demo-account performance with trade categorisation and strate
 <p>This is a static GitHub Pages site, so it cannot hold a secret and a visitor&#8217;s browser
 cannot be the only data path. Instead:</p>
 <ol class="clean">
-<li>A GitHub Actions workflow runs <code>tools/collector.py</code> every 30 minutes against the
+<li>A GitHub Actions workflow runs <code>tools/collector.py</code> every 10 minutes against the
    official demo API (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment</a>).</li>
 <li>The collector writes <code>data/*.json</code>, including an <b>API log</b> of every request
    and its HTTP status, and commits the snapshot.</li>
 <li>The pages read those snapshots, so every number on screen traces back to a logged request.</li>
 </ol>
-<p class="small muted">Consequence stated plainly: the site is refreshed every 30 minutes, not
+<p class="small muted">Consequence stated plainly: the site is refreshed every 10 minutes, not
 tick-by-tick. The 60-second chart window is therefore often empty. Real-time would need a hosted
 WebSocket relay, which is raised as a decision in <a href="suggestions.html">Suggestions</a>.</p>
 </div>
@@ -236,7 +236,7 @@ WebSocket relay, which is raised as a decision in <a href="suggestions.html">Sug
 """ + table(["Question a decision-maker must settle", "Status", "Where to settle it"], [
  ["How is &#8220;highest dollar volume&#8221; defined - volume, open interest, or an estimate?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q1</a>'],
  ["Which series are authoritative for gas and golf (tag-based, since categories are Economics/Sports)?", '<span class="pill ok">Resolved - tags</span>', '<a href="api-reference.html">API reference</a>'],
- ["Is 30-minute snapshot freshness acceptable, or is live streaming required?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q3</a>'],
+ ["Is 10-minute snapshot freshness acceptable, or is live streaming required?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q3</a>'],
  ["Is a demo API key available for portfolio/execution?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q4</a>'],
  ["What is the minimum sample before a strategy may be stated?", '<span class="pill ok">Resolved - 5 resolved fills, flagged low confidence</span>', '<a href="analysis.html">Analysis</a>'],
  ["Should demo-derived strategies be treated as transferable to production?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q7</a>'],
@@ -252,7 +252,10 @@ data (<a href="flagged.html">F20</a>). The gas topic includes solar, electricity
 (<a href="flagged.html">F14</a>). The jump page cannot name a cause, because no official source links a price
 move to news (<a href="flagged.html">F18</a>), and snapshots are too coarse for intraday moves
 (<a href="flagged.html">F17</a>). A public page takes a demo private key as input
-(<a href="flagged.html">F21</a>).</p>
+(<a href="flagged.html">F21</a>). The live alert chats (<a href="../alerts.html">Live Alerts</a>) now run in the
+browser against the demo API and the simulated strategy lab runs without keys, but the high-ROI filter
+is a labelled local heuristic (<a href="flagged.html">F22</a>) and the simulation does not model fees
+or slippage (<a href="flagged.html">F23</a>).</p>
 <p>What remains open is definition and access: what &#8220;highest dollar amount&#8221; means, how fresh the data
 must be, whether a demo key will be supplied, and how much evidence is enough before a strategy is trusted.
 Those are listed, with the exact information needed to close them, on <a href="questions.html">Questions</a>.</p>
@@ -287,6 +290,25 @@ or maker.</p>
 <code>tools/execute_strategy.py</code>. Dry-run entries were validated but never sent. Only
 entries with an HTTP status were actually transmitted.</p>
 <div id="execTable"></div>
+
+<h2>Simulated strategy lab <span class="muted">— automated paper trading, no keys, nothing sent</span></h2>
+<p class="muted">From <code>data/paper_portfolio.json</code>, written hourly by
+<code>tools/paper_trade.py</code> (workflow <code>paper-trade.yml</code>). Four documented
+strategies — momentum, mean-reversion, longshot, favorite — trade the collected snapshot
+deterministically, trades are categorised by topic / price band / strategy, and open positions
+are settled on the official <code>result</code> (yes/no). This is a <b>SIMULATED</b> ledger:
+fees are not modeled and fills are assumed at the quoted ask (flagged
+<a href="flagged.html">F23</a>). Blank prices are skipped, never guessed.</p>
+<div id="paperState"></div>
+<div class="kpis" id="paperKpis"></div>
+<h3 class="small">Open positions</h3>
+<div id="paperPos"></div>
+<h3 class="small">Settled — tracked until resolution</h3>
+<div id="paperSettled"></div>
+<h3 class="small">Strategy performance by trade type</h3>
+<div id="paperStrats"></div>
+<h3 class="small">Trade log</h3>
+<div id="paperTrades"></div>
 
 <h2>Placing a demo order by hand is not required</h2>
 <p class="muted">Execution is driven by <code>data/strategy_plan.json</code> plus the
@@ -324,11 +346,7 @@ request shape are on <a href="api-reference.html">API reference</a>.</p>
       repository secrets. Balances, positions and fills are deliberately blank rather than zero,
       because "no key" and "empty account" are different facts.
       <br><span class="small muted">Requirement: <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API Keys</a></span></div>`;
-    $('kpis').innerHTML = `
-      <div class="kpi-card"><div class="k">Balance</div><div class="v">—</div><div class="s">no demo key</div></div>
-      <div class="kpi-card"><div class="k">Positions</div><div class="v">—</div><div class="s">not read</div></div>
-      <div class="kpi-card"><div class="k">Fills</div><div class="v">—</div><div class="s">not read</div></div>
-      <div class="kpi-card"><div class="k">Why blank</div><div class="s" style="font-size:.8rem">“no key” ≠ “zero balance”</div></div>`;
+    $('kpis').innerHTML = '';
     $('posTable').innerHTML = '<div class="empty">Blank - not connected.</div>';
     $('fillTable').innerHTML = '<div class="empty">Blank - not connected.</div>';
   } else {
@@ -384,6 +402,68 @@ request shape are on <a href="api-reference.html">API reference</a>.</p>
   }catch(e){
     $('execTable').innerHTML = '<div class="empty">No data/executions.json yet - the trade workflow has not run.</div>';
   }
+})();
+</script>
+<script>
+(async function(){
+  const $ = id=>document.getElementById(id);
+  let pp;
+  try{ pp = await KR.getJSON('data/paper_portfolio.json'); }catch(e){
+    $('paperState').innerHTML = '<div class="empty">No data/paper_portfolio.json yet — the paper-trade workflow has not run. It commits after its first run (Actions → “Paper trading simulation”).</div>';
+    return;
+  }
+  const t = pp.totals||{};
+  $('paperState').innerHTML = `<div class="notice info"><b>SIMULATED</b> — generated ${KR.when(pp.generated_at_utc)} · source snapshot ${KR.esc(pp.source_snapshot_generated_at||'—')} · no orders sent, no API key used · fees not modeled (F23).</div>`;
+  $('paperKpis').innerHTML = `
+    <div class="kpi-card"><div class="k">Equity (simulated)</div><div class="v">${KR.usd(t.equity_dollars,2)}</div><div class="s">cash + mark-to-market</div></div>
+    <div class="kpi-card"><div class="k">Cash</div><div class="v">${KR.usd(t.cash_dollars,2)}</div><div class="s">start $100.00</div></div>
+    <div class="kpi-card"><div class="k">Realized P&amp;L</div><div class="v">${KR.usd(t.realized_pnl_dollars,2)}</div><div class="s">on settlement</div></div>
+    <div class="kpi-card"><div class="k">Unrealized P&amp;L</div><div class="v">${KR.usd(t.unrealized_pnl_dollars,2)}</div><div class="s">mark at quoted bid</div></div>
+    <div class="kpi-card"><div class="k">Trades</div><div class="v">${KR.num(t.trades_total,0)}</div><div class="s">${KR.num(t.open_positions,0)} open · ${KR.num(t.settled_positions,0)} settled (yes ${KR.num((t.resolution_counts||{}).yes,0)} / no ${KR.num((t.resolution_counts||{}).no,0)})</div></div>`;
+  KR.renderTable($('paperPos'), [
+    {label:'Topic', get:p=>KR.topicPill(p.topic)},
+    {label:'Market', get:p=>`<b>${KR.esc(p.title||p.ticker)}</b><br><span class="muted small">${KR.esc(p.ticker)}</span>`},
+    {label:'Side', get:p=>KR.esc(p.side)},
+    {label:'Entry $', num:true, get:p=>KR.usd(p.entry_price_dollars,4)},
+    {label:'Mark $', num:true, get:p=>KR.usd(p.mark_price_dollars,4)+(p.mark_note?' <span class="pill flag">mark blank</span>':'')},
+    {label:'Count', num:true, get:p=>KR.num(p.count,0)},
+    {label:'Unrealized P&L', num:true, get:p=>KR.usd(p.unrealized_pnl_dollars,2)},
+    {label:'Strategy', get:p=>KR.esc(p.strategy)},
+    {label:'Source', get:p=>KR.link(p.source_url,'API row')}
+  ], pp.positions||[], 'No open simulated positions.');
+  KR.renderTable($('paperSettled'), [
+    {label:'Topic', get:p=>KR.topicPill(p.topic)},
+    {label:'Market', get:p=>`<b>${KR.esc(p.title||p.ticker)}</b><br><span class="muted small">${KR.esc(p.ticker)}</span>`},
+    {label:'Side', get:p=>KR.esc(p.side)},
+    {label:'Result', get:p=>KR.resultPill(p.result)},
+    {label:'Payout $', num:true, get:p=>KR.usd(p.payout_dollars,2)},
+    {label:'Realized P&L', num:true, get:p=>KR.usd(p.realized_pnl_dollars,2)},
+    {label:'Settled', get:p=>`<span class="small">${KR.when(p.settled_at_utc)}</span>`},
+    {label:'Settlement rule', get:p=>KR.link(p.settlement_source,'market settlement')}
+  ], pp.settled||[], 'Nothing has resolved yet — positions are tracked until yes/no.');
+  const stats = pp.strategy_stats||{};
+  KR.renderTable($('paperStrats'), [
+    {label:'Strategy', get:r=>`<b>${KR.esc(r.name)}</b><br><span class="muted small">${KR.esc((pp.definitions||{}).strategies ? ((pp.definitions.strategies[r.name])||'') : '')}</span>`},
+    {label:'Trades', num:true, get:r=>KR.num(r.s.trades,0)},
+    {label:'Open', num:true, get:r=>KR.num(r.s.open_positions,0)},
+    {label:'Settled', num:true, get:r=>KR.num(r.s.settled,0)},
+    {label:'Wins', num:true, get:r=>KR.num(r.s.wins,0)},
+    {label:'Losses', num:true, get:r=>KR.num(r.s.losses,0)},
+    {label:'Realized P&L', num:true, get:r=>KR.usd(r.s.realized_pnl_dollars,2)},
+    {label:'Cost deployed', num:true, get:r=>KR.usd(r.s.cost_dollars,2)}
+  ], Object.keys(stats).map(name=>({name, s:stats[name]})), 'No strategy trades yet.');
+  KR.renderTable($('paperTrades'), [
+    {label:'When', get:x=>`<span class="small">${KR.when(x.ts)}</span>`},
+    {label:'Topic', get:x=>KR.topicPill(x.topic)},
+    {label:'Market', get:x=>`<b>${KR.esc(x.title||x.ticker)}</b><br><span class="muted small">${KR.esc(x.ticker)}</span>`},
+    {label:'Side', get:x=>KR.esc(x.side)},
+    {label:'Price $', num:true, get:x=>KR.usd(x.price_dollars,4)},
+    {label:'Count', num:true, get:x=>KR.num(x.count,0)},
+    {label:'Cost $', num:true, get:x=>KR.usd(x.cost_dollars,2)},
+    {label:'Category', get:x=>`${KR.esc((x.category||{}).band||'')} / ${KR.esc((x.category||{}).strategy||x.strategy)}`},
+    {label:'Why', get:x=>`<span class="small">${KR.esc(x.reason||'')}</span>`},
+    {label:'Source', get:x=>KR.link(x.source_url,'API row')}
+  ], (pp.trades||[]).slice().reverse(), 'No simulated trades yet.');
 })();
 </script>"""
     body += """
@@ -531,10 +611,10 @@ SUGGESTIONS = [
          recommended="Implemented. Gas is found by the \u201cGas\u201d tag and golf by \u201cGolf\u201d "
                      "because their categories are Economics and Sports; elections, culture and "
                      "crypto use their category. Unmapped series are listed, never guessed."),
-    dict(id="S3", title="Raise data freshness from 30 minutes to live",
-         problem="GitHub Actions snapshots run every 30 minutes, so the 60-second chart window is "
+    dict(id="S3", title="Raise data freshness from 10 minutes to live",
+         problem="GitHub Actions snapshots run every 10 minutes, so the 60-second chart window is "
                  "usually empty and \u201clive\u201d is really \u201cnear-live\u201d.",
-         options=["Accept 30-minute snapshots (current)",
+         options=["Accept 10-minute snapshots (current)",
                   "Host a small relay that keeps a WebSocket open to the demo feed and appends ticks",
                   "Move to polling every 60 s (rate-limit budget permitting)"],
          effort="Medium", impact="High", risk="A relay needs hosting, secrets and a cost owner.",
@@ -569,7 +649,7 @@ SUGGESTIONS = [
          source=DOCS + "/getting_started/demo_env",
          recommended="Re-validate on production data before any real-money use."),
     dict(id="S7", title="Add resolution alerting",
-         problem="Resolution is recorded on the next 30-minute run, but nobody is notified.",
+         problem="Resolution is recorded on the next 10-minute run, but nobody is notified.",
          options=["Email/Slack via Actions on newly settled in-scope markets",
                   "No alerts, dashboard only (current)"],
          effort="Low", impact="Medium", risk="Alert fatigue if the topic list widens.",
@@ -583,14 +663,19 @@ SUGGESTIONS = [
          source=DOCS + "/getting_started/pagination",
          recommended="Implemented \u2014 see the API log section on Verification."),
     dict(id="S9", title="Mark sharp price jumps (\u2265 $0.10) on the live chart",
-         problem="A sharp price move has no visible marker on the chart, so a trader can miss a significant move.",
+         problem="A sharp price move has no visible marker on the chart, so a trader can miss a "
+                 "significant move.",
          options=["Mark jumps \u2265 $0.10 with red vertical markers + a table below the chart (implemented)",
                   "No markers, keep chart clean (rejected)",
-                  "Add news/event links for each jump (not possible from the API \u2014 cause unverified)"],
-         effort="Low", impact="High",
-         risk="A reader could mistake a jump marker for a confirmed causal event \u2014 mitigated by the unverified flag and the F13 flag.",
+                  "News/event links per jump: the cause is not derivable from the API, so each jump "
+                  "instead gets a clearly labelled \u201cpossible context\u201d search link plus a "
+                  "\u201ccause unverified\u201d flag (implemented)"],
+         effort="Low", impact="High", risk="A reader could mistake a jump marker for a confirmed "
+                                         "causal event \u2014 mitigated by the unverified flag (F13).",
          source=DOCS + "/api-reference/market/get-market-candlesticks",
-         recommended="Implemented \u2014 see the \"Sharp price moves\" card on the Dashboard. Each jump is flagged <span class=\"pill flag\">cause unverified</span> because the Trade API returns price and volume only."),
+         recommended="Implemented \u2014 see the \u201cSharp price moves\u201d card on the Dashboard. Each "
+                     "jump is flagged \u201ccause unverified\u201d because the Trade API returns price "
+                     "and volume only."),
 ]
 
 
@@ -703,7 +788,7 @@ QUESTIONS = [
   "series it could not classify is listed on the Flagged page for review. Nothing is guessed.",
   "api-reference/market/get-series-list"),
  ("Q3", "How fresh must the data be?",
-  "The site is static on GitHub Pages; the collector runs every 30 minutes and commits a snapshot.",
+  "The site is static on GitHub Pages; the collector runs every 10 minutes and commits a snapshot.",
   "Whether \u201clive\u201d means sub-minute (which needs a hosted WebSocket relay) or near-live.",
   "Ask the stakeholder; S3 in Suggestions lays out the three options and their cost.",
   "getting_started/quick_start_websockets"),
@@ -910,18 +995,61 @@ VERIFIED = [
   "GET /portfolio/balance and GET /portfolio/positions return 401 without signed headers; no demo credentials exist in this workspace, so all portfolio/trade rows stay blank and flagged",
   "api-reference/portfolio/get-balance", "read on page (security scheme kalshiAccessKey) + unauthenticated request fails", "Verified"),
  ("Sharp-jump price-move detection (\u2265 $0.10)",
-  "Chart detects moves of $0.10 or more between consecutive price points and marks them with red vertical markers; the table below the chart lists each jump with a link to the market on Kalshi. The cause of each jump is not derivable from the Kalshi API (no news/event field in price responses) and is flagged cause unverified.",
-  ("api-reference/market/get-market-candlesticks", "api-reference/market/get-trades"),
+  "Chart detects moves of $0.10 or more between consecutive price points and marks them with red "
+  "vertical markers; the table below the chart lists each jump with a link to the market on Kalshi "
+  "and a clearly labelled \u201cpossible context\u201d search link. The cause of each jump is not "
+  "derivable from the Kalshi API (no news/event field in price responses) and is flagged cause unverified.",
+  "api-reference/market/get-market-candlesticks|api-reference/market/get-trades",
   "implemented in assets/site.js (KR.detectJumps) + chart markers in KR.drawChart; table renders on index.html", "By design"),
+ ("Get Trades tape query (live alerts)",
+  "<code>GET /markets/trades?limit=1000&amp;min_ts=&lt;unix seconds&gt;</code> returns completed "
+  "trades with <code>ticker</code>, <code>yes_price_dollars</code>, <code>count_fp</code>, "
+  "<code>created_time</code>, <code>trade_id</code>",
+  "api-reference/market/get-trades",
+  "read on page + live 200 JSON; sample prints preserved in data/dashboard_instrument.json trade blocks", "Verified"),
+ ("Order book raw response shape",
+  "<code>orderbook_fp.yes_dollars</code> / <code>orderbook_fp.no_dollars</code>, arrays of "
+  "[price, size]; ask depth is derived as 1 &#8722; p and labelled &#8220;derived&#8221; everywhere",
+  "api-reference/market/get-market-orderbook",
+  "read on page + parsed live in tools/collector.py (collect_orderbooks) and assets/alerts.js", "Verified"),
+ ("Live alert chats (moves of $0.10+, all events + model filter)",
+  "alerts.html runs two scrolling chats over official trade prints and quote polls (15 s cadence, "
+  "60 s backoff on HTTP 429). Swing cause is flagged unverified (F13); the high-ROI filter is a "
+  "labelled local heuristic (F22); markets are watched until the official result posts yes/no.",
+  "api-reference/market/get-trades|api-reference/market/get-markets|getting_started/rate_limits",
+  "implemented in assets/alerts.js against the request shapes verified in this table; no value is invented", "By design"),
+ ("Snapshot file-size bounds (data pipeline)",
+  "collector publishes the top rows per topic by estimated dollar volume, writes compact JSON "
+  "and refuses any data file over 90 MB; GitHub rejects pushes containing a file over 100 MB, "
+  "which is what failed every Refresh Kalshi demo data run on 2026-11-20 (COORDINATION.md A-1)",
+  "https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github",
+  "regression-tested offline in tests/test_collector_output.py (52 assertions); workflow tripwire step added", "By design"),
+ ("Automated simulated trades (paper portfolio)",
+  "tools/paper_trade.py runs hourly with no credentials: four deterministic strategies "
+  "(momentum / mean-revert / longshot / favorite) over the snapshot; trades categorised by topic, "
+  "price band and strategy; positions settled on the official yes/no result; blanks skipped, "
+  "never guessed. SIMULATED: fees and slippage not modeled (F23).",
+  "api-reference/market/get-markets|getting_started/market_settlement",
+  "regression-tested offline in tests/test_paper_trade.py (20 assertions); ledger published at data/paper_portfolio.json", "By design"),
 ]
 
 
+def src_multi(p) -> str:
+    # one row can cite several official pages: "|" string or tuple/list of paths.
+    # Full https URLs are rendered as-is (used for non-Kalshi official sources such
+    # as docs.github.com); everything else is a docs.kalshi.com path.
+    paths = p if isinstance(p, (tuple, list)) else p.split("|")
+    out = []
+    for x in paths:
+        if x.startswith("http"):
+            out.append(f'<a href="{x}" target="_blank" rel="noopener">{x.split("//", 1)[1].split("/", 1)[0]}</a>')
+        else:
+            out.append(src(x, x.rsplit("/", 1)[-1]))
+    return ", ".join(out)
+
+
 def build_verification() -> None:
-    def vsrc(p):
-        if isinstance(p, (list, tuple)):
-            return ", ".join(src(x, x.rsplit("/", 1)[-1]) for x in p)
-        return src(p, p.rsplit("/", 1)[-1])
-    rows = [[c, v, vsrc(p), how,
+    rows = [[c, v, src_multi(p), how,
              '<span class="pill ok">Verified</span>' if st == "Verified"
              else '<span class="pill flag">By design</span>']
             for c, v, p, how, st in VERIFIED]
@@ -935,11 +1063,6 @@ official Kalshi source, it is left blank and flagged rather than inferred. That 
 market tables contain no hard-coded numbers \u2014 they are populated only from the collector
 snapshot, which logs the HTTP status of every request it made.</div>
 """ + table(["Claim", "Value / statement", "Official source", "How it was checked", "Status"], rows) + """
-<h2>Pipeline health \u2014 what the last run actually did</h2>
-<p class="lead">Read from <code>data/dashboard_meta.json</code>. These numbers are how the site
-tells "there are no markets" apart from "the request failed": both can produce an empty table,
-and only one of them is a fact about the exchange.</p>
-<div id="health"></div>
 <h2>Live API log from the most recent snapshot</h2>
 <p class="lead">The collector writes the URL, HTTP status and any error body for every request it
 makes. This is the provenance for every figure in the dashboard tables.</p>
@@ -958,7 +1081,7 @@ makes. This is the provenance for every figure in the dashboard tables.</p>
 (async function(){
   const $=id=>document.getElementById(id);
   try{
-    const s = await KR.getJSON("data/snapshot_api_log.json");
+    const s = await KR.snapshot();
     const log = s.api_log||[];
     const ok = log.filter(r=>r.ok).length, bad = log.length-ok;
     $('logKpis').innerHTML = `
@@ -969,29 +1092,6 @@ makes. This is the provenance for every figure in the dashboard tables.</p>
     document.getElementById('apiLog').innerHTML = '';
     const wrap=document.createElement('div'); wrap.id='apiLogInner';
     document.getElementById('apiLog').appendChild(wrap);
-    // pipeline health: scope read/failed per topic, request totals, scope limits
-    try{
-      const m = await KR.getJSON("data/dashboard_meta.json");
-      const cat = m.topic_catalog || {}, c = m.counts || {};
-      const health = Object.entries(cat).map(([t,v])=>({topic:t, ...v}));
-      KR.renderTable($('health'), [
-        {label:'Topic', get:r=>KR.topicPill(r.topic)},
-        {label:'Series in catalogue', num:true, get:r=>KR.num(r.series_in_catalog,0)},
-        {label:'Series read this run', num:true, get:r=>KR.num(r.series_read,0)},
-        {label:'Series requests failed', num:true, get:r=>r.series_failed?`<span class="pill err">${KR.num(r.series_failed,0)}</span>`:KR.num(0,0)},
-        {label:'Series with live markets', num:true, get:r=>KR.num((r.series_with_live_markets||[]).length,0)},
-        {label:'Live markets', num:true, get:r=>KR.num((c.per_topic||{})[r.topic],0)},
-        {label:'Settled markets in log', num:true, get:r=>KR.num((m.resolutions_by_topic||{})[r.topic],0)},
-        {label:'Source', get:r=>`<a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=${encodeURIComponent(r.topic)}" target="_blank" rel="noopener">series list</a>`}
-      ], health, 'No dashboard_meta.json yet.');
-      $('logKpis').insertAdjacentHTML('afterbegin', `
-        <div class="kpi-card"><div class="k">Requests this run</div><div class="v">${KR.num(m.api_request_count,0)}</div>
-          <div class="s">${KR.num(m.api_request_failures,0)} non-2xx</div></div>`);
-    }catch(e){
-      const box=document.createElement('div'); box.className='notice bad';
-      box.textContent='data/dashboard_meta.json could not be loaded: '+e.message;
-      $('health').appendChild(box);
-    }
     const rows = log.filter(r=>!r.ok).length ? log : log.slice(0,40);
     KR.renderTable(wrap, [
       {label:'HTTP', get:r=>`<span class="pill ${r.ok?'ok':'err'}">${KR.esc(r.http_status)}</span>`},
@@ -1072,10 +1172,10 @@ FLAGGED = [
   "Nothing is excluded silently: these markets fall outside the five topics because they carry no "
   "in-scope tag or category, and the unmapped-series list is published for review.",
   "api-reference/market/get-markets"),
- ("F8", "Snapshot freshness is 30 minutes, not real time",
-  "Data is refreshed by a scheduled GitHub Actions run (cadence reduced 10 -> 30 min by session b7bc848c to bound repository growth from frequent data commits).",
-  "Short chart windows are often empty; the word \u201clive\u201d overstates it for chart data.",
-  "Labelled on the dashboard, the empty state explains why, and S3 offers a relay as a decision. Since session b7bc848c the Live Alerts page polls the public trades endpoint from the browser every 25 s, so swing detection itself is live even though chart snapshots are not.",
+ ("F8", "Snapshot freshness is 10 minutes, not real time",
+  "Data is refreshed by a scheduled GitHub Actions run.",
+  "Short chart windows are often empty; the word \u201clive\u201d overstates it.",
+  "Labelled on the dashboard, the empty state explains why, and S3 offers a relay as a decision.",
   "getting_started/quick_start_websockets"),
  ("F9", "Unmapped series are excluded, not guessed",
   "Any open event whose series has no in-scope tag/category is dropped from the tables.",
@@ -1111,63 +1211,53 @@ FLAGGED = [
   "api-reference/market/get-series-list"),
  ("F13", "Sharp-jump cause cannot be determined from the API",
   "The dashboard now marks price moves \u2265 $0.10 between consecutive points on the live chart and "
-  "links each to the market's page on Kalshi. But the Trade API returns price and volume only \u2014 no "
-  "news, no event, no explanation for why a contract moved.",
+  "links each to the market\u2019s page on Kalshi, plus a clearly labelled \u201cpossible context\u201d "
+  "search link. But the Trade API returns price and volume only \u2014 no news, no event, no "
+  "explanation for why a contract moved.",
   "A reader could mistake a jump marker for a confirmed causal event.",
   "Each jump row links to the market on Kalshi (where traders can see discussion) and is tagged "
-  "<span class=\"pill flag\">cause unverified</span>. Nothing is inferred. Raised as verification row "
-  "on pages/verification.html and as suggestion S9 on pages/suggestions.html.",
-  ("api-reference/market/get-markets", "api-reference/market/get-trades")),
- ("F14", "The Gas prices topic includes markets that are not gas prices",
-  "The gas scope accepts every series tagged <code>Oil and energy</code> under Economics, plus any title "
-  "containing gas, gasoline or diesel. The collected <code>gas</code> topic holds 189 markets, 18 of which are not "
-  "gas prices: solar capacity (<code>KXSOLAR</code>, 5), electricity price (<code>KXPOWERKWH</code>, 7), refinery "
-  "utilization (<code>KXEIAREFUTILM</code>, 5) and Louisiana oil-and-gas jobs (<code>KXLAOILGASEMP</code>, 1). "
-  "Source of the series rows: <a href=\"https://external-api.demo.kalshi.co/trade-api/v2/series?category=Economics&amp;limit=200\" target=\"_blank\" rel=\"noopener\">official demo API series list</a>.",
-  "The Gas page and the gas ranking mix in non-price markets, so a \u201ctop gas market\u201d can be a solar contract.",
-  "Not changed in this session: the scope is the owner\u2019s decision. The rows are listed here by series ticker.",
-  "api-reference/market/get-series-list"),
- ("F15", "Elections coverage is capped: 2,409 series were dropped",
-  "The collector queries at most 300 series per topic. It sorts discovered series by the API\u2019s <code>frequency</code> field, then by ticker, and drops the rest. "
-  "The snapshot records 2,409 elections series dropped (and 20 crypto series). The dropped series are the one-off tail.",
-  "The elections \u201chighest dollar amount\u201d ranking covers only the kept series, so a large one-off election market can be missing.",
-  "The number dropped is published per topic in <code>data/dashboard_instrument.json</code> (<code>series_truncated_per_topic</code>) and on the Verification page. The cap is set by <code>KALSHI_MAX_SERIES</code>.",
-  "api-reference/market/get-series-list"),
- ("F16", "Trade history is one page per market, and only 600 prints are kept",
-  "<code>collect_trades()</code> requests one page (<code>limit=1000</code>) and never follows the <code>cursor</code>. "
-  "The snapshot keeps the first 600 prints per market. The docs define <code>limit</code> as a page size with a maximum of 1000, and <code>cursor</code> as the way to get the next page.",
-  "Moves older than the kept prints are not visible, and the jump detector cannot prove it has seen every move.",
-  "The Price Jumps page states the prints analysed per market and their first and latest times, so the window is visible. Following the cursor is listed as a fix.",
-  "https://docs.kalshi.com/api-reference/market/get-trades"),
- ("F17", "Snapshots are too coarse to find intraday moves of $0.10",
-  "The jump page compared 733 consecutive snapshot price pairs across 7 snapshots. The gaps between snapshots run from 2.2 to 47.2 minutes, and no pair moved $0.10 or more.",
-  "A move that starts and reverts between two snapshots is invisible, so \u201cno snapshot moves\u201d means only \u201cnone visible at this resolution\u201d.",
-  "Trade prints are used for the move list, and snapshot results are shown separately with their gaps. A WebSocket <code>trade</code> channel is the real fix. Its handshake requires API-key headers, so it depends on F19 too.",
-  "https://docs.kalshi.com/getting_started/quick_start_websockets"),
- ("F18", "No official source ties a price move to a cause",
-  "The brief asks for events and website links that may have caused a jump of $0.10 or more. The Kalshi APIs return prices, trades and market metadata, and no field records news or a cause.",
-  "Attributing a move to a news item would be inference. Any link we added would be a guess.",
-  "The cause column on the Price Jumps page is blank and marked unverified. A reviewer can add a dated link with its own source; nothing is added automatically.",
-  "https://docs.kalshi.com/api-reference/market/get-trades"),
- ("F19", "Demo-account portfolio and order execution cannot run from this workspace",
-  "This workspace holds no Kalshi demo API key. The repository secrets <code>KALSHI_DEMO_API_KEY_ID</code> and <code>KALSHI_DEMO_PRIVATE_KEY</code> could not be read: "
-  "<code>gh secret list</code> returned HTTP 403 (Resource not accessible by integration). The portfolio endpoints need signed requests (docs: get-balance).",
-  "The brief asks for trades on the demo account and portfolio tracking from it. None of those rows can be verified or filled in here.",
-  "Trade execution is dry-run by default (<code>KALSHI_DRY_RUN=1</code>) and disabled unless <code>KALSHI_TRADING_ENABLED=1</code>. Portfolio rows stay blank. The owner must create a demo key (official tutorial: help.kalshi.com, article 13823775) and add the two secrets.",
-  "https://docs.kalshi.com/getting_started/api_keys"),
- ("F20", "Culture has no open markets",
-  "The collected snapshot has 0 open culture markets. The official API lists 2 culture series (<code>KXXBANNEDMURRAYHILLGUY1</code> and <code>KXXBANNEDGROK</code>, both one-off), "
-  "<a href=\"https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture\" target=\"_blank\" rel=\"noopener\">series?category=Culture</a>. Neither has an open market in the snapshot.",
-  "The culture page cannot show a price, a ranking or a jump, even though culture is one of the five topics in the brief.",
-  "Shown as an empty topic, not filled. The page states the count of series found.",
-  "https://docs.kalshi.com/api-reference/market/get-series-list"),
-
- ("F21", "A public page takes a demo private key as input",
-  "<code>live/trading.html</code> asks the user to paste the demo API Key ID and the PEM private key. The key is used in the browser to sign demo requests, and it is kept in sessionStorage. "
-  "Source: the page and script in the repository (see R18).",
-  "The site is public. A script injected into the page, or a browser extension, could read the key while the tab is open.",
-  "The page says the key stays in sessionStorage for one tab and offers a Forget button. The README warns about the risk. Recommended: remove the form, or move signing to the server (<code>server/</code>).",
-  "https://docs.kalshi.com/getting_started/api_keys"),
+  "<span class=\"pill flag\">cause unverified</span>; the search link is labelled \u201cnot an official "
+  "source\u201d. Nothing is inferred. Raised as verification row on pages/verification.html and as "
+  "suggestion S9 on pages/suggestions.html.",
+  "api-reference/market/get-markets|api-reference/market/get-trades"),
+ ("F14", "Browser-side private-key prompts are unsafe on a public static host",
+  "Session 6d75123b\u2019s <code>live/trading.html</code> Mode B asked the user to paste a demo "
+  "private key into the page, and <code>assets/app.js</code> still carried orphaned WebCrypto "
+  "signing code wired to ids no page contains. PR #6 (session 22b4f0cb) raised this and was "
+  "stale; session bdb4d2d0 took it over under the 60-minute rule.",
+  "A public GitHub Pages deployment cannot protect a pasted signing key; any script on the page "
+  "could read it. This conflicts with the README policy that signing keys belong only in "
+  "repository secrets behind the three execution gates.",
+  "Integration fix (2026-11-20): the Mode B credential form is disabled on the deployed copy with "
+  "a notice pointing at the gated Actions path (<code>tools/execute_strategy.py</code>) and the "
+  "<code>server/</code> backend; the orphaned signing code was removed from "
+  "<code>assets/app.js</code>. Mode A paper trading and the request builder are unchanged. "
+  "Reversible by removing the <code>disabled</code> attributes when serving privately. "
+  "Cross-scope request logged for session 6d75123b in COORDINATION.md.",
+  "getting_started/api_keys"),
+ ("F22", "The high-ROI model is a transparent local heuristic, not an official measure",
+  "The Live Alerts page (alerts.html) filters one chat by a model score computed in the browser: "
+  "<code>score = 0.40&#183;liquidity + 0.30&#183;tightness + 0.30&#183;price action</code>, cutoff 0.60. "
+  "The Trade API exposes no ROI, edge or expected-return field (see the Market schema on Get Markets), "
+  "so the score is a labelled heuristic over official fields only (volume_fp, yes_bid/yes_ask, "
+  "and the count of observed $0.10+ swings this session).",
+  "A reader could mistake the model filter for a predictive, backtested or official ROI measure.",
+  "The formula and cutoff are printed beside the chat, every input is a visible column in the model "
+  "table, and the page states plainly that it is not financial advice and makes no outcome prediction. "
+  "Nothing is inferred from outside the API; detections themselves use only official prices.",
+  "api-reference/market/get-markets"),
+ ("F23", "The paper-trading simulator does not model fees or slippage",
+  "tools/paper_trade.py runs four deterministic strategies over the collected snapshot and "
+  "settles positions on the official result field. Fills are assumed at the quoted ask with no "
+  "slippage, no partial fills and <b>zero fees</b>. The real Kalshi fee schedule is documented "
+  "but was not verified line by line in this workspace, so it is left unmodeled rather than guessed.",
+  "Simulated results overstate real achievable performance; the demo environment itself warns "
+  "that its prices may not reflect real markets.",
+  "Every page that shows the ledger says SIMULATED in the banner, the definitions block inside "
+  "data/paper_portfolio.json repeats the limits, strategy statistics are shown by trade type so "
+  "the assumption is auditable, and the live demo-account path (trade.yml + tools/execute_strategy.py) "
+  "records real fees once keys are configured.",
+  "getting_started/market_settlement|https://docs.kalshi.com/getting_started/demo_env"),
 ]
 
 
@@ -1175,6 +1265,8 @@ def build_flagged() -> None:
     def fsrc(p):
         if isinstance(p, (list, tuple)):
             return ", ".join(fsrc(x) for x in p)
+        if "|" in p:  # multi-source path list (session bdb4d2d0 rows)
+            return ", ".join(fsrc(x) for x in p.split("|"))
         if p.startswith("http"):
             return f'<a href="{p}" target="_blank" rel="noopener">{p.split("//", 1)[1].split("/", 1)[0]}</a>'
         return src(p, p.rsplit("/", 1)[-1])
@@ -1194,7 +1286,11 @@ wrong.</p>
 <li><b>F6</b>: the portfolio page says \u201cnot configured\u201d; it is not a zero balance.</li>
 <li><b>F11</b>: the chart notes whether it is plotting a derived quoted mid or a traded price.</li>
 <li><b>F12</b>: the Gas page says \u201ccatalogue only\u201d instead of showing an unexplained empty table.</li>
-<li><b>F13</b>: sharp jumps \u2265 &#36;0.10 are marked with red vertical markers on the chart and listed in a table below it, each tagged \u201ccause unverified\u201d \u2014 the Trade API returns price and volume only, never the news or event behind a move.</li>
+<li><b>F14</b>: no page on the deployed site accepts a private key; the one form that did is
+  disabled behind a notice that names the gated Actions path.</li>
+<li><b>F13</b>: sharp jumps \u2265 $0.10 are marked with red vertical markers on the chart and listed in
+  a table below it, each tagged \u201ccause unverified\u201d \u2014 the Trade API returns price and volume
+  only, never the news or event behind a move.</li>
 <li><b>F8</b>: the dashboard header shows the snapshot time and age, so stale data is visible.</li>
 <li><b>F9</b>: compare the in-scope series list per topic against the unclassified list in
   <code>data/snapshot.json</code>.</li>
@@ -1220,6 +1316,16 @@ every navigation: <a href="../index.html">live dashboard</a> &middot;
 dashboard</a> &middot; <a href="../review.html">decision register</a>. Nothing published is removed.
 Full prior registers: <a href="../verified/flagged-for-review.html">verified/ (F-01&hellip;F-12, R-F1&hellip;R-F7)</a>
 &middot; <a href="../dashboard/flagged.html">dashboard/ (F1&hellip;F15, U1&hellip;U8)</a>.</p>
+<h2>Implementation audit (session f75410bb, 2026-11-20)</h2>
+<p class="lead">The audit and reproducible checks are published in <a href="../session-f75410bb/review.html">the detailed review</a>. The rows below highlight issues found in the current tree; they are open, not claimed as fixed.</p>
+<div class="tablewrap"><table><thead><tr><th>Finding</th><th>Observed issue</th><th>Action / status</th><th>Official source</th></tr></thead><tbody>
+<tr><td>Trade request contract</td><td><code>server/</code> submits to <code>POST /orders</code> using fields that do not match the documented Create Order V2 request.</td><td>Needs backend-owner correction and a contract test; no trade was sent.</td><td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2">Create Order V2</a></td></tr>
+<tr><td>Event coverage</td><td>The backend reads one event page and does not follow the response cursor.</td><td>Needs pagination before claiming a complete ranking/tracker.</td><td><a href="https://docs.kalshi.com/api-reference/events/get-events">Get Events</a></td></tr>
+<tr><td>Alerts freshness</td><td>The two alert panes are generated from static snapshots and do not refresh while open; high-ROI is a rule-based filter, not a trained model.</td><td>Snapshot-only; not real-time or model-selected. Keep that limitation visible.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-trades">Get Trades</a> · <a href="https://docs.kalshi.com/getting_started/quick_start_websockets">WebSocket quick start</a></td></tr>
+<tr><td>Alert joins / sources</td><td>With the committed snapshot files, the page rendered 14 alert rows but matched 0 ticker rows to market metadata; the default high-ROI feed was empty and six alert rows had no source link.</td><td>Needs a same-source data join, matching freshness metadata, and official per-row links.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> · <a href="https://docs.kalshi.com/api-reference/market/get-trades">Get Trades</a></td></tr>
+<tr><td>Live Alerts browser load</td><td>The deployed <code>/pages/live-alerts.html</code> displayed “Could not load alert data: 503”. Its relative <code>fetch('data/...')</code> URLs resolve beneath <code>/pages/</code>, but the published JSON files are at the site-root <code>/data/</code>.</td><td>Needs corrected relative paths and live browser verification; current page cannot load its alert rows.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> · <a href="https://docs.kalshi.com/api-reference/market/get-trades">Get Trades</a></td></tr>
+<tr><td>Static hosting boundary</td><td>GitHub Pages publishes static HTML/CSS/JS; it does not run the authenticated Node backend.</td><td>Portfolio reads and order placement remain unavailable from Pages alone; deploy a separately secured backend for these features.</td><td><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages">GitHub Pages</a> · <a href="https://docs.kalshi.com/getting_started/api_keys">Kalshi API keys</a></td></tr>
+</tbody></table></div>
 <p class="lead"><b>Policy:</b> every table row links to an official source. Values that cannot be
 confirmed from official sources stay blank and flagged as unverified &mdash; never inferred.</p>
 """
@@ -1287,13 +1393,13 @@ REPO_FINDINGS = [
  ("R12", "repository (workflows)", "Five workflows write to main, each with its own concurrency group",
   "Concurrency keys are <code>kalshi-refresh</code> (every 10 min), <code>pages-and-data</code> (7,22,37,52 past the hour), <code>collect-kalshi</code> and <code>data-refresh</code> (both at 23 past every second hour), and <code>kalshi-portfolio</code> (hourly at :20). "
   "GitHub serializes only runs that share a key, so these runs can overlap and push to <code>main</code> at the same time. "
-  "Source: <a href=\"https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency\" target=\"_blank\" rel=\"noopener\">GitHub docs: control workflow concurrency</a>; the workflow files in <a href=\"https://github.com/karagemop466-tech/Demo2/tree/main/.github/workflows\" target=\"_blank\" rel=\"noopener\">.github/workflows</a>.",
+  "Source: <a href=\"https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency\" target=\"_blank\" rel=\"noopener\">GitHub docs: control workflow concurrency</a>; the workflow files in <a href=\"https://github.com/karagemop466-tech/Demo2/tree/main/.github/workflows\" target=\"_blank\" rel=\"noopener\">.github/workflows/</a>.",
   "Push races on the same data files; the result depends on which run pushes last.",
-  "<b>Fixed in session 6332d7d3</b>: every workflow that commits now shares one concurrency key (`kalshi-data-writers`), so two runs cannot push at once. Originally flagged; serialising all data writers under one key was the recommended fix. Not changed here (cross-session files)."),
+  "Flagged. Serializing all data writers under one key is the recommended fix. Not changed here (cross-session files)."),
  ("R13", "repository (workflows)", "Bots push generated data straight to main, and one rebase failure is swallowed",
   "Four workflows push to <code>main</code> without a pull request: <code>pages.yml</code> (line 59), <code>refresh-data.yml</code> (line 88), <code>trade.yml</code> (line 100) and <code>collect.yml</code> (line 46, using <code>GITHUB_REF_NAME</code>). "
   "<code>collect.yml</code> runs <code>git pull --rebase ... || true</code>, so a failed rebase is ignored and the push that follows can fail without any error being raised. "
-  "Source: the workflow files in <a href=\"https://github.com/karagemop466-tech/Demo2/tree/main/.github/workflows\" target=\"_blank\" rel=\"noopener\">.github/workflows</a>.",
+  "Source: the workflow files in <a href=\"https://github.com/karagemop466-tech/Demo2/tree/main/.github/workflows\" target=\"_blank\" rel=\"noopener\">.github/workflows/</a>.",
   "Generated data bypasses review, which is acceptable only if the data cannot change code. A silent rebase failure can drop a snapshot without notice.",
   "Flagged. The fix is to remove <code>|| true</code> and to fail the job when the rebase fails. Not changed here."),
  ("R14", "scripts/__pycache__", "Compiled bytecode is tracked in git",

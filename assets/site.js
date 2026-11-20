@@ -94,7 +94,7 @@
   KR.dataURL = function (path) { return KR.DATA_ROOT + path; };
 
   /* ---------------- data loaders ---------------- */
-  KR.snapshot = function () { return KR.getJSON("data/dashboard_meta.json"); };
+  KR.snapshot = function () { return KR.getJSON("data/snapshot.json"); };
   KR.topic = function (t) { return KR.getJSON("data/topic-" + t + ".json"); };
   KR.resolutions = function () { return KR.getJSON("data/resolutions.json"); };
   KR.portfolio = function () { return KR.getJSON("data/portfolio.json"); };

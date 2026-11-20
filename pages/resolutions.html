@@ -5,7 +5,7 @@
 <meta name="description" content="In-scope Kalshi demo markets tracked until resolution, with the official yes/no result.">
 <link rel="stylesheet" href="../assets/style.css">
 </head><body>
-<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Start here</a><a href="../dashboard.html">Live dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html" aria-current="page">Resolutions</a><a href="../pages/alerts.html">Live Alerts</a><a href="../pages/causes.html">Cause Channels</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../alerts.html">Live Alerts</a><a href="../pages/resolutions.html" aria-current="page">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
 <div class="wrap">
 
 <h1>Resolutions — tracked until the market resolves</h1>
@@ -15,17 +15,6 @@ straight from <code>GET /markets?status=settled</code>; the <code>result</code> 
 Kalshi's own, not computed here.</p>
 <div id="metaBar"><div class="card tight"><div class="status" id="staleness">Loading…</div></div></div>
 <div class="kpis" id="kpis"></div>
-<h2>Topics at a glance</h2>
-<p class="muted">Five topics, kept separate. Each card is that topic's own page; the counts and the
-24-hour dollar figures come from the same snapshot as the tables below.</p>
-<div class="kpis" id="topicStrip"></div>
-<h2>How the events resolved, by topic</h2>
-<p class="muted">Counts of settled in-scope markets by the official <code>result</code> field.
-A market that never traded still has a result: it settles at $1.00 (yes) or $0.00 (no) regardless
-of whether anyone bought it, so it is counted here and flagged on
-<a href="flagged.html">Flagged for Review</a> when its volume is zero — a YES on a market nobody
-traded is not evidence about anything.</p>
-<div id="byTopic"></div>
 <div class="row" style="margin:10px 0">
   <div><label for="topicFilter">Topic</label>
     <select id="topicFilter"><option value="">All</option><option value="gas">Gas</option>
@@ -71,38 +60,6 @@ traded is not evidence about anything.</p>
       <div class="kpi-card"><div class="k">Resolved NO</div><div class="v bad">${no}</div><div class="s">result = no</div></div>
       <div class="kpi-card"><div class="k">Topics with data</div><div class="v">${Object.keys(per).length}</div>
         <div class="s">${Object.entries(per).map(([k,v])=>k+': '+v.total).join(' · ')||'none'}</div></div>`;
-    try{
-      const m = await KR.getJSON("data/dashboard_meta.json");
-      const cap = Object.values(m.topic_catalog||{}).map(v=>v.cap_this_run).find(x=>x);
-      $('scopeNote').innerHTML = `<b>What this log covers.</b> Settled markets are read from the same
-        rotating series sweep as the live ones${cap ? ` (at most <b>${KR.num(cap,0)}</b> series per topic per run)` : ''},
-        so this is what the runs so far have reached — not a complete settlement history.
-        ${d.this_run !== undefined ? `The latest run added <b>${KR.num(d.this_run,0)}</b> settled markets.` : ''}
-        A market that never traded is included and marked <span class="pill flag">no volume</span>.`;
-    }catch(e){}
-
-    // per-topic YES/NO breakdown, so "how did events resolve" is answerable at a glance
-    const ORDER = ['gas','elections','culture','crypto','golf'];
-    const bt = ORDER.map(tp=>{
-      const rs = rows.filter(r=>r.topic===tp);
-      const yes = rs.filter(r=>r.result==='yes').length;
-      const no  = rs.filter(r=>r.result==='no').length;
-      const traded = rs.filter(r=>Number(r.volume_fp||0) > 0).length;
-      return {topic:tp, resolved:rs.length, yes, no,
-              yesShare: (yes+no) ? (yes/(yes+no)) : null,
-              traded, untraded: rs.length - traded};
-    });
-    KR.renderTable($('byTopic'), [
-      {label:'Topic', get:r=>KR.topicPill(r.topic)},
-      {label:'Settled markets', num:true, get:r=>KR.num(r.resolved,0)},
-      {label:'Resolved YES', num:true, get:r=>KR.num(r.yes,0)},
-      {label:'Resolved NO', num:true, get:r=>KR.num(r.no,0)},
-      {label:'YES share', num:true, get:r=>r.yesShare===null?KR.dash(''):KR.pct(r.yesShare)},
-      {label:'Ever traded', num:true, get:r=>`${KR.num(r.traded,0)} <span class="muted small">of ${KR.num(r.resolved,0)}</span>`},
-      {label:'Never traded', num:true, get:r=>r.untraded?`${KR.num(r.untraded,0)} <span class="pill flag">no volume</span>`:KR.num(0,0)},
-      {label:'Source', get:r=>`<a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=1000" target="_blank" rel="noopener">settled markets</a>`}
-    ], bt, 'No resolved markets in the current snapshot.');
-
     function render(){
       const t=$('topicFilter').value, rf=$('resFilter').value;
       const f = rows.filter(r=>(!t||r.topic===t)&&(!rf||r.result===rf));
@@ -113,7 +70,7 @@ traded is not evidence about anything.</p>
         {label:'Settlement $', num:true, get:r=>KR.usd(r.settlement_value_dollars,2)},
         {label:'Settled (UTC)', get:r=>`<span class="small">${KR.when(r.settlement_ts)}</span>`},
         {label:'Volume', num:true, get:r=>KR.num(r.volume_fp,0)},
-        {label:'Rules', get:r=>r.rules_primary?`<span class="small" title="${KR.esc(r.rules_primary)}">${KR.esc(r.rules_primary.slice(0,80))}…</span>`:'—'},
+        {label:'Rules', get:r=>r.rules_primary_head?`<span class="small" title="${KR.esc(r.rules_primary_head)}">${KR.esc(r.rules_primary_head.slice(0,80))}…</span>`:'—'},
         {label:'Source', get:r=>`<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">settled markets</a>`}
       ], f, 'No resolved markets for this filter in the current snapshot.');
     }

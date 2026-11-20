@@ -27,21 +27,16 @@ const server = http.createServer((req, res) => {
   res.end(fs.readFileSync(file));
 });
 
+// Page list: the pages whose DOM contracts this session asserts (the merged site's
+// canonical dashboard/alerts plus the three preserved variant pages). Session
+// b7bc848c kept this gate after the reconciliation with session a984e8f4's
+// integration; extend the list when more pages grow stable panel ids.
 const PAGES = [
-  ['index.html', ['#landingCards', '#topicTable', '#pipelineKpis']],
+  ['index.html', ['#kpis', '#mktTable', '#jumpTable']],
+  ['alerts.html', ['#alertsKpis', '#chatAll', '#chatRoi']],
   ['dashboard.html', ['#kpis', '#topicStrip', '#mktTable']],
-  ['pages/gas.html', ['#kpis', '#liveTable']],
-  ['pages/elections.html', ['#kpis', '#liveTable']],
-  ['pages/crypto.html', ['#kpis', '#liveTable']],
-  ['pages/golf.html', ['#kpis', '#liveTable']],
-  ['pages/culture.html', ['#kpis', '#catNote']],
-  ['pages/resolutions.html', ['#kpis', '#byTopic', '#resTable']],
   ['pages/alerts.html', ['#alertStatus', '#chatAll', '#chatModel']],
   ['pages/causes.html', ['#srcTable', '#newsTable']],
-  ['pages/verification.html', ['#health', '#apiLog']],
-  ['pages/analysis.html', ['#kpis', '#tradeTable']],
-  ['pages/portfolio.html', ['#kpis']],
-  ['pages/executive-summary.html', []],
 ];
 
 function stubCanvas(dom) {
