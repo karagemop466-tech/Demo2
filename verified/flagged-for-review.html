@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flagged for Review · Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<header class="top">
+  <div class="brand"><a href="index.html">Kalshi Demo Dashboard</a><span class="tag">DEMO DATA · read-only</span></div>
+  <nav><a href="index.html">Home</a><a href="gas-prices.html">Gas Prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live-dashboard.html">Live Dashboard</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="flagged-for-review.html" class="active">Flagged for Review</a><a href="repo-review.html">Repo Review</a><a href="../index.html">Main dashboard ↗</a></nav>
+</header>
+<main>
+
+<section class="hero small">
+  <h1>Flagged for Review</h1>
+  <p>Irregularities, unverified items, and open issues. Each one has the source links for manual review. Flagged items do not block the site or the merge. They are listed here so you can review them after the site is live and request changes.</p>
+</section>
+<section><h2>Data flags</h2><article class="flag sev-high" id="F-01">
+<header><span class="pill">F-01</span> <h3>Demo data looks synthetic or placeholder</h3> <span class="pill">Severity: high</span></header>
+<p>Demo events include close dates in 2099 (e.g., KXNEXTNATOSECGEN-99 and KXELONMARS-99 with close_time 2099-01-08 and 2099-08-01) and a custom_strike field reading &#x27;demo strike&#x27;. Kalshi says demo prices &#x27;may not be reflective of those in real markets&#x27;. None of these rows should be treated as a real-market signal.</p>
+<p><strong>Sources for manual review:</strong></p><ul><li><a href="https://docs.kalshi.com/getting_started/demo_env.md" target="_blank" rel="noopener">Kalshi demo environment doc</a></li><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&amp;limit=200" target="_blank" rel="noopener">Events API response (observed)</a></li></ul>
+<p class="meta">Status: <strong>needs review</strong>. Does not block the site.</p>
+</article><article class="flag sev-high" id="F-02">
+<header><span class="pill">F-02</span> <h3>&#x27;Highest dollar amount&#x27; cannot be read from volume fields</h3> <span class="pill">Severity: high</span></header>
+<p>Kalshi&#x27;s volume_fp and open_interest_fp are contract counts (&#x27;_fp&#x27; = contract quantity), not dollars. Prices are in &#x27;_dollars&#x27; fields. A dollar-volume figure would have to be computed from trade prices times contracts (for example from the Trades endpoint). That computation is not done yet.</p>
+<p><strong>Sources for manual review:</strong></p><ul><li><a href="https://docs.kalshi.com/getting_started/fixed_point_migration.md" target="_blank" rel="noopener">Fixed-Point Representation</a></li><li><a href="https://docs.kalshi.com/api-reference/market/get-market.md" target="_blank" rel="noopener">Get Market (volume_fp definition)</a></li></ul>
+<p class="meta">Status: <strong>needs review</strong>. Does not block the site.</p>
+</article><article class="flag sev-medium" id="F-03">
+<header><span class="pill">F-03</span> <h3>Settlement source does not match the contract</h3> <span class="pill">Severity: medium</span></header>
+<p>KXRIQUAHOG (Rhode Island quahog landings) lists a Federal Reserve Bank of New York SOFR page as its settlement source. A SOFR page does not describe shellfish landings. Row kept off the public tables. Needs review of the contract terms PDF before any use.</p>
+<p><strong>Sources for manual review:</strong></p><ul><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Economics&amp;limit=200" target="_blank" rel="noopener">Series API (observed)</a></li><li><a href="https://assets.kalshi.com/contract_terms/ECONSTATE.pdf" target="_blank" rel="noopener">Contract terms PDF</a></li></ul>
+<p class="meta">Status: <strong>needs review</strong>. Does not block the site.</p>
+</article><article class="flag sev-medium" id="F-04">
+<header><span class="pill">F-04</span> <h3>Ticker and title disagree</h3> <span class="pill">Severity: medium</span></header>
+<p>KXBTCMAX130 has the title &#x27;When will bitcoin hit 100k?&#x27; but its ticker suffix (MAX130) and its contract-terms file (BTCMINMAX.pdf) do not match that title. The threshold must be confirmed in the contract terms before using the series.</p>
+<p><strong>Sources for manual review:</strong></p><ul><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&amp;limit=100" target="_blank" rel="noopener">Series API (observed)</a></li><li><a href="https://assets.kalshi.com/contract_terms/BTCMINMAX.pdf" target="_blank" rel="noopener">Contract terms PDF</a></li></ul>
+<p class="meta">Status: <strong>needs review</strong>. Does not block the site.</p>
+</article><article class="flag sev-high" id="F-05">
+<header><span class="pill">F-05</span> <h3>Placeholder and search-engine links in settlement sources</h3> <span class="pill">Severity: high</span></header>
+<p>KXXBANNEDMURRAYHILLGUY1 and KXXBANNEDGROK list settlement-source names with unfilled template text (for example &#x27;account holder of&#x27;, &#x27;official social media accounts of  or their official representatives&#x27;), and some entries link to Google search pages rather than to a named source. Settlement rules for these series are unclear from the API.</p>
+<p><strong>Sources for manual review:</strong></p><ul><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&amp;limit=20" target="_blank" rel="noopener">Series API (observed)</a></li><li><a href="https://assets.kalshi.com/contract_terms/XBANNED.pdf" target="_blank" rel="noopener">Contract terms PDF</a></li></ul>
+<p class="meta">Status: <strong>needs review</strong>. Does not block the site.</p>
+</article><article class="flag sev-low" id="F-06">
+<header><span class="pill">F-06</span> <h3>Gas-price series listed without a market-level snapshot</h3> <span class="pill">Severity: low</span></header>
+<p>The AAA gas series rows come from the series list. A market-level price for these series was not returned by a market query during collection (markets?series_ticker=KXAAAGASDTN&amp;status=open returned an empty list). Current prices are therefore not in the table.</p>
+<p><strong>Sources for manual review:</strong></p><ul><li><a href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noopener">Get Markets endpoint doc</a></li><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Economics&amp;limit=200" target="_blank" rel="noopener">Series API (observed)</a></li></ul>
+<p class="meta">Status: <strong>needs review</strong>. Does not block the site.</p>
+</article><article class="flag sev-medium" id="F-07">
+<header><span class="pill">F-07</span> <h3>Event-level settlement sources list mismatched URLs</h3> <span class="pill">Severity: medium</span></header>
+<p>Some news-outlet names link to different domains than their names suggest (for example &#x27;The Washington Post&#x27; linked to abc.com on KXNEWPOPE-70, and &#x27;ABC&#x27; linked to abc.net.au, an Australian site). The NATO event is dated to 2099 in the demo data (see F-01).</p>
+<p><strong>Sources for manual review:</strong></p><ul><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&amp;limit=200" target="_blank" rel="noopener">Events API (observed)</a></li></ul>
+<p class="meta">Status: <strong>needs review</strong>. Does not block the site.</p>
+</article><article class="flag sev-low" id="F-08">
+<header><span class="pill">F-08</span> <h3>Settlement source is a third-party data site</h3> <span class="pill">Severity: low</span></header>
+<p>KXFDVBIRB (BIRB FDV) lists CoinGecko, a third-party crypto data site, as its settlement source. The contract terms file was not read during collection. Reviewer should confirm the methodology the contract uses.</p>
+<p><strong>Sources for manual review:</strong></p><ul><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&amp;limit=100" target="_blank" rel="noopener">Series API (observed)</a></li><li><a href="https://assets.kalshi.com/contract_terms/CRYPTOFDV.pdf" target="_blank" rel="noopener">Contract terms PDF</a></li></ul>
+<p class="meta">Status: <strong>needs review</strong>. Does not block the site.</p>
+</article><article class="flag sev-medium" id="F-09">
+<header><span class="pill">F-09</span> <h3>Vague settlement source list</h3> <span class="pill">Severity: medium</span></header>
+<p>KXBOASTABLE (BOA stablecoin) lists 14 news outlets as settlement sources with no single authoritative publisher named. Reviewer should confirm which source resolves the contract.</p>
+<p><strong>Sources for manual review:</strong></p><ul><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&amp;limit=100" target="_blank" rel="noopener">Series API (observed)</a></li><li><a href="https://assets.kalshi.com/contract_terms/BOASTABLE.pdf" target="_blank" rel="noopener">Contract terms PDF</a></li></ul>
+<p class="meta">Status: <strong>needs review</strong>. Does not block the site.</p>
+</article><article class="flag sev-low" id="F-10">
+<header><span class="pill">F-10</span> <h3>Contract-terms file name does not match the series</h3> <span class="pill">Severity: low</span></header>
+<p>KXDPWORLDTOUR (DP World Tour Tournament Winner) points to PGATOUR.pdf as its contract terms file, the same file used by KXPGASOLHEIM. Reviewer should confirm the file covers this series.</p>
+<p><strong>Sources for manual review:</strong></p><ul><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Golf&amp;limit=20" target="_blank" rel="noopener">Series API (observed, tags=Golf)</a></li><li><a href="https://assets.kalshi.com/contract_terms/PGATOUR.pdf" target="_blank" rel="noopener">Contract terms PDF</a></li></ul>
+<p class="meta">Status: <strong>needs review</strong>. Does not block the site.</p>
+</article><article class="flag sev-high" id="F-11">
+<header><span class="pill">F-11</span> <h3>Category naming: &#x27;Culture&#x27; and &#x27;Golf&#x27; do not match Kalshi&#x27;s tag list</h3> <span class="pill">Severity: high</span></header>
+<p>The series endpoint returns a category named &#x27;Culture&#x27;, but Kalshi&#x27;s tags_by_categories endpoint has no &#x27;Culture&#x27; key. Golf appears only as a tag under Sports. Filters were built on the observed values, so the Culture and Golf pages may differ from what Kalshi&#x27;s own site shows.</p>
+<p><strong>Sources for manual review:</strong></p><ul><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories" target="_blank" rel="noopener">Tags by categories (observed)</a></li><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&amp;limit=20" target="_blank" rel="noopener">Series API category=Culture (observed)</a></li></ul>
+<p class="meta">Status: <strong>needs review</strong>. Does not block the site.</p>
+</article><article class="flag sev-medium" id="F-12">
+<header><span class="pill">F-12</span> <h3>Partial collection</h3> <span class="pill">Severity: medium</span></header>
+<p>Each query response was longer than one fetch chunk (totalChunks shown in tool output: Golf tag 27, Crypto 35, Elections 522, Sports 841, Economics 115 at the page sizes used). Only chunk 0 (the first page of results) was read for each. The rows are not complete category lists.</p>
+<p><strong>Sources for manual review:</strong></p><ul><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Golf&amp;limit=20" target="_blank" rel="noopener">Series API tags=Golf (observed)</a></li><li><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&amp;limit=100" target="_blank" rel="noopener">Series API category=Crypto (observed)</a></li></ul>
+<p class="meta">Status: <strong>needs review</strong>. Does not block the site.</p>
+</article></section>
+<section><h2>Repository flags</h2><article class="flag sev-medium" id="R-F1"><header><span class="pill">R-F1</span> <h3>Repo irregularity</h3></header><p>At this session&#x27;s base commit (6072808) the repository had no code, only a one-line README (&quot;# Demo2&quot;). Confirm the current main content matches the review.</p><ul><li><a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a></li></ul></article><article class="flag sev-medium" id="R-F2"><header><span class="pill">R-F2</span> <h3>Repo irregularity</h3></header><p>At the base there was no LICENSE, no CI workflow, and no .gitignore. main now has a Pages workflow (.github/workflows/pages.yml) but still no LICENSE in the files listed at review time.</p><ul><li><a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a></li></ul></article><article class="flag sev-medium" id="R-F3"><header><span class="pill">R-F3</span> <h3>Repo irregularity</h3></header><p>COORDINATION.md did not exist at the base. The session that built the main dashboard created it, and this session appended its entry.</p><ul><li><a href="https://github.com/karagemop466-tech/Demo2/blob/main/COORDINATION.md" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2/blob/main/COORDINATION.md</a></li></ul></article><article class="flag sev-medium" id="R-F4"><header><span class="pill">R-F4</span> <h3>Repo irregularity</h3></header><p>The coordination instructions describe session-&lt;id&gt;/&lt;task&gt; branches, but the session rules here allow only the assigned branch. This session worked only on arena/6822d767-demo2. Reviewer should confirm which convention to use.</p><ul><li><a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a></li></ul></article><article class="flag sev-medium" id="R-F5"><header><span class="pill">R-F5</span> <h3>Repo irregularity</h3></header><p>Security review: the main dashboard&#x27;s README says users paste a demo API Key ID and private key into the Portfolio page and that keys are signed in-browser. A GitHub Pages site is public static hosting. Confirm this design is acceptable, or move signing out of the browser. This session did not read or store any key.</p><ul><li><a href="https://github.com/karagemop466-tech/Demo2/blob/main/README.md" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2/blob/main/README.md</a></li></ul></article><article class="flag sev-medium" id="R-F6"><header><span class="pill">R-F6</span> <h3>Repo irregularity</h3></header><p>Overlap: main&#x27;s category pages (pages/gas.html and others) show no data rows; values are live-only in the browser. The verified/ subsite adds static rows with a source link per row. Integration needed to link the two sites from the main navigation (a shared file, not edited here).</p><ul><li><a href="https://github.com/karagemop466-tech/Demo2/blob/main/pages/gas.html" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2/blob/main/pages/gas.html</a></li></ul></article><article class="flag sev-medium" id="R-F7"><header><span class="pill">R-F7</span> <h3>Repo irregularity</h3></header><p>PR #3 (branch arena/407c72e2-demo2) merged into main during this session (merge commit 5224293). It adds root-level analysis, portfolio, and review pages. Not reviewed by this session.</p><ul><li><a href="https://github.com/karagemop466-tech/Demo2/pull/3" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2/pull/3</a></li></ul></article></section>
+
+</main>
+<footer>
+  <p>Data source: Kalshi <strong>demo</strong> Trade API, <a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a>.
+  Kalshi says demo prices and behavior may not reflect real markets. Not financial advice.
+  Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a>.</p>
+  <p>Site built 2026-11-20 11:17 UTC from data/kalshi_snapshot.json (collected 2026-11-20).</p>
+</footer>
+
+</body>
+</html>

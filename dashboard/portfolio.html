@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portfolio & trades — Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div id="nav"></div>
+<main>
+  <h1>Portfolio & trade execution</h1>
+  <p class="lead">Status: <span class="badge b-bad">BLOCKED — no demo API key connected</span></p>
+
+  <div class="note bad">
+    <strong>Why nothing is shown here yet:</strong> Kalshi’s portfolio, balance and order endpoints are authenticated. They need an API key created in your Kalshi <em>demo</em> account. No key exists in this workspace, and I cannot create a demo account or key without your login, so I have <strong>not</strong> placed any trades and have <strong>not</strong> invented any balances or P&amp;L. No orders were executed.
+  </div>
+
+  <h2>What is needed to unblock (one-time)</h2>
+  <ol class="clean">
+    <li>Create an API key in the Kalshi <em>demo</em> environment. Docs: <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API Keys ↗</a> · <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment ↗</a>.</li>
+    <li>Provide the key to the workspace as a secret (never commit it to this repo). Demo keys only work against demo hosts (<a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API environments ↗</a>).</li>
+    <li>The workspace then signs requests per Kalshi’s request-signing rules: sign the path only, e.g. <code>/trade-api/v2/portfolio/orders</code> (no host, no query) — <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">Request Signing ↗</a>.</li>
+  </ol>
+
+  <h2>Endpoints that will feed this page (verified names)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Purpose</th><th>Method &amp; path</th><th>Auth</th><th>Rate-limit bucket (docs)</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>Cash balance</td><td><code>GET /portfolio/balance</code></td><td>Required</td><td>Own bucket: Basic/Advanced 1/sec; higher tiers 5/sec</td><td><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate limits ↗</a></td></tr>
+      <tr><td>Place order</td><td><code>POST /portfolio/orders</code></td><td>Required</td><td>Write bucket</td><td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">Signing example ↗</a> · <a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noopener">Create order quick start ↗</a></td></tr>
+      <tr><td>Fills (executed trades)</td><td>WebSocket <code>fill</code> channel (private)</td><td>Required</td><td>—</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">WebSocket quick start ↗</a></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Trade log (empty until a demo key is connected)</h2>
+  <p class="small muted">Each row will be one executed trade, read from the authenticated API. Fields not returned by the API will stay blank and be flagged UNVERIFIED.</p>
+  <div class="tablewrap"><table>
+    <thead><tr>
+      <th>Trade time (UTC)</th><th>Market ticker</th><th>Category</th><th>Trade type (threshold / range / outcome)</th><th>Side (YES/NO)</th>
+      <th class="num">Contracts</th><th class="num">Fill price</th><th>Result (yes/no)</th><th class="num">Realized P&amp;L</th><th>Source</th>
+    </tr></thead>
+    <tbody><tr><td colspan="10" class="muted">No trades recorded. Status: BLOCKED (see above).</td></tr></tbody>
+  </table></div>
+
+  <h2>Portfolio performance</h2>
+  <div class="kpis">
+    <div class="card"><div class="k">Balance</div><div class="v"><span class="unv">UNVERIFIED</span></div><div class="s">needs demo key</div></div>
+    <div class="card"><div class="k">Open positions</div><div class="v"><span class="unv">UNVERIFIED</span></div><div class="s">needs demo key</div></div>
+    <div class="card"><div class="k">Realized P&amp;L</div><div class="v"><span class="unv">UNVERIFIED</span></div><div class="s">needs demo key</div></div>
+    <div class="card"><div class="k">Trades executed</div><div class="v">0</div><div class="s">none placed</div></div>
+  </div>
+</main>
+<footer>Sources: <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API Keys</a> · <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API Environments</a> · <a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate Limits</a></footer>
+<script src="assets/site.js"></script>
+</body>
+</html>
