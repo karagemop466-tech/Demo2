@@ -21,7 +21,7 @@ Last updated: 2026-11-20
 | 8 | Questions / missing-information register | done | e3f65782 | `pages/questions.html` |
 | 9 | Flagged for Review page | done | e3f65782 | `pages/flagged.html` |
 | 10 | GitHub Pages deploy config | done | e3f65782 | `.github/workflows/pages.yml` |
-| 11 | Final integration + link check + PR | in progress | fed802ba | all |
+| 11 | Final integration + link check + PR | done | fed802ba | all |
 
 ## Sources used (official only)
 
@@ -72,9 +72,10 @@ No secrets or hard-coded market values in the repo; live values come only from t
 
 ## PR / deploy record
 
-- PR: (to be filled after `gh pr create`)
-- Merge result: (to be filled)
-- Pages deploy: (to be filled)
+- PR #8: https://github.com/karagemop466-tech/Demo2/pull/8 — MERGED (merge commit b3cb0b85a0d96ffe96ba45a3a2be2bf6ffab706c)
+- Merge result: MERGED via `gh pr merge 8 --merge`, no approval wait
+- Pages deploy: GitHub Actions run 44726748335 completed successfully (conclusion: success, 14s deploy job). Site live at https://karagemop466-tech.github.io/Demo2/ — homepage fetched and verified rendering dashboard, chart, orderbook, markets and resolved-events tables.
+- Live site URL: https://karagemop466-tech.github.io/Demo2/
 
 ## Update 2026-11-20 (post-merge)
 - PR #1: https://github.com/karagemop466-tech/Demo2/pull/1 — MERGED (merge commit acf8ef38292d7aaff1591a077742798b3a0ddde2)
