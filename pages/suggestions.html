@@ -5,7 +5,7 @@
 <meta name="description" content="Eight reviewed improvement proposals with options, trade-offs and official sources.">
 <link rel="stylesheet" href="../assets/style.css">
 </head><body>
-<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Start here</a><a href="../dashboard.html">Live dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/causes.html">Cause Channels</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html" aria-current="page">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Start here</a><a href="../dashboard.html">Live dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/alerts.html">Live Alerts</a><a href="../pages/causes.html">Cause Channels</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html" aria-current="page">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
 <div class="wrap">
 
 <h1>Suggestions — review before anything changes</h1>
@@ -57,10 +57,10 @@ knowledge. No decision is transmitted anywhere.</div>
   <input id="note-S2" data-note="S2" placeholder="why, and what would change your mind">
 </div>
 <div class="card" style="margin-bottom:12px" data-sug="S3">
-  <h3>S3 · Raise data freshness from 10 minutes to live</h3>
-  <p><b>Problem.</b> GitHub Actions snapshots run every 10 minutes, so the 60-second chart window is usually empty and “live” is really “near-live”.</p>
+  <h3>S3 · Raise data freshness from 30 minutes to live</h3>
+  <p><b>Problem.</b> GitHub Actions snapshots run every 30 minutes, so the 60-second chart window is usually empty and “live” is really “near-live”.</p>
   <p style="margin-bottom:.2em"><b>Options on the table.</b></p>
-  <ul class="clean"><li>Accept 10-minute snapshots (current)</li><li>Host a small relay that keeps a WebSocket open to the demo feed and appends ticks</li><li>Move to polling every 60 s (rate-limit budget permitting)</li></ul>
+  <ul class="clean"><li>Accept 30-minute snapshots (current)</li><li>Host a small relay that keeps a WebSocket open to the demo feed and appends ticks</li><li>Move to polling every 60 s (rate-limit budget permitting)</li></ul>
   <p><b>Recommendation.</b> Approve a relay only if sub-minute responsiveness is actually required; otherwise rename the panel “near-live” so the label is honest.</p>
   <p class="small muted">Effort Medium · Impact High · Risk: A relay needs hosting, secrets and a cost owner.</p>
   <p class="small">Source: <a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/quick_start_websockets</a></p>
@@ -126,7 +126,7 @@ knowledge. No decision is transmitted anywhere.</div>
 </div>
 <div class="card" style="margin-bottom:12px" data-sug="S7">
   <h3>S7 · Add resolution alerting</h3>
-  <p><b>Problem.</b> Resolution is recorded on the next 10-minute run, but nobody is notified.</p>
+  <p><b>Problem.</b> Resolution is recorded on the next 30-minute run, but nobody is notified.</p>
   <p style="margin-bottom:.2em"><b>Options on the table.</b></p>
   <ul class="clean"><li>Email/Slack via Actions on newly settled in-scope markets</li><li>No alerts, dashboard only (current)</li></ul>
   <p><b>Recommendation.</b> Add one digest per settled batch rather than per market.</p>

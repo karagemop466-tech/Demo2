@@ -196,13 +196,13 @@ price, and reports demo-account performance with trade categorisation and strate
 <p>This is a static GitHub Pages site, so it cannot hold a secret and a visitor&#8217;s browser
 cannot be the only data path. Instead:</p>
 <ol class="clean">
-<li>A GitHub Actions workflow runs <code>tools/collector.py</code> every 10 minutes against the
+<li>A GitHub Actions workflow runs <code>tools/collector.py</code> every 30 minutes against the
    official demo API (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment</a>).</li>
 <li>The collector writes <code>data/*.json</code>, including an <b>API log</b> of every request
    and its HTTP status, and commits the snapshot.</li>
 <li>The pages read those snapshots, so every number on screen traces back to a logged request.</li>
 </ol>
-<p class="small muted">Consequence stated plainly: the site is refreshed every 10 minutes, not
+<p class="small muted">Consequence stated plainly: the site is refreshed every 30 minutes, not
 tick-by-tick. The 60-second chart window is therefore often empty. Real-time would need a hosted
 WebSocket relay, which is raised as a decision in <a href="suggestions.html">Suggestions</a>.</p>
 </div>
@@ -236,7 +236,7 @@ WebSocket relay, which is raised as a decision in <a href="suggestions.html">Sug
 """ + table(["Question a decision-maker must settle", "Status", "Where to settle it"], [
  ["How is &#8220;highest dollar volume&#8221; defined - volume, open interest, or an estimate?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q1</a>'],
  ["Which series are authoritative for gas and golf (tag-based, since categories are Economics/Sports)?", '<span class="pill ok">Resolved - tags</span>', '<a href="api-reference.html">API reference</a>'],
- ["Is 10-minute snapshot freshness acceptable, or is live streaming required?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q3</a>'],
+ ["Is 30-minute snapshot freshness acceptable, or is live streaming required?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q3</a>'],
  ["Is a demo API key available for portfolio/execution?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q4</a>'],
  ["What is the minimum sample before a strategy may be stated?", '<span class="pill ok">Resolved - 5 resolved fills, flagged low confidence</span>', '<a href="analysis.html">Analysis</a>'],
  ["Should demo-derived strategies be treated as transferable to production?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q7</a>'],
@@ -531,10 +531,10 @@ SUGGESTIONS = [
          recommended="Implemented. Gas is found by the \u201cGas\u201d tag and golf by \u201cGolf\u201d "
                      "because their categories are Economics and Sports; elections, culture and "
                      "crypto use their category. Unmapped series are listed, never guessed."),
-    dict(id="S3", title="Raise data freshness from 10 minutes to live",
-         problem="GitHub Actions snapshots run every 10 minutes, so the 60-second chart window is "
+    dict(id="S3", title="Raise data freshness from 30 minutes to live",
+         problem="GitHub Actions snapshots run every 30 minutes, so the 60-second chart window is "
                  "usually empty and \u201clive\u201d is really \u201cnear-live\u201d.",
-         options=["Accept 10-minute snapshots (current)",
+         options=["Accept 30-minute snapshots (current)",
                   "Host a small relay that keeps a WebSocket open to the demo feed and appends ticks",
                   "Move to polling every 60 s (rate-limit budget permitting)"],
          effort="Medium", impact="High", risk="A relay needs hosting, secrets and a cost owner.",
@@ -569,7 +569,7 @@ SUGGESTIONS = [
          source=DOCS + "/getting_started/demo_env",
          recommended="Re-validate on production data before any real-money use."),
     dict(id="S7", title="Add resolution alerting",
-         problem="Resolution is recorded on the next 10-minute run, but nobody is notified.",
+         problem="Resolution is recorded on the next 30-minute run, but nobody is notified.",
          options=["Email/Slack via Actions on newly settled in-scope markets",
                   "No alerts, dashboard only (current)"],
          effort="Low", impact="Medium", risk="Alert fatigue if the topic list widens.",
@@ -703,7 +703,7 @@ QUESTIONS = [
   "series it could not classify is listed on the Flagged page for review. Nothing is guessed.",
   "api-reference/market/get-series-list"),
  ("Q3", "How fresh must the data be?",
-  "The site is static on GitHub Pages; the collector runs every 10 minutes and commits a snapshot.",
+  "The site is static on GitHub Pages; the collector runs every 30 minutes and commits a snapshot.",
   "Whether \u201clive\u201d means sub-minute (which needs a hosted WebSocket relay) or near-live.",
   "Ask the stakeholder; S3 in Suggestions lays out the three options and their cost.",
   "getting_started/quick_start_websockets"),
@@ -1072,10 +1072,10 @@ FLAGGED = [
   "Nothing is excluded silently: these markets fall outside the five topics because they carry no "
   "in-scope tag or category, and the unmapped-series list is published for review.",
   "api-reference/market/get-markets"),
- ("F8", "Snapshot freshness is 10 minutes, not real time",
-  "Data is refreshed by a scheduled GitHub Actions run.",
-  "Short chart windows are often empty; the word \u201clive\u201d overstates it.",
-  "Labelled on the dashboard, the empty state explains why, and S3 offers a relay as a decision.",
+ ("F8", "Snapshot freshness is 30 minutes, not real time",
+  "Data is refreshed by a scheduled GitHub Actions run (cadence reduced 10 -> 30 min by session b7bc848c to bound repository growth from frequent data commits).",
+  "Short chart windows are often empty; the word \u201clive\u201d overstates it for chart data.",
+  "Labelled on the dashboard, the empty state explains why, and S3 offers a relay as a decision. Since session b7bc848c the Live Alerts page polls the public trades endpoint from the browser every 25 s, so swing detection itself is live even though chart snapshots are not.",
   "getting_started/quick_start_websockets"),
  ("F9", "Unmapped series are excluded, not guessed",
   "Any open event whose series has no in-scope tag/category is dropped from the tables.",

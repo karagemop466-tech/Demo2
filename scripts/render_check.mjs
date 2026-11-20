@@ -36,6 +36,7 @@ const PAGES = [
   ['pages/golf.html', ['#kpis', '#liveTable']],
   ['pages/culture.html', ['#kpis', '#catNote']],
   ['pages/resolutions.html', ['#kpis', '#byTopic', '#resTable']],
+  ['pages/alerts.html', ['#alertStatus', '#chatAll', '#chatModel']],
   ['pages/causes.html', ['#srcTable', '#newsTable']],
   ['pages/verification.html', ['#health', '#apiLog']],
   ['pages/analysis.html', ['#kpis', '#tradeTable']],

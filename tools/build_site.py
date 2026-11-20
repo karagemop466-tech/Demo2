@@ -36,6 +36,7 @@ NAV = [
     ("live/index.html", "Live Console", "live"),
     ("jumps/index.html", "Price Jumps", "jumps"),
     ("pages/resolutions.html", "Resolutions", "res"),
+    ("pages/alerts.html", "Live Alerts", "alerts"),
     ("pages/causes.html", "Cause Channels", "cause"),
     ("pages/portfolio.html", "Portfolio", "port"),
     ("pages/analysis.html", "Analysis", "an"),
@@ -183,7 +184,7 @@ tables on the category, resolution and verification pages still work without it.
     <p class="small muted" style="margin-top:6px">Long windows use official candlesticks
       (<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">Get Market Candlesticks</a>,
       period 1 min / 1 h / 1 day, max 5,000 periods per request). Short windows use the
-      collector's own tick history, which is sampled every 10 minutes — a 60-second window
+      collector's own tick history, which is sampled every 30 minutes — a 60-second window
       will legitimately be empty. Nothing is interpolated.</p>
   </div>
 
@@ -403,7 +404,7 @@ DASH_JS = r"""
       spanSeconds: state.window,
       jumps: jumps,
       emptyMessage: state.window<=300
-        ? 'No ticks inside this window yet. The collector samples every 10 minutes, so a 60-second or 5-minute window only fills when a run has just completed.'
+        ? 'No ticks inside this window yet. The collector samples every 30 minutes, so a 60-second or 5-minute window only fills when a run has just completed.'
         : 'No price points in this window. Candlestick price objects are empty in periods with no trade - try the quoted-mid series or a longer window.'
     });
     const srcCount = series.filter(p=>p.src==='candle').length, tickCount = series.length-srcCount;
@@ -596,6 +597,195 @@ CATEGORY_JS = r"""
     $('kpis').innerHTML = `<div class="notice bad">Could not load data/topic-${topicsafe()}.json: ${KR.esc(e.message)}</div>`;
   }
   function topicsafe(){ return TOPIC; }
+})();
+</script>
+"""
+
+
+# ------------------------------------------------------- live alerts (two chats)
+ALERTS_BODY = r"""
+<h1>Live alerts — sharp price moves</h1>
+<p class="lead">A simplified scrolling chat for every move of <b>$0.10 or more</b> between two
+consecutive contract prices, in either direction, on in-scope markets (gas, elections, culture,
+crypto, golf). Two chats: <b>everything</b>, and a <b>rule-filtered “high-ROI” view</b> of the
+same swings. Each message links the market's own API page so a move can be checked against its
+timestamp; the cause of a move is never guessed — see
+<a href="causes.html">Cause channels</a> for where to look.</p>
+<div id="alertStatus" class="card">Loading alert feeds…</div>
+<div class="chatgrid">
+  <div class="chat"><h3>All in-scope events</h3><div id="chatAll" class="chatfeed"></div></div>
+  <div class="chat"><h3>Model picks — high ROI <span class="pill flag">rule-based</span></h3>
+    <p class="small muted" style="margin:0 4px 6px">The model is a documented two-tier rule over
+    the same swings, not a learned system: <b>Tier A · high ROI</b> — swing ≥ $0.10 that lands at
+    a price between $0.15 and $0.85 (room to run in both directions); <b>Tier B · traded snap</b> —
+    swing ≥ $0.30 that lands at ≤ $0.05 or ≥ $0.95 on a market with volume ≥ 1,000 contracts
+    (conviction repricing on real flow). <b>Not</b> financial advice; no backtested performance is
+    claimed. Criteria and trade categorisation live on
+    <a href="analysis.html">Analysis</a>.</p>
+    <div id="chatModel" class="chatfeed"></div></div>
+</div>
+<p class="small muted">Where the messages come from: (1) on load, every ≥ $0.10 move inside the
+collector's official candlesticks and tick history (<code>data/history.json</code>) is seeded into
+the chat, labelled <i>collector history</i>; (2) after load the page polls
+<code>GET /markets/trades</code> on the demo API every 25 seconds (market-data endpoints need no
+authentication — <a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">docs</a>)
+and turns new trade prints into alerts, labelled <i>live trade print</i>. If the browser cannot
+reach the API (offline, rate-limited), the chats keep the seeded history and the status card says
+so. Alerts persist in this browser only (localStorage); “Clear” empties them. Up to 200 are kept.</p>
+<div class="card"><button id="alertClear" class="pill">Clear alerts</button>
+<span class="small muted"> Source of each row:
+<a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a>
+(demo environment, mock funds).</span></div>
+"""
+
+ALERTS_JS = r"""
+<script>
+(async function(){
+  const $ = id => document.getElementById(id);
+  const DEMO = KR.DEMO_REST;
+  const STORE = "kalshi_alerts_v2";
+  const SWING = 0.10;
+  const topics = ["gas","elections","culture","crypto","golf"];
+  const tracked = new Map();
+  for (const t of topics) {
+    try {
+      const d = await KR.getJSON("data/topic-" + t + ".json");
+      (d.markets || []).forEach(m => { if (m && m.market_ticker) tracked.set(m.market_ticker, m); });
+    } catch (e) {}
+  }
+  const last = {};
+  tracked.forEach((m, t) => {
+    const p = Number(m.last_price_dollars);
+    if (m.last_price_dollars !== null && m.last_price_dollars !== "" && isFinite(p)) last[t] = p;
+  });
+  let alerts = [];
+  try { alerts = JSON.parse(localStorage.getItem(STORE)) || []; } catch (e) {}
+  const prints = {};
+
+  function esc(s){ return KR.esc(String(s === undefined || s === null ? "" : s)); }
+  function emptyMsg(txt){ return '<div class="emptyp">' + esc(txt) + '</div>'; }
+
+  function msgHTML(a) {
+    const dir = a.change > 0 ? "up" : "down";
+    const arrow = a.change > 0 ? "▲" : "▼";
+    return '<div class="msg' + (a.model ? " model" : "") + '">' +
+      '<div class="msg-t"><span class="pill ' + esc(a.topic || "") + '">' + esc(a.topic || "unmapped") + '</span>' +
+      (a.tier ? '<span class="pill ok" title="documented rule that selected this pick">tier ' + esc(a.tier) + '</span>' : "") +
+      '<span class="muted small">' + esc(a.time) + ' · ' + esc(a.origin) + '</span></div>' +
+      '<div><b>' + esc(a.title || a.ticker) + '</b></div>' +
+      '<div class="msg-p">' + KR.usd(a.fromV, 2) + ' → ' + KR.usd(a.toV, 2) +
+      ' <span class="' + dir + '">' + arrow + ' ' + KR.usd(Math.abs(a.change), 2) + '</span></div>' +
+      '<div class="small"><span class="muted">' + esc(a.ticker) + '</span> · ' +
+      KR.link(a.url || "#", "market API") + ' · ' +
+      '<span class="flagpill" title="The Kalshi API does not return causes; nothing here claims what moved the price">cause unverified</span></div>' +
+      '</div>';
+  }
+
+  function render() {
+    const model = alerts.filter(a => a.model);
+    $("chatAll").innerHTML = alerts.length
+      ? alerts.slice(0, 80).map(msgHTML).join("")
+      : emptyMsg("No ≥ $0.10 moves recorded yet. The chat fills from collector history on load and live trade prints after that.");
+    $("chatModel").innerHTML = model.length
+      ? model.slice(0, 80).map(msgHTML).join("")
+      : emptyMsg("No swings passed the model rules yet (Tier A: swing ≥ $0.10 landing between $0.15 and $0.85 · Tier B: ≥ $0.30 snap to an extreme on ≥ 1,000 contracts of volume).");
+  }
+
+  function pushAlert(a) {
+    alerts.unshift(a);
+    if (alerts.length > 200) alerts.length = 200;
+    try { localStorage.setItem(STORE, JSON.stringify(alerts)); } catch (e) {}
+  }
+
+  function consider(ticker, price, timeStr, origin) {
+    const row = tracked.get(ticker);
+    if (!row || !isFinite(price)) return;
+    const prev = last[ticker];
+    last[ticker] = price;
+    if (prev === undefined || prev === null) return;
+    const change = price - prev;
+    if (Math.abs(change) + 1e-9 < SWING) return;
+    prints[ticker] = (prints[ticker] || 0) + 1;
+    /* Two documented tiers (see the page text). Tier A: the swing lands mid-band.
+       Tier B: a >= $0.30 snap to an extreme on a market with real volume. */
+    let tier = null;
+    if (price >= 0.15 && price <= 0.85) tier = "A";
+    else if (Math.abs(change) >= 0.30 && (price <= 0.05 || price >= 0.95) &&
+             Number(row.volume_fp) >= 1000) tier = "B";
+    pushAlert({
+      ticker: ticker, title: row.market_title, topic: row.topic,
+      fromV: prev, toV: price, change: Math.round(change * 100) / 100,
+      time: timeStr, origin: origin, model: tier !== null, tier: tier,
+      url: row.market_url || (DEMO + "/markets/" + encodeURIComponent(ticker))
+    });
+  }
+
+  function hhmmss(unixSec) {
+    try { return new Date(unixSec * 1000).toISOString().slice(11, 19) + "Z"; }
+    catch (e) { return ""; }
+  }
+
+  /* Seed from the collector's own history (official API values): tick points first,
+     then 1-minute candlesticks. Chronological per ticker so `last` ends at the newest. */
+  try {
+    const h = await KR.getJSON("data/history.json");
+    Object.keys(h.points || {}).forEach(ticker => {
+      const arr = (h.points[ticker] || []).slice().sort((a, b) => (a.t || 0) - (b.t || 0));
+      arr.forEach(p => {
+        const v = Number(p.last);
+        if (isFinite(v)) consider(ticker, v, hhmmss(p.t || 0), "collector history");
+      });
+    });
+  } catch (e) {}
+  try {
+    const snap = await KR.getJSON("data/snapshot.json");
+    Object.keys(snap.candles || {}).forEach(ticker => {
+      const per = snap.candles[ticker] || {};
+      const set = per["1m"] || per["1h"] || per["1d"] || {};
+      const arr = (set.candles || []).slice().sort((a, b) => (a.ts || 0) - (b.ts || 0));
+      arr.forEach(c => {
+        const v = Number(c.close);
+        if (isFinite(v)) consider(ticker, v, hhmmss(c.ts || 0), "collector candle");
+      });
+    });
+  } catch (e) {}
+
+  /* Live poll: recent public trade prints across the demo exchange. */
+  let livePrints = 0, lastPoll = null;
+  async function poll() {
+    try {
+      const r = await fetch(DEMO + "/markets/trades?limit=1000", { cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const j = await r.json();
+      (j.trades || []).forEach(tr => {
+        const v = Number(tr.yes_price_dollars);
+        if (!isFinite(v)) return;
+        livePrints++;
+        consider(tr.ticker, v, String(tr.created_time || "").slice(11, 19) + "Z", "live trade print");
+      });
+      lastPoll = new Date().toISOString().slice(11, 19) + "Z";
+      $("alertStatus").innerHTML = '<span class="pill ok">live</span> ' +
+        'polling <code>GET /markets/trades</code> every 25 s · ' +
+        KR.num(tracked.size, 0) + ' tracked markets in 5 topics · ' +
+        KR.num(livePrints, 0) + ' trade prints processed · last poll ' + esc(lastPoll);
+    } catch (e) {
+      $("alertStatus").innerHTML = '<span class="pill flag">fallback</span> ' +
+        'live fetch unavailable (' + esc(String(e)) + ') — chats show the seeded collector ' +
+        'history only. The demo API is reachable from a normal browser; this sandbox or ' +
+        'connection is not.';
+    }
+    render();
+  }
+
+  $("alertClear").addEventListener("click", function () {
+    alerts = [];
+    try { localStorage.removeItem(STORE); } catch (e) {}
+    render();
+  });
+
+  render();
+  poll();
+  setInterval(poll, 25000);
 })();
 </script>
 """
@@ -813,6 +1003,7 @@ LANDING_JS = r"""
   const views = [
     {href:"dashboard.html", t:"Live dashboard", d:"Ranked live markets, price chart (time vs price), order book depth, liquidity over time, sharp-move table."},
     {href:"pages/executive-summary.html", t:"Executive summary", d:"The brief, what was built, what the data says, and what is still missing."},
+    {href:"pages/alerts.html", t:"Live alerts", d:"Two scrolling chats: every $0.10+ price swing in scope, and a rule-based high-ROI filter of the same swings."},
     {href:"instrument-panel/site/index.html", t:"Instrument panel", d:"1,500+ open in-scope markets and 1,600+ resolved ones, ranked by open interest, with per-row API links."},
     {href:"verified/index.html", t:"Verified rows", d:"Every row with its official source; anything unconfirmable is blank and flagged."},
     {href:"rankings.html", t:"Dollar rankings", d:"Highest-dollar events per topic by a stated formula."},
@@ -1046,6 +1237,10 @@ def build_live_pages() -> None:
     page(path="pages/resolutions.html", title="Resolutions", active="res",
          body=RES_BODY, extra_js=RES_JS,
          desc="In-scope Kalshi demo markets tracked until resolution, with the official yes/no result.")
+
+    page(path="pages/alerts.html", title="Live Alerts", active="alerts",
+         body=ALERTS_BODY, extra_js=ALERTS_JS,
+         desc="Scrolling alert chats for every >= $0.10 contract-price swing on in-scope Kalshi demo markets, with a rule-based high-ROI filter, live trade-print polling and sourced links.")
 
     page(path="index.html", title="Kalshi demo dashboard — start here", active="landing",
          body=LANDING_BODY, extra_js=LANDING_JS,
