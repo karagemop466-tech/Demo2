@@ -372,7 +372,32 @@ a 429 has no penalty — so backoff is the only remedy. The collector now spaces
 (widening x1.5 per 429, narrowing 0.5% per success, 4 workers) and publishes the observed 429 count on
 the Verification page. After the restructure: 440 requests, 0 errors, 5 observed 429s.
 
-### PR / deploy record
-- PR: (filled after `gh pr create`)
-- Merge result: (filled after merge)
-- Pages deploy: (filled after deploy check)
+### PR / deploy record — complete
+
+| PR | What | Result |
+|----|------|--------|
+| [#28](https://github.com/karagemop466-tech/Demo2/pull/28) | The instrument panel itself (15 pages, collector, validator, workflow) | **merged** `46acd3e` at 2026-11-20T12:43:50Z |
+| [#29](https://github.com/karagemop466-tech/Demo2/pull/29) | Move the nav link into `build_site.py` so the generated-page check passes | **merged** |
+| [#30](https://github.com/karagemop466-tech/Demo2/pull/30) | Derive the expected nav size from the generator instead of hardcoding 20 | **merged** `64d0961` |
+
+**`Build and check the site` is green on main at `64d0961`.** `pages build and deployment` succeeded,
+and `Deploy GitHub Pages` ran the full collect → validate → rebuild → link-check chain.
+
+**Live and verified by fetching the deployed page** (not by assuming):
+`https://karagemop466-tech.github.io/Demo2/instrument-panel/site/analysis.html` returns the dashboard,
+showing 1,601 resolved markets, 317 traded / 1,284 never-traded, and the corrected calibration table.
+
+### Two CI failures I caused on main, and what was actually wrong
+
+Both were **my** mistakes, both blocked nothing but looked like broken deployments, and both are worth
+recording so another session does not repeat them:
+
+1. **Edited a generated file.** `index.html` is produced by `tools/build_site.py`. Adding a nav link by
+   hand made CI's "pages must match the generator" step fail. *Lesson: if a file has a generator, edit
+   the generator.*
+2. **A hardcoded count in a checker.** `tools/check.py` asserted "nav has 20 links", a magic number that
+   has to be edited whenever a section is added. It now reads the count from the generator's `NAV` list,
+   so it checks that pages match their source rather than a number someone has to remember.
+
+In both cases the Pages deploy itself was fine; only the consistency job was red. The site was never
+broken, and it is worth distinguishing the two when reading Actions.
