@@ -1216,3 +1216,5 @@ The claim does not authorize edits to other sessions' implementation code (`serv
 
 - PR #55: https://github.com/karagemop466-tech/Demo2/pull/55 — **merged** at `be21513ec96b44e9bed98dfcfc1a138324529668` (2026-11-20T19:59:33Z).
 - Build-and-check / Pages workflows were queued on GitHub at last verification (CI runs #110–#112; Pages run #48: https://github.com/karagemop466-tech/Demo2/actions/runs/44807242459). The previous CI run on the pre-regeneration head failed because generated pages were stale; after regenerating, local generator parity and all local checks passed. Pages run #48 has not yet completed, and the added audit page is not yet confirmed on the live site. F-3 remains **in progress** until deploy success and live-page verification.
+
+| F-5 | Audit the deployed Live Alerts page's real browser request paths and publish any live-only failure | in progress | f75410bb | `session-f75410bb/review.html`, `COORDINATION.md`, `tools/build_content.py`, generated `pages/flagged.html` |
