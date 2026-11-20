@@ -401,3 +401,24 @@ recording so another session does not repeat them:
 
 In both cases the Pages deploy itself was fine; only the consistency job was red. The site was never
 broken, and it is worth distinguishing the two when reading Actions.
+
+---
+
+## Session `arena-21eed9ff` — current-branch documentation audit (2026-11-20)
+
+**Branch:** `arena/21eed9ff-demo2` (the Arena-assigned active branch; branch name is fixed).
+**Scope claim:** independently audit executive-summary and verification documentation against
+current official Kalshi documentation and checked-in implementation. This task edits only
+`docs/EXECUTIVE_SUMMARY.md`, `docs/VERIFICATION.md`, and this coordination record.
+
+| ID | Task | Status | Owner | Files touched |
+|---|---|---|---|---|
+| A-1 | Claim & source-backed documentation audit | in progress | arena-21eed9ff | `COORDINATION.md`, `docs/EXECUTIVE_SUMMARY.md`, `docs/VERIFICATION.md` |
+| A-2 | Reconcile claims with current implementation; leave inaccessible or unverified values blank/flagged | in progress | arena-21eed9ff | `docs/EXECUTIVE_SUMMARY.md`, `docs/VERIFICATION.md` |
+| A-3 | Run existing site/data/link verification and report findings | in progress | arena-21eed9ff | `COORDINATION.md` |
+
+The preceding board entries are historical records of merged sessions, not active file locks.
+This audit intentionally does not change generated pages, dashboards, collectors, trade code,
+workflow files, or shared site navigation. No Kalshi credentials are available in this session.
+The coordination request to use a separate `session-<id>/<task>` branch conflicts with the
+Arena branch constraint; this work stays on the assigned branch.
