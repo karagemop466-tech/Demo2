@@ -183,6 +183,16 @@ price, and reports demo-account performance with trade categorisation and strate
   <code>POST /portfolio/events/orders</code>; every attempt is logged with its HTTP status.</li>
 <li><b>Live interactive graph, X = time, Y = contract price, seconds to days</b> -
   <a href="../index.html">Dashboard</a> chart, 60 s / 5 m / 1 h / 6 h / 24 h / 7 d.</li>
+<li><b>Live alerting on sudden swings &ge; $0.10, as two scrolling chats</b> - the Dashboard's
+  <b>Live alert desk</b>: <i>all events</i> and <i>model screen &mdash; high ROI</i>. Lines come from a
+  20-second poll of the official demo Trade API (tagged <span class="pill ok">live poll</span>) or from
+  the collector's 10-minute history (tagged <span class="pill">snapshot</span>); every line links the
+  market and keeps tracking it to its official yes/no result. The screen is a printed heuristic, not a
+  forecast (<a href="flagged.html">N-7</a>).</li>
+<li><b>Automated simulated trades to test strategies</b> - <a href="paper-trading.html">Paper Trades</a>,
+  run by the data workflow on every refresh. Fills use only official ask fields, fees are the published
+  quadratic form, and the ledger labels every fee as a model (<a href="flagged.html">N-3</a>). It is
+  <b>not</b> the demo account's performance and the order book is not consulted.</li>
 <li><b>Current liquidity: how many contracts at a given price</b> - order-book panel on the
   Dashboard; full depth on each category page.</li>
 <li><b>Suggestions section to choose a path before implementing</b> -
@@ -202,9 +212,12 @@ cannot be the only data path. Instead:</p>
    and its HTTP status, and commits the snapshot.</li>
 <li>The pages read those snapshots, so every number on screen traces back to a logged request.</li>
 </ol>
-<p class="small muted">Consequence stated plainly: the site is refreshed every 10 minutes, not
-tick-by-tick. The 60-second chart window is therefore often empty. Real-time would need a hosted
-WebSocket relay, which is raised as a decision in <a href="suggestions.html">Suggestions</a>.</p>
+<p class="small muted">Consequence stated plainly: the snapshot behind the tables is refreshed every
+10 minutes, not tick-by-tick, so the 60-second chart window is often empty. The <b>alert desk</b> does
+not wait for the snapshot: it polls the official demo Trade API itself every 20 seconds and labels those
+lines <span class="pill ok">live poll</span>, while the chart and tables stay on the 10-minute
+snapshot. A hosted WebSocket relay is still the only way to true tick-level streaming, and is raised as
+a decision in <a href="suggestions.html">Suggestions</a>.</p>
 </div>
 <div class="card">
 <h3>What it explicitly does not do</h3>
@@ -240,19 +253,23 @@ WebSocket relay, which is raised as a decision in <a href="suggestions.html">Sug
  ["Is a demo API key available for portfolio/execution?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q4</a>'],
  ["What is the minimum sample before a strategy may be stated?", '<span class="pill ok">Resolved - 5 resolved fills, flagged low confidence</span>', '<a href="analysis.html">Analysis</a>'],
  ["Should demo-derived strategies be treated as transferable to production?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q7</a>'],
+ ["Is the alert desk's high-ROI screen a forecast?", '<span class="pill ok">Resolved - disclosed heuristic, never a forecast</span>', '<a href="flagged.html">N-7</a>'],
+ ["Is the published snapshot the whole exchange?", '<span class="pill flag">Open - bounded payload</span>', '<a href="flagged.html">N-1</a>'],
 ]) + """
 <h2>Bottom line</h2>
 <p>Built and sourced: the five-topic scope, the ranked live view, the time-versus-price chart, order-book
 depth, yes/no resolution tracking, trade categorisation, a strategy engine that refuses to guess, a review
-gate for suggestions, and a price-jump page for moves of $0.10 or more between official trade prints
-(<a href="../jumps/index.html">Price Jumps</a>, added in this review).</p>
-<p><b>Not done, and why.</b> Demo-account portfolio tracking and order execution need a Kalshi demo API key,
-and this workspace has none (<a href="flagged.html">F19</a>). Culture has no open markets in the collected
-data (<a href="flagged.html">F20</a>). The gas topic includes solar, electricity and refinery markets
-(<a href="flagged.html">F14</a>). The jump page cannot name a cause, because no official source links a price
-move to news (<a href="flagged.html">F18</a>), and snapshots are too coarse for intraday moves
-(<a href="flagged.html">F17</a>). A public page takes a demo private key as input
-(<a href="flagged.html">F21</a>).</p>
+gate for suggestions, a price-jump page for moves of $0.10 or more between official trade prints
+(<a href="../jumps/index.html">Price Jumps</a>, added in this review), and the live alert desk with its two
+scrolling chats and disclosed model screen.</p>
+<p><b>Not done, and why.</b> Demo-account portfolio tracking and order execution need a Kalshi demo
+API key, and this workspace has none (<a href="flagged.html">F6</a>). Culture has no open markets in the
+collected data, and gas is catalogue-only with no live markets (<a href="flagged.html">F12</a>). The
+cause of a price move cannot be named, because no official source links a price move to news
+(<a href="flagged.html">F13</a>, <a href="flagged.html">N-7</a>), and the snapshot is a
+<b>bounded</b> publish payload rather than a complete enumeration (<a href="flagged.html">N-1</a>).
+Short-dated markets only appear because a separate near-term pass unions them in, from a different
+request than the event rows (<a href="flagged.html">N-4</a>).</p>
 <p>What remains open is definition and access: what &#8220;highest dollar amount&#8221; means, how fresh the data
 must be, whether a demo key will be supplied, and how much evidence is enough before a strategy is trusted.
 Those are listed, with the exact information needed to close them, on <a href="questions.html">Questions</a>.</p>
@@ -993,6 +1010,65 @@ makes. This is the provenance for every figure in the dashboard tables.</p>
 <tr><td>Candlesticks</td><td><code>period_interval</code> 1/60/1440; traded price can be an empty object in quiet periods</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">get-market-candlesticks</a></td><td>Verified 2026-11-20</td></tr>
 <tr><td>Settlement</td><td>Winning side settles at $1.00 per contract; losing side $0</td><td><a href="https://docs.kalshi.com/getting_started/market_settlement">market settlement</a></td><td>Verified 2026-11-20</td></tr>
 <tr><td>Status enums</td><td>Filter values differ from response values in the same doc</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Verified 2026-11-20 &mdash; docs inconsistency flagged (G-10)</td></tr>
+</tbody></table></div>
+"""
+    body += """
+<h2>Additional verified claims (session 7085e643, 2026-11-20)</h2>
+<p class="lead">Every row below was checked against the official demo Trade API or the official docs
+during this session, on 2026-11-20. The URLs are the exact requests used, so any value can be
+re-checked by opening them.</p>
+<div class="tablewrap"><table><thead><tr><th>Claim</th><th>Verified value</th><th>Source</th><th>Result</th></tr></thead><tbody>
+<tr><td><code>GET /markets</code> <code>tickers=</code> filter</td><td>Comma-separated ticker filter
+returns exactly the requested markets; rows carry <code>last_price_dollars</code>,
+<code>volume_24h_fp</code>, <code>close_time</code>, <code>result</code>, <code>yes_ask_dollars</code>.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a> &middot;
+<a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?tickers=KXCRYPTOLEAD15M-26NOV201745-XRP,KXCRYPTOLEAD15M-26NOV201745-SOL&amp;limit=10">live probe</a></td>
+<td>Verified 2026-11-20 &mdash; this is the request the dashboard's alert desk polls</td></tr>
+<tr><td>Short-dated open markets</td><td><code>status=open&amp;max_close_ts=&lt;epoch&gt;</code> returns
+markets closing inside the window; the first page held
+<code>KXCRYPTOLEAD15M-26NOV201745-XRP</code> with <code>close_time 2026-11-20T22:45:00Z</code>, absent
+from the event pagination entirely.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a> &middot;
+<a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&amp;max_close_ts=1795214873&amp;limit=20">live probe</a></td>
+<td>Verified 2026-11-20 &mdash; the collector's near-term pass uses this shape</td></tr>
+<tr><td>Unposted books</td><td>A near-term book can be entirely unposted:
+<code>yes_ask_dollars "0.0000"</code>, <code>no_ask_dollars "1.0000"</code>,
+<code>volume_24h_fp "0.00"</code>, <code>yes_bid_size_fp "0.00"</code>.</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&amp;max_close_ts=1795214873&amp;limit=20">live probe</a></td>
+<td>Verified 2026-11-20 &mdash; why the desk skips a side instead of inventing a fill price</td></tr>
+<tr><td>Settled rows</td><td>A settled market carries <code>result</code>,
+<code>settlement_ts</code> and <code>settlement_value_dollars</code>.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a> &middot;
+<a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTC&amp;status=settled&amp;limit=2">live probe</a></td>
+<td>Verified 2026-11-20 &mdash; basis of settlement in the paper ledger and the alert desk</td></tr>
+<tr><td>Series fee fields</td><td><code>GET /series/KXBTC</code> returns
+<code>fee_type "quadratic"</code>, <code>fee_multiplier 1</code>; the enum is exactly
+<code>quadratic | quadratic_with_maker_fees | quadratic_with_combo_maker_fees | flat</code>.</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC">live probe</a> &middot;
+<a href="https://docs.kalshi.com/api-reference/exchange/get-series-fee-changes">get-series-fee-changes</a></td>
+<td>Verified 2026-11-20 &mdash; copied onto every scope row; the 0.07 constant itself is not
+restated on the docs site, so fees stay labelled a model</td></tr>
+<tr><td>Fee rounding</td><td>The trade fee is the model fee rounded <b>up</b> to six decimals, not to a
+cent.</td>
+<td><a href="https://docs.kalshi.com/getting_started/fee_rounding">fee rounding</a></td>
+<td>Verified 2026-11-20 &mdash; implemented in <code>Decimal</code>; a float <code>ceil</code>
+overcharges by one micro-dollar (<code>0.08645000000000001</code>)</td></tr>
+<tr><td>Exchange status</td><td><code>exchange_active true</code>, <code>trading_active true</code>,
+4 shards.</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">/exchange/status</a></td>
+<td>Verified 2026-11-20 &mdash; so the zero live markets for gas and culture are scope-mapping facts,
+not an outage</td></tr>
+<tr><td>Browser access to the demo API</td><td>A cross-origin request from the Pages origin is
+allowed (<code>access-control-allow-origin</code> echoed), so the alert desk's 20-second poll can run
+in the browser; the WebSocket handshake still needs signed headers a browser cannot set.</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=1">probe</a> &middot;
+<a href="https://docs.kalshi.com/getting_started/quick_start_websockets">websockets quick start</a></td>
+<td>Verified 2026-11-20T12:12:40Z; the desk falls back to the snapshot stream if it is blocked</td></tr>
+<tr><td>Float comparison on the $0.10 threshold</td><td><code>1.00 - 0.90</code> evaluates to
+<code>0.09999999999999998</code>, so a strict <code>&gt;= 0.10</code> test drops a real $0.10 move.</td>
+<td><a href="session-7085e643/tests/test_alerts.cjs">reproducing test</a> (node)</td>
+<td>Verified 2026-11-20 &mdash; both the alert desk and the chart's jump markers now compare with a
+1e-9 tolerance</td></tr>
 </tbody></table></div>
 """
     page(path="pages/verification.html", title="Verification", active="ver", body=body, extra_js=js,

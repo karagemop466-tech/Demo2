@@ -29,6 +29,9 @@ nav.main a{color:var(--text);padding:5px 9px;border-radius:999px;border:1px soli
   text-decoration:none;white-space:nowrap}
 nav.main a:hover{background:var(--panel2);border-color:var(--line)}
 nav.main a[aria-current="page"]{background:var(--accent);color:var(--ink);font-weight:700}
+nav.main .navgroup{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--muted);margin:6px 0 2px;width:100%}
+
 .navtoggle{display:none}
 
 /* ---------- layout ---------- */
@@ -43,6 +46,12 @@ nav.main a[aria-current="page"]{background:var(--accent);color:var(--ink);font-w
 .small{font-size:.8rem}
 hr{border:0;border-top:1px solid var(--line);margin:22px 0}
 
+/* ---------- start-here strip ---------- */
+.startrow{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;font-size:.84rem;
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:10px 13px;margin:10px 0}
+.startrow .startlabel{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.startrow b{color:var(--text);font-weight:700}
 /* ---------- KPI ---------- */
 .kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin:14px 0}
 .kpi-card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);

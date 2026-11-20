@@ -47,12 +47,37 @@ NAV = [
     ("pages/sources.html", "Sources", "src"),
 ]
 
+# The navigation is grouped so the landing page stays scannable: the five topics first, the
+# trading desk next, the registers after that, and the other sessions' published subsites
+# last. The grouping is a presentation of NAV, not a second list of links: every entry must
+# appear in exactly one group, which the assertion below enforces at build time (a new page
+# that is added to NAV but forgotten here fails the build instead of silently vanishing
+# from the navigation).
+NAV_GROUPS = [
+    ("Desk", ["dash", "paper", "res", "rank"]),
+    ("Topics", ["gas", "elections", "culture", "crypto", "golf"]),
+    ("Registers", ["exec", "ver", "flag", "repo", "src", "q", "sug", "an", "port", "api"]),
+    ("Preserved subsites", ["verified", "static", "inst", "live", "jumps", "decide"]),
+]
+
 
 def nav_html(active: str, prefix: str) -> str:
+    by_key = {key: (href, label) for href, label, key in NAV}
+    missing = [k for _, keys in NAV_GROUPS for k in keys if k not in by_key]
+    ungrouped = [k for _, _, k in NAV
+                 if k not in {gk for _, keys in NAV_GROUPS for gk in keys}]
+    if missing or ungrouped:
+        raise SystemExit(
+            f"NAV and NAV_GROUPS disagree: missing={missing} ungrouped={ungrouped}"
+        )
     items = []
-    for href, label, key in NAV:
-        cur = ' aria-current="page"' if key == active else ""
-        items.append(f'<a href="{prefix}{href}"{cur}>{label}</a>')
+    for group, keys in NAV_GROUPS:
+        links = []
+        for k in keys:
+            href, label = by_key[k]
+            cur = ' aria-current="page"' if k == active else ""
+            links.append(f'<a href="{prefix}{href}"{cur}>{label}</a>')
+        items.append(f'<span class="navgroup">{group}</span>' + "".join(links))
     return (
         '<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard'
         "<small>demo environment · not real money</small></div>"
@@ -132,11 +157,17 @@ DASH_BODY = r"""
 elections, culture, crypto, golf</b>. Ranked by <i>estimated</i> dollar volume, charted by
 contract price over time, with order-book liquidity at each price, tracked until the market
 resolves <b>yes</b> or <b>no</b>.</p>
-<p class="lead" style="font-size:.95em">All sections: <a href="rankings.html">Dollar Rankings</a> ·
-<a href="verified/index.html">Verified rows</a> · <a href="dashboard/index.html">Dashboard</a> ·
-<a href="site/index.html">Site</a> · <a href="intelligence/index.html">Intelligence</a> ·
-<a href="analysis.html">Analysis (root)</a> · <a href="portfolio.html">Portfolio status (root)</a> ·
-<a href="review.html">Review (root)</a></p>
+<div class="startrow">
+  <span class="startlabel">Start here</span>
+  <span><b>Alert desk</b> below · <b>Topics:</b>
+    <a href="pages/gas.html">Gas</a> · <a href="pages/elections.html">Elections</a> ·
+    <a href="pages/culture.html">Culture</a> · <a href="pages/crypto.html">Crypto</a> ·
+    <a href="pages/golf.html">Golf</a></span>
+  <span><b>Desk:</b> <a href="pages/paper-trading.html">Paper Trades</a> ·
+    <a href="pages/resolutions.html">Resolutions</a> · <a href="rankings.html">Dollar Rankings</a></span>
+  <span><b>Registers:</b> <a href="pages/verification.html">Verification</a> ·
+    <a href="pages/flagged.html">Flagged for Review</a> · <a href="pages/sources.html">Sources</a></span>
+</div>
 <div id="metaBar"></div>
 <noscript><div class="notice">JavaScript is required for the live panels. The static
 tables on the category, resolution and verification pages still work without it.</div></noscript>

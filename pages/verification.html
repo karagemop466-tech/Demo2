@@ -5,7 +5,7 @@
 <meta name="description" content="Every claim, the official source, and how it was verified.">
 <link rel="stylesheet" href="../assets/style.css">
 </head><body>
-<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/paper-trading.html">Paper Trades</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html" aria-current="page">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><span class="navgroup">Desk</span><a href="../index.html">Dashboard</a><a href="../pages/paper-trading.html">Paper Trades</a><a href="../pages/resolutions.html">Resolutions</a><a href="../rankings.html">Dollar Rankings</a><span class="navgroup">Topics</span><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><span class="navgroup">Registers</span><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/verification.html" aria-current="page">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a><a href="../pages/questions.html">Questions</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/api-reference.html">API Reference</a><span class="navgroup">Preserved subsites</span><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../review.html">Decision Register</a></nav></div></header>
 <div class="wrap">
 
 <h1>Verification — line by line</h1>
@@ -36,6 +36,64 @@ makes. This is the provenance for every figure in the dashboard tables.</p>
 <tr><td>Candlesticks</td><td><code>period_interval</code> 1/60/1440; traded price can be an empty object in quiet periods</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">get-market-candlesticks</a></td><td>Verified 2026-11-20</td></tr>
 <tr><td>Settlement</td><td>Winning side settles at $1.00 per contract; losing side $0</td><td><a href="https://docs.kalshi.com/getting_started/market_settlement">market settlement</a></td><td>Verified 2026-11-20</td></tr>
 <tr><td>Status enums</td><td>Filter values differ from response values in the same doc</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Verified 2026-11-20 &mdash; docs inconsistency flagged (G-10)</td></tr>
+</tbody></table></div>
+
+<h2>Additional verified claims (session 7085e643, 2026-11-20)</h2>
+<p class="lead">Every row below was checked against the official demo Trade API or the official docs
+during this session, on 2026-11-20. The URLs are the exact requests used, so any value can be
+re-checked by opening them.</p>
+<div class="tablewrap"><table><thead><tr><th>Claim</th><th>Verified value</th><th>Source</th><th>Result</th></tr></thead><tbody>
+<tr><td><code>GET /markets</code> <code>tickers=</code> filter</td><td>Comma-separated ticker filter
+returns exactly the requested markets; rows carry <code>last_price_dollars</code>,
+<code>volume_24h_fp</code>, <code>close_time</code>, <code>result</code>, <code>yes_ask_dollars</code>.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a> &middot;
+<a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?tickers=KXCRYPTOLEAD15M-26NOV201745-XRP,KXCRYPTOLEAD15M-26NOV201745-SOL&amp;limit=10">live probe</a></td>
+<td>Verified 2026-11-20 &mdash; this is the request the dashboard's alert desk polls</td></tr>
+<tr><td>Short-dated open markets</td><td><code>status=open&amp;max_close_ts=&lt;epoch&gt;</code> returns
+markets closing inside the window; the first page held
+<code>KXCRYPTOLEAD15M-26NOV201745-XRP</code> with <code>close_time 2026-11-20T22:45:00Z</code>, absent
+from the event pagination entirely.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a> &middot;
+<a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&amp;max_close_ts=1795214873&amp;limit=20">live probe</a></td>
+<td>Verified 2026-11-20 &mdash; the collector's near-term pass uses this shape</td></tr>
+<tr><td>Unposted books</td><td>A near-term book can be entirely unposted:
+<code>yes_ask_dollars "0.0000"</code>, <code>no_ask_dollars "1.0000"</code>,
+<code>volume_24h_fp "0.00"</code>, <code>yes_bid_size_fp "0.00"</code>.</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&amp;max_close_ts=1795214873&amp;limit=20">live probe</a></td>
+<td>Verified 2026-11-20 &mdash; why the desk skips a side instead of inventing a fill price</td></tr>
+<tr><td>Settled rows</td><td>A settled market carries <code>result</code>,
+<code>settlement_ts</code> and <code>settlement_value_dollars</code>.</td>
+<td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a> &middot;
+<a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTC&amp;status=settled&amp;limit=2">live probe</a></td>
+<td>Verified 2026-11-20 &mdash; basis of settlement in the paper ledger and the alert desk</td></tr>
+<tr><td>Series fee fields</td><td><code>GET /series/KXBTC</code> returns
+<code>fee_type "quadratic"</code>, <code>fee_multiplier 1</code>; the enum is exactly
+<code>quadratic | quadratic_with_maker_fees | quadratic_with_combo_maker_fees | flat</code>.</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC">live probe</a> &middot;
+<a href="https://docs.kalshi.com/api-reference/exchange/get-series-fee-changes">get-series-fee-changes</a></td>
+<td>Verified 2026-11-20 &mdash; copied onto every scope row; the 0.07 constant itself is not
+restated on the docs site, so fees stay labelled a model</td></tr>
+<tr><td>Fee rounding</td><td>The trade fee is the model fee rounded <b>up</b> to six decimals, not to a
+cent.</td>
+<td><a href="https://docs.kalshi.com/getting_started/fee_rounding">fee rounding</a></td>
+<td>Verified 2026-11-20 &mdash; implemented in <code>Decimal</code>; a float <code>ceil</code>
+overcharges by one micro-dollar (<code>0.08645000000000001</code>)</td></tr>
+<tr><td>Exchange status</td><td><code>exchange_active true</code>, <code>trading_active true</code>,
+4 shards.</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status">/exchange/status</a></td>
+<td>Verified 2026-11-20 &mdash; so the zero live markets for gas and culture are scope-mapping facts,
+not an outage</td></tr>
+<tr><td>Browser access to the demo API</td><td>A cross-origin request from the Pages origin is
+allowed (<code>access-control-allow-origin</code> echoed), so the alert desk's 20-second poll can run
+in the browser; the WebSocket handshake still needs signed headers a browser cannot set.</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=1">probe</a> &middot;
+<a href="https://docs.kalshi.com/getting_started/quick_start_websockets">websockets quick start</a></td>
+<td>Verified 2026-11-20T12:12:40Z; the desk falls back to the snapshot stream if it is blocked</td></tr>
+<tr><td>Float comparison on the $0.10 threshold</td><td><code>1.00 - 0.90</code> evaluates to
+<code>0.09999999999999998</code>, so a strict <code>&gt;= 0.10</code> test drops a real $0.10 move.</td>
+<td><a href="session-7085e643/tests/test_alerts.cjs">reproducing test</a> (node)</td>
+<td>Verified 2026-11-20 &mdash; both the alert desk and the chart's jump markers now compare with a
+1e-9 tolerance</td></tr>
 </tbody></table></div>
 
 </div>

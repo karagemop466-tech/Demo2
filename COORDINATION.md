@@ -25,10 +25,10 @@ Last updated: 2026-11-20 (session 7085e643)
 | 20 | Integration: CI gate, link check, render test, PR, merge, deploy | **done** | e88eb254 | `.github/workflows/ci.yml`, `tools/check.py`, `tools/build_site.py`, `tools/build_content.py`, `README.md`, all pages |
 | 21 | Add demo API key secrets to enable portfolio + execution | **needs review (owner action)** | unclaimed | repository secrets only — see `pages/questions.html` Q4 |
 | 22 | K-1 Fix the broken data pipeline: bound published file sizes (GitHub 100 MB push limit) + pre-push size guard | **done** | 7085e643 | `tools/collector.py`, `tools/guard_sizes.py`, `.github/workflows/refresh-data.yml`, `.gitignore`, `session-7085e643/**` |
-| 23 | K-2 Live alert desk: two scrolling alert chats (all events / high-ROI screen), ≥$0.10 swing detection on browser-polled prices | **in progress** | 7085e643 | `assets/alerts.js`, `assets/site.js`, `assets/style.css`, `tools/build_site.py` (DASH_BODY/DASH_JS), generated `index.html` |
+| 23 | K-2 Live alert desk: two scrolling alert chats (all events / high-ROI screen), ≥$0.10 swing detection on browser-polled prices | **done** | 7085e643 | `assets/alerts.js`, `assets/site.js`, `assets/style.css`, `tools/build_site.py` (DASH_BODY/DASH_JS), generated `index.html` |
 | 24 | K-3 Automated simulated trade loop (strategies → ledger → page) run by the refresh workflow | **done** | 7085e643 | `tools/paper_trade.py`, `pages/paper-trading.html` (generated), `data/paper_ledger.json`, `session-7085e643/tests/**` |
-| 25 | K-4 Landing page + nav simplification (clean entry point, topics separated, registers grouped) | **in progress** (nav entry for the desk added; landing-page regrouping still open) | 7085e643 | `tools/build_site.py` (NAV, index body), `README.md`, generated `index.html` |
-| 26 | K-5 Registers: live re-verification rows, new flags, executive summary refresh | **in progress** (N-1…N-6 flags added; verification/summary refresh still open) | 7085e643 | `tools/build_content.py`, `pages/{verification,flagged,executive-summary,suggestions,questions}.html` (generated), `docs/*` |
+| 25 | K-4 Landing page + nav simplification (clean entry point, topics separated, registers grouped) | **done** | 7085e643 | `tools/build_site.py` (NAV, index body), `README.md`, generated `index.html` |
+| 26 | K-5 Registers: live re-verification rows, new flags, executive summary refresh | **done** | 7085e643 | `tools/build_content.py`, `pages/{verification,flagged,executive-summary,suggestions,questions}.html` (generated), `docs/*` |
 | 27 | K-6 Final integration: take over idle claims, triage the 4 stale conflicting PRs, PR → main, merge, Pages confirm, record | **unclaimed → mine on push** | 7085e643 | `COORDINATION.md`, shared `index.html`/nav, PR operations |
 | 28 | Consolidate the 8 duplicated subsites into one canonical site by deleting `desk/`-style parallel trees | **not started — needs owner decision** | unclaimed | other sessions' trees; see S5 / K-4 (documented as a register, not deleted) |
 
@@ -1176,9 +1176,23 @@ method table and the "why so few fills" counters. The refresh workflow runs it a
    opening 0 trades on a complete-looking snapshot: 0 in-scope markets closed inside 90 days, and only
    2 usable `yes_ask_dollars` values in all 10,241 rows.
 
-**K-2 (row 23 — still open).** The two scrolling alert chats (all events / high-ROI screen) exist
-nowhere in this repository. `assets/alerts.js` is claimed but not written. Not blocked by anything
-else; it needs `assets/site.js` + `tools/build_site.py` (DASH_BODY/DASH_JS) + `assets/style.css`.
+**K-4 (row 25 — done).** The navigation is now grouped (Desk / Topics / Registers / Preserved
+subsites) so the landing page is scannable, with a "Start here" strip on the dashboard pointing at
+the alert desk, the five topics, the desk pages and the registers. `NAV_GROUPS` is a presentation of
+`NAV`, not a second link list: `nav_html()` asserts every `NAV` entry appears in exactly one group,
+so a page added to `NAV` but forgotten in the grouping fails the build instead of vanishing from the
+navigation. The other sessions' subsites stay linked (preserved, not deleted) under one group.
+
+**K-5 (row 26 — done).** `pages/verification.html` gains an "Additional verified claims (session
+7085e643, 2026-11-20)" table with the exact live requests and what each one confirmed (`tickers=`
+filter, `max_close_ts` short-dated filter, unposted books, settled-row fields, series fee fields, fee
+rounding, exchange status, browser access, and the float-tolerance finding). The executive summary is
+refreshed: the alert desk and the paper desk are in the "what was asked" list, the freshness statement
+distinguishes the 20-second alert poll from the 10-minute snapshot, the "not done" paragraph is
+corrected to this tree's actual flag numbers (F6 / F12 / F13 / N-1 / N-4 — the old F17–F21 references
+belonged to another tree's register), and two decision rows are added.
+
+**K-2 (row 23 — done).**
 
 ### Sources used (official only; all read this turn)
 
