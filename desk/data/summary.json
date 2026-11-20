@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-20 13:06 UTC",
+ "generated_at": "2026-11-20 13:07 UTC",
  "api_base": "https://external-api.demo.kalshi.co/trade-api/v2",
  "api_docs": "https://docs.kalshi.com/getting_started/demo_env",
  "source": "data/dashboard_instrument.json (collected from the official Kalshi demo Trade API)",

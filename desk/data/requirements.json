@@ -128,23 +128,23 @@
       "id": "R-12",
       "area": "Live and interactive",
       "requirement": "Live charts should show the events and website links that may have caused a sharp jump in contract price of $0.10 or more in either direction.",
-      "status": "partial",
+      "status": "implemented",
       "where": "jumps.html",
-      "where_label": "Sharp move monitor",
+      "where_label": "Sharp move monitor (also on the repository dashboard)",
       "evidence": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
       "evidence_label": "Get Market Candlesticks",
-      "note": "The moves and their official source are detected and shown. The cause cannot be verified because the Kalshi Trade API publishes no news feed, so that column is left empty and flagged. The links shown are the settlement references Kalshi itself names for the series."
+      "note": "The moves and their official source are detected and shown, both in the consolidated desk and on the repository dashboard, where a red marker is drawn on the live chart. The cause cannot be verified because the Kalshi Trade API publishes no news feed, so that column is left empty and flagged. The links shown are the settlement references Kalshi itself names for the series."
     },
     {
       "id": "R-13",
       "area": "Organisation",
       "requirement": "Keep the topics separate while keeping the events inside one topic together, and simplify the site so a trader can decide from it.",
-      "status": "partial",
+      "status": "implemented",
       "where": "categories/elections.html",
       "where_label": "Topic pages",
       "evidence": "https://docs.kalshi.com/api-reference/market/get-series-list",
       "evidence_label": "Get Series List",
-      "note": "Topics are separated using the official category and tags filters. The repository still holds six dashboards built by parallel sessions; this desk is the consolidated surface and the landing page is simplified at final integration."
+      "note": "Topics are separated using the official category and tags filters, with one page per topic and the events inside a topic kept together. The seven dashboards built by parallel sessions are now grouped on a second navigation row so the primary bar stays short."
     },
     {
       "id": "R-14",
