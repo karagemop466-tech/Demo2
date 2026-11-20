@@ -224,16 +224,18 @@ def collect(out_dir):
     taxonomy_raw = c.get(taxonomy_url, note="official tag taxonomy per category")
     taxonomy = (taxonomy_raw or {}).get("tags_by_categories", {})
 
-    # 2. Official series list (carries category + tags + settlement sources)
+    # 2. Official series list (carries category + tags + settlement sources).
+    # Coverage is bounded (max_pages) because the demo API rate-limits anonymous
+    # clients; the bound is recorded in meta.notes. Re-running refreshes coverage.
     series_records, series_urls = c.get_paged(
-        "/series", {}, "series", max_pages=20, note="series catalogue"
+        "/series", {}, "series", max_pages=4, note="series catalogue"
     )
     if not series_records:
         # Fall back to per-category queries if an unfiltered /series call fails.
         series_records, series_urls = [], []
         for cat_name in sorted(taxonomy.keys()):
             recs, urls = c.get_paged(
-                "/series", {"category": cat_name}, "series", max_pages=10,
+                "/series", {"category": cat_name}, "series", max_pages=2,
                 note="series catalogue for category=%s" % cat_name,
             )
             series_records.extend(recs)
@@ -246,19 +248,19 @@ def collect(out_dir):
 
     # 3. Open markets (paginated)
     open_markets, open_urls = c.get_paged(
-        "/markets", {"status": "open", "limit": 1000}, "markets", max_pages=40,
-        note="open markets, full pagination",
+        "/markets", {"status": "open", "limit": 1000}, "markets", max_pages=6,
+        note="open markets (bounded pagination)",
     )
     # 4. Settled markets (paginated) - used for resolution tracking
     settled_markets, settled_urls = c.get_paged(
-        "/markets", {"status": "settled", "limit": 1000}, "markets", max_pages=40,
-        note="settled markets, full pagination",
+        "/markets", {"status": "settled", "limit": 1000}, "markets", max_pages=4,
+        note="settled markets (bounded pagination)",
     )
 
     # 5. Open events (paginated) - event level category, volume, liquidity
     events, event_urls = c.get_paged(
-        "/events", {"status": "open", "limit": 200}, "events", max_pages=40,
-        note="open events, full pagination",
+        "/events", {"status": "open", "limit": 200}, "events", max_pages=3,
+        note="open events (bounded pagination)",
     )
 
     # ---------------------------------------------------------------- build
@@ -332,8 +334,8 @@ def collect(out_dir):
     for r in open_rows:
         picked.append(r)
         seen_topics[r["topic"]] = seen_topics.get(r["topic"], 0) + 1
-        if len(picked) >= 30 and all(
-            seen_topics.get(t, 0) >= 3 for t in TOPIC_RULES
+        if len(picked) >= 15 and all(
+            seen_topics.get(t, 0) >= 2 for t in TOPIC_RULES
         ):
             break
     for r in picked:
@@ -486,6 +488,10 @@ def collect(out_dir):
             "volume_fp is a contract count, not dollars.",
             "dollar_turnover_estimate = volume_fp x last_price_dollars (a computed proxy, not an official field).",
             "Kalshi states demo prices and behaviour may not reflect real markets.",
+            "Coverage is bounded (series 4 pages; open markets 6 pages; settled 4; events 3; "
+            "orderbooks/candlesticks for the top 15 in-scope markets) because the demo API "
+            "rate-limits anonymous clients. Every collected row still carries its source_url; "
+            "re-run the collector to widen coverage.",
         ],
     }
 

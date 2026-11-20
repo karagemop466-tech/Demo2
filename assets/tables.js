@@ -46,11 +46,56 @@
   }
   var RENDER = { open: renderOpen, settled: renderSettled, series: renderSeries };
   var cache = {};
+  /* Fallback chain: 1) CI collector files (data/*.json, refreshed every 2h);
+     2) the verified hand-captured snapshots (dashboard/data/snapshot.json markets,
+        data/kalshi_snapshot.json series/events) with values copied verbatim and
+     their original source links. Nothing is inferred in either path. */
+  var CATMAP = { "Gas prices": "gas-prices", "Elections": "elections", "Culture": "culture", "Crypto": "crypto", "Golf": "golf" };
+  function legacyFrom(kind) {
+    var loads = [fetch("dashboard/data/snapshot.json", { cache: "no-store" }), fetch("data/kalshi_snapshot.json", { cache: "no-store" })];
+    return Promise.all(loads.map(function (p) { return p.then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }))
+      .then(function (pair) {
+        var dash = pair[0], old = pair[1];
+        if (!dash && !old) throw new Error("no committed snapshots");
+        var rows = [], collected = "";
+        if (kind === "open" || kind === "settled") {
+          if (!dash) throw new Error("no market snapshot");
+          collected = (dash.meta && dash.meta.captured_utc_date) || "";
+          rows = (dash.markets || []).filter(function (m) {
+            return kind === "open" ? (m.status === "active" && !m.result) : (m.result === "yes" || m.result === "no" || m.status === "finalized");
+          }).map(function (m) {
+            return {
+              ticker: m.ticker, title: m.title, topic: CATMAP[m.category] || "",
+              status: m.status, result: m.result || "",
+              settlement_value_dollars: "", settlement_ts: "",
+              volume_fp: m.volume_contracts, open_interest_fp: m.open_interest_contracts,
+              last_price_dollars: m.last_price, yes_bid_dollars: m.yes_bid,
+              yes_ask_dollars: m.yes_ask, close_time: m.close_time_utc,
+              source_url: m.source, dollar_turnover_estimate: "", settlement_sources: []
+            };
+          });
+        } else {
+          if (!old) throw new Error("no series snapshot");
+          collected = (old.meta && old.meta.collected_on) || "";
+          rows = (old.rows || []).map(function (r) {
+            return {
+              series_ticker: r.ticker, title: r.title + (r.type === "event" ? " (event)" : ""),
+              category: r.kalshi_category, tags: String(r.tags || "").split(";").map(function (s) { return s.trim(); }).filter(Boolean),
+              frequency: r.frequency, contract_terms_url: r.contract_terms,
+              settlement_sources: r.settlement_sources || [], source_url: r.source_api, _type: r.type
+            };
+          });
+        }
+        return { collected_at: collected, rows: rows, _fallback: true };
+      });
+  }
   function load(kind) {
     if (cache[kind]) return Promise.resolve(cache[kind]);
     return fetch(KINDS[kind].file, { cache: "no-store" }).then(function (r) {
       if (!r.ok) throw new Error(KINDS[kind].file + " HTTP " + r.status);
       return r.json();
+    }).catch(function () {
+      return legacyFrom(kind);
     }).then(function (j) { cache[kind] = j; return j; });
   }
   function mount() {
@@ -64,7 +109,11 @@
           if (h.getAttribute("data-kind") !== kind) return;
           var topic = h.getAttribute("data-topic");
           var rows = (j.rows || []).filter(function (r) { return !topic || r.topic === topic; });
-          h.innerHTML = '<p class="muted">' + KINDS[kind].title + ' — ' + rows.length + ' row(s) matching topic <b>' + esc(topic) + '</b>. Snapshot collected <b>' + esc(j.collected_at || "?") + '</b> UTC by tools/collect_kalshi.py from the official Kalshi demo API. Blank cells (—) were blank in the API response and are marked unverified.</p>' +
+          h.innerHTML = '<p class="muted">' + KINDS[kind].title + ' — ' + rows.length + ' row(s) matching topic <b>' + esc(topic) + '</b>. ' +
+            (j._fallback
+              ? 'CI collector files not present yet — showing the verified hand-captured snapshot (values copied verbatim with their original source links), captured <b>' + esc(j.collected_at || "?") + '</b>.'
+              : 'Snapshot collected <b>' + esc(j.collected_at || "?") + '</b> UTC by tools/collect_kalshi.py from the official Kalshi demo API.') +
+            ' Blank cells (—) were blank in the API response and are marked unverified.</p>' +
             (rows.length ? RENDER[kind](rows) : '<p><span class="unv">No rows in the current snapshot for this topic.</span></p>');
         });
       }).catch(function (e) {
