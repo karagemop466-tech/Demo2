@@ -238,3 +238,11 @@ Session owner: `arena-3420a90d`. Work was scoped to the new folder `dashboard/` 
 
 ### Not done / blocked (requires user action)
 - Portfolio, balances, trade execution and per-trade P&L need a Kalshi **demo API key** created by a human login. Not available in this workspace. No trades were placed and no values were invented.
+
+### Integration record — session arena-3420a90d (T10)
+- PR: https://github.com/karagemop466-tech/Demo2/pull/9 — **MERGED** (merge commit 7d64ca5, 2026-11-20 11:23 UTC, `gh pr merge 9 --merge`). Earlier attempts were blocked by conflicts in `COORDINATION.md`, `README.md`, and `index.html`; those were resolved by keeping main's content and appending this session's sections. A second conflict in `COORDINATION.md` came from PR #10 (bb334a65); both sections were kept.
+- Pages deploy: `Deploy GitHub Pages` run 44727189437 for commit 7d64ca5 — **success**. Earlier main run 44727103431 (commit 3524205) had failed; the successful run above supersedes it.
+- Live URLs (on the deployed site): `/Demo2/` (main landing) and `/Demo2/dashboard/index.html` (this session's dashboard). The sandbox cannot reach github.io, so the live pages were not fetched from here. Verified locally instead: 38 HTML pages with 0 broken links or anchors; all 9 dashboard pages run under jsdom without errors; `node --check` passes on all JS.
+- Pages source is still main `/`; the PUT to `/docs` returned 403 with the integration token. The workflow deploys the root, so `dashboard/` is published.
+- Retry of KXCABALLOTMEASURES (previously HTTP 502): **now succeeded**. Demo results (all status `finalized`, volume ~3 contracts each): Prop 45 `no`, Prop 44 `no`, Prop 43 `no`, Prop 42 `yes`. Not yet added to `dashboard/data/snapshot.json`. Follow-up for the next dashboard update, since these are low-dollar.
+- Still open for the user: demo API key (portfolio/trading); R-F5 and the root-navigation request from main's board.
