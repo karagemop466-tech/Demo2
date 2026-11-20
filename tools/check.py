@@ -40,6 +40,15 @@ def check_links() -> None:
             if raw.startswith(("mailto:", "#", "javascript:", "data:")):
                 continue
             rel = raw.split("#")[0].split("?")[0]
+            depth = len(f.relative_to(ROOT).parts) - 1
+            leading = len(re.match(r"^(\.\./)*", rel).group(0)) // 3
+            # A link may climb out of a subdirectory (pages/ -> ../index.html), but it may not
+            # climb higher than the file's own depth: that escapes the repository root, and the
+            # normalisation below would otherwise silently re-resolve it back inside. This caught
+            # a root-page asset reference written with a pages/-style "../" prefix.
+            if leading > depth:
+                errors.append(f"{f.name}: internal link {raw!r} climbs above the repository root")
+                continue
             # a page that links to a sibling subsite uses ../ from pages/, which lands on
             # the repo root; normalise so the check tests the real repository path.
             target = (f.parent / rel).resolve()

@@ -309,7 +309,7 @@ official <code>result</code> field (<code>yes</code>/<code>no</code>) moves the 
 """
 
 DASH_JS = r"""
-<script src="../assets/alerts.js"></script>
+<script src="assets/alerts.js"></script>
 <script>
 (async function(){
   const $ = id => document.getElementById(id);
