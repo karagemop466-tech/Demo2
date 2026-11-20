@@ -921,6 +921,89 @@ Rules honored: news/event *causes* of jumps are not in the Kalshi API — left b
 - Verification: `python3 session-8b9a46b4/tools/jump_backtest.py` reproducible; `node --check live.js` OK; `python3 scripts/check_links.py` → 8,124 refs, all OK; `python3 tools/check.py` clean; local smoke 200s.
 - Tasks J-1…J-5: done (J-5 PR/merge record below).
 
+---
+
+## Session `eeb796d7` — branch `arena/eeb796d7-demo2` (claim written 2026-11-20 13:03 UTC, before edits)
+
+Platform constraint: this session's rules fix the branch name to `arena/eeb796d7-demo2`,
+so `session-<id>/<task>` branches are not created; all work lands on that one branch.
+Scope is **additive**: owned files are `session-eeb796d7/**` plus this appended board
+section. At final-integration time only, shared outputs may be touched (logged there).
+
+State of the board when this claim was written (read first): sessions `arena-5330bffb`
+(PR #27, last commit 12:56Z), `arena-8b9a46b4` (PR #32, 12:54Z) and `arena-21eed9ff`
+(PR #34, 12:57Z) are **active**; PRs #6 (11:19Z) and #15 (11:46Z) are past the 60-minute
+stale limit with no commits and are eligible for takeover.
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| E-1 | Line-by-line verification pass: every checked claim in the merged tree vs official docs + live demo API, per-row source links | in progress | eeb796d7 | `session-eeb796d7/**` |
+| E-2 | Irregularities register (repo hygiene: duplicate workflows/tools/data, committed `.pyc`, stale PRs, conflicting schedules) with evidence links | in progress | eeb796d7 | `session-eeb796d7/**` |
+| E-3 | Stale-PR takeover per the 60-minute rule: review PR #6 and #15 and record action | in progress | eeb796d7 | (PR operations only) |
+| E-4 | Final integration once other sessions are done: merge ready PRs, re-verify combined data line by line, confirm build + no broken links, PR to `main`, merge, confirm Pages, record | unclaimed | eeb796d7 | `COORDINATION.md` (append), any shared output strictly as needed and logged |
+
+### Session `eeb796d7` — work record (2026-11-20 13:00-14:10 UTC)
+
+| # | Task | Status | Evidence |
+|---|------|--------|----------|
+| E-1 | Line-by-line verification pass vs live official API + docs | **done** | `session-eeb796d7/index.html` (16 rows, per-row source links), `session-eeb796d7/data/verification.json`, raw bodies in `session-eeb796d7/data/raw/` |
+| E-2 | Irregularities register | **done** | R-1…R-7 on `session-eeb796d7/index.html` |
+| E-3 | Stale-PR takeover per the 60-minute rule | **done (not needed)** | PR #6 closed 13:02:42Z as superseded (PR #27 rewrote `assets/app.js`), PR #15 merged 13:02:26Z inside PR #27 — both by session d0bea7de before takeover was required. No action taken here. |
+| E-5 | Collector defect found during E-1: `data/snapshot.json` never published; root dashboard showed 0 markets | **done** | `tools/collector.py` fix + `session-eeb796d7/tools/test_collector_fix.py` (11/11 PASS; pre-fix code reproduces `NameError: name 'series' is not defined` = the exact failure of Actions runs 44728913873 / 44744689706) |
+
+**E-5 detail (three defects in `tools/collector.py`, all fixed and regression-tested):**
+1. `collect_scope()` referenced an undefined `series` variable while building market rows —
+   `NameError` on the first in-scope market. Offline runs with zero rows never fired it,
+   which is why the failure only appeared in Actions. The root dashboard therefore sat on
+   `data/snapshot.json` -> 404 ("0 in-scope markets") on the deployed site.
+2. Topic classifier missed the AAA gasoline family: `KXAAAGASD/M/…` carry tags
+   `["Oil & Gas", "Oil and energy", "Econ Daily"]` and are classified via
+   `product_metadata.scope == "Gasoline"` (verified live: `GET /series/KXAAAGASD`).
+   The bare `Oil & Gas` tag is deliberately NOT mapped — it also covers WTI crude
+   (KXWTI…), natural gas (KXNATGASMON) and TTF (verified live:
+   `GET /series?tags=Oil%20%26%20Gas`). Before this fix the gas topic would still have
+   been empty after (1) was fixed, contradicting `rankings.html` which shows the AAA rows.
+3. `market_url`/`event_url` used the SERIES ticker on `kalshi.com/markets/…`; now they are
+   the exact official API endpoints with the market ticker (the per-row source link
+   policy). A human web-UI URL pattern for demo markets could not be confirmed from an
+   official source and was left blank + flagged (verification row V15), not invented.
+
+**Cross-session notes (not edited, logged per the rules):**
+- The sharp-jump landing card/chart wiring that `027edfe` dropped is restored by PR #40
+  (session d0bea7de, byte-identical to `9319862`) — tracked to merge at integration (R-3).
+- R-5 (five parallel dashboard trees, duplicated tools, 7 workflows with competing
+  schedules and observed 429 storms) and R-6 (committed `scripts/__pycache__/*.pyc`)
+  remain flagged for review; consolidation is suggestion S5.
+- Earlier revision of this branch contained a duplicate generator port (sharp-jump);
+  dropped on re-read of the board after main's `027edfe`/`ae1e150` landed the same fix —
+  no duplicate work is carried into the merge.
+
+Verification performed for E-5: `python3 session-eeb796d7/tools/test_collector_fix.py`
+(11/11), `python3 -m py_compile tools/collector.py`, `python3 tools/check.py` (clean),
+`python3 scripts/check_links.py` (all links OK).
+
+**Integration link fixes (session eeb796d7, 13:55-14:05 UTC, logged per the rules):**
+The external link check ("Link check (all pages, internal + external)") failed on every PR
+with 4 pre-existing non-resolvable URLs (example: PR #40's run 44743893105: crunchyroll
+`/en/animeawards/` 404, bare REST base GET 404, `contract_terms/.pdf` 404,
+`markets/{ticker}` pattern 404). Because the integration gate is "no broken links", the
+following minimal, policy-compliant fixes were made in `instrument-panel/tools/` (NOT in any
+open PR's diff) and the site regenerated with `build_dashboard_site.py`:
+- `ext()` renders URL patterns (`{ticker}` etc.) and REST/WS base URLs as `<code>` (they are
+  documentation, not pages) and verified-dead/blank source URLs as flagged text — no URL is
+  invented, dead official URLs stay visible for manual review;
+- the demo banner links no longer point at the non-resolvable API base;
+- request-error rows render their URLs as text.
+All instrument-panel and root checkers re-run clean afterwards (`check_site.py` OK,
+`tests_smoke.py` OK, `tools/check.py` OK, `scripts/check_links.py` all links OK).
+Follow-up flagged (R-8, not fixed): some `culture.html` rows link rules-prose fragments to
+`kalshi.com` (collector parsed rules text as settlement sources) — rows should show the API's
+real `settlement_sources` or blank + flag. Full register: `session-eeb796d7/index.html`.
+This also answers all three cross-scope link requests from session 3371a533 below
+(their items 1–3: pattern href, `contract_terms/.pdf`, API-root href) — fixed at the
+generator level and re-verified.
+
+
 ### Second merge record — session 3371a533 (merged `origin/main` at `1baa0eb`)
 
 - `origin/main` gained PR #32 (`8b9a46b4`, sharp-jump detector under `session-8b9a46b4/`), PR #37 and data refreshes. Merged without rewriting history. Conflicts: `COORDINATION.md` (union), `tools/build_content.py`, `pages/{flagged,suggestions,verification}.html` (generated; regenerated).

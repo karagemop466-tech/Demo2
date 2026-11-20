@@ -1,0 +1,48 @@
+{
+ "fetched_at_utc": "2026-11-20T13:06Z",
+ "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture",
+ "http_status": 200,
+ "note": "Field extract copied verbatim from the response body (full response re-fetchable at source_url; the settlement_sources arrays are long and identical in structure to the events fixture). Supports the claim 'culture topic: 2 series in the catalogue, 0 with open markets'.",
+ "extract": [
+  {
+   "ticker": "KXXBANNEDMURRAYHILLGUY1",
+   "title": "Will @MurrayHillGuy1 get banned from X this year?",
+   "category": "Culture",
+   "categories": [
+    "Culture"
+   ],
+   "tags": null,
+   "frequency": "one_off"
+  },
+  {
+   "ticker": "KXXBANNEDGROK",
+   "title": "Will Grok be banned this year",
+   "category": "Culture",
+   "categories": [
+    "Culture"
+   ],
+   "tags": [
+    "AI"
+   ],
+   "frequency": "one_off"
+  }
+ ],
+ "open_markets_checks": [
+  {
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXXBANNEDGROK&status=open",
+   "http_status": 200,
+   "observed": {
+    "cursor": "",
+    "markets": []
+   }
+  },
+  {
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXXBANNEDMURRAYHILLGUY1&status=open",
+   "http_status": 200,
+   "observed": {
+    "cursor": "",
+    "markets": []
+   }
+  }
+ ]
+}

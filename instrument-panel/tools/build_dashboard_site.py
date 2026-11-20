@@ -566,7 +566,7 @@ def page_verification():
         f'<td class="small">{"<br>".join(ext(q, q) for q in ((D.get("scope") or {}).get("series_queries") or {}).get(t["id"], []) if q) or "—"}</td></tr>'
         for t in (D.get("scope") or {}).get("topics") or [])
     errs = META.get("request_errors") or []
-    err_html = "".join(f'<tr><td class="small">{ext(e.get("url"), e.get("url"))}</td><td class="num">{e.get("status")}</td><td class="small">{E(str(e.get("detail"))[:200])}</td></tr>' for e in errs)
+    err_html = "".join(f'<tr><td class="small"><code>{E(str(e.get("url")))}</code></td><td class="num">{e.get("status")}</td><td class="small">{E(str(e.get("detail"))[:200])}</td></tr>' for e in errs)
 
     checks = [
         ("Every table row links to the Kalshi API response it came from", "Enforced by tools/validate_data.py on every deploy; a row without a source_url fails the build."),

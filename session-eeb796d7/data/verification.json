@@ -1,0 +1,153 @@
+{
+ "session": "eeb796d7",
+ "branch": "arena/eeb796d7-demo2",
+ "verified_at_utc": "2026-11-20T13:00Z-14:00Z",
+ "rule": "Every checked claim is compared against the live official demo API or the official docs page cited in its source link. Values that cannot be confirmed are left blank and flagged. Live markets drift between fetches; settled/static fields must match exactly. Nothing is inferred.",
+ "api_base": "https://external-api.demo.kalshi.co/trade-api/v2",
+ "rows": [
+  {
+   "id": "V1",
+   "claim": "Demo REST root (recommended) matches the user brief",
+   "observed": "https://external-api.demo.kalshi.co/trade-api/v2",
+   "expected": "same",
+   "source": "https://docs.kalshi.com/getting_started/demo_env",
+   "how": "read on official page + live 200 from /exchange/status this session",
+   "status": "verified"
+  },
+  {
+   "id": "V2",
+   "claim": "Demo WebSocket root (recommended)",
+   "observed": "wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2",
+   "expected": "same",
+   "source": "https://docs.kalshi.com/getting_started/demo_env",
+   "how": "read on official page",
+   "status": "verified"
+  },
+  {
+   "id": "V3",
+   "claim": "Exchange status on the demo exchange",
+   "observed": "exchange_active=true, trading_active=true (4 demo shards)",
+   "expected": "n/a",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/exchange/status",
+   "how": "live GET 2026-11-20 13:05Z (raw: data/raw/exchange_status.json)",
+   "status": "verified"
+  },
+  {
+   "id": "V4",
+   "claim": "Settled market row KXXRP-26NOV2006-T1.6399 in data/resolved.json",
+   "observed": "result=no, status=finalized, settlement_ts=2026-11-20T12:10:34.610192Z, settlement_value_dollars=0.0000 \u2014 identical to the live response",
+   "expected": "identical",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-T1.6399",
+   "how": "field-by-field compare, live GET 13:05Z (raw: data/raw/market_KXXRP-26NOV2006-T1.6399.json)",
+   "status": "verified"
+  },
+  {
+   "id": "V5",
+   "claim": "Gas lead market row KXAAAGASD-28SEP16-2.5 in data/events_top.json",
+   "observed": "last_price_dollars 0.3500, yes_bid 0.3500, yes_ask 1.0000, yes_bid_size_fp 90.18, volume_fp 12.98, open_interest_fp 9.84 \u2014 all exact matches",
+   "expected": "identical",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-28SEP16-2.5",
+   "how": "field-by-field compare, live GET 13:06Z (raw: data/raw/market_KXAAAGASD-28SEP16-2.5.json)",
+   "status": "verified"
+  },
+  {
+   "id": "V6",
+   "claim": "Live-market rows drift between fetches and are not byte-stable",
+   "observed": "KXPRESNOMD-28-AYAN between 12:12:32Z and 13:05Z: yes_ask 0.0030->0.0040, volume_24h_fp 174412.23->174485.97, open_interest_fp 47102308.69->47102349.71; static fields (title, close_time, rules) identical",
+   "expected": "n/a",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-AYAN",
+   "how": "compare snapshot row vs live GET 13:05Z (raw: data/raw/market_KXPRESNOMD-28-AYAN.json)",
+   "status": "verified"
+  },
+  {
+   "id": "V7",
+   "claim": "Orderbook response shape used by every parser in the repo",
+   "observed": "orderbook_fp.yes_dollars / no_dollars = [[price, size], ...]; KXPRESNOMD-28-AYAN depth=5 returned 2 yes levels and 3 no levels",
+   "expected": "orderbook_fp.*_dollars",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-AYAN/orderbook?depth=5",
+   "how": "live GET 13:07Z + grep of all 10 client parsers (raw: data/raw/orderbook_KXPRESNOMD-28-AYAN.json)",
+   "status": "verified"
+  },
+  {
+   "id": "V8",
+   "claim": "Culture topic has catalogue series but zero open markets (blank rows are correct)",
+   "observed": "/series?category=Culture -> 2 series (KXXBANNEDMURRAYHILLGUY1, KXXBANNEDGROK); /markets?series_ticker=<each>&status=open -> empty lists",
+   "expected": "n/a",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture",
+   "how": "live GETs 13:06-13:07Z (raw: data/raw/series_category_Culture.json)",
+   "status": "verified"
+  },
+  {
+   "id": "V9",
+   "claim": "Settlement pays the winning side $1 per contract; result field is yes/no",
+   "observed": "Yes outcome: Yes holders receive $1 per contract; No outcome: No holders receive $1 per contract",
+   "source": "https://docs.kalshi.com/getting_started/market_settlement",
+   "how": "read on official page 13:20Z",
+   "status": "verified"
+  },
+  {
+   "id": "V10",
+   "claim": "Portfolio endpoints require signed KALSHI-ACCESS-* headers (all three required)",
+   "observed": "Authorizations: KALSHI-ACCESS-KEY required, KALSHI-ACCESS-SIGNATURE required (base64, RSA-PSS/SHA-256 or Ed25519), KALSHI-ACCESS-TIMESTAMP required (ms)",
+   "source": "https://docs.kalshi.com/api-reference/portfolio/get-balance",
+   "how": "read on official page 13:20Z; no demo credentials exist in this workspace, so portfolio/trade rows stay blank + flagged",
+   "status": "verified"
+  },
+  {
+   "id": "V11",
+   "claim": "AAA gasoline series classification signal",
+   "observed": "GET /series/KXAAAGASD: product_metadata.scope=Gasoline, tags=[Oil & Gas, Oil and energy, Econ Daily], categories=[Economics], settlement_source AAA",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "how": "live GET 13:45Z (raw: data/raw/series_KXAAAGASD.json); drove the E-5 classifier fix",
+   "status": "verified"
+  },
+  {
+   "id": "V12",
+   "claim": "Tag 'Oil & Gas' alone does NOT imply the gas-prices topic",
+   "observed": "GET /series?tags=Oil%20%26%20Gas also returns crude oil (KXWTI, KXWTI15M, KXWTIW, KXWTIMAX), natural gas (KXNATGASMON) and TTF series",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Oil%20%26%20Gas",
+   "how": "live GET 13:45Z (raw: data/raw/series_KXWTI.json); negative fixture in the E-5 test",
+   "status": "verified"
+  },
+  {
+   "id": "V13",
+   "claim": "tools/collector.py crash that left data/snapshot.json unpublished",
+   "observed": "collect_scope() referenced an undefined `series` variable -> NameError on the first in-scope market row; Actions runs 44728913873 and 44744689706 both failed at 'Collect demo snapshot' in ~23s; reproduced offline with real fixtures (NameError: name 'series' is not defined)",
+   "source": "https://github.com/karagemop466-tech/Demo2/actions/runs/44744689706",
+   "how": "run steps + offline repro (session-eeb796d7/tools/test_collector_fix.py: 11/11 PASS after fix)",
+   "status": "fixed by this session (E-5)"
+  },
+  {
+   "id": "V14",
+   "claim": "Generator gate on main (pages must match the generator)",
+   "observed": "PR #35 hand-edited 4 generated files; main's 027edfe ported F13/S9/verification row; the sharp-jump landing card + chart wiring were dropped by 027edfe and are being restored by PR #40 (session d0bea7de, byte-identical to 9319862)",
+   "source": "https://github.com/karagemop466-tech/Demo2/pull/40",
+   "how": "diff of generator output vs committed pages at 9319862/027edfe/3cb809c; my independent port (closed PR #41 earlier revision) found the same defects",
+   "status": "verified; pending PR #40 merge"
+  },
+  {
+   "id": "V15",
+   "claim": "Human web-UI market page URL pattern for demo markets",
+   "observed": "",
+   "expected": "",
+   "source": "https://docs.kalshi.com/getting_started/demo_env",
+   "how": "https://demo.kalshi.co/markets/... could not be confirmed from an official source (fetch blocked); left blank per policy \u2014 market rows link the exact API endpoint instead",
+   "status": "unverified \u2014 blank + flagged"
+  },
+  {
+   "id": "V16",
+   "claim": "Cause of sharp price jumps (>= $0.10)",
+   "observed": "",
+   "expected": "",
+   "source": "https://docs.kalshi.com/api-reference/market/get-trades",
+   "how": "the Trade API returns price and volume only; no news/event field exists to attribute a move to a cause",
+   "status": "unverified \u2014 blank + flagged (cause unverified on the site)"
+  }
+ ],
+ "test": {
+  "harness": "session-eeb796d7/tools/test_collector_fix.py",
+  "result": "11/11 PASS",
+  "old_code_repro": "NameError: name 'series' is not defined (matches Actions run failure signature)",
+  "fixtures": "session-eeb796d7/data/raw/ \u2014 verbatim demo-API bodies fetched 2026-11-20"
+ }
+}
