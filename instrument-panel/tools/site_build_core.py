@@ -103,6 +103,36 @@ def ext(url, label=None):
     return f'<a href="{E(url, quote=True)}" target="_blank" rel="noopener">{E(label or url)}</a>'
 
 
+def liquidity(m):
+    """Derive a plain-language liquidity state from the copied quote fields.
+
+    Returns (label, css). Nothing is inferred beyond comparing the returned numbers
+    with the contract's own price range:
+      - a bid of 0.00 and an ask of 1.00 on a market whose last trade is in between
+        means nobody is currently quoting either side (the full 0-1 spread);
+      - an empty orderbook on the same ticker confirms it rather than contradicting it.
+    """
+    bid, ask = fnum(m.get("yes_bid_dollars")), fnum(m.get("yes_ask_dollars"))
+    if bid is None or ask is None:
+        return "no quote", "info"
+    if bid <= 0.0 and ask >= 1.0:
+        return "empty book (0.00 / 1.00)", "warn"
+    if bid <= 0.0:
+        return "bid side empty", "warn"
+    if ask >= 1.0:
+        return "ask side empty", "warn"
+    return "quoted", "yes"
+
+
+def fnum(v):
+    if v in (None, ""):
+        return None
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
 def badge(text, cls="info"):
     return f'<span class="b {cls}">{E(str(text))}</span>'
 
@@ -192,8 +222,8 @@ def market_table(rows, show_topic=False, id_prefix="t"):
         head.append("<th>Topic</th>")
     head += ['<th class="num">Last price</th>', '<th class="num">YES bid</th>', '<th class="num">YES ask</th>',
              '<th class="num">Volume (contracts)</th>', '<th class="num">Open interest</th>',
-             '<th class="num">Notional (vol × price)</th>', '<th>Status</th>', '<th class="num">Close time</th>',
-             '<th>Source</th>']
+             '<th class="num">Notional (vol × price)</th>', '<th>Liquidity</th>', '<th>Status</th>',
+             '<th class="num">Close time</th>', '<th>Source</th>']
     body = []
     for i, m in enumerate(rows, 1):
         src = m.get("source_market_url") or m.get("source_url")
@@ -213,6 +243,7 @@ def market_table(rows, show_topic=False, id_prefix="t"):
             f'<td class="num">{count(m.get("volume_fp"))}</td>',
             f'<td class="num">{count(m.get("open_interest_fp"))}</td>',
             f'<td class="num">{money(m.get("notional_lifetime_usd"))}</td>',
+            f'<td>{badge(*liquidity(m)[:1], liquidity(m)[1])}</td>',
             f'<td>{status_badge(m.get("status"))}</td>',
             f'<td class="num small">{E(str(m.get("close_time") or "")[:16].replace("T", " "))}</td>',
             f'<td class="small">{ext(src, "API")} · {ext(m.get("source_url"), "list")}</td>',

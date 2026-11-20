@@ -92,6 +92,8 @@ def page_index():
   </div>
 </div>
 
+<div class="notice"><h4>Reading the bid/ask columns</h4>
+A YES bid of <code>$0.0000</code> with a YES ask of <code>$1.0000</code> is not a missing value — it is the API returning the widest possible quote, which means <b>nobody is currently bidding or offering</b> that contract. The Liquidity column labels those rows <span class="b warn">empty book</span>. Where a snapshot orderbook exists for the ticker it is shown on the <a href="live.html">Live &amp; liquidity</a> page, and an empty orderbook there confirms the same thing. A market can therefore carry large open interest and still be untradeable at any price today.</div>
 <h2>Highest open-interest markets in scope</h2>
 <p class="hint muted">Ranked by open interest × last price. Volume is in contracts because Kalshi does not publish a dollar-turnover field — see <a href="questions.html#Q5">Q5</a> and <a href="suggestions.html#S2">S2</a>.</p>
 {market_table(top, show_topic=True)}
@@ -135,6 +137,8 @@ def page_topic(tid):
 <details><summary>Discovery queries that define this topic</summary><ul class="small">{qlist or '<li class="empty">none recorded</li>'}</ul>
 <p class="small muted">A market appears here only if its series was returned by one of these queries. Completeness beyond the queries is not proven — see <a href="flagged.html">F-12</a>.</p></details>
 
+<div class="notice"><h4>Reading the bid/ask columns</h4>
+A YES bid of <code>$0.0000</code> with a YES ask of <code>$1.0000</code> is not a missing value — it is the API returning the widest possible quote, which means <b>nobody is currently bidding or offering</b> that contract. The Liquidity column labels those rows <span class="b warn">empty book</span>. Where a snapshot orderbook exists for the ticker it is shown on the <a href="live.html">Live &amp; liquidity</a> page, and an empty orderbook there confirms the same thing. A market can therefore carry large open interest and still be untradeable at any price today.</div>
 <h2>Open markets — highest open interest first</h2>
 {market_table(rows)}
 
