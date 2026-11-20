@@ -1,72 +1,87 @@
 # COORDINATION.md — Shared Task Board
 
-Session ID: `e3f65782` (branch `arena/e3f65782-demo2`, base `6072808` on `main`)
-Last updated: 2026-11-20
+Current session ID: `92996116` (branch `arena/92996116-demo2`, base `35dc382` on `main`)
 
-> Single-session execution: all tasks below are claimed by this session.
-> No other session is active in this checkout. If another session starts,
-> it must claim a non-overlapping scope here first.
+> This session is the sole active session in this checkout as of 2026-11-20.
+> Any other session that starts must claim a non-overlapping scope here first,
+> before editing any file.
 
 ## Task board
 
 | # | Task | Status | Owner | Files touched |
 |---|------|--------|-------|---------------|
-| 1 | Repo review + official source verification | done | e3f65782 | `pages/sources.html`, `pages/verification.html` |
-| 2 | Executive summary | done | e3f65782 | `pages/executive-summary.html` |
-| 3 | Live dashboard (markets, chart, orderbook) | done | e3f65782 | `index.html`, `assets/app.js`, `assets/style.css` |
-| 4 | Category subpages (gas/elections/culture/crypto/golf) | done | e3f65782 | `pages/gas.html`, `pages/elections.html`, `pages/culture.html`, `pages/crypto.html`, `pages/golf.html` |
-| 5 | Portfolio + trade execution + analysis | done | e3f65782 | `pages/portfolio.html`, `assets/app.js` |
-| 6 | Resolution tracking (yes/no) | done | e3f65782 | `index.html`, `pages/portfolio.html` |
-| 7 | Suggestions review board | done | e3f65782 | `pages/suggestions.html` |
-| 8 | Questions / missing-information register | done | e3f65782 | `pages/questions.html` |
-| 9 | Flagged for Review page | done | e3f65782 | `pages/flagged.html` |
-| 10 | GitHub Pages deploy config | done | e3f65782 | `.github/workflows/pages.yml` |
-| 11 | Final integration + link check + PR | in progress | e3f65782 | all |
+| 1 | Repo review + line-by-line source verification | done | 92996116 | `pages/sources.html`, `pages/verification.html` |
+| 2 | Executive summary | done | 92996116 | `pages/executive-summary.html` |
+| 3 | Live dashboard: markets ranked by dollar amount | done | 92996116 | `index.html`, `assets/app.js` |
+| 4 | Price chart with time-scale selector (sec/min/hr/day) | done | 92996116 | `assets/app.js` |
+| 5 | Orderbook / liquidity depth table | done | 92996116 | `assets/app.js` |
+| 6 | Resolution tracking (watchlist, yes/no outcome) | done | 92996116 | `assets/app.js` |
+| 7 | Portfolio tracking via signed demo API | done | 92996116 | `pages/portfolio.html`, `assets/portfolio.js` |
+| 8 | Trade execution (demo) + fill categorization + strategies | done | 92996116 | `assets/portfolio.js`, `pages/analysis.html` |
+| 9 | Category subpages (gas/elections/culture/crypto/golf) | done | 92996116 | `pages/gas.html` … `pages/golf.html` |
+| 10 | Suggestions review board | done | 92996116 | `pages/suggestions.html` |
+| 11 | Questions / missing-information register | done | 92996116 | `pages/questions.html` |
+| 12 | Flagged for Review page | done | 92996116 | `pages/flagged.html` |
+| 13 | CI data snapshot (scheduled refresh) | done | 92996116 | `scripts/refresh-data.mjs`, `.github/workflows/refresh-data.yml` |
+| 14 | Final integration + link check + PR + merge + Pages deploy | in progress | 92996116 | all |
+
+## Claim record
+
+- 2026-11-20 — session `92996116` claimed tasks 1–14 (whole repo scope, sole active session).
+- Claimed scope: `index.html`, `assets/*`, `pages/*`, `scripts/*`, `data/*`,
+  `.github/workflows/*`, `README.md`, `COORDINATION.md`.
+- No other session holds a claim. No conflicts to resolve.
 
 ## Sources used (official only)
 
-- https://docs.kalshi.com/welcome
-- https://docs.kalshi.com/getting_started/demo_env
 - https://docs.kalshi.com/getting_started/api_environments
+- https://docs.kalshi.com/getting_started/demo_env
 - https://docs.kalshi.com/getting_started/making_your_first_request
 - https://docs.kalshi.com/getting_started/quick_start_market_data
 - https://docs.kalshi.com/getting_started/quick_start_authenticated_requests
-- https://docs.kalshi.com/getting_started/api_keys
+- https://docs.kalshi.com/getting_started/quick_start_create_order
+- https://docs.kalshi.com/getting_started/quick_start_websockets
+- https://docs.kalshi.com/getting_started/orderbook_responses
+- https://docs.kalshi.com/getting_started/market_lifecycle
+- https://docs.kalshi.com/getting_started/market_settlement
+- https://docs.kalshi.com/getting_started/fixed_point_migration
 - https://docs.kalshi.com/api-reference/market/get-markets
+- https://docs.kalshi.com/api-reference/market/get-market-candlesticks
+- https://docs.kalshi.com/api-reference/market/get-market-orderbook
+- https://docs.kalshi.com/api-reference/market/get-series-list
+- https://docs.kalshi.com/api-reference/events/get-events
+- https://docs.kalshi.com/api-reference/portfolio/*
+- https://docs.kalshi.com/api-reference/orders/create-order
 
 ## Verification performed
 
 - Demo REST base `https://external-api.demo.kalshi.co/trade-api/v2` and WS
-  `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` confirmed on
-  demo_env + api_environments pages.
-- Public endpoints need no auth; portfolio/trading need signed API keys
-  (RSA-PSS/SHA-256 or Ed25519, ms timestamp, 30s tolerance) — confirmed on
-  quick_start pages + api_keys page.
-- Sandbox egress to Kalshi API fails (TLS `SSL_ERROR_SYSCALL`); live data
-  is therefore fetched client-side in the visitor's browser. No market
-  values are hard-coded — see Flagged for Review.
+  `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` confirmed live (see
+  `pages/sources.html` for the exact requests and timestamps).
+- Live checks run 2026-11-20 against the demo API: `GET /markets?limit=2`,
+  `GET /markets?status=settled&limit=1`,
+  `GET /series/KXDEMOFUTHOURLY/markets/KXDEMOFUTHOURLY-26NOV20H11-UP/candlesticks?...&period_interval=1`,
+  `GET /series?limit=200`, `GET /markets/{ticker}/orderbook`.
+- Public endpoints need no authentication; portfolio/trading need signed API
+  keys (RSA-PSS/SHA-256 or Ed25519, millisecond timestamp, 30 s tolerance).
+- Sandbox shell egress to Kalshi is blocked (TLS `SSL_ERROR_SYSCALL`); the
+  build environment therefore cannot verify browser CORS behaviour or execute
+  authenticated calls. Live data is fetched client-side in the visitor's
+  browser, and a CI job produces the committed snapshot.
 
 ## Irregularities / handoffs
 
 - See `pages/flagged.html`. None block merge per instructions.
-- No merge conflicts encountered (single session, clean tree).
+- No merge conflicts encountered.
 
 ## PR / deploy record
 
-- PR: (to be filled after `gh pr create`)
-- Merge result: (to be filled)
-- Pages deploy: (to be filled)
+- PR: (pending)
+- Merge result: (pending)
+- Pages deploy: (pending)
 
-## Update 2026-11-20 (post-merge)
-- PR #1: https://github.com/karagemop466-tech/Demo2/pull/1 — MERGED (merge commit acf8ef38292d7aaff1591a077742798b3a0ddde2)
-- Pages: https://karagemop466-tech.github.io/Demo2/ (legacy build from main /)
+## History (previous sessions)
 
-## Follow-up integration update — branch `arena/407c72e2-demo2`
-
-- This checkout found that `origin/main` had advanced with PR #1 and already contains the complete multi-page dashboard. To avoid overwriting that work, retained the existing `index.html`, `.github/workflows/pages.yml`, and this coordination board from `origin/main`; additional root-level analysis, portfolio-safe-state, and review pages are additive. README now explains both sets of pages and security cautions.
-- Added links and analysis references based on official docs: market data quick start, orderbook schema, WebSocket quick start, events endpoint, portfolio balance endpoint, order guide, and changelog.
-- Follow-up implementation: `analysis.html`, `portfolio.html`, `review.html`, root `app.js` and `style.css`; does not alter existing `pages/` content or `assets/` implementation. The root portfolio page purposely exposes no account metrics and no trade form.
-- Verification: `node --check app.js` passed; checked local links in the newly added root pages before reconciliation. Existing site remains unchanged after resolving rebase conflicts by retaining the main versions.
-- Rebase conflict encountered after `origin/main` advanced. Preserved main's shared dashboard, workflow, and coordination content; no main implementation was discarded. Root README was updated to document the additional pages, and any earlier branch-only top-level monitor mockup was omitted because it conflicted with main's dashboard landing page. Follow-up run of the main site's link checker and deployment is still required.
-- PR #3: https://github.com/karagemop466-tech/Demo2/pull/3 — MERGED 2026-11-20; merge commit `5224293c8b48b9b7f8a6ed3b8b4f2c5556115c24`.
-- GitHub Pages deployment run `44726290846` completed successfully after the merge. Site URL: https://karagemop466-tech.github.io/Demo2/ . No branch status checks were reported; local HTML link checks and JavaScript syntax checks passed.
+- PR #1: https://github.com/karagemop466-tech/Demo2/pull/1 — MERGED
+- PR #3: https://github.com/karagemop466-tech/Demo2/pull/3 — MERGED
+- Pages: https://karagemop466-tech.github.io/Demo2/
