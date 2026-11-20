@@ -67,10 +67,24 @@ def check_nav() -> None:
         elif norm != canonical:
             errors.append(f"{f.name}: nav differs from canonical ({len(norm)} vs {len(canonical)} links)")
     if canonical:
-        # 18 original entries + Dollar Rankings + Live Console (2026-11-20).
-        expected = 20
+        # Derive the expected count from the generator instead of hardcoding it. A hardcoded
+        # number has to be edited every time a section is added (it broke when the instrument
+        # panel was linked), and the failure says nothing about what is actually wrong. Comparing
+        # against tools/build_site.py's NAV list checks the thing that matters: the pages on disk
+        # match the generator that is supposed to have produced them.
+        expected = len(nav_source())
         if len(canonical) != expected:
-            errors.append(f"nav has {len(canonical)} links, expected {expected}")
+            errors.append(f"nav has {len(canonical)} links, but tools/build_site.py defines {expected}; "
+                          f"run tools/build_site.py and commit the result")
+
+
+def nav_source() -> list:
+    """The NAV list from tools/build_site.py, read as source rather than imported."""
+    src = (ROOT / "tools" / "build_site.py").read_text()
+    block = re.search(r"^NAV\s*=\s*\[(.*?)^\]", src, re.S | re.M)
+    if not block:
+        return []
+    return re.findall(r'\(\s*"([^"]+)"\s*,\s*"([^"]+)"', block.group(1))
 
 
 def check_data() -> None:
