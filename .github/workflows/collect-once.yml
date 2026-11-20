@@ -1,6 +1,5 @@
-# Temporary helper for this session's branch only: runs the same collection chain
-# as pages.yml so the data and generated pages can be reviewed in the pull request.
-# Deleted before the PR is merged.
+# Temporary helper for this session's branch only. Runs the same chain as pages.yml and
+# commits its own log so the run can be diagnosed from the repository. Deleted before merge.
 name: Collect once (branch test)
 on:
   push:
@@ -21,22 +20,32 @@ jobs:
       - name: Offline smoke test
         run: python instrument-panel/tests_smoke.py
       - name: Collect demo market data
-        env:
-          KALSHI_MAX_SERIES: '400'
-          KALSHI_WORKERS: '6'
-          KALSHI_MIN_INTERVAL: '0.12'
-        run: python instrument-panel/tools/kalshi_collect.py
-      - name: Validate
-        run: python instrument-panel/tools/validate_data.py
-      - name: Rebuild pages
-        run: python instrument-panel/tools/build_dashboard_site.py
-      - name: Link check
-        run: python instrument-panel/tools/check_site.py
-      - name: Commit results
+        run: python instrument-panel/tools/kalshi_collect.py 2>&1 | tee /tmp/collect.log; exit ${PIPESTATUS[0]}
+      - name: Show what the collector produced
+        if: always()
         run: |
+          echo "=== data file ==="
+          ls -la data/dashboard_instrument.json data/history_instrument 2>&1 || true
+          python - <<'PY' || true
+          import json
+          d=json.load(open('data/dashboard_instrument.json'))
+          print('generated_at', d['meta']['generated_at'])
+          print('has populations:', 'populations' in d['calibration'])
+          print('counts', json.dumps(d['counts']))
+          PY
+      - name: Validate
+        run: python instrument-panel/tools/validate_data.py 2>&1 | tee /tmp/validate.log; exit ${PIPESTATUS[0]}
+      - name: Rebuild pages
+        run: python instrument-panel/tools/build_dashboard_site.py 2>&1 | tee /tmp/build.log; exit ${PIPESTATUS[0]}
+      - name: Link check
+        run: python instrument-panel/tools/check_site.py 2>&1 | tee /tmp/links.log; exit ${PIPESTATUS[0]}
+      - name: Commit results and log
+        if: always()
+        run: |
+          { echo "run ${{ github.run_id }} commit ${{ github.sha }}"; echo "--- collect ---"; tail -30 /tmp/collect.log 2>/dev/null; echo "--- validate ---"; tail -20 /tmp/validate.log 2>/dev/null; echo "--- build ---"; tail -20 /tmp/build.log 2>/dev/null; echo "--- links ---"; tail -10 /tmp/links.log 2>/dev/null; } > instrument-panel/last_run.log
           git config user.name "kalshi-dashboard-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/dashboard_instrument.json data/history_instrument instrument-panel/site
+          git add -A data instrument-panel
           git diff --cached --quiet && echo "nothing to commit" && exit 0
           git commit -m "data: Kalshi demo snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
           git pull --rebase --autostash origin "${{ github.ref_name }}"
