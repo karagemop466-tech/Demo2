@@ -114,7 +114,7 @@ def main() -> int:
                 "side": side, "entry_yes_price": price, "band": band(price),
                 "result": r["result"], "cost": cost, "payout": payout, "pnl": pnl,
                 "close_time": r.get("close_time"),
-                "source": r.get("source_url") or f"{API}/markets/{r['ticker']}",
+                "source": r.get("source_market_url") or f"{API}/markets/{r['ticker']}",
             })
         # equity curve in close-time order for max drawdown
         equity, peak, max_dd, run = 0.0, 0.0, 0.0, 0.0

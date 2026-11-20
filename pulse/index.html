@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pulse · Kalshi Demo Dashboard</title>
+<meta name="description" content="Highest-dollar live Kalshi demo events for gas prices, elections, culture, crypto and golf, with live charts, jump alerts, simulated trading and resolution tracking.">
+<link rel="stylesheet" href="assets/style.css">
+</head><body>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Pulse<small>demo environment · not real money</small></div>
+<nav class="main"><a href="index.html" aria-current="page">Overview</a><a href="live.html">Live chart</a><a href="jumps.html">Jumps ≥ $0.10</a><a href="simulated.html">Simulated trading</a><a href="resolved.html">Resolutions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged</a><a href="../index.html">Main dashboard</a></nav></div></header>
+<div class="wrap">
+<h1>Highest-dollar live events — five topics only</h1>
+<p class="lead">Live Kalshi <b>demo</b> markets for <b>gas prices, elections, culture, crypto, golf</b> only.
+Ranked by <i>computed</i> dollar notional (official contracts × official last price — the API has no
+dollar-turnover field), charted by contract price over time, with contracts available at each price,
+tracked until each market resolves <b>yes</b> or <b>no</b>. Simulated trades run automatically —
+no manual input.</p>
+<div class="notice"><b>Demo only.</b> Mock funds. Demo prices “may not be reflective of those in real markets”
+(<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a>).
+Nothing here is investment advice.</div>
+<div class="kpis" id="kpis"></div>
+<div class="card"><h3>Executive summary — important details</h3>
+<ul>
+<li><b>Scope:</b> 174 in-scope series; 1,556 open markets collected; 1,601 resolved (317 ever traded).
+Snapshot <span id="snapWhen" class="muted">…</span> Source: <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo_env</a>.</li>
+<li><b>Highest dollar:</b> elections dominate (top ≈ $15.8k lifetime notional). Strict gas-price markets
+max ≈ $2.89 — thin demo liquidity. Culture has <b>0 open markets</b> in the snapshot (2 series, 1 resolved).
+See <a href="flagged.html">Flagged P-F02</a>.</li>
+<li><b>Chart:</b> X = time (60 s / 5 m / 15 m / 1 h / 6 h), Y = contract price $0–$1 fixed.
+Seconds are browser-polled observations (candlesticks exist only at 1 m / 1 h / 1 d —
+<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">candlesticks</a>).</li>
+<li><b>Jumps:</b> 39 moves ≥ $0.10 found in trade prints. External news causation is
+<b>unverified</b> (the API does not provide it) — each jump links to its Kalshi event, market,
+rules and settlement source instead of an invented news URL.</li>
+<li><b>Simulated trading:</b> 5 strategies backtested on 317 traded resolved markets + 12 live paper
+positions. Entry uses the final traded price (hindsight) — descriptive calibration, <b>not</b> a
+tradable strategy. Realised P&amp;L stays blank until Kalshi settles.</li>
+<li><b>Demo account:</b> no API key in this repo, so balance/positions/fills are blank (not zero).
+Paper portfolio is shown separately and never mixed with account data.</li>
+</ul></div>
+<div id="top"></div>
+<div class="card"><h3>How to use this dashboard</h3>
+<ol>
+<li><a href="live.html">Live chart</a> — pick a market, choose a window, read liquidity beside it.</li>
+<li><a href="jumps.html">Jumps</a> — every ≥ $0.10 move with before/after prices and cause-context links.</li>
+<li><a href="simulated.html">Simulated trading</a> — strategy backtest + paper portfolio, categorised by topic/side/band.</li>
+<li><a href="resolved.html">Resolutions</a> — how each tracked market resolved (yes/no).</li>
+<li><a href="verification.html">Verification</a> — every claim with its official source. <a href="flagged.html">Flagged</a> — irregularities for review.</li>
+</ol></div>
+</div>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div>
+<div><a href="verification.html">Verification</a> · <a href="flagged.html">Flagged for Review</a> · <a href="../pages/sources.html">Sources</a></div></div></footer>
+<script src="assets/app.js"></script>
+<script>
+(function(){
+  var P = window.PULSE;
+  P.getJSON("../data/pulse_top.json").then(function(d){
+    document.getElementById("snapWhen").textContent = d.generated_at + " UTC";
+    var topics = [["gas_strict","Gas prices (strict)"],["elections","Elections"],["culture","Culture"],["crypto","Crypto"],["golf","Golf"]];
+    var html = "";
+    topics.forEach(function(pair){
+      var rows = d.topics[pair[0]] || [];
+      html += '<div class="card"><h3>' + P.esc(pair[1]) + ' — top live events by computed notional</h3>';
+      if(!rows.length){ html += '<p class="empty">No open markets in this snapshot for this topic. Blank, not zero — see Flagged.</p></div>'; return; }
+      html += '<div class="tablewrap"><table><thead><tr><th>Event / market</th><th class="num">Last $</th><th class="num">Notional $ ƒ</th><th class="num">Volume</th><th class="num">Open int.</th><th>Close (UTC)</th><th>Source</th></tr></thead><tbody>';
+      rows.forEach(function(m){
+        html += '<tr><td><b>' + P.esc(m.title) + '</b><br><span class="small muted">' + P.esc(m.ticker) + '</span></td>'
+          + '<td class="num">' + P.usd(m.last_price,4) + '</td>'
+          + '<td class="num">' + P.usd(m.notional_lifetime_usd,2) + '</td>'
+          + '<td class="num">' + P.num(m.volume_fp,2) + '</td>'
+          + '<td class="num">' + P.num(m.open_interest_fp,2) + '</td>'
+          + '<td>' + P.when(m.close_time) + '</td>'
+          + '<td>' + P.src(m.source,"API") + '</td></tr>';
+      });
+      html += '</tbody></table></div><p class="small muted">ƒ = computed: volume_fp × last_price_dollars. Official contract volumes shown unmodified. Source: <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>.</p></div>';
+    });
+    document.getElementById("top").innerHTML = html;
+    P.getJSON("../data/pulse_jumps.json").then(function(j){
+      P.getJSON("../data/pulse_simulated.json").then(function(s){
+        document.getElementById("kpis").innerHTML =
+          '<div class="kpi"><div class="k">Jumps ≥ $0.10</div><div class="v">' + j.counts.total + '</div><div class="s">trade prints</div></div>'
+          + '<div class="kpi"><div class="k">Paper positions</div><div class="v">' + s.portfolio.positions + '</div><div class="s">invested ' + P.usd(s.portfolio.invested,2) + '</div></div>'
+          + '<div class="kpi"><div class="k">Unrealised P&amp;L</div><div class="v">' + P.usd(s.portfolio.unrealised_pnl,2) + '</div><div class="s">paper only</div></div>'
+          + '<div class="kpi"><div class="k">Realised P&amp;L</div><div class="v">—</div><div class="s">blank until settle</div></div>';
+      });
+    });
+  }).catch(function(e){
+    document.getElementById("top").innerHTML = '<div class="notice bad">Could not load ../data/pulse_top.json (' + P.esc(e.message) + '). Run tools/pulse_build_data.py.</div>';
+  });
+})();
+</script>
+</body></html>

@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-20T12:55:36Z",
+ "generated_at": "2026-11-20T13:00:20Z",
  "threshold_usd": 0.1,
  "definition": "|yes_price_after - yes_price_before| >= 0.10 between consecutive trade prints (GET /markets/trades) or consecutive collector tick samples (last_price_dollars). Prices are official API fields; the jump flag is computed arithmetic.",
  "inputs": [

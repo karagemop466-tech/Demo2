@@ -43,6 +43,7 @@ NAV = [
     ("pages/flagged.html", "Flagged", "flag"),
     ("pages/repo-review.html", "Repo Review", "repo"),
     ("pages/sources.html", "Sources", "src"),
+    ("pulse/index.html", "Pulse Trader", "pulse"),
 ]
 
 

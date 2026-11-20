@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sharp jumps ≥ $0.10 · Pulse</title>
+<link rel="stylesheet" href="assets/style.css">
+</head><body>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Pulse<small>demo environment · not real money</small></div>
+<nav class="main"><a href="index.html">Overview</a><a href="live.html">Live chart</a><a href="jumps.html" aria-current="page">Jumps ≥ $0.10</a><a href="simulated.html">Simulated trading</a><a href="resolved.html">Resolutions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged</a><a href="../index.html">Main dashboard</a></nav></div></header>
+<div class="wrap">
+<h1>Sharp price jumps — ≥ $0.10 in either direction</h1>
+<p class="lead">Every move of <b>$0.10 or more</b> between consecutive trade prints
+(<a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a>)
+or consecutive collector ticks. Each row links to the Kalshi <b>event</b>, <b>market</b>, <b>orderbook</b>,
+<b>candlesticks</b> and <b>settlement source</b> so you can investigate what may have caused it.</p>
+<div class="notice warn"><b>About “cause”.</b> The Kalshi API does not provide news causation, so no external
+news URL is asserted — that column stays blank and flagged <span class="pill flag">unverified</span>.
+What <i>is</i> linked is verified: the event/market/rules/settlement-source chain. In thin demo books a
+jump may reflect the spread (wide bid/ask) rather than information — check the orderbook link before
+concluding anything. Settlement pays $1 to the winning side
+(<a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">market settlement</a>).</div>
+<div class="row"><label for="topicF">Topic</label><select id="topicF"><option value="">All topics</option>
+<option value="gas">Gas prices</option><option value="elections">Elections</option><option value="culture">Culture</option>
+<option value="crypto">Crypto</option><option value="golf">Golf</option></select>
+<span class="small muted" id="count"></span></div>
+<div class="tablewrap" style="margin-top:10px"><table><thead><tr>
+<th>When (UTC)</th><th>Market</th><th>Topic</th><th class="num">Before → After</th><th class="num">Δ</th>
+<th>Source</th><th>Cause context (verified links)</th><th>External news</th>
+</tr></thead><tbody id="rows"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody></table></div>
+<p class="small muted">Prices are official <code>yes_price_dollars</code> fields; the ≥ $0.10 flag is computed arithmetic.
+Collector ticks (7 samples over ~51 min) produced 0 jumps — demo prices did not move in that window.
+Trade prints span months and produced all 39 jumps below.</p>
+</div>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div>
+<div><a href="live.html">Live chart</a> · <a href="verification.html">Verification</a></div></div></footer>
+<script src="assets/app.js"></script>
+<script>
+(function(){
+  var P = window.PULSE, all = [];
+  P.getJSON("../data/pulse_jumps.json").then(function(d){
+    all = d.jumps || [];
+    document.getElementById("count").textContent = all.length + " jumps · generated " + d.generated_at + " UTC";
+    render("");
+  }).catch(function(e){
+    document.getElementById("rows").innerHTML = '<tr><td colspan="8" class="empty">Could not load jumps (' + P.esc(e.message) + '). Run tools/pulse_jumps.py.</td></tr>';
+  });
+  function render(topic){
+    var rows = all.filter(function(j){ return !topic || j.topic === topic; });
+    if(!rows.length){ document.getElementById("rows").innerHTML = '<tr><td colspan="8" class="empty">No jumps for this topic.</td></tr>'; return; }
+    document.getElementById("rows").innerHTML = rows.map(function(j){
+      var settle = j.settlement_source_url
+        ? P.src(j.settlement_source_url, j.settlement_source_name || "Settlement source")
+        : '<span class="muted">—</span>';
+      return '<tr><td>' + P.when(j.ts_after) + '</td>'
+        + '<td><b>' + P.esc(j.ticker) + '</b><br><span class="small muted">' + P.esc(j.title) + '</span></td>'
+        + '<td>' + P.esc(j.topic) + '</td>'
+        + '<td class="num">' + P.usd(j.price_before,4) + ' → ' + P.usd(j.price_after,4) + '</td>'
+        + '<td class="num">' + (j.delta>0?"+":"") + P.usd(j.delta,4) + '</td>'
+        + '<td>' + P.src(j.market_url,"Official market") + '</td>'
+        + '<td class="small">' + P.src(j.event_url,"Event") + " · " + P.src(j.market_url,"Market") + " · "
+        + P.src(j.trades_url,"Trades") + " · " + P.src(j.orderbook_url,"Book") + " · "
+        + P.src(j.candlesticks_url,"Candles") + " · " + P.src(j.contract_terms_url,"Rules") + "<br>" + settle + "</td>"
+        + '<td><span class="pill flag">unverified</span><br><span class="small muted">blank — no API news feed</span></td></tr>';
+    }).join("");
+  }
+  document.getElementById("topicF").addEventListener("change", function(){ render(this.value); });
+})();
+</script>
+</body></html>

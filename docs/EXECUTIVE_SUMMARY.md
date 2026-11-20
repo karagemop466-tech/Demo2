@@ -152,3 +152,54 @@ the site's "Flagged for Review" page:
 - Quick Start: Market Data: https://docs.kalshi.com/getting_started/quick_start_market_data
 - WebSocket Connection: https://docs.kalshi.com/websockets/websocket-connection
 - REST OpenAPI spec: https://docs.kalshi.com/openapi.yaml
+
+## 8. Pulse trader subsite — snapshot and implementation (2026-11-20)
+
+The additional `pulse/` subsite is a trader-facing view of the existing Kalshi **demo** data. It does
+not replace the existing dashboard, execute real-money trades, or claim that sampled prices are a
+continuous exchange feed.
+
+### Snapshot facts (source: official demo API collector)
+
+| Finding | Observed value | Source / verification |
+| --- | ---: | --- |
+| In-scope series | 174 | [`data/dashboard_instrument.json`](../data/dashboard_instrument.json), collected from demo series/markets; [Get Series](https://docs.kalshi.com/api-reference/market/get-series-list), [Get Markets](https://docs.kalshi.com/api-reference/market/get-markets) |
+| Open markets collected | 1,556 | [`data/dashboard_instrument.json`](../data/dashboard_instrument.json); [Get Markets](https://docs.kalshi.com/api-reference/market/get-markets) |
+| Resolved markets collected | 1,601 | [`data/dashboard_instrument.json`](../data/dashboard_instrument.json); official market `result` field, [Get Markets](https://docs.kalshi.com/api-reference/market/get-markets) |
+| Resolved markets with `volume_fp > 0` | 317 | Computed filter over official `volume_fp`; [`data/pulse_backtest.json`](../data/pulse_backtest.json) |
+| Resolved markets with `volume_fp = 0` (excluded from backtest) | 1,284 | Computed filter over official `volume_fp`; excluded because the displayed last price is not an observed trade price for these markets |
+| Open markets by topic | Gas 189; elections 367; culture 0; crypto 500; golf 500 | [`data/dashboard_instrument.json`](../data/dashboard_instrument.json); collector snapshot, not a claim of current live counts |
+| Traded resolved results | Yes 83; no 234 | Computed from official `result` on the 317 traded resolved markets; [`data/pulse_backtest.json`](../data/pulse_backtest.json) |
+| Detected trade-print jumps | 39 with absolute consecutive `yes_price_dollars` difference ≥ $0.10 | Computed using official trade prices/timestamps, [Get Trades](https://docs.kalshi.com/api-reference/market/get-trades); [`data/pulse_jumps.json`](../data/pulse_jumps.json) |
+| Collector tick jumps | 0 in 7 observed tick samples | Computed from [`data/history_instrument/2026-11-20.json`](../data/history_instrument/2026-11-20.json); sample gaps mean this is not evidence of no intervening movement |
+| Culture open-market rows | 0 | Empty in this snapshot; see [Pulse Flagged for Review](../pulse/flagged.html) P-F02 |
+| Authenticated account values | Blank / unavailable | The existing portfolio snapshot records unauthenticated; no API key exists in repo. Never shown as zero. |
+
+“Dollar amount” ranking is a **computed proxy**, `volume_fp × last_price_dollars`, not a Kalshi-reported
+turnover field. It is explicitly marked computed in the page UI. The strict gas-price display omits
+energy-adjacent markets (such as solar) that fall into the broad Oil-and-energy collector taxonomy.
+
+### Live interaction and limitations
+
+- `pulse/live.html` polls public demo REST market and orderbook endpoints in the browser. The chart axis
+  is time and contract price, with 60-second, 5-minute, 15-minute, 1-hour and 6-hour windows. It labels
+  browser polls as observations, not historical exchange data. Official candles support 1-minute,
+  1-hour and 1-day periods only: [Get Market Candlesticks](https://docs.kalshi.com/api-reference/market/get-market-candlesticks).
+- Liquidity displays official YES/NO bid price/count levels. The displayed YES ask is **derived** as
+  `1 − best NO bid`, not mislabeled as a raw ask: [Get Market Orderbook](https://docs.kalshi.com/api-reference/market/get-market-orderbook).
+- The 39 recorded ≥$0.10 changes link to official Kalshi market/event/trade/orderbook and contract
+  settlement-source context. External news causation is blank and marked **unverified**; the API does
+  not establish that any article caused a particular move.
+- Five automated paper strategies run on resolved, traded markets only. Results are gross, one-contract
+  arithmetic using the final observed price (hindsight-biased); they are a calibration description,
+  not evidence of tradable performance. Payout logic follows the official
+  [market settlement docs](https://docs.kalshi.com/getting_started/market_settlement). The 12-position
+  paper portfolio is separate from the actual demo account, with realised P&amp;L blank until settlement.
+- No API key is configured, so no demo balance/positions/fills can be displayed and no orders were
+  submitted. The source data and all limitations are published on [Pulse Verification](../pulse/verification.html)
+  and [Pulse Flagged for Review](../pulse/flagged.html).
+
+All counts above are a dated snapshot (`data/dashboard_instrument.json` generated 2026-11-20); they
+must be refreshed by the repository collector before being treated as current. Full implementation:
+[`pulse/`](../pulse/index.html), engines [`tools/pulse_jumps.py`](../tools/pulse_jumps.py),
+[`tools/pulse_simulate.py`](../tools/pulse_simulate.py), and outputs in [`data/`](../data/).

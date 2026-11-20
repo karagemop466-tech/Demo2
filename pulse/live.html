@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live chart &amp; liquidity · Pulse</title>
+<link rel="stylesheet" href="assets/style.css">
+</head><body>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Pulse<small>demo environment · not real money</small></div>
+<nav class="main"><a href="index.html">Overview</a><a href="live.html" aria-current="page">Live chart</a><a href="jumps.html">Jumps ≥ $0.10</a><a href="simulated.html">Simulated trading</a><a href="resolved.html">Resolutions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged</a><a href="../index.html">Main dashboard</a></nav></div></header>
+<div class="wrap">
+<h1>Live price chart &amp; liquidity</h1>
+<p class="lead">X = time, Y = contract price ($0.00–$1.00, fixed axis). Pick a window in
+<b>seconds, minutes or hours</b>. Beside the chart: how many contracts sit at each price right now.</p>
+<div class="card">
+<div class="row">
+<div><label for="mkt">Market</label><br><select id="mkt" style="min-width:340px;max-width:100%"></select></div>
+<div><label>Window</label><br><div class="seg" id="winSeg" role="group" aria-label="Chart window">
+<button data-w="60" aria-pressed="false">60 s</button><button data-w="300" aria-pressed="true">5 min</button>
+<button data-w="900" aria-pressed="false">15 min</button><button data-w="3600" aria-pressed="false">1 h</button>
+<button data-w="21600" aria-pressed="false">6 h</button></div></div>
+<div><label for="intv">Refresh</label><br><select id="intv"><option value="5000">5 s</option><option value="15000" selected>15 s</option><option value="60000">60 s</option></select></div>
+<button id="pause" class="secondary">Pause</button>
+<span class="small muted" id="status">starting…</span>
+</div>
+<div class="chartwrap" style="margin-top:10px"><canvas id="chart" class="chart"></canvas></div>
+<div class="legend"><span><span class="swatch" style="background:#1f5fbf"></span>last price (polled)</span>
+<span><span class="swatch" style="background:#1f9d55"></span>YES bid</span>
+<span><span class="swatch" style="background:#b32d2d"></span>YES ask (1 − best NO bid, derived)</span>
+<span><span class="swatch" style="background:#e67e22"></span>jump ≥ $0.10 marker</span></div>
+<p class="small muted" id="chartNote">Seconds windows plot your browser's own polls (labelled polled, not exchange history):
+official candlesticks exist only at 1-minute / 1-hour / 1-day intervals
+(<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">candlesticks</a>).
+Jump markers come from <a href="jumps.html">detected ≥ $0.10 moves</a> inside the window.</p>
+</div>
+<div class="grid two">
+<div class="card"><h3>Liquidity — contracts at each price</h3>
+<p class="small muted">Raw bids from <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Get Market Orderbook</a>.
+Kalshi returns <b>yes bids and no bids only</b>; a NO bid at <i>p</i> equals a YES ask at <i>1 − p</i> (derived, labelled).</p>
+<div id="liqSummary" class="kpis"></div>
+<div class="grid two" style="gap:10px"><div><h3 class="small">YES bids</h3><div id="liqBid"></div></div>
+<div><h3 class="small">YES asks <span class="muted">(derived)</span></h3><div id="liqAsk"></div></div></div>
+<p class="small muted" id="liqNote"></p></div>
+<div class="card"><h3>Jump alerts for this market</h3><div id="jumpBox"><p class="muted small">Loading…</p></div></div>
+</div>
+</div>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div>
+<div><a href="jumps.html">All jumps</a> · <a href="verification.html">Verification</a></div></div></footer>
+<script src="assets/app.js"></script>
+<script>
+(function(){
+  var P = window.PULSE, API = P.DEMO;
+  var ticker = null, series = null, timer = null, paused = false;
+  var points = []; // {t, last, bid, ask}
+  var jumps = [];
+  var $ = function(id){ return document.getElementById(id); };
+  function setStatus(s){ $("status").textContent = s; }
+  function windowSec(){ return Number(document.querySelector('#winSeg button[aria-pressed="true"]').dataset.w); }
+
+  P.getJSON("../data/pulse_top.json").then(function(d){
+    var sel = $("mkt"), opts = [], seen = {};
+    Object.keys(d.topics).forEach(function(t){
+      (d.topics[t]||[]).forEach(function(m){ if(!seen[m.ticker]){ opts.push(m); seen[m.ticker]=true; } });
+    });
+    opts.sort(function(a,b){ return (b.notional_lifetime_usd||0)-(a.notional_lifetime_usd||0); });
+    sel.innerHTML = opts.map(function(m){
+      return '<option value="' + P.esc(m.ticker) + '">' + P.esc(m.ticker) + " — " + P.esc(m.title) + "</option>";
+    }).join("");
+    ticker = opts[0].ticker;
+    P.getJSON("../data/pulse_jumps.json").then(function(j){
+      jumps = j.jumps || [];
+      renderJumpBox();
+      select(ticker);
+    });
+  }).catch(function(e){ setStatus("snapshot load failed: " + e.message); });
+
+  function renderJumpBox(){
+    var mine = jumps.filter(function(j){ return j.ticker === ticker; }).slice(0, 8);
+    if(!mine.length){ $("jumpBox").innerHTML = '<p class="muted small">No ≥ $0.10 jumps recorded for this market in trade prints. See <a href="jumps.html">all jumps</a>.</p>'; return; }
+    var h = '<div class="tablewrap"><table><thead><tr><th>When (UTC)</th><th class="num">Before → After</th><th class="num">Δ</th><th>Cause context</th></tr></thead><tbody>';
+    mine.forEach(function(j){
+      h += '<tr><td>' + P.when(j.ts_after) + '</td><td class="num">' + P.usd(j.price_before,4) + ' → ' + P.usd(j.price_after,4) + '</td>'
+        + '<td class="num">' + (j.delta>0?"+":"") + P.usd(j.delta,4) + '</td>'
+        + '<td>' + P.src(j.event_url,"Event") + " · " + P.src(j.market_url,"Market") + '<br><span class="small muted">External news: unverified (blank)</span></td></tr>';
+    });
+    $("jumpBox").innerHTML = h + "</tbody></table></div>";
+  }
+
+  function select(tk){
+    ticker = tk; points = [];
+    var m = null;
+    var sel = $("mkt");
+    for(var i=0;i<sel.options.length;i++){ if(sel.options[i].value===tk){ m = sel.options[i].text; break; } }
+    // find series from pulse_top via option text is fragile; fetch market to get series
+    P.liveJSON(API + "/markets/" + encodeURIComponent(tk)).then(function(d){
+      series = (d.market && d.market.series_ticker) || null;
+    }).catch(function(e){
+      setStatus("market fetch unavailable: " + e.message + " — trying live polling and snapshot fallback");
+    }).then(function(){
+      sample(); if(timer) clearInterval(timer);
+      timer = setInterval(function(){ if(!paused) sample(); }, Number($("intv").value));
+      renderJumpBox();
+    });
+  }
+
+  function sample(){
+    if(!ticker) return;
+    Promise.all([
+      P.liveJSON(API + "/markets/" + encodeURIComponent(ticker)),
+      P.liveJSON(API + "/markets/" + encodeURIComponent(ticker) + "/orderbook?depth=20")
+    ]).then(function(res){
+      var m = res[0].market || {}, book = (res[1].orderbook_fp) || {};
+      var last = Number(m.last_price_dollars), bid = Number(m.yes_bid_dollars);
+      var noBid = Number(m.no_bid_dollars);
+      var ask = isFinite(noBid) ? 1 - noBid : NaN;
+      if(isFinite(last)){
+        points.push({t: Date.now(), last: last, bid: isFinite(bid)?bid:null, ask: isFinite(ask)?ask:null});
+        var cutoff = Date.now() - windowSec()*1000;
+        points = points.filter(function(p){ return p.t >= cutoff; });
+        if(points.length > 500) points = points.slice(-500);
+      }
+      draw(); renderBook(book, m);
+      setStatus("live · " + new Date().toLocaleTimeString());
+    }).catch(function(e){
+      setStatus("live fetch unavailable (" + e.message + ") — snapshot fallback");
+      P.getJSON("../data/pulse_books.json").then(function(d){
+        var b = d.books[ticker];
+        if(b){ renderBook({yes_dollars: b.yes_dollars||[], no_dollars: b.no_dollars||[]}, {}); }
+        else { $("liqNote").textContent = "No snapshot book for this ticker."; }
+      });
+    });
+  }
+
+  function renderBook(book, m){
+    var yes = book.yes_dollars || [], no = book.no_dollars || [];
+    var yesContracts = yes.reduce(function(s,x){ return s + (Number(x[1])||0); }, 0);
+    var noContracts = no.reduce(function(s,x){ return s + (Number(x[1])||0); }, 0);
+    $("liqSummary").innerHTML =
+      '<div class="kpi"><div class="k">YES levels</div><div class="v">' + yes.length + '</div><div class="s">' + P.num(yesContracts,2) + ' contracts</div></div>'
+      + '<div class="kpi"><div class="k">NO levels</div><div class="v">' + no.length + '</div><div class="s">' + P.num(noContracts,2) + ' contracts</div></div>'
+      + '<div class="kpi"><div class="k">Best YES bid</div><div class="v">' + (yes.length? P.usd(yes[yes.length-1][0],4) : "—") + '</div><div class="s">official</div></div>'
+      + '<div class="kpi"><div class="k">Implied YES ask</div><div class="v">' + (no.length? P.usd(1-Number(no[no.length-1][0]),4) : "—") + '</div><div class="s">derived 1−p</div></div>';
+    function levels(arr, invert){
+      if(!arr.length) return '<span class="muted small">No resting bids reported (empty book).</span>';
+      var rows = arr.slice().reverse().slice(0,10).map(function(x){
+        var px = invert ? 1 - Number(x[0]) : Number(x[0]);
+        return '<div class="row" style="justify-content:space-between;border-bottom:1px solid #eef2f7;padding:4px 0"><span>' + P.usd(px,4) + '</span><b>' + P.num(x[1],2) + '</b></div>';
+      }).join("");
+      return rows;
+    }
+    $("liqBid").innerHTML = levels(yes, false);
+    $("liqAsk").innerHTML = levels(no, true);
+    $("liqNote").textContent = "Snapshot " + new Date().toLocaleTimeString() + ". Empty book = no resting orders (200 with empty arrays), not missing data.";
+  }
+
+  function draw(){
+    var c = $("chart"); if(!c) return;
+    var dpr = window.devicePixelRatio || 1;
+    var cssW = c.parentElement.clientWidth - 16, cssH = 360;
+    c.width = Math.floor(cssW*dpr); c.height = Math.floor(cssH*dpr);
+    c.style.height = cssH + "px";
+    var g = c.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0);
+    g.clearRect(0,0,cssW,cssH);
+    var pad = {l:56,r:14,t:14,b:40}, W = cssW, H = cssH;
+    var win = windowSec()*1000, now = Date.now(), t0 = now - win;
+    g.strokeStyle = "#e6ecf3"; g.fillStyle = "#6b7a8c"; g.font = "11px sans-serif";
+    for(var i=0;i<=4;i++){
+      var y = pad.t + (H-pad.t-pad.b)*i/4, val = 1 - i/4;
+      g.beginPath(); g.moveTo(pad.l,y); g.lineTo(W-pad.r,y); g.stroke();
+      g.fillText("$" + val.toFixed(2), 8, y+4);
+    }
+    // x labels
+    for(var k=0;k<=4;k++){
+      var tx = t0 + win*k/4, px = pad.l + (W-pad.l-pad.r)*k/4;
+      g.fillText(new Date(tx).toLocaleTimeString(), px-20, H-14);
+    }
+    if(points.length < 2){
+      g.fillStyle = "#6b7a8c";
+      g.fillText(points.length ? "Collecting another poll…" : "Polling live prices…", pad.l+10, H/2);
+      return;
+    }
+    function plot(key, color){
+      g.strokeStyle = color; g.lineWidth = 2; g.beginPath();
+      var started = false;
+      points.forEach(function(p){
+        if(p[key] === null || p[key] === undefined) return;
+        var px = pad.l + (p.t - t0)/win*(W-pad.l-pad.r);
+        var py = pad.t + (1 - p[key])*(H-pad.t-pad.b);
+        if(!started){ g.moveTo(px,py); started = true; } else g.lineTo(px,py);
+      });
+      g.stroke(); g.lineWidth = 1;
+    }
+    plot("last", "#1f5fbf"); plot("bid", "#1f9d55"); plot("ask", "#b32d2d");
+    // jump markers inside window
+    g.fillStyle = "#e67e22";
+    jumps.forEach(function(j){
+      if(j.ticker !== ticker) return;
+      var t = new Date(j.ts_after).getTime();
+      if(t < t0 || t > now) return;
+      var px = pad.l + (t - t0)/win*(W-pad.l-pad.r);
+      var py = pad.t + (1 - j.price_after)*(H-pad.t-pad.b);
+      g.beginPath(); g.arc(px, py, 5, 0, Math.PI*2); g.fill();
+    });
+  }
+
+  $("mkt").addEventListener("change", function(){ select(this.value); });
+  $("winSeg").addEventListener("click", function(e){
+    if(!e.target.matches("button")) return;
+    this.querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed", b===e.target ? "true" : "false"); });
+    draw();
+  });
+  $("intv").addEventListener("change", function(){
+    if(timer) clearInterval(timer);
+    timer = setInterval(function(){ if(!paused) sample(); }, Number(this.value));
+  });
+  $("pause").addEventListener("click", function(){
+    paused = !paused; this.textContent = paused ? "Resume" : "Pause";
+    setStatus(paused ? "paused" : "live");
+  });
+  window.addEventListener("resize", draw);
+})();
+</script>
+</body></html>

@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-20T12:55:48Z",
+ "generated_at": "2026-11-20T13:00:20Z",
  "mode": "paper_simulated_no_key",
  "method": "Top 3 open markets per topic by computed notional (volume_fp x last_price_dollars, labelled computed). Entry = first collector tick last price, mark = latest tick. Side = favorite. Unrealised only; realised stays blank until Kalshi settles (result).",
  "portfolio": {

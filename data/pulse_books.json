@@ -1,0 +1,1098 @@
+{
+ "generated_at": "2026-11-20T13:00:20Z",
+ "books": {
+  "KX2028DRUN-28-CHOL": {
+   "ticker": "KX2028DRUN-28-CHOL",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KX2028DRUN-28-CHOL/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.0900",
+     "5.00"
+    ]
+   ],
+   "no_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.0200",
+     "1.00"
+    ],
+    [
+     "0.0300",
+     "1.00"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 2,
+    "no_levels": 3,
+    "yes_contracts_at_levels": 6.0,
+    "no_contracts_at_levels": 3.0,
+    "yes_resting_usd": 0.46,
+    "no_resting_usd": 0.06,
+    "best_yes_bid": 0.09,
+    "best_no_bid": 0.03,
+    "implied_yes_ask": 0.97
+   }
+  },
+  "KX2028DRUN-28-DPHI": {
+   "ticker": "KX2028DRUN-28-DPHI",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KX2028DRUN-28-DPHI/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.1000",
+     "5.00"
+    ],
+    [
+     "0.2700",
+     "1.00"
+    ]
+   ],
+   "no_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.0200",
+     "1.00"
+    ],
+    [
+     "0.0300",
+     "1.00"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 3,
+    "no_levels": 3,
+    "yes_contracts_at_levels": 7.0,
+    "no_contracts_at_levels": 3.0,
+    "yes_resting_usd": 0.78,
+    "no_resting_usd": 0.06,
+    "best_yes_bid": 0.27,
+    "best_no_bid": 0.03,
+    "implied_yes_ask": 0.97
+   }
+  },
+  "KX2028DRUN-28-ESLO": {
+   "ticker": "KX2028DRUN-28-ESLO",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KX2028DRUN-28-ESLO/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ]
+   ],
+   "no_dollars": [
+    [
+     "0.2200",
+     "50.00"
+    ],
+    [
+     "0.2300",
+     "1.00"
+    ],
+    [
+     "0.2400",
+     "1.00"
+    ],
+    [
+     "0.7500",
+     "5.00"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 1,
+    "no_levels": 4,
+    "yes_contracts_at_levels": 1.0,
+    "no_contracts_at_levels": 57.0,
+    "yes_resting_usd": 0.01,
+    "no_resting_usd": 15.22,
+    "best_yes_bid": 0.01,
+    "best_no_bid": 0.75,
+    "implied_yes_ask": 0.25
+   }
+  },
+  "KX2028DRUN-28-GWHI": {
+   "ticker": "KX2028DRUN-28-GWHI",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KX2028DRUN-28-GWHI/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.0200",
+     "1.00"
+    ],
+    [
+     "0.2100",
+     "1.00"
+    ],
+    [
+     "0.2200",
+     "2.00"
+    ]
+   ],
+   "no_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.0200",
+     "1.00"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 4,
+    "no_levels": 2,
+    "yes_contracts_at_levels": 5.0,
+    "no_contracts_at_levels": 2.0,
+    "yes_resting_usd": 0.68,
+    "no_resting_usd": 0.03,
+    "best_yes_bid": 0.22,
+    "best_no_bid": 0.02,
+    "implied_yes_ask": 0.98
+   }
+  },
+  "KX2028DRUN-28-MCUB": {
+   "ticker": "KX2028DRUN-28-MCUB",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KX2028DRUN-28-MCUB/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.1200",
+     "5.00"
+    ]
+   ],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 1,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 5.0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0.6,
+    "no_resting_usd": 0,
+    "best_yes_bid": 0.12,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KX2028DRUN-28-MOBA": {
+   "ticker": "KX2028DRUN-28-MOBA",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KX2028DRUN-28-MOBA/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0400",
+     "1.00"
+    ]
+   ],
+   "no_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.0200",
+     "1.00"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 1,
+    "no_levels": 2,
+    "yes_contracts_at_levels": 1.0,
+    "no_contracts_at_levels": 2.0,
+    "yes_resting_usd": 0.04,
+    "no_resting_usd": 0.03,
+    "best_yes_bid": 0.04,
+    "best_no_bid": 0.02,
+    "implied_yes_ask": 0.98
+   }
+  },
+  "KX2028DRUN-28-RCOO": {
+   "ticker": "KX2028DRUN-28-RCOO",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KX2028DRUN-28-RCOO/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.0900",
+     "5.00"
+    ]
+   ],
+   "no_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.0200",
+     "1.00"
+    ],
+    [
+     "0.0300",
+     "1.00"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 2,
+    "no_levels": 3,
+    "yes_contracts_at_levels": 6.0,
+    "no_contracts_at_levels": 3.0,
+    "yes_resting_usd": 0.46,
+    "no_resting_usd": 0.06,
+    "best_yes_bid": 0.09,
+    "best_no_bid": 0.03,
+    "implied_yes_ask": 0.97
+   }
+  },
+  "KXAAAGASMIN-26DEC31-3.60": {
+   "ticker": "KXAAAGASMIN-26DEC31-3.60",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMIN-26DEC31-3.60/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXAAAGASMINFL-26DEC31-2.40": {
+   "ticker": "KXAAAGASMINFL-26DEC31-2.40",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMINFL-26DEC31-2.40/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXAAAGASMINFL-26DEC31-2.50": {
+   "ticker": "KXAAAGASMINFL-26DEC31-2.50",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMINFL-26DEC31-2.50/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXAAAGASMINFL-26DEC31-2.60": {
+   "ticker": "KXAAAGASMINFL-26DEC31-2.60",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMINFL-26DEC31-2.60/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXAAAGASMINNY-26DEC31-2.50": {
+   "ticker": "KXAAAGASMINNY-26DEC31-2.50",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMINNY-26DEC31-2.50/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXAAAGASMINNY-26DEC31-2.60": {
+   "ticker": "KXAAAGASMINNY-26DEC31-2.60",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMINNY-26DEC31-2.60/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXAAAGASMINNY-26DEC31-2.70": {
+   "ticker": "KXAAAGASMINNY-26DEC31-2.70",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMINNY-26DEC31-2.70/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0600",
+     "1.00"
+    ]
+   ],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 1,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 1.0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0.06,
+    "no_resting_usd": 0,
+    "best_yes_bid": 0.06,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXAAAGASMINNY-26DEC31-2.80": {
+   "ticker": "KXAAAGASMINNY-26DEC31-2.80",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMINNY-26DEC31-2.80/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 1,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 1.0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0.01,
+    "best_yes_bid": null,
+    "best_no_bid": 0.01,
+    "implied_yes_ask": 0.99
+   }
+  },
+  "KXAAAGASMINNY-26DEC31-2.90": {
+   "ticker": "KXAAAGASMINNY-26DEC31-2.90",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASMINNY-26DEC31-2.90/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXAOCSENATE-28": {
+   "ticker": "KXAOCSENATE-28",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAOCSENATE-28/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.0200",
+     "0.96"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 2,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 1.96,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0.0292,
+    "best_yes_bid": null,
+    "best_no_bid": 0.02,
+    "implied_yes_ask": 0.98
+   }
+  },
+  "KXBNBY-27JAN0100-T40000": {
+   "ticker": "KXBNBY-27JAN0100-T40000",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBNBY-27JAN0100-T40000/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXBRYSONCOURSERECORDS-26-4": {
+   "ticker": "KXBRYSONCOURSERECORDS-26-4",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBRYSONCOURSERECORDS-26-4/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXBRYSONCOURSERECORDS-26-5": {
+   "ticker": "KXBRYSONCOURSERECORDS-26-5",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBRYSONCOURSERECORDS-26-5/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXBRYSONCOURSERECORDS-26-6": {
+   "ticker": "KXBRYSONCOURSERECORDS-26-6",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBRYSONCOURSERECORDS-26-6/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXBTCMAX125-1-26-DEC31-124999.99": {
+   "ticker": "KXBTCMAX125-1-26-DEC31-124999.99",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMAX125-1-26-DEC31-124999.99/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ]
+   ],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 1,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 1.0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0.01,
+    "no_resting_usd": 0,
+    "best_yes_bid": 0.01,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXBTCMAX125-1-26-NOV30-124999.99": {
+   "ticker": "KXBTCMAX125-1-26-NOV30-124999.99",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMAX125-1-26-NOV30-124999.99/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ]
+   ],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 1,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 1.0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0.01,
+    "no_resting_usd": 0,
+    "best_yes_bid": 0.01,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXDOGEMAX1-27-JAN01-0.99999999": {
+   "ticker": "KXDOGEMAX1-27-JAN01-0.99999999",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGEMAX1-27-JAN01-0.99999999/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.0200",
+     "1.00"
+    ]
+   ],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 2,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 2.0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0.03,
+    "no_resting_usd": 0,
+    "best_yes_bid": 0.02,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXDOGEMAX1-27-JUN01-0.99999999": {
+   "ticker": "KXDOGEMAX1-27-JUN01-0.99999999",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGEMAX1-27-JUN01-0.99999999/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.0200",
+     "0.70"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 2,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 1.7,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0.024,
+    "best_yes_bid": null,
+    "best_no_bid": 0.02,
+    "implied_yes_ask": 0.98
+   }
+  },
+  "KXETHMINY-27JAN01-1000": {
+   "ticker": "KXETHMINY-27JAN01-1000",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHMINY-27JAN01-1000/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [
+    [
+     "0.7600",
+     "25.09"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 1,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 25.09,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 19.0684,
+    "best_yes_bid": null,
+    "best_no_bid": 0.76,
+    "implied_yes_ask": 0.24
+   }
+  },
+  "KXETHMINY-27JAN01-1250": {
+   "ticker": "KXETHMINY-27JAN01-1250",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHMINY-27JAN01-1250/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "0.95"
+    ]
+   ],
+   "no_dollars": [
+    [
+     "0.6600",
+     "4.46"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 1,
+    "no_levels": 1,
+    "yes_contracts_at_levels": 0.95,
+    "no_contracts_at_levels": 4.46,
+    "yes_resting_usd": 0.0095,
+    "no_resting_usd": 2.9436,
+    "best_yes_bid": 0.01,
+    "best_no_bid": 0.66,
+    "implied_yes_ask": 0.34
+   }
+  },
+  "KXETHMINY-27JAN01-1500": {
+   "ticker": "KXETHMINY-27JAN01-1500",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHMINY-27JAN01-1500/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXETHMINY-27JAN01-750": {
+   "ticker": "KXETHMINY-27JAN01-750",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHMINY-27JAN01-750/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [
+    [
+     "0.0100",
+     "1.00"
+    ],
+    [
+     "0.0200",
+     "1.00"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 2,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 2.0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0.03,
+    "best_yes_bid": null,
+    "best_no_bid": 0.02,
+    "implied_yes_ask": 0.98
+   }
+  },
+  "KXHYPEY-27JAN0100-T999999": {
+   "ticker": "KXHYPEY-27JAN0100-T999999",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXHYPEY-27JAN0100-T999999/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXPGACURRY-28": {
+   "ticker": "KXPGACURRY-28",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGACURRY-28/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXPGATIGER-26": {
+   "ticker": "KXPGATIGER-26",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATIGER-26/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXPGATOP20-THRC26-EGRI": {
+   "ticker": "KXPGATOP20-THRC26-EGRI",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOP20-THRC26-EGRI/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "20.00"
+    ],
+    [
+     "0.4100",
+     "406.50"
+    ],
+    [
+     "0.4200",
+     "396.82"
+    ],
+    [
+     "0.4300",
+     "387.59"
+    ],
+    [
+     "0.4400",
+     "757.56"
+    ],
+    [
+     "0.4500",
+     "740.74"
+    ],
+    [
+     "0.4600",
+     "724.62"
+    ]
+   ],
+   "no_dollars": [
+    [
+     "0.3800",
+     "268.81"
+    ],
+    [
+     "0.3900",
+     "273.22"
+    ],
+    [
+     "0.4000",
+     "277.77"
+    ],
+    [
+     "0.4700",
+     "628.92"
+    ],
+    [
+     "0.4800",
+     "641.02"
+    ],
+    [
+     "0.4900",
+     "653.08"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 7,
+    "no_levels": 6,
+    "yes_contracts_at_levels": 3433.83,
+    "no_contracts_at_levels": 2742.82,
+    "yes_resting_usd": 1500.1777,
+    "no_resting_usd": 1243.1028,
+    "best_yes_bid": 0.46,
+    "best_no_bid": 0.49,
+    "implied_yes_ask": 0.51
+   }
+  },
+  "KXPGATOP20-THRC26-JBYR": {
+   "ticker": "KXPGATOP20-THRC26-JBYR",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOP20-THRC26-JBYR/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "16666.66"
+    ],
+    [
+     "0.0200",
+     "8333.33"
+    ]
+   ],
+   "no_dollars": [
+    [
+     "0.9500",
+     "3333.33"
+    ],
+    [
+     "0.9600",
+     "4166.66"
+    ],
+    [
+     "0.9700",
+     "5555.55"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 2,
+    "no_levels": 3,
+    "yes_contracts_at_levels": 24999.99,
+    "no_contracts_at_levels": 13055.54,
+    "yes_resting_usd": 333.3332,
+    "no_resting_usd": 12555.5406,
+    "best_yes_bid": 0.02,
+    "best_no_bid": 0.97,
+    "implied_yes_ask": 0.03
+   }
+  },
+  "KXPGATOP20-THRC26-PCOO": {
+   "ticker": "KXPGATOP20-THRC26-PCOO",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOP20-THRC26-PCOO/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "60.00"
+    ],
+    [
+     "0.1800",
+     "2777.76"
+    ],
+    [
+     "0.1900",
+     "2631.57"
+    ],
+    [
+     "0.2000",
+     "2499.99"
+    ],
+    [
+     "0.2300",
+     "724.63"
+    ]
+   ],
+   "no_dollars": [
+    [
+     "0.4300",
+     "292.39"
+    ],
+    [
+     "0.4400",
+     "297.61"
+    ],
+    [
+     "0.4500",
+     "303.03"
+    ],
+    [
+     "0.7400",
+     "1923.06"
+    ],
+    [
+     "0.7500",
+     "1999.98"
+    ],
+    [
+     "0.7600",
+     "1416.66"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 5,
+    "no_levels": 6,
+    "yes_contracts_at_levels": 8693.95,
+    "no_contracts_at_levels": 6232.73,
+    "yes_resting_usd": 1667.258,
+    "no_resting_usd": 4392.7506,
+    "best_yes_bid": 0.23,
+    "best_no_bid": 0.76,
+    "implied_yes_ask": 0.24
+   }
+  },
+  "KXPGATOP20-THRC26-RCAM": {
+   "ticker": "KXPGATOP20-THRC26-RCAM",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOP20-THRC26-RCAM/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "16666.66"
+    ],
+    [
+     "0.0200",
+     "8333.33"
+    ]
+   ],
+   "no_dollars": [
+    [
+     "0.8600",
+     "1190.47"
+    ],
+    [
+     "0.8700",
+     "1282.05"
+    ],
+    [
+     "0.8800",
+     "1388.88"
+    ],
+    [
+     "0.9500",
+     "3333.33"
+    ],
+    [
+     "0.9600",
+     "4166.66"
+    ],
+    [
+     "0.9700",
+     "5555.55"
+    ]
+   ],
+   "derived": {
+    "yes_levels": 2,
+    "no_levels": 6,
+    "yes_contracts_at_levels": 24999.99,
+    "no_contracts_at_levels": 16916.94,
+    "yes_resting_usd": 333.3332,
+    "no_resting_usd": 15916.9427,
+    "best_yes_bid": 0.02,
+    "best_no_bid": 0.97,
+    "implied_yes_ask": 0.03
+   }
+  },
+  "KXSCOTTIESLAM-28": {
+   "ticker": "KXSCOTTIESLAM-28",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSCOTTIESLAM-28/orderbook?depth=20",
+   "yes_dollars": [
+    [
+     "0.0100",
+     "20.00"
+    ],
+    [
+     "0.9900",
+     "2.13"
+    ]
+   ],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 2,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 22.13,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 2.3087,
+    "no_resting_usd": 0,
+    "best_yes_bid": 0.99,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXSOLAR-26-35": {
+   "ticker": "KXSOLAR-26-35",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLAR-26-35/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXSOLAR-26-40": {
+   "ticker": "KXSOLAR-26-40",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLAR-26-40/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  },
+  "KXSOLAR-26-55": {
+   "ticker": "KXSOLAR-26-55",
+   "http_status": 200,
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLAR-26-55/orderbook?depth=20",
+   "yes_dollars": [],
+   "no_dollars": [],
+   "derived": {
+    "yes_levels": 0,
+    "no_levels": 0,
+    "yes_contracts_at_levels": 0,
+    "no_contracts_at_levels": 0,
+    "yes_resting_usd": 0,
+    "no_resting_usd": 0,
+    "best_yes_bid": null,
+    "best_no_bid": null,
+    "implied_yes_ask": null
+   }
+  }
+ }
+}
