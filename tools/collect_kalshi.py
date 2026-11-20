@@ -17,6 +17,7 @@ an empty string and the site renders it blank and flags it as unverified.
 """
 
 import argparse
+import concurrent.futures
 import json
 import os
 import re
@@ -151,6 +152,27 @@ class Collector:
         self.log.append(entry)
         return None
 
+    def get_many(self, jobs, workers=8):
+        """Run a list of (url, note) requests concurrently.
+
+        Used for the per-series market lookups: the demo environment has a few
+        hundred in-scope series and each individual request is small, so a
+        thread pool turns a serial hour into a couple of minutes."""
+        results = []
+        with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
+            futures = {pool.submit(self.get, url, note): (url, note) for url, note in jobs}
+            done = 0
+            for fut in concurrent.futures.as_completed(futures):
+                url, note = futures[fut]
+                done += 1
+                try:
+                    results.append((url, note, fut.result()))
+                except Exception as exc:  # noqa: BLE001 - recorded, not raised
+                    results.append((url, note, None))
+                if done % 25 == 0:
+                    print("  %d/%d requests done" % (done, len(jobs)), flush=True)
+        return results
+
     def get_paged(self, path, params, key, max_pages=60, note=""):
         """Follow the Kalshi cursor pagination and return (records, urls).
 
@@ -239,107 +261,114 @@ def collect(out_dir):
     taxonomy_raw = c.get(taxonomy_url, note="official tag taxonomy per category")
     taxonomy = (taxonomy_raw or {}).get("tags_by_categories", {})
 
-    # 2. Official series list (carries category + tags + settlement sources)
-    series_records, series_urls = c.get_paged(
-        "/series", {}, "series", max_pages=3, note="series catalogue"
-    )
+    # 2. Official series catalogue (carries category + tags + settlement sources)
+    #    Read one category at a time, in parallel: a single unfiltered call is
+    #    very large, while the per-category calls are small and quick.
+    cat_names = sorted(taxonomy.keys())
+    jobs = [("%s/series?category=%s" % (API_BASE, urllib.parse.quote(c)), "category=%s" % c)
+            for c in cat_names]
+    # also ask for the whole catalogue, in case a series is not listed under
+    # any published category
+    jobs.append(("%s/series" % API_BASE, "all categories"))
+    series_records, series_urls = [], []
+    for url, note, data in c.get_many(jobs):
+        if not data:
+            continue
+        series_urls.append(url)
+        series_records.extend(data.get("series") or [])
     if not series_records:
-        # Fall back to per-category queries if an unfiltered /series call fails.
-        series_records, series_urls = [], []
-        for cat_name in sorted(taxonomy.keys()):
-            recs, urls = c.get_paged(
-                "/series", {"category": cat_name}, "series", max_pages=10,
-                note="series catalogue for category=%s" % cat_name,
-            )
-            series_records.extend(recs)
-            series_urls.extend(urls)
+        recs, urls = c.get_paged("/series", {}, "series", max_pages=3, note="series catalogue")
+        series_records.extend(recs)
+        series_urls.extend(urls)
     series_by_ticker = {}
     for s in series_records:
         t = s.get("ticker")
         if t:
             series_by_ticker[t] = s
+    print("series catalogue: %d series across %d categories" % (len(series_by_ticker), len(cat_names)),
+          flush=True)
 
-    # 3. Open markets (paginated)
-    open_markets, open_urls = c.get_paged(
-        "/markets", {"status": "open", "limit": 1000}, "markets", max_pages=20,
-        note="open markets, full pagination",
-    )
-    # 4. Settled markets (paginated) - used for resolution tracking
-    settled_markets, settled_urls = c.get_paged(
-        "/markets", {"status": "settled", "limit": 1000}, "markets", max_pages=20,
-        note="settled markets, full pagination",
-    )
+    # 3. In-scope series -> every market of those series.
+    #
+    # The global "open markets" listing is ordered by creation time and the
+    # demo environment creates markets continuously, so it has no natural end.
+    # Walking it would give a truncated sample. Instead the catalogue of series
+    # is read first and every in-scope series is then fetched in full, which
+    # gives complete coverage of the five topics.
+    in_scope_series = []
+    for st, info in series_by_ticker.items():
+        topic, basis, detail = classify(info, info.get("title") or "", st)
+        if topic:
+            in_scope_series.append((st, topic, basis, detail))
+    in_scope_series.sort()
+    print("in-scope series: %d of %d" % (len(in_scope_series), len(series_by_ticker)), flush=True)
+
+    max_series = int(os.environ.get("KALSHI_MAX_SERIES", "4000"))
+    series_capped = len(in_scope_series) > max_series
+    if series_capped:
+        in_scope_series = in_scope_series[:max_series]
+        print("WARNING: series list truncated to %d (KALSHI_MAX_SERIES)" % max_series, flush=True)
+
+    jobs = []
+    for st, topic, basis, detail in in_scope_series:
+        for status in ("open", "settled"):
+            url = ("%s/markets?series_ticker=%s&status=%s&limit=1000"
+                   % (API_BASE, urllib.parse.quote(st), status))
+            jobs.append((url, "%s %s" % (status, st)))
+
+    open_markets, settled_markets = [], []
+    series_market_urls = []
+    cursors = []
+
+    def absorb(url, note, data):
+        if not data:
+            return
+        series_market_urls.append(url)
+        batch = data.get("markets") or []
+        if note.startswith("open"):
+            open_markets.extend(batch)
+        else:
+            settled_markets.extend(batch)
+        cur = data.get("cursor") or ""
+        if cur:
+            cursors.append((url, note, cur))
+
+    for url, note, data in c.get_many(jobs):
+        absorb(url, note, data)
+
+    # a series with more than 1,000 markets is continued with its cursor
+    round_no = 0
+    while cursors and round_no < 4:
+        round_no += 1
+        more = []
+        for url, note, cur in cursors:
+            sep = "&" if "?" in url else "?"
+            more.append((url + sep + "cursor=" + urllib.parse.quote(cur), note))
+        cursors = []
+        print("  follow-up round %d for %d series" % (round_no, len(more)), flush=True)
+        for url, note, data in c.get_many(more):
+            absorb(url, note, data)
+
+    def dedupe(rows):
+        seen = set()
+        out = []
+        for m in rows:
+            t = m.get("ticker")
+            if not t or t in seen:
+                continue
+            seen.add(t)
+            out.append(m)
+        return out
+
+    open_markets = dedupe(open_markets)
+    settled_markets = dedupe(settled_markets)
+    print("markets: open=%d settled=%d" % (len(open_markets), len(settled_markets)), flush=True)
 
     # 5. Open events (paginated) - event level category, volume, liquidity
     events, event_urls = c.get_paged(
-        "/events", {"status": "open", "limit": 200}, "events", max_pages=20,
-        note="open events, full pagination",
+        "/events", {"status": "open", "limit": 200}, "events", max_pages=6,
+        note="open events, first pages",
     )
-
-    # ---------------------------------------------------------------- build
-    def rows_from(markets, status):
-        out = []
-        for m in markets:
-            ticker = m.get("ticker") or ""
-            if ticker.startswith(SKIP_TICKER_PREFIX):
-                continue
-            st = m.get("series_ticker") or ""
-            info = series_by_ticker.get(st, {})
-            topic, basis, detail = classify(info, m.get("title") or "", ticker)
-            if not topic:
-                continue
-            src = "%s/markets/%s" % (API_BASE, urllib.parse.quote(ticker))
-            row = {
-                "ticker": ticker,
-                "event_ticker": m.get("event_ticker") or "",
-                "series_ticker": st,
-                "title": m.get("title") or "",
-                "subtitle": m.get("subtitle") or m.get("yes_sub_title") or "",
-                "topic": topic,
-                "topic_label": TOPIC_RULES[topic]["label"],
-                "classification_basis": basis,
-                "classification_detail": detail,
-                "series_category": (info.get("category") or
-                                    (info.get("categories") or [""])[0]),
-                "series_tags": info.get("tags") or [],
-                "status": m.get("status") or status,
-                "result": m.get("result") or "",
-                "settlement_value_dollars": m.get("settlement_value_dollars") or "",
-                "settlement_ts": m.get("settlement_ts") or "",
-                "close_time": m.get("close_time") or "",
-                "open_time": m.get("open_time") or "",
-                "volume_fp": m.get("volume_fp") or "",
-                "volume_24h_fp": m.get("volume_24h_fp") or "",
-                "open_interest_fp": m.get("open_interest_fp") or "",
-                "liquidity_dollars": m.get("liquidity_dollars") or "",
-                "last_price_dollars": m.get("last_price_dollars") or "",
-                "yes_bid_dollars": m.get("yes_bid_dollars") or "",
-                "yes_ask_dollars": m.get("yes_ask_dollars") or "",
-                "yes_bid_size_fp": m.get("yes_bid_size_fp") or "",
-                "yes_ask_size_fp": m.get("yes_ask_size_fp") or "",
-                "no_bid_dollars": m.get("no_bid_dollars") or "",
-                "no_ask_dollars": m.get("no_ask_dollars") or "",
-                "notional_value_dollars": m.get("notional_value_dollars") or "",
-                "rules_primary": m.get("rules_primary") or "",
-                "source_url": src,
-                "settlement_sources": info.get("settlement_sources") or [],
-                "series_title": info.get("title") or "",
-            }
-            try:
-                vol = float(row["volume_fp"] or 0)
-                price = float(row["last_price_dollars"] or 0)
-                row["dollar_turnover_estimate"] = round(vol * price, 2)
-            except (TypeError, ValueError):
-                row["dollar_turnover_estimate"] = ""
-            out.append(row)
-        out.sort(key=lambda r: (-(r["dollar_turnover_estimate"] or 0), r["ticker"]))
-        return out
-
-    open_rows = rows_from(open_markets, "open")
-    settled_rows = rows_from(settled_markets, "settled")
-    for r in settled_rows:
-        r["dollar_turnover_estimate"] = ""
-
     # 6. Orderbook depth for the highest-notional in-scope markets
     orderbooks = {}
     picked = []
@@ -445,6 +474,9 @@ def collect(out_dir):
         "taxonomy_url": taxonomy_url,
         "counts": {
             "open_markets_returned": len(open_markets),
+            "in_scope_series": len(in_scope_series),
+            "series_list_capped": series_capped,
+            "coverage": "every market of every in-scope series (category/tag match against the official taxonomy)",
             "settled_markets_returned": len(settled_markets),
             "events_returned": len(events),
             "series_returned": len(series_records),
@@ -474,9 +506,9 @@ def collect(out_dir):
     dump("meta.json", meta)
     dump("taxonomy.json", {"source_url": taxonomy_url, "collected_at": started,
                            "tags_by_categories": taxonomy})
-    dump("markets_open.json", {"source_urls": open_urls, "collected_at": started,
+    dump("markets_open.json", {"source_urls": series_market_urls, "collected_at": started,
                                 "rows": open_rows})
-    dump("markets_settled.json", {"source_urls": settled_urls, "collected_at": started,
+    dump("markets_settled.json", {"source_urls": series_market_urls, "collected_at": started,
                                   "rows": settled_rows})
     dump("events_open.json", {"source_urls": event_urls, "collected_at": started,
                               "rows": event_rows})
