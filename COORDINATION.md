@@ -350,6 +350,23 @@ Both sets of pages are published by the root-deploying `pages.yml` workflow.
   session's work was discarded.
 
 ### PR / deploy record (this session)
-- PR #13: https://github.com/karagemop466-tech/Demo2/pull/13 — merged (see merge commit below).
-- Pages: deployed via the root-deploying workflow; `site/` dashboard published at
-  `/Demo2/site/index.html` alongside the existing root/dashboard/pages sites.
+- PR #13: https://github.com/karagemop466-tech/Demo2/pull/13 — **MERGED** on
+  2026-11-20T11:34:08Z, merge commit `e3a6f5faa8e27ebc787df0b55a2ebb83151e3d3e`
+  (`gh pr merge 13 --merge`). Merge-commit parent chain includes `340e7ae`
+  (this session's merge of `origin/main`) on top of `6cf2ef3`.
+- Merge conflict resolution: merging `origin/main` (advanced by prior sessions'
+  PRs #1–#12) into `arena/406a2f21-demo2` conflicted in `pages.yml`, `.gitignore`,
+  `COORDINATION.md`, `README.md`; resolved additively (kept `origin/main` content,
+  appended this session's sections). A subsequent `git pull --rebase` entered a
+  conflicted state while rebasing a merge commit and was aborted
+  (`git rebase --abort`); the clean merge commit `340e7ae` was restored and pushed.
+- GitHub Pages deploy: workflow run
+  https://github.com/karagemop466-tech/Demo2/actions/runs/44728671259 — **success**.
+  Pages status `built`; site live at https://karagemop466-tech.github.io/Demo2/ .
+  Both the existing root dashboard and this session's `site/` dashboard are served:
+  - Root: https://karagemop466-tech.github.io/Demo2/
+  - This session: https://karagemop466-tech.github.io/Demo2/site/index.html
+- Link check: 14 HTML pages in `site/`, 18 internal link targets, 0 broken links.
+- Combined-data re-verification: all `site/` table rows carry source links to
+  official Kalshi pages; unverified items are flagged on `site/flagged.html` and
+  documented in `docs/VERIFICATION.md`. Flagged items do not block the merge.
