@@ -177,11 +177,17 @@ def get_json(url: str, signer: Signer | None = None, retries: int = 3) -> tuple[
 
 
 def paginate(url: str, key: str, signer: Signer | None = None, max_pages: int = 30) -> list[dict]:
-    """Cursor pagination exactly as documented in getting_started/pagination.md."""
+    """Cursor pagination exactly as documented in getting_started/pagination.md.
+
+    A caller may pass its own `limit`; it is kept (the API caps the page size, so a
+    smaller value is always honoured and a larger one simply yields full pages).
+    """
     out: list[dict] = []
     cursor = ""
     for _ in range(max_pages):
-        u = url + ("&" if "?" in url else "?") + "limit=200"
+        u = url
+        if "limit=" not in u:
+            u += ("&" if "?" in u else "?") + "limit=200"
         if cursor:
             u += "&cursor=" + urllib.parse.quote(cursor, safe="")
         j, status = get_json(u, signer)
@@ -279,83 +285,214 @@ def load_series_index(signer: Signer | None) -> dict[str, dict]:
 
 # ----------------------------------------------------------------- collector core
 def collect_scope(signer: Signer | None) -> dict:
-    """Open markets for the in-scope topics, plus their event/series metadata."""
+    """Open markets for the in-scope topics, fetched SERIES BY SERIES.
+
+    Why not `GET /events?status=open&with_nested_markets=true` (the previous design):
+    that stream is ordered by creation time and heavily dominated by multi-leg
+    "MVE" combo events. Paging it stops long before the in-scope series are reached,
+    and the combo markets carry event tickers such as
+    `KXMVECROSSCATEGORY-S2026Y4RKDT7KS5SRIH27` that do not start with a series ticker,
+    so they can never be mapped to a topic. The observed result was an empty
+    dashboard: 1,556 rows on the previous collector were almost all unmatched combo
+    markets and the 5 topic counts rendered 0.
+
+    Re-basing on the series list makes the scope the official catalogue itself:
+    one `GET /markets?series_ticker=...&status=open` per in-scope series. That is
+    slower, so it is bounded and the bound is reported honestly (see `truncated`).
+    """
     series_idx = load_series_index(signer)
     topic_cache = {t: series_topic(s) for t, s in series_idx.items()}
-    events = paginate(DEMO_REST + "/events?status=open&with_nested_markets=true", "events", signer,
-                      max_pages=25)
+    in_scope: dict[str, list[str]] = {t: [] for t in TOPICS}
+    for ticker, series in series_idx.items():
+        tp = topic_cache.get(ticker)
+        if tp in TOPICS:
+            in_scope[tp].append(ticker)
 
+    # Per-topic series caps keep the run inside the documented rate limits
+    # (docs: getting_started/rate_limits). Truncation is reported, never hidden.
+    limits = {"gas": 120, "elections": 60, "culture": 40, "crypto": 60, "golf": 60}
     rows: list[dict] = []
-    unmapped_series: dict[str, int] = {}
-    for ev in events:
-        st = ev.get("series_ticker") or ""
-        topic = topic_cache.get(st)
-        if topic is None:
-            # No official record => no topic. Record it instead of guessing, so the
-            # Flagged page can show exactly which series could not be classified.
-            unmapped_series[st] = unmapped_series.get(st, 0) + 1
-            continue
-        if topic not in TOPICS:
-            continue
-        for m in ev.get("markets") or []:
-            rows.append(
-                {
-                    "topic": topic,
-                    "event_ticker": ev.get("event_ticker"),
-                    "series_ticker": st,
-                    "event_title": ev.get("title"),
-                    "market_ticker": m.get("ticker"),
-                    "market_title": m.get("title"),
-                    "yes_sub_title": m.get("yes_sub_title"),
-                    "status": m.get("status"),
-                    "result": m.get("result") or "",
-                    # ---- dollar fields are VERBATIM strings from the API ----
-                    "yes_bid_dollars": m.get("yes_bid_dollars"),
-                    "yes_ask_dollars": m.get("yes_ask_dollars"),
-                    "no_bid_dollars": m.get("no_bid_dollars"),
-                    "no_ask_dollars": m.get("no_ask_dollars"),
-                    "last_price_dollars": m.get("last_price_dollars"),
-                    "yes_bid_size_fp": m.get("yes_bid_size_fp"),
-                    "yes_ask_size_fp": m.get("yes_ask_size_fp"),
-                    "volume_fp": m.get("volume_fp"),
-                    "volume_24h_fp": m.get("volume_24h_fp"),
-                    "open_interest_fp": m.get("open_interest_fp"),
-                    "close_time": m.get("close_time"),
-                    "open_time": m.get("open_time"),
-                    "updated_time": m.get("updated_time"),
-                    "price_level_structure": m.get("price_level_structure"),
-                    "rules_primary": m.get("rules_primary"),
-                    "exchange_index": m.get("exchange_index"),
-                    "settlement_sources": ev.get("settlement_sources"),
-                    "series_category": series.get("category"),
-                    "series_categories": series.get("categories"),
-                    "contract_terms_url": series.get("contract_terms_url"),
-                    "contract_url": series.get("contract_url"),
-                    "event_url": f"https://kalshi.com/events/{ev.get('event_ticker')}",
-                    "market_url": f"https://kalshi.com/markets/{st.lower()}",
-                }
+    truncated: dict[str, dict] = {}
+    queried: dict[str, list[str]] = {}
+    for topic in TOPICS:
+        tickers = sorted(in_scope[topic])
+        cap = limits[topic]
+        used = tickers[:cap]
+        queried[topic] = used
+        if len(tickers) > cap:
+            truncated[topic] = {"in_catalog": len(tickers), "queried": cap}
+        for st in used:
+            url = (
+                f"{DEMO_REST}/markets?series_ticker={urllib.parse.quote(st)}"
+                "&status=open&limit=1000"
             )
-    # A series can exist in the catalogue with no live events at all (verified live for
-    # DIESEL/DIESELM gas series in the demo environment). Record that explicitly so the
-    # site can say "series exist, no live markets" instead of implying the topic is empty.
-    catalog = {}
-    for t in TOPICS:
-        tickers = sorted([k for k, v in topic_cache.items() if v == t])
-        catalog[t] = {
-            "series_in_catalog": len(tickers),
-            "series_tickers": tickers[:40],
-            "series_with_live_markets": sorted({r["series_ticker"] for r in rows if r["topic"] == t}),
-        }
+            for m in paginate(url, "markets", signer, max_pages=2):
+                rows.append(_market_row(topic, st, m))
 
+    unmapped = {s_: 1 for s_, t in topic_cache.items() if t is None}
     return {
-        "series_index_size": len(series_idx),
-        "topic_catalog": catalog,
-        "events_scanned": len(events),
         "markets_in_scope": rows,
-        "unmapped_series": dict(sorted(unmapped_series.items(), key=lambda kv: -kv[1])[:50]),
+        "series_index_size": len(series_idx),
         "series_inventory": inventory(series_idx),
-        "source_requests": ["GET /series", "GET /events?status=open&with_nested_markets=true"],
+        "topic_catalog": {
+            t: {
+                "series_in_catalog": len(in_scope[t]),
+                "series_queried": len(queried[t]),
+                "series_with_live_markets": sorted({r["series_ticker"] for r in rows if r["topic"] == t}),
+            }
+            for t in TOPICS
+        },
+        "truncated": truncated,
+        "unmapped_series": unmapped,
+        "events_scanned": len({r["event_ticker"] for r in rows}),
     }
+
+
+def _market_row(topic: str, series_ticker: str, m: dict) -> dict:
+    """One row per market. Dollar fields are copied VERBATIM from the API response."""
+    t = m.get("ticker")
+    return {
+        "topic": topic,
+        "event_ticker": m.get("event_ticker"),
+        "series_ticker": series_ticker,
+        "market_ticker": t,
+        "market_title": m.get("title"),
+        "yes_sub_title": m.get("yes_sub_title"),
+        "status": m.get("status"),
+        "result": m.get("result") or "",
+        "yes_bid_dollars": m.get("yes_bid_dollars"),
+        "yes_ask_dollars": m.get("yes_ask_dollars"),
+        "no_bid_dollars": m.get("no_bid_dollars"),
+        "no_ask_dollars": m.get("no_ask_dollars"),
+        "last_price_dollars": m.get("last_price_dollars"),
+        "yes_bid_size_fp": m.get("yes_bid_size_fp"),
+        "yes_ask_size_fp": m.get("yes_ask_size_fp"),
+        "volume_fp": m.get("volume_fp"),
+        "volume_24h_fp": m.get("volume_24h_fp"),
+        "open_interest_fp": m.get("open_interest_fp"),
+        "close_time": m.get("close_time"),
+        "open_time": m.get("open_time"),
+        "updated_time": m.get("updated_time"),
+        "market_url": m.get("market_url") or (
+            f"https://external-api.demo.kalshi.co/trade-api/v2/markets/{urllib.parse.quote(t)}" if t else None
+        ),
+    }
+
+
+def collect_trade_volume(rows: list[dict], signer: Signer | None,
+                         top_n: int, hours: int = 24) -> dict:
+    """REAL dollar volume from public trade prints: GET /markets/trades?ticker=...
+
+    The API has no dollar-turnover field. `volume_fp x last_price_dollars` is only a
+    proxy (it prices the whole history at today's price). Each trade print carries
+    `count_fp` and `yes_price_dollars`, so summing count x yes price inside a window
+    IS turnover in dollars for that window - computed here, per market, and labelled
+    as computed rather than raw.
+    """
+    cutoff = dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=hours)
+    ranked = sorted(rows, key=lambda r: (implied_dollar_volume(r) or 0), reverse=True)
+    # Always include a spread over all five topics so no topic is invisible.
+    picks: list[dict] = []
+    seen: set[str] = set()
+    for r in ranked[:top_n]:
+        if r["market_ticker"] not in seen:
+            picks.append(r); seen.add(r["market_ticker"])
+    for topic in TOPICS:
+        for r in [x for x in ranked if x["topic"] == topic][:3]:
+            if r["market_ticker"] not in seen:
+                picks.append(r); seen.add(r["market_ticker"])
+
+    out: dict[str, dict] = {}
+    for r in picks:
+        t = r["market_ticker"]
+        url = f"{DEMO_REST}/markets/trades?ticker={urllib.parse.quote(t)}&limit=1000"
+        j, status = get_json(url, signer)
+        if not j:
+            out[t] = {"error": f"HTTP {status}", "source_url": url}
+            continue
+        trades = j.get("trades") or []
+        usd = 0.0
+        contracts = 0.0
+        counted = 0
+        for tr in trades:
+            ts = tr.get("created_time") or ""
+            try:
+                when = dt.datetime.fromisoformat(ts.replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            if when < cutoff:
+                continue
+            try:
+                c = float(tr.get("count_fp") or 0)
+                p = float(tr.get("yes_price_dollars") or 0)
+            except (TypeError, ValueError):
+                continue
+            usd += c * p
+            contracts += c
+            counted += 1
+        out[t] = {
+            "source_url": url,
+            "window_hours": hours,
+            "trades_returned": len(trades),
+            "trades_in_window": counted,
+            "contracts_in_window": round(contracts, 2),
+            "usd_volume_in_window": round(usd, 2),
+            "note": ("Computed: sum(count_fp x yes_price_dollars) over trade prints whose "
+                     "created_time falls inside the window. The API returns at most the "
+                     "page it was asked for, so a market trading more than 1000 prints in "
+                     "the window is under-counted; trades_returned shows the page size."),
+        }
+    return out
+
+
+def collect_orderbook_history(rows: list[dict], signer: Signer | None,
+                              top_n: int, samples: int = 12, gap_s: int = 22) -> dict:
+    """Repeated orderbook snapshots, so the liquidity page can show depth over time.
+
+    Kalshi publishes no orderbook history endpoint; the only way to chart liquidity is
+    to sample it. Each point stores the full bid ladder, so "how many contracts at a
+    given price" is answerable for any past sample inside the window as well as now.
+    """
+    ranked = sorted(rows, key=lambda r: (implied_dollar_volume(r) or 0), reverse=True)
+    picks: list[dict] = []
+    seen: set[str] = set()
+    for topic in TOPICS:  # one per topic first, so every topic gets a liquidity series
+        for r in [x for x in ranked if x["topic"] == topic][:1]:
+            if r["market_ticker"] not in seen:
+                picks.append(r); seen.add(r["market_ticker"])
+    for r in ranked:
+        if len(picks) >= top_n:
+            break
+        if r["market_ticker"] not in seen:
+            picks.append(r); seen.add(r["market_ticker"])
+
+    out: dict[str, dict] = {r["market_ticker"]: {"points": [], "source_url": None} for r in picks}
+    for i in range(samples):
+        for r in picks:
+            t = r["market_ticker"]
+            url = f"{DEMO_REST}/markets/{urllib.parse.quote(t)}/orderbook?depth=25"
+            j, status = get_json(url, signer)
+            if not j:
+                continue
+            ob = j.get("orderbook_fp") or {}
+            yes = sorted([[float(p), float(q)] for p, q in (ob.get("yes_dollars") or [])],
+                         key=lambda x: -x[0])
+            no = sorted([[float(p), float(q)] for p, q in (ob.get("no_dollars") or [])],
+                        key=lambda x: -x[0])
+            asks = sorted([[round(1 - p, 4), q] for p, q in no], key=lambda x: x[0])
+            out[t]["source_url"] = url
+            out[t]["points"].append({
+                "ts": int(time.time()),
+                "yes_bids": yes,
+                "derived_yes_asks": asks,
+                "yes_bid_contracts": round(sum(q for _, q in yes), 2),
+                "derived_ask_contracts": round(sum(q for _, q in asks), 2),
+                "best_yes_bid": yes[0][0] if yes else None,
+                "best_yes_ask_derived": asks[0][0] if asks else None,
+            })
+        if i < samples - 1:
+            time.sleep(gap_s)   # spaced samples, not a burst
+    return out
 
 
 def implied_dollar_volume(m: dict) -> float | None:
@@ -517,16 +654,34 @@ def write_json(name: str, payload: Any) -> None:
     DATA.mkdir(exist_ok=True)
     p = DATA / name
     p.write_text(json.dumps(payload, indent=1, sort_keys=False) + "\n")
-    print(f"wrote {p.relative_to(ROOT)} ({p.stat().st_size} bytes)")
+    try:
+        shown = p.relative_to(ROOT)
+    except ValueError:          # DATA redirected (offline test writes to a temp dir)
+        shown = p
+    print(f"wrote {shown} ({p.stat().st_size} bytes)")
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--scope-only", action="store_true", help="skip candles/books (fast path)")
+    ap.add_argument("--max-runtime", type=int, default=900,
+                    help="soft wall-clock budget in seconds; optional extras are skipped, "
+                         "never the core market list")
+    ap.add_argument("--volume-markets", type=int, default=30,
+                    help="markets to pull trade prints for (real 24h dollar volume)")
+    ap.add_argument("--book-markets", type=int, default=10,
+                    help="markets to sample the order book for")
+    ap.add_argument("--book-samples", type=int, default=12,
+                    help="order-book samples per market, ~22 s apart")
     args = ap.parse_args()
 
     signer = signer_from_env()
     started = dt.datetime.now(dt.timezone.utc)
+    deadline = started + dt.timedelta(seconds=args.max_runtime)
+
+    def left() -> float:
+        return (deadline - dt.datetime.now(dt.timezone.utc)).total_seconds()
+
     status = exchange_status(signer)
 
     scope = collect_scope(signer)
@@ -536,13 +691,34 @@ def main() -> int:
     for r in rows:
         r["est_dollar_volume"] = implied_dollar_volume(r)
 
+    # Order of work: core market list -> resolutions -> real 24h turnaround -> books
+    # -> candlesticks. The optional blocks are time-boxed so the essentials always land.
+    resolutions = [] if left() < 120 else collect_resolutions(signer)
+
+    trade_volume: dict[str, dict] = {}
+    if not args.scope_only and left() > 240 and args.volume_markets > 0:
+        trade_volume = collect_trade_volume(rows, signer, top_n=args.volume_markets)
+
     books = {} if args.scope_only else collect_orderbooks(rows, signer)
-    candles = {} if args.scope_only else collect_candles(rows, signer)
-    resolutions = collect_resolutions(signer)
+    book_history: dict[str, dict] = {}
+    if not args.scope_only and left() > 60 and args.book_markets > 0:
+        samples = max(1, min(args.book_samples, int(left() // 25)))
+        book_history = collect_orderbook_history(rows, signer, top_n=args.book_markets,
+                                                 samples=samples)
+    candles = {} if args.scope_only or left() < 45 else collect_candles(rows, signer)
+
+    # attach the computed 24h dollar volume to each row; absent stays absent
+    for r in rows:
+        tv = trade_volume.get(r["market_ticker"])
+        if tv and "usd_volume_in_window" in tv:
+            r["usd_volume_24h"] = tv["usd_volume_in_window"]
+            r["contracts_24h_from_trades"] = tv["contracts_in_window"]
+            r["usd_volume_24h_source_url"] = tv["source_url"]
 
     by_topic = {t: [r for r in rows if r["topic"] == t] for t in TOPICS}
     for t in TOPICS:
-        by_topic[t].sort(key=lambda r: (r.get("est_dollar_volume") or -1), reverse=True)
+        by_topic[t].sort(key=lambda r: (r.get("usd_volume_24h") if r.get("usd_volume_24h") is not None
+                                        else r.get("est_dollar_volume") or -1), reverse=True)
 
     finished = dt.datetime.now(dt.timezone.utc)
     snapshot = {
@@ -563,16 +739,36 @@ def main() -> int:
             "resolved_in_scope": len(resolutions),
             "orderbooks": len(books),
             "candle_sets": len(candles),
+            "trade_volume_markets": len(trade_volume),
+            "book_history_markets": len(book_history),
+            "truncated_topics": sorted(scope["truncated"].keys()),
         },
         "markets": rows,
         "by_topic": by_topic,
         "orderbooks": books,
+        "orderbook_history": book_history,
+        "trade_volume": trade_volume,
         "candles": candles,
         "resolutions": resolutions,
+        "scope_limits": scope["truncated"],
         "definitions": {
             "est_dollar_volume": (
                 "ESTIMATE = volume_fp x last_price_dollars, computed by this collector. "
                 "The API exposes no single dollar-volume field. Label is shown in the UI."
+            ),
+            "usd_volume_24h": (
+                "COMPUTED, not an API field: sum(count_fp x yes_price_dollars) over public "
+                "trade prints (GET /markets/trades) whose created_time is inside the last "
+                "24 hours. Only computed for the markets listed in `trade_volume`."
+            ),
+            "orderbook_history": (
+                "SAMPLED, not an API endpoint: /markets/{ticker}/orderbook is polled ~22 s "
+                "apart by this collector. Kalshi publishes no orderbook history."
+            ),
+            "scope_limits": (
+                "Per-topic cap on how many series were queried. A topic listed here has more "
+                "series in the catalogue than were queried this run; nothing is dropped "
+                "silently, the numbers are on the Verification page."
             ),
             "derived_yes_asks": (
                 "Derived, not raw: a NO bid at price p is equivalent to a YES ask at 1-p "
@@ -599,11 +795,68 @@ def main() -> int:
                 "count": len(by_topic[t]),
                 "markets": by_topic[t],
                 "resolutions": [r for r in resolutions if r["topic"] == t],
+                "orderbook_history": {
+                    k: v for k, v in book_history.items()
+                    if any(r["market_ticker"] == k for r in by_topic[t])
+                },
             },
         )
 
     write_json("resolutions.json", {"generated_at_utc": snapshot["generated_at_utc"],
                                     "count": len(resolutions), "resolutions": resolutions})
+
+    # ---- compact files: the browser must not download the full snapshot ----
+    write_json("dashboard_meta.json", {
+        "generated_at_utc": snapshot["generated_at_utc"],
+        "environment": "demo",
+        "rest_base": DEMO_REST,
+        "authenticated": signer is not None,
+        "exchange_status": status,
+        "counts": snapshot["counts"],
+        "topic_catalog": snapshot["topic_catalog"],
+        "scope_limits": snapshot["scope_limits"],
+        "series_inventory": {
+            "series_count": scope["series_inventory"]["series_count"],
+            "in_scope_series": {t: len(v) for t, v in scope["series_inventory"]["in_scope_series"].items()},
+        },
+        "definitions": snapshot["definitions"],
+        "api_request_count": len(API_LOG),
+        "api_request_failures": len([r for r in API_LOG if not r["ok"]]),
+    })
+
+    ranked_all = sorted(
+        rows,
+        key=lambda r: (r.get("usd_volume_24h") if r.get("usd_volume_24h") is not None
+                       else r.get("est_dollar_volume") or -1),
+        reverse=True,
+    )
+    write_json("top.json", {
+        "generated_at_utc": snapshot["generated_at_utc"],
+        "method": ("Ranked by usd_volume_24h (computed from public trade prints) where it was "
+                   "computed for that market, otherwise by the est_dollar_volume proxy "
+                   "(volume_fp x last_price_dollars). The row says which one was used in "
+                   "`rank_by`."),
+        "count": min(len(ranked_all), 200),
+        "rows": [
+            dict(r, rank_by=("usd_volume_24h" if r.get("usd_volume_24h") is not None else "est_dollar_volume"))
+            for r in ranked_all[:200]
+        ],
+    })
+
+    write_json("liquidity.json", {
+        "generated_at_utc": snapshot["generated_at_utc"],
+        "note": ("Sampled by this collector from GET /markets/{ticker}/orderbook. Kalshi "
+                 "publishes no orderbook history; each point is one poll, about 22 s apart."),
+        "sample_interval_s": 22,
+        "markets": {
+            t: dict(
+                v,
+                topic=next((r["topic"] for r in rows if r["market_ticker"] == t), None),
+                title=next((r["market_title"] for r in rows if r["market_ticker"] == t), None),
+            )
+            for t, v in book_history.items()
+        },
+    })
 
     # history ledger: append one compact point per market per run (for the price chart)
     hist_path = DATA / "history.json"
