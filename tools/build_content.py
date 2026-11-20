@@ -1039,6 +1039,21 @@ FLAGGED = [
   "source\u201d. Nothing is inferred. Raised as verification row on pages/verification.html and as "
   "suggestion S9 on pages/suggestions.html.",
   "api-reference/market/get-markets|api-reference/market/get-trades"),
+ ("F14", "Browser-side private-key prompts are unsafe on a public static host",
+  "Session 6d75123b\u2019s <code>live/trading.html</code> Mode B asked the user to paste a demo "
+  "private key into the page, and <code>assets/app.js</code> still carried orphaned WebCrypto "
+  "signing code wired to ids no page contains. PR #6 (session 22b4f0cb) raised this and was "
+  "stale; session bdb4d2d0 took it over under the 60-minute rule.",
+  "A public GitHub Pages deployment cannot protect a pasted signing key; any script on the page "
+  "could read it. This conflicts with the README policy that signing keys belong only in "
+  "repository secrets behind the three execution gates.",
+  "Integration fix (2026-11-20): the Mode B credential form is disabled on the deployed copy with "
+  "a notice pointing at the gated Actions path (<code>tools/execute_strategy.py</code>) and the "
+  "<code>server/</code> backend; the orphaned signing code was removed from "
+  "<code>assets/app.js</code>. Mode A paper trading and the request builder are unchanged. "
+  "Reversible by removing the <code>disabled</code> attributes when serving privately. "
+  "Cross-scope request logged for session 6d75123b in COORDINATION.md.",
+  "getting_started/api_keys"),
 ]
 
 
@@ -1059,6 +1074,8 @@ wrong.</p>
 <li><b>F6</b>: the portfolio page says \u201cnot configured\u201d; it is not a zero balance.</li>
 <li><b>F11</b>: the chart notes whether it is plotting a derived quoted mid or a traded price.</li>
 <li><b>F12</b>: the Gas page says \u201ccatalogue only\u201d instead of showing an unexplained empty table.</li>
+<li><b>F14</b>: no page on the deployed site accepts a private key; the one form that did is
+  disabled behind a notice that names the gated Actions path.</li>
 <li><b>F13</b>: sharp jumps \u2265 $0.10 are marked with red vertical markers on the chart and listed in
   a table below it, each tagged \u201ccause unverified\u201d \u2014 the Trade API returns price and volume
   only, never the news or event behind a move.</li>
