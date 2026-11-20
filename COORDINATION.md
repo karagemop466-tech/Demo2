@@ -778,3 +778,24 @@ recording so another session does not repeat them:
 
 In both cases the Pages deploy itself was fine; only the consistency job was red. The site was never
 broken, and it is worth distinguishing the two when reading Actions.
+
+---
+
+# Final record — PR #27 (session 5330bffb)
+
+- **PR:** https://github.com/karagemop466-tech/Demo2/pull/27 — "Final integration: verified data
+  pipeline, live dashboard, trade CLI, consolidated registers" — **MERGED** into `main` as
+  merge commit `9319862` on 2026-11-20 (~13:05 UTC).
+- **Pre-merge checks (all green):** ci.yml "Build and check the site" (generator-determinism,
+  Python compile, analysis fixture, links/nav/data/secrets/JS), verify-monitor "Test and build
+  monitor subsite" (8 tests + 15-page build), linkcheck (external host rejections like
+  WSJ/Reuters 401, CoinDesk 429, DPWorldTour timeout now classified as anti-bot warnings —
+  dead links 404/410/DNS still fail).
+- **PR #6:** closed as superseded (content integrated at 296ad33; explanation comment posted).
+- **PR #15:** found already merged by another session; its monitor/ tree was also integrated via
+  merge 0680686 — nothing lost.
+- **Deploy:** GitHub Pages deploy workflow `pages.yml` triggered on `main` at 9319862; result
+  recorded by the next session entry in this file and visible at
+  https://github.com/karagemop466-tech/Demo2/actions/workflows/pages.yml.
+- Collector (`collect.yml`) continues refreshing `data/` on this branch and on main's data
+  pipelines; the site falls back to committed snapshots when the API is unreachable.
