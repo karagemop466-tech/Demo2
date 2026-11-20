@@ -38,7 +38,8 @@
   A.EPS = 1e-9;               // binary floats: 1.00 - 0.90 is 0.09999999999999998, and a
                               // real $0.10 move must not be silently missed because of it
   A.POLL_MS = 20000;          // live poll interval
-  A.TOP_N = 40;               // in-scope markets polled per request (tickers= filter)
+  A.TOP_N = 40;               // how many in-scope markets the desk polls: the highest
+                              // estimated-dollar-volume ones, so the poll stays small
   A.MAX_LINES = 200;          // lines kept per chat, oldest dropped
   A.MIN_VOLUME_24H = 100;     // screen: contracts traded in 24 h
   A.MAX_DAYS_TO_CLOSE = 30;   // screen: only near-dated events
@@ -162,11 +163,6 @@
   }
 
   /* ---------------- live poll ---------------- */
-  function pollUrl() {
-    var list = state.watch.slice(0, A.TOP_N).join(",");
-    return A.DEMO_REST + "/markets?tickers=" + encodeURIComponent(list) + "&limit=100";
-  }
-
   function fallbackUrl() {
     return A.DEMO_REST + "/markets?status=open&limit=100";
   }
@@ -213,20 +209,29 @@
   }
 
   A.pollOnce = async function () {
-    var rows = null;
-    try {
-      var r = await fetch(pollUrl(), { cache: "no-store" });
-      if (r.ok) {
-        var j = await r.json();
-        rows = j.markets || [];
-        state.mode = "live";
-      } else {
-        rows = null;
-      }
-    } catch (e) {
-      rows = null;
+    /* Chunk the ticker list: one unrecognised ticker must not be able to fail the whole
+       poll. Batches are requested sequentially (not in parallel) so a 20-second cycle
+       cannot turn into a burst of requests against a rate-limited public endpoint. */
+    var BATCH = 20;
+    var batches = [];
+    for (var i = 0; i < state.watch.length; i += BATCH) {
+      batches.push(state.watch.slice(i, i + BATCH));
     }
-    if (!rows) {
+    var rows = [];
+    var anyOk = false;
+    for (var b = 0; b < batches.length; b++) {
+      var url = A.DEMO_REST + "/markets?tickers=" +
+        encodeURIComponent(batches[b].join(",")) + "&limit=100";
+      try {
+        var r = await fetch(url, { cache: "no-store" });
+        if (r.ok) {
+          var j = await r.json();
+          rows = rows.concat(j.markets || []);
+          anyOk = true;
+        }
+      } catch (e) { /* this batch failed; try the rest */ }
+    }
+    if (!anyOk) {
       /* documented fallback: the open feed, filtered to the watched tickers */
       try {
         var r2 = await fetch(fallbackUrl(), { cache: "no-store" });
@@ -236,19 +241,19 @@
           var wanted = {};
           state.watch.forEach(function (t) { wanted[t] = 1; });
           rows = all.filter(function (m) { return wanted[m.ticker || m.market_ticker]; });
-          state.mode = "fallback";
+          anyOk = rows.length > 0;
+          if (anyOk) state.mode = "fallback";
         }
-      } catch (e) {
-        rows = null;
-      }
+      } catch (e) { /* offline */ }
     }
-    if (!rows) {
+    if (!anyOk) {
       // Transitioning to offline must be VISIBLE: repaint so the banner stops claiming
       // live polling rather than leaving the last successful state on screen.
       state.mode = "offline";
       render();
       return;
     }
+    state.mode = state.mode === "fallback" ? "fallback" : "live";
     state.lastPoll = Date.now();
     rows.forEach(applyRow);
     render();
@@ -295,6 +300,20 @@
       "consecutive official price points.");
     paint("alertModel", screened, "Nothing passed the model screen yet. Thresholds are printed in " +
       "the chat header; a pass is not a forecast.");
+    var c1 = document.getElementById("alertAllCount");
+    if (c1) {
+      c1.textContent = all.length
+        ? "· " + all.length + " line" + (all.length !== 1 ? "s" : "")
+          + " · " + all.filter(function (a) { return a.settled; }).length + " settled"
+          + " · " + all.filter(function (a) { return a.source === "live"; }).length + " live"
+        : "";
+    }
+    var c2 = document.getElementById("alertModelCount");
+    if (c2) {
+      c2.textContent = screened.length
+        ? "· " + screened.length + " pass the screen of " + all.length
+        : "";
+    }
     var st = document.getElementById("alertStatus");
     if (st) {
       var last = state.lastPoll ? KR.ago(new Date(state.lastPoll).toISOString()) : "never";
@@ -350,7 +369,8 @@
           volume24h: m.volume_24h_fp,
         };
       });
-      state.watch = Object.keys(byTicker);
+      // Bound the polled set to the highest-estimated-dollar-volume in-scope markets.
+      state.watch = Object.keys(byTicker).slice(0, A.TOP_N);
       /* start from the collector's own tick history so the chat is not empty before the
          first poll; those lines are labelled "snapshot" so nobody reads them as live. */
       try {
