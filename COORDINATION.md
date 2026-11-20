@@ -288,11 +288,24 @@ docs.kalshi.com.
 ### Claim table (5330bffb)
 | # | Task | Status | Owner | Files touched |
 |---|------|--------|-------|---------------|
-| G-1 | Site consolidation: one clean landing page + cross-tree navigation (keeps all published URLs) | in progress | 5330bffb | `index.html`, `README.md` |
-| G-2 | Re-verify every on-page data row + doc claim against official sources; blank/flag anything unconfirmable | in progress | 5330bffb | `data/*`, `dashboard/data/*`, `verified/*.html`, `pages/verification.html`, `pages/sources.html` |
-| G-3 | Fresh verified data: gas, elections, culture, crypto, golf + orderbooks + YES/NO resolutions (incl. KXCABALLOTMEASURES follow-up) | in progress | 5330bffb | `data/*`, `dashboard/data/*` |
-| G-4 | R-F5 decision + portfolio/trade safe state + local CLI trade tool + trade analysis/strategy framework | in progress | 5330bffb | `pages/portfolio.html`, `portfolio.html`, `verified/portfolio.html`, `dashboard/portfolio.html`, `tools/kalshi_trade.py`, `assets/app.js` |
-| G-5 | Line-by-line repo review incl. PR #3 root additions and PR #6; dead-code audit | in progress | 5330bffb | `review.html`, `verified/repo-review.html`, `COORDINATION.md` |
-| G-6 | Consolidated Flagged-for-Review register + questions register with answers + suggestions decision board | in progress | 5330bffb | `pages/flagged.html`, `pages/questions.html`, `pages/suggestions.html` |
-| G-7 | Live chart (time window s/m/h, price axis) + orderbook liquidity verification/fixes | in progress | 5330bffb | `assets/app.js`, `dashboard/assets/live.js`, `verified/assets/live.js` |
-| G-8 | Build + link + JS/DOM checks, PR → main, merge, Pages deploy verification, final record | unclaimed | 5330bffb | `tools/`, `COORDINATION.md` |
+| G-1 | Site consolidation: cross-tree navigation (keeps all published URLs) | done | 5330bffb | `index.html`, `dashboard/assets/site.js`, `verified/*.html`, `review.html` |
+| G-2 | Re-verify every on-page data row + doc claim against official sources; blank/flag anything unconfirmable | done | 5330bffb | `pages/verification.html`, `pages/sources.html`, `pages/flagged.html` |
+| G-3 | Fresh verified data: gas, elections, culture, crypto, golf + orderbooks + candlesticks + YES/NO resolutions via CI collector | in progress (workflow run 44729162248) | 5330bffb | `data/*`, `tools/collect_kalshi.py` |
+| G-4 | R-F5 decision + portfolio/trade safe state + local CLI trade tool + trade analysis/strategy framework | done | 5330bffb | `pages/portfolio.html`, `pages/analysis.html`, `pages/executive-summary.html`, `tools/kalshi_trade.py` |
+| G-5 | Line-by-line repo review incl. PR #3 root additions and PR #6; dead-code audit | done | 5330bffb | `pages/repo-review.html`, `pages/flagged.html` |
+| G-6 | Consolidated Flagged-for-Review register + questions register with answers + suggestions decision board | done | 5330bffb | `pages/flagged.html`, `pages/questions.html`, `pages/suggestions.html` |
+| G-7 | Live chart (time window s/m/h, price axis, candlesticks) + orderbook liquidity verification/fixes | done | 5330bffb | `assets/app.js`, `index.html`, `assets/tables.js`, `pages/*.html` |
+| G-8 | Build + link + JS/DOM checks, PR → main, merge, Pages deploy verification, final record | in progress | 5330bffb | `tools/`, `COORDINATION.md` |
+
+### Integration notes (2026-11-20 ~12:00 UTC)
+- PR #6 work (22b4f0cb) integrated by content-preserving commit `296ad33`; PR #6 will be
+  closed as superseded by the integration PR. Nothing discarded.
+- A second collect run (44729955155, branch `arena/bb334a65-demo2`) was dispatched at
+  11:43 UTC — session bb334a65 may still be active. Overlap note: this session's
+  G-4/G-6/G-7 work covers the same files bb334a65's I-2…I-5 planned (`pages/*`,
+  `assets/*`, `tools/kalshi_trade.py`). Per protocol, conflicts must be resolved by
+  keeping both sessions' work; this session logged the takeover above and did not
+  delete any of bb334a65's landed files. `collect.yml` concurrency is now
+  per-branch (G-9) so the two collection runs cannot cancel each other.
+- KXCABALLOTMEASURES retry values could not be re-verified (empty API response);
+  NOT carried into any table — see pages/flagged.html G-3.
