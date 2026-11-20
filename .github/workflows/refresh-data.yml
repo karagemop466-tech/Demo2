@@ -85,6 +85,7 @@ jobs:
             exit 0
           fi
           MSG="data: refresh Kalshi demo snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+          echo "::notice::data/ sizes at commit time :: $(du -sh data/* 2>/dev/null | tr '\n' ' ' | cut -c1-300)"
           git commit -m "$MSG"
           rc=$?
           if [ $rc -ne 0 ]; then
@@ -103,7 +104,7 @@ jobs:
               echo "snapshot pushed on attempt $attempt"
               exit 0
             fi
-            echo "::warning::push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -3 | tr '\n' ' | ')"
+            echo "::warning::push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -25 | tr '\n' '|' | cut -c1-3500)"
             git fetch origin main 2>&1 | tail -1
             git reset --soft origin/main
             git add data/
