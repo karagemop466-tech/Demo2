@@ -163,3 +163,46 @@ test('a failed request is reported instead of being swallowed', async () => {
   assert.equal(statuses.at(-1).state, 'error');
   assert.match(statuses.at(-1).error, /429/);
 });
+
+test('the live order book reads the official response shape and derives the ask side', async () => {
+  /* The shape below is the live demo API's own answer, captured on 2026-11-20
+     from GET /markets/KXECCOMPACT-30/orderbook?depth=25:
+       { "orderbook_fp": { "yes_dollars": [[price, qty], ...],
+                           "no_dollars":  [[price, qty], ...] } }
+     Only bids exist, so a NO bid at p is a YES ask at (1 - p). */
+  const KR = loadKR(async () => ({
+    ok: true,
+    json: async () => ({
+      orderbook_fp: {
+        yes_dollars: [['0.6000', '10.00'], ['0.5900', '25.00']],
+        no_dollars: [['0.4000', '5.00']],
+      },
+    }),
+  }));
+  const book = await KR.live.fetchOrderbook('KXT-1', 25);
+  /* The arrays are built inside the vm sandbox, so they are compared through
+     JSON: same values, and the test realm's own prototypes. */
+  const plain = (v) => JSON.parse(JSON.stringify(v));
+  assert.deepStrictEqual(plain(book.yes_bids), [[0.6, 10], [0.59, 25]], 'yes bids, best first');
+  assert.deepStrictEqual(plain(book.no_bids), [[0.4, 5]]);
+  assert.deepStrictEqual(plain(book.derived_yes_asks), [[0.6, 5]],
+    'a NO bid at 0.40 is a YES ask at 0.60');
+  assert.equal(book.best_yes_bid, 0.6);
+  assert.equal(book.best_yes_ask_derived, 0.6);
+  assert.equal(book.yes_bid_contracts, 35);
+  assert.equal(book.derived_ask_contracts, 5);
+  assert.equal(book.spread_derived, 0);
+  assert.match(book.raw_request, /\/markets\/KXT-1\/orderbook\?depth=25$/);
+});
+
+test('an empty book is reported as empty, not as an error', async () => {
+  const KR = loadKR(async () => ({
+    ok: true,
+    json: async () => ({ orderbook_fp: { yes_dollars: [], no_dollars: [] } }),
+  }));
+  const book = await KR.live.fetchOrderbook('KXT-EMPTY', 25);
+  assert.equal(book.yes_bids.length, 0);
+  assert.equal(book.best_yes_bid, null);
+  assert.equal(book.best_yes_ask_derived, null);
+  assert.equal(book.spread_derived, null);
+});

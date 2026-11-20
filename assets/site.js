@@ -501,8 +501,17 @@
   };
 
   /* Live order book for one market, straight from the demo API.
-     The official response carries YES bids and NO bids only; a NO bid at price
-     p is a YES ask at (1 - p), so the ask side is derived and labelled. */
+
+     The official response shape (verified against the live demo API on
+     2026-11-20, e.g. GET /markets/KXECCOMPACT-30/orderbook?depth=25) is:
+
+       { "orderbook_fp": { "yes_dollars": [[price, quantity], ...],
+                           "no_dollars":  [[price, quantity], ...] } }
+
+     The prices are fixed-point strings with four decimals and the quantities
+     with two. Only bids are returned, so a NO bid at p is a YES ask at (1 - p);
+     the ask side is derived and labelled as derived. The older `orderbook`
+     shape (integer cents) is accepted as a fallback. */
   KR.live.fetchOrderbook = function (ticker, depth) {
     var url = KR.DEMO_REST + "/markets/" + encodeURIComponent(ticker) +
       "/orderbook?depth=" + (depth || 25);
@@ -510,17 +519,27 @@
       if (!r.ok) throw new Error("HTTP " + r.status + " for " + url);
       return r.json();
     }).then(function (j) {
-      var book = (j && j.orderbook) || {};
-      var yes = book.yes || [];
-      var no = book.no || [];
-      var yesBids = yes.map(function (d) { return [d.price, d.quantity]; });
-      var noBids = no.map(function (d) { return [d.price, d.quantity]; });
-      var asks = noBids.map(function (d) { return [Math.round((1 - Number(d[0])) * 10000) / 10000, d[1]]; })
+      var fp = (j && j.orderbook_fp) || null;
+      var legacy = (j && j.orderbook) || null;
+      var yesRaw = fp ? (fp.yes_dollars || []) : (legacy ? (legacy.yes || []) : []);
+      var noRaw = fp ? (fp.no_dollars || []) : (legacy ? (legacy.no || []) : []);
+      var toLevels = function (arr, legacyCents) {
+        return (arr || []).map(function (d) {
+          var p = Array.isArray(d) ? d[0] : d.price;
+          var q = Array.isArray(d) ? d[1] : d.quantity;
+          var price = Number(p);
+          if (legacyCents && isFinite(price)) price = price / 100;   /* cents -> dollars */
+          return [Math.round(price * 10000) / 10000, Number(q) || 0];
+        }).filter(function (d) { return isFinite(d[0]); });
+      };
+      var yesBids = toLevels(yesRaw, !fp).sort(function (a, b) { return b[0] - a[0]; });
+      var noBids = toLevels(noRaw, !fp).sort(function (a, b) { return b[0] - a[0]; });
+      var asks = noBids.map(function (d) { return [Math.round((1 - d[0]) * 10000) / 10000, d[1]]; })
         .sort(function (a, b) { return a[0] - b[0]; });
-      var bidContracts = yesBids.reduce(function (s, d) { return s + (Number(d[1]) || 0); }, 0);
-      var askContracts = asks.reduce(function (s, d) { return s + (Number(d[1]) || 0); }, 0);
-      var bestBid = yesBids.length ? Math.max.apply(null, yesBids.map(function (d) { return Number(d[0]); })) : null;
-      var bestAsk = asks.length ? Math.min.apply(null, asks.map(function (d) { return Number(d[0]); })) : null;
+      var bidContracts = yesBids.reduce(function (s, d) { return s + d[1]; }, 0);
+      var askContracts = asks.reduce(function (s, d) { return s + d[1]; }, 0);
+      var bestBid = yesBids.length ? yesBids[0][0] : null;
+      var bestAsk = asks.length ? asks[0][0] : null;
       return {
         ticker: ticker, raw_request: url,
         yes_bids: yesBids, no_bids: noBids, derived_yes_asks: asks,

@@ -70,7 +70,19 @@ async function boot(pageRel) {
         if (url.startsWith('http')) {
           // Kalshi demo API fixture: every requested market moved $0.12 since
           // its last trade, so the alert engine must raise a line for each.
-          const tickers = (url.match(/tickers=([^&]+)/) || [, ''])[1]
+          if (/\/orderbook\?/.test(url)) {
+          // Kalshi demo API fixture, in the live response shape.
+          return {
+            ok: true,
+            json: async () => ({
+              orderbook_fp: {
+                yes_dollars: [['0.6000', '10.00']],
+                no_dollars: [['0.4000', '5.00']],
+              },
+            }),
+          };
+        }
+        const tickers = (url.match(/tickers=([^&]+)/) || [, ''])[1]
             .split(',').map(decodeURIComponent).filter(Boolean);
           return {
             ok: true,
@@ -130,6 +142,11 @@ test('the dashboard renders, populates its panels and raises a live alert', { sk
   // the live feeds exist and are seeded from the committed history
   assert.ok(doc.querySelector('#chatAll'), 'the all-alerts feed exists');
   assert.ok(doc.querySelector('#chatRoi'), 'the ROI feed exists');
+
+  // the live order-book button calls the official endpoint and repaints the panel
+  doc.querySelector('#liqLive').dispatchEvent(new window.Event('click', { bubbles: true }));
+  await wait(() => /live fetch/i.test(doc.querySelector('#liqNote').textContent),
+    'the live order book');
 
   // start the live feed and let one poll land
   doc.querySelector('#liveGo').dispatchEvent(new window.Event('click', { bubbles: true }));
