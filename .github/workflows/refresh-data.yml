@@ -83,6 +83,19 @@ jobs:
             exit 0
           fi
           git commit -m "data: refresh Kalshi demo snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
-          # small, frequent commits; rebase before push to avoid clobbering other work
-          git pull --rebase --autostash origin main
-          git push origin HEAD:main
+          # Small, frequent commits. Several pipelines commit into data/ (F17) and
+          # queued refresh runs can overlap, so the pull/push can lose the race or
+          # rebase onto a same-file data commit. -X theirs keeps THIS run's freshly
+          # collected snapshot when both sides changed it (newest data wins); abort
+          # cleanly and retry instead of failing the run (session eeb796d7).
+          for attempt in 1 2 3 4 5 6; do
+            if git pull --rebase -X theirs --autostash origin main && git push origin HEAD:main; then
+              echo "snapshot pushed on attempt $attempt"
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            echo "push race/rebase conflict on attempt $attempt; retrying..."
+            sleep $((attempt * 10))
+          done
+          echo "could not push snapshot after 6 attempts" >&2
+          exit 1

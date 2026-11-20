@@ -224,13 +224,14 @@ def series_topic(series: dict) -> str | None:
     gas on its own unless the tag "Gas" is also present, because a diesel series is a
     fuel-price series but the tag is the authoritative signal.
     """
-    if not series:
+    if not series or not isinstance(series, dict):
         return None
     # 0) official product scope (verified live 2026-11-20 on GET /series/KXAAAGASD:
     #    product_metadata.scope == "Gasoline" for the AAA gasoline family). The bare
     #    "Oil & Gas" tag is deliberately NOT mapped here: it also covers crude oil
     #    (KXWTI), natural gas and TTF series, which are not "gas prices".
-    scope = str(((series.get("product_metadata") or {}).get("scope")) or "").strip().lower()
+    pm = series.get("product_metadata")
+    scope = str((pm.get("scope") if isinstance(pm, dict) else None) or "").strip().lower()
     if scope == "gasoline":
         return "gas"
     tags = [str(t).strip().lower() for t in (series.get("tags") or []) if t]
@@ -265,7 +266,7 @@ def inventory(series_idx: dict[str, dict]) -> dict:
         "tags_top": dict(sorted(tags.items(), key=lambda kv: -kv[1])[:60]),
         "categories": dict(sorted(cats.items(), key=lambda kv: -kv[1])),
         "in_scope_series": {
-            t: sorted([s["ticker"] for s in series_idx.values() if series_topic(s) == t])
+            t: sorted([s["ticker"] for s in series_idx.values() if series_topic(s) == t and s.get("ticker")])
             for t in TOPICS
         },
     }
@@ -305,12 +306,17 @@ def collect_scope(signer: Signer | None) -> dict:
             # (verified live 2026-11-20). Enrich only the unmapped series that
             # actually appear in in-scope events, then re-map. Official data only.
             enriched.add(st)
-            j2, _ = get_json(f"{DEMO_REST}/series/{st}", signer)
-            full = (j2 or {}).get("series") or {}
-            if full:
-                series_idx[st] = full
-                topic = series_topic(full)
-                topic_cache[st] = topic
+            try:
+                j2, _ = get_json(f"{DEMO_REST}/series/{st}", signer)
+                full = (j2 or {}).get("series") if isinstance(j2, dict) else None
+                # the endpoint can return {"series": {...}} or {"series": [...]} —
+                # only a dict record is usable; anything else stays unmapped+flagged
+                if isinstance(full, dict) and full.get("ticker"):
+                    series_idx[st] = full
+                    topic = series_topic(full)
+                    topic_cache[st] = topic
+            except Exception as e:  # never let one series kill the whole collection
+                log_req(f"{DEMO_REST}/series/{st}", "error", f"enrichment skipped: {type(e).__name__}: {e}")
         if topic is None:
             # No official record => no topic. Record it instead of guessing, so the
             # Flagged page can show exactly which series could not be classified.

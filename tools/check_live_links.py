@@ -20,7 +20,10 @@ SKIP_DIRS = {".git", "node_modules", "verified", "data"}
 HREF = re.compile(r'(?:href|src)\s*=\s*"([^"]+)"')
 # API path templates such as /markets/{ticker} are legitimate, so a brace
 # preceded by a slash or underscore is not treated as an unfinished placeholder.
-PLACEHOLDER = re.compile(r"(?<![/_])\{[A-Za-z_]+\}|TODO|FIXME|Lorem ipsum|XXXX")
+# Double braces {{...}} are the demo API's own title templating appearing verbatim
+# in copied data (e.g. "How {{high_low}} will Bitcoin get this year?") - data, not
+# our unfinished markup.
+PLACEHOLDER = re.compile(r"(?<![/_\{])\{[A-Za-z_]+\}|TODO|FIXME|Lorem ipsum|XXXX")
 # Bodies of <script>, <code> and <pre> are not markup: template literals and code
 # samples there would otherwise look like broken links or unfinished placeholders.
 # The opening <script src="..."> tag is kept so asset references are still checked.
