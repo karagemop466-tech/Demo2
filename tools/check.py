@@ -143,18 +143,25 @@ def check_js_syntax() -> None:
 
 
 def main() -> int:
-    check_links()
-    check_nav()
-    check_data()
-    check_secrets()
-    check_js_syntax()
+    print(f"python={sys.version.split()[0]} node={__import__('shutil').which('node')} "
+          f"cwd={ROOT} files={len(list(ROOT.rglob('*.html')))} html")
+    for name, fn in (("links", check_links), ("nav", check_nav), ("data", check_data),
+                     ("secrets", check_secrets), ("js", check_js_syntax)):
+        before = len(errors)
+        fn()
+        print(f"  [{name}] {'ok' if len(errors) == before else str(len(errors) - before) + ' error(s)'}")
+        for e in errors[before:]:
+            print(f"::error file={e.split(':')[0]}::{e}")
     print(f"pages checked: {len(HTML)}")
     for w in warnings:
         print(f"WARN  {w}")
+        print(f"::warning::{w}")
     for e in errors:
         print(f"FAIL  {e}")
     if errors:
-        print(f"\n{len(errors)} error(s) — not publishable")
+        print(f"\n{len(errors)} error(s) - not publishable")
+        for e in errors[:40]:
+            print(f"::error::{e}")
         return 1
     print("OK — links, nav, data, secrets and scripts all clean")
     return 0
