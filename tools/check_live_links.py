@@ -32,6 +32,26 @@ def strip_code(text: str) -> str:
     return CODE_BLOCK.sub(" ", SCRIPT_BODY.sub(r"\1", text))
 
 
+# A sentence that ends on a preposition ("listed on .") or an empty "()" is the
+# signature of a link that was stripped out and never replaced. Cheap to detect,
+# and it is exactly the defect this checker missed on its first run.
+# Require whitespace *before* the full stop: "listed on ." is broken, while
+# "each value is filled in." is ordinary English.
+DANGLING = re.compile(r"\b(?:on|in|at|from|per|as|see|below|above)\s+\.|<\s*\.|>\s*\(\s*\)")
+
+
+def check_dangling(rel, scan, problems):
+    # Replace code bodies with a token rather than nothing, otherwise
+    # "sees the market's <code>result</code> in <code>GET ...</code>." collapses to
+    # "sees the market's in ." and looks like a stripped link.
+    text = re.sub(r"<code>.*?</code>|<pre>.*?</pre>", " CODE ", scan, flags=re.S)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    m = DANGLING.search(text)
+    if m:
+        problems.append(f"{rel}: dangling reference near {text[max(0, m.start()-45):m.end()+10]!r}")
+
+
 class IdCollector(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -63,6 +83,8 @@ def main():
         checked += len(HREF.findall(strip_code(text)))
 
         scan = strip_code(text)
+
+        check_dangling(rel, text, problems)
 
         m = PLACEHOLDER.search(scan)
         if m:
