@@ -18,6 +18,9 @@ REPO = "https://github.com/karagemop466-tech/Demo2"
 
 with open(DATA, encoding="utf-8") as fh:
     D = json.load(fh)
+MS_PATH = os.path.join(ROOT, "data", "api_market_samples.json")
+with open(MS_PATH, encoding="utf-8") as fh:
+    MS = json.load(fh)
 
 E = html.escape
 BUILT = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -33,6 +36,8 @@ NAV = [
     ("portfolio.html", "Portfolio &amp; Trades"),
     ("questions.html", "Questions"),
     ("suggestions.html", "Suggestions"),
+    ("markets.html", "Market Samples"),
+    ("resolutions.html", "Resolutions"),
     ("flagged-for-review.html", "Flagged for Review"),
     ("repo-review.html", "Repo Review"),
     ("../index.html", "Main dashboard ↗"),
@@ -89,11 +94,14 @@ def flag_links(ids):
 
 
 def source_cell(row):
-    return link(row["source_api"], "API response")
+    out = link(row["source_api"], "List API response")
+    if row.get("detail_endpoint"):
+        out += "<br>" + link(row["detail_endpoint"], "Detail API response")
+    return out
 
 
 def sources_cell(row):
-    items = [link(s["url"], s["name"]) for s in row["settlement_sources"]]
+    items = [link(s["url"], s["name"]) if s.get("url") else E(s["name"]) + ' <span class="flag">(link not verified, F-14)</span>' for s in row["settlement_sources"]]
     return "<br>".join(items)
 
 
@@ -112,7 +120,7 @@ def category_page(cat):
 <td>{sources_cell(r)}</td>
 <td>{link(r['contract_terms'], 'Contract terms')}</td>
 <td>{source_cell(r)}</td>
-<td><span class="ok">Verified: API</span>{('<br>' + flag_links(r['flags'])) if r['flags'] else ''}</td>
+<td><span class="ok">Verified: detail API</span>{('<br>' + flag_links(r['flags'])) if r['flags'] else ''}</td>
 </tr>""")
     table = "\n".join(tr) if tr else '<tr><td colspan="10">No rows collected yet.</td></tr>'
     notes = ""
@@ -169,7 +177,7 @@ def index_page():
 <h2>Executive summary</h2>
 <ul class="summary">
   <li><strong>What works:</strong> Public, unauthenticated market-data reads from the demo Trade API return verified data. Every row on the category pages links to the API response it came from.</li>
-  <li><strong>What is in the data:</strong> {sum(counts.values())} rows: 2 AAA gas-price series, 6 elections rows (4 series, 2 events), 2 culture series, 9 crypto series, 5 golf series. Each category is the first page of results only, not a full list.</li>
+  <li><strong>What is in the data:</strong> {sum(counts.values())} rows: 2 AAA gas-price series, 6 elections rows (4 series, 2 events), 2 culture series, 9 crypto series, 5 golf series. Each category is the first page of results only, not a full list. Market Samples and Resolutions add open and settled markets from the same API (samples, first page only).</li>
   <li><strong>Biggest limits:</strong> demo data includes 2099 close dates and placeholder-looking settlement sources (see <a href="flagged-for-review.html">Flagged for Review</a>). Volume fields are contract counts, not dollars, so the "highest dollar amount" ranking cannot be read directly.</li>
   <li><strong>Blocked without your action:</strong> Portfolio tracking, trade execution, and per-trade performance need a Kalshi demo account and API key. Creating those requires logging in to Kalshi, so they are not done. See the <a href="portfolio.html">Portfolio &amp; Trades</a> page.</li>
   <li><strong>Next decisions:</strong> review the <a href="suggestions.html">Suggestions</a> and answer the open <a href="questions.html">Questions</a>. No implementation changes are made until you choose.</li>
@@ -188,6 +196,8 @@ def index_page():
   <a class="card" href="portfolio.html"><h3>Portfolio &amp; Trades</h3><p>Status of the demo account, trade log layout, and the strategy categories proposed for analysis.</p></a>
   <a class="card" href="questions.html"><h3>Questions</h3><p>What is answered, what is not, and how each missing item could be found.</p></a>
   <a class="card" href="suggestions.html"><h3>Suggestions</h3><p>Options to improve the site and decisions. Each one waits for your choice.</p></a>
+  <a class="card" href="markets.html"><h3>Market Samples</h3><p>Open demo markets from the API with last price, bid, ask, volume, and open interest. Sample only, not a full list.</p></a>
+  <a class="card" href="resolutions.html"><h3>Resolutions</h3><p>Settled demo markets with the result (YES or NO), the settlement value, and the rule that decided it.</p></a>
   <a class="card" href="flagged-for-review.html"><h3>Flagged for Review</h3><p>Irregularities and unverified items, with the source links for manual review.</p></a>
   <a class="card" href="repo-review.html"><h3>Repo Review</h3><p>What the repository contains, checked against GitHub.</p></a>
 </div>
@@ -208,13 +218,16 @@ def live_page():
 <section class="controls">
   <label>Market ticker
     <select id="tickerSel">
-      <option value="KXNEXTNATOSECGEN-99-KIOH">KXNEXTNATOSECGEN-99-KIOH (Klaus Iohannis, NATO SG)</option>
-      <option value="KXNEXTNATOSECGEN-99-KKAL">KXNEXTNATOSECGEN-99-KKAL (Kaja Kallas, NATO SG)</option>
-      <option value="KXELONMARS-99">KXELONMARS-99 (Elon Musk visits Mars)</option>
+      <option value="KXBTCY-27JAN0100-B97500">KXBTCY-27JAN0100-B97500 (BTC on Jan 1 2027: 95,000 to 99,999.99)</option>
+      <option value="KXBTCY-27JAN0100-T20000.00">KXBTCY-27JAN0100-T20000.00 (BTC on Jan 1 2027: 19,999.99 or below)</option>
+      <option value="KXBTCY-27JAN0100-T149999.99">KXBTCY-27JAN0100-T149999.99 (BTC on Jan 1 2027: 150,000 or above)</option>
+      <option value="KXNEWPOPE-70-LANT">KXNEWPOPE-70-LANT (Next Pope: Luis Antonio Tagle)</option>
+      <option value="KXNEWPOPE-70-PPIZ">KXNEWPOPE-70-PPIZ (Next Pope: Pierbattista Pizzaballa)</option>
+      <option value="KXHFCCHAIR-26DEC01-KSEL">KXHFCCHAIR-26DEC01-KSEL (HFC Chair: Keith Self)</option>
     </select>
   </label>
   <label>Or type any ticker
-    <input id="tickerTxt" placeholder="e.g. KXNEXTNATOSECGEN-99-KIOH">
+    <input id="tickerTxt" placeholder="e.g. KXBTCY-27JAN0100-T20000.00">
   </label>
   <label>Chart length
     <select id="windowSel">
@@ -317,20 +330,28 @@ def questions_page():
         ("What is the base URL for the demo REST API?", f"{API}", "Kalshi demo env doc recommends this root.", "https://docs.kalshi.com/getting_started/demo_env.md"),
         ("Is market data available without authentication?", "Yes. The GET market endpoints returned data with no credentials.", "Kalshi's quick-start list describes market data 'without authentication'; observed responses confirm it.", "https://docs.kalshi.com/llms.txt"),
         ("Are demo prices real-market prices?", "Not guaranteed. Kalshi says demo prices may not reflect real markets.", "Demo env doc warning.", "https://docs.kalshi.com/getting_started/demo_env.md"),
-        ("Is volume_fp in dollars?", "No. '_fp' fields are contract quantities; '_dollars' fields are prices.", "Fixed-point doc.", "https://docs.kalshi.com/getting_started/fixed_point_migration.md"),
+        ("Is volume_fp in dollars?", "No. '_fp' fields are contract quantities; '_dollars' fields are prices.", "Fixed-point doc. Market responses show volume_fp as contract counts.", "https://docs.kalshi.com/getting_started/fixed_point_migration.md"),
         ("How does the orderbook show asks?", "It returns yes bids and no bids only. A yes bid at X is the same as a no ask at 1 − X.", "Get Market Orderbook doc.", "https://docs.kalshi.com/api-reference/market/get-market-orderbook.md"),
+        ("How are resolved markets settled?", "Yes outcome: YES holders receive $1 per contract. No outcome: NO holders receive $1 per contract. Settled sample results are on the Resolutions page.", "Market Settlement doc. Sample only, see F-18.", "https://docs.kalshi.com/getting_started/market_settlement.md"),
+        ("How is dollar volume computed from the API?", "Not directly. Each trade has count_fp and yes_price_dollars, so dollar volume = sum of price × contracts over trades. The market objects give contract counts only.", "Get Trades doc lists these trade fields. Computation not yet run (Q-07).", "https://docs.kalshi.com/api-reference/market/get-trades.md"),
+        ("Is there historical price data for charts?", "Yes. Get Market Candlesticks returns 1-minute, 1-hour, or 1-day candles (open, high, low, close, volume, open interest), up to 5,000 periods per request. The site does not use it yet (Suggestion S-11).", "Get Market Candlesticks doc.", "https://docs.kalshi.com/api-reference/market/get-market-candlesticks.md"),
+        ("What does the fee rounding rule do?", "A trade fee is rounded up to $0.000001; a rounding fee brings the balance to the user's precision; a rebate returns accumulated overpayment. The per-contract fee schedule was not read (Q-10).", "Fee Rounding doc.", "https://docs.kalshi.com/getting_started/fee_rounding.md"),
+        ("What is the 'Culture' and 'Golf' category naming?", "The series endpoint uses 'Culture' as a category and 'Golf' as a tag under 'Sports'. Labels on the site follow what the API returns.", "Series detail responses for KXXBANNEDGROK and KXLIVH2H (see F-11).", "https://docs.kalshi.com/api-reference/market/get-series.md"),
     ]
     unknown = [
-        ("Q-06", "Which open markets exist in each of the five topics, and how many?", "Follow the cursor on /markets and /series pages until empty. Not done; first pages only.", "Get Markets doc", "https://docs.kalshi.com/api-reference/market/get-markets.md"),
-        ("Q-07", "Which markets have the most dollar volume?", "Compute dollar volume from the Trades endpoint (price × contracts) per market. Volume fields alone do not give dollars.", "Get Trades", "https://docs.kalshi.com/api-reference/market/get-trades.md"),
-        ("Q-08", "What are current prices for the AAA gas-price series?", "Find the open market tickers for KXAAAGASCDOK and KXAAAGASDTN, then read them with Get Market. A series-level query returned none.", "Get Market", "https://docs.kalshi.com/api-reference/market/get-market.md"),
-        ("Q-09", "How did resolved events settle (yes or no)?", "Query settled markets and read the result field. Not yet done.", "Market Settlement doc", "https://docs.kalshi.com/getting_started/market_settlement.md"),
-        ("Q-10", "What are the trading fees per contract?", "Series rows carry fee_type 'quadratic' and fee_multiplier 1. The fee formula has not been read or checked.", "Fee rounding doc", "https://docs.kalshi.com/getting_started/fee_rounding.md"),
+        ("Q-06", "Which open markets exist in each of the five topics, and how many?", "Partly answered: the Market Samples page lists the first 3 to 5 open markets per query. Full counts need cursor paging on /markets and /series until the cursor is empty (Get Markets doc).", "Get Markets doc", "https://docs.kalshi.com/api-reference/market/get-markets.md"),
+        ("Q-07", "Which markets have the most dollar volume?", "Compute per market: sum of count_fp × yes_price_dollars over trades, paging with the cursor. Not run. Volume fields alone do not give dollars (F-02).", "Get Trades doc", "https://docs.kalshi.com/api-reference/market/get-trades.md"),
+        ("Q-08", "What are current prices for the AAA gas-price series?", "Open daily markets exist for KXAAAGASCDOK (Market Samples: zero volume, zero bid/ask). KXAAAGASDTN was not re-queried for open markets in this session (F-06).", "Get Markets doc", "https://docs.kalshi.com/api-reference/market/get-markets.md"),
+        ("Q-09", "What did each resolved event settle to (yes or no)?", "Partly answered: 10 sampled settled markets are on the Resolutions page. The full list needs paging. The daily gas YES bucket is not recorded (F-18).", "Market Settlement doc", "https://docs.kalshi.com/getting_started/market_settlement.md"),
+        ("Q-10", "What are the trading fees per contract?", "Fee rounding is documented. The fee schedule (linked from the Get Series doc as a PDF) was not read. Series rows carry fee_type 'quadratic' and fee_multiplier 1.", "Get Series doc", "https://docs.kalshi.com/api-reference/market/get-series.md"),
         ("Q-11", "Does the browser (GitHub Pages) get CORS access to the demo API?", "Test from a real browser on the live site. Not verified from the sandbox.", "Live Dashboard status line", "live-dashboard.html"),
         ("Q-12", "Which data is production vs. demo, and which should drive the analysis?", "Decision needed. See Suggestion S-01.", "Demo env doc", "https://docs.kalshi.com/getting_started/demo_env.md"),
-        ("Q-13", "How much demo funding is available, and what position sizes are allowed?", "Visible only after the demo account exists. Needs your action.", "Demo env doc", "https://docs.kalshi.com/getting_started/demo_env.md"),
+        ("Q-13", "How much demo funding is available, and what position sizes are allowed?", "Visible only after the demo account exists. Needs your action. The Kalshi help article says demo accounts start with no funds.", "Kalshi demo account help", "https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account"),
         ("Q-14", "What risk limits and entry rules should apply to demo trades?", "Decision needed from you before any trade. See Suggestions S-05 and S-06.", "Your decision", "suggestions.html"),
-        ("Q-15", "Are there markets whose settlement sources are unclear?", "Yes, see flags F-03, F-04, F-05, F-07, F-09. Each needs a contract-terms read.", "Flagged for Review", "flagged-for-review.html"),
+        ("Q-15", "Are there markets whose settlement sources are unclear?", "Yes, see flags F-03, F-04, F-05, F-07, F-09, F-14, F-17. Each needs a contract-terms read.", "Flagged for Review", "flagged-for-review.html"),
+        ("Q-16", "Why do list and detail endpoints show different last-updated times?", "The Get Series doc defines last_updated_ts as when the series metadata was last updated. The meaning of the list field was not checked. See F-13.", "Get Series doc", "https://docs.kalshi.com/api-reference/market/get-series.md"),
+        ("Q-17", "How many contracts are available at each price, for each sampled market?", "Live Dashboard reads the orderbook. The static snapshot does not record depth. Needs a per-market orderbook snapshot at a fixed time.", "Get Market Orderbook doc", "https://docs.kalshi.com/api-reference/market/get-market-orderbook.md"),
+        ("Q-18", "Does each shared contract-terms PDF cover its series?", "Open each PDF listed in F-17 and confirm the series name, threshold, date, and source.", "Flag F-17", "flagged-for-review.html#F-17"),
     ]
     rows_a = "".join(
         f"<tr><td>{E(q)}</td><td>{E(a)}</td><td>{E(n)}</td><td>{link(s, s if s.startswith('http') else None) if s.startswith('http') else '<a href=' + chr(34) + E(s) + chr(34) + '>' + E(s) + '</a>'}</td></tr>"
@@ -382,6 +403,10 @@ SUGGESTIONS = [
      ["Keep polling (simple, works in a browser, limited resolution).", "Add a WebSocket feed (more accurate; needs a small server or a browser test of CORS/WebSocket support).", "Use candlestick data for longer windows."]),
     ("S-09", "Exclude 2099 demo markets from analysis", "Demo events close in 2099 (F-01). They produce no useful short-term signal.",
      ["Exclude markets whose close time is more than one year away.", "Keep them, but label them as demo-only.", "Keep as is."]),
+    ("S-11", "Historical price chart from candlesticks", "The live chart only holds what this browser has seen since the page opened. Get Market Candlesticks gives 1-minute, 1-hour, and 1-day history (Q-06 and the Get Market Candlesticks doc).",
+     ["Keep the live chart only (simple; no history before the page opened).", "Backfill the chart with 1-minute candles for the last few hours, then add live points (CORS must be tested from a browser first).", "Use hourly or daily candles for longer windows (one request covers up to 5,000 periods)."]),
+    ("S-12", "Show full lists, not samples", "The tables show the first page of each query (F-12, F-19). Full coverage needs cursor paging on the Get Markets and Get Series endpoints.",
+     ["Page through every series in the five topics and rebuild the snapshot (more requests; cursor per the Get Markets doc).", "Keep samples and label them clearly (current state).", "Limit the scope to the markets the analysis needs (for example one topic first)."]),
     ("S-10", "Add fee-aware profit and loss", "Series carry fee_type 'quadratic' and fee_multiplier 1, but the fee formula has not been verified (Q-10).",
      ["Read the official fee doc, then compute fees per trade.", "Ignore fees for now and label P&L as before fees.", "Defer until a trade exists."]),
 ]
@@ -656,6 +681,104 @@ paint();
 """
 
 
+def market_page():
+    rows = sorted(MS["open_markets"], key=lambda m: float(m["volume_fp"]), reverse=True)
+    extra_flags = {"elections": ["F-01"], "gas-prices": ["F-06", "F-18"], "crypto": [], "golf": ["F-19"]}
+    trs = []
+    for m in rows:
+        fl = ["F-02"] + extra_flags.get(m["topic"], [])
+        trs.append(f"""<tr>
+<td><code>{E(m['ticker'])}</code></td>
+<td>{E(m['title'])}<br><small>{E(m['yes_sub_title'])}</small></td>
+<td>{E(m['topic'])}</td>
+<td>{E(m['status'])}</td>
+<td>{E(m['last_price_dollars'])}</td>
+<td>{E(m['yes_bid_dollars'])}</td>
+<td>{E(m['yes_ask_dollars'])}</td>
+<td>{E(m['volume_fp'])}</td>
+<td>{E(m['volume_24h_fp'])}</td>
+<td>{E(m['open_interest_fp'])}</td>
+<td>{E(m['close_time'])}</td>
+<td>{link(m['source_api'], 'API response')}</td>
+<td><span class="ok">Verified: API</span><br>{flag_links(fl)}</td>
+</tr>""")
+    body = f"""
+<section class="hero small">
+  <h1>Market Samples (open demo markets)</h1>
+  <p>Open markets returned by the Kalshi <strong>demo</strong> API. Prices are in dollars per contract (a YES contract pays $1.00 if it resolves YES). Volume and open interest are <strong>contract counts</strong>, not dollars (flag F-02).</p>
+  <p class="meta">Rows: <strong>{len(rows)}</strong> · Sorted by volume (contracts) <em>within this sample only</em>. This is not a ranking of the exchange and not a dollar ranking.</p>
+  <div class="banner warn">Sample, not a list. Each query returned only the first 3 to 5 markets. Golf returned no open markets in this sample (F-19). Liquidity at each price (contracts available) is on the Live Dashboard, which reads the order book.</div>
+</section>
+<section>
+<div class="tablewrap">
+<table>
+<thead><tr>
+<th>Ticker</th><th>Market</th><th>Topic</th><th>Status</th>
+<th>Last price ($)</th><th>Yes bid ($)</th><th>Yes ask ($)</th>
+<th>Volume (contracts)</th><th>24h volume (contracts)</th><th>Open interest (contracts)</th>
+<th>Close time (API)</th><th>Source</th><th>Status</th>
+</tr></thead>
+<tbody>
+{chr(10).join(trs)}
+</tbody>
+</table>
+</div>
+</section>
+"""
+    page("markets.html", "Market Samples", body, active="markets.html")
+
+
+def resolution_page():
+    rows = MS["settled_markets"]
+    tally = {}
+    for m in rows:
+        t = tally.setdefault(m["topic"], {"yes": 0, "no": 0})
+        t[m["result"]] += 1
+    summary = "".join(f"<li><strong>{E(k)}</strong>: {v['yes']} resolved YES, {v['no']} resolved NO (sample)</li>" for k, v in tally.items())
+    trs = []
+    for m in rows:
+        res = m["result"].upper()
+        cls = "yes" if m["result"] == "yes" else "no"
+        fl = {"gas-prices": ["F-18"], "golf": ["F-02"], "culture": [], "elections": []}.get(m["topic"], [])
+        trs.append(f"""<tr>
+<td><code>{E(m['ticker'])}</code></td>
+<td>{E(m['title'])}<br><small>{E(m['yes_sub_title'])}</small></td>
+<td>{E(m['topic'])}</td>
+<td><strong class="{cls}">{res}</strong></td>
+<td>{E(m['settlement_value_dollars'])}</td>
+<td>{E(m['settlement_ts'])}</td>
+<td>{E(m['close_time'])}</td>
+<td>{E(m['volume_fp'])}</td>
+<td>{E(m['rules_primary'])}</td>
+<td>{link(m['source_api'], 'API response')}</td>
+<td><span class="ok">Verified: API</span><br>{flag_links(fl)}</td>
+</tr>""")
+    body = f"""
+<section class="hero small">
+  <h1>Resolutions (settled demo markets)</h1>
+  <p>Settled markets returned by the Kalshi <strong>demo</strong> API, with the <code>result</code> field (YES or NO), the <code>settlement_value_dollars</code> (1.0000 for YES, 0.0000 for NO), and the resolution rule as written by the API.</p>
+  <p class="meta">Rows: <strong>{len(rows)}</strong> · Status in the API: <code>finalized</code>. Open events are followed on the <a href="live-dashboard.html">Live Dashboard</a> until they settle.</p>
+  <ul class="summary">{summary}</ul>
+  <div class="banner warn">Sample only. A market shows here only if it was in the first page of a settled-market query. Demo data, not real markets. See <a href="flagged-for-review.html">Flagged for Review</a>.</div>
+</section>
+<section>
+<div class="tablewrap">
+<table>
+<thead><tr>
+<th>Ticker</th><th>Market</th><th>Topic</th><th>Result</th>
+<th>Settlement value ($)</th><th>Settled at (API)</th><th>Close time (API)</th><th>Volume (contracts)</th>
+<th>Resolution rule (API)</th><th>Source</th><th>Status</th>
+</tr></thead>
+<tbody>
+{chr(10).join(trs)}
+</tbody>
+</table>
+</div>
+</section>
+"""
+    page("resolutions.html", "Resolutions", body, active="resolutions.html")
+
+
 def write_assets():
     os.makedirs(ASSETS, exist_ok=True)
     with open(os.path.join(ASSETS, "style.css"), "w", encoding="utf-8") as fh:
@@ -675,6 +798,8 @@ def main():
     for c in D["categories"]:
         category_page(c)
     live_page()
+    market_page()
+    resolution_page()
     portfolio_page()
     questions_page()
     suggestions_page()
