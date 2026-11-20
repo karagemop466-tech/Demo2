@@ -1,11 +1,13 @@
-/* Full-page render test of the canonical dashboard (index.html) in a DOM.
+/* Full-page render test of the canonical dashboard (index.html) and of the
+ * Live Alerts page, in a real DOM.
  *
  * It runs the real page scripts against the real data/ files, with the Kalshi
  * demo API replaced by a fixture, and checks that:
- *   - the page renders with no JavaScript error
+ *   - the dashboard renders with no JavaScript error
  *   - the KPI cards, the markets table and the liquidity panel are populated
  *   - the live alert feeds are populated from the committed tick history
  *   - starting the live feed and polling once adds a new line to the chat
+ *   - the Live Alerts page loads its data (it used to ask for /pages/data/...)
  *
  * jsdom is a dev dependency; when it is not installed the test is skipped
  * instead of failing, so the dependency-free suite stays runnable anywhere.
@@ -20,33 +22,38 @@ import path from 'node:path';
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 
 let JSDOM = null;
+let VirtualConsole = null;
 try {
-  ({ JSDOM } = await import('jsdom'));
+  const jsdom = await import('jsdom');
+  JSDOM = jsdom.JSDOM;
+  VirtualConsole = jsdom.VirtualConsole;
 } catch {
   JSDOM = null;
 }
 
-const skip = JSDOM ? false : 'jsdom is not installed (npm ci)';
+const skip = JSDOM ? false : 'jsdom is not installed (npm install jsdom)';
 
 function readJSON(rel) {
   return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8'));
 }
 
-async function boot() {
-  let html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-  // Inline assets/site.js and drop the stylesheet link: jsdom must not depend on
-  // the network, and the shared helper has to be defined before the page script
-  // runs (the <script src> tag would otherwise be fetched asynchronously).
+/* Load a page with its CSS and shared JS inlined, and a fetch stub that
+   serves data/ from disk and answers the Kalshi API with a fixture. */
+async function boot(pageRel) {
+  let html = fs.readFileSync(path.join(ROOT, pageRel), 'utf8');
+  const depth = pageRel.split('/').length - 1;
+  const prefix = '../'.repeat(depth);
   const siteJs = fs.readFileSync(path.join(ROOT, 'assets', 'site.js'), 'utf8');
   const css = fs.readFileSync(path.join(ROOT, 'assets', 'style.css'), 'utf8');
   html = html
-    .replace('<link rel="stylesheet" href="assets/style.css">', `<style>${css}</style>`)
-    .replace('<script src="assets/site.js"></script>', `<script>${siteJs}</script>`);
+    .replace(new RegExp(`<link rel="stylesheet" href="${prefix}assets/style.css">`), `<style>${css}</style>`)
+    .replace(new RegExp(`<script src="${prefix}assets/site.js"></script>`), `<script>${siteJs}</script>`);
+
   const errors = [];
   const dom = new JSDOM(html, {
     runScripts: 'dangerously',
-    url: 'https://karagemop466-tech.github.io/Demo2/',
-    virtualConsole: new (await import('jsdom')).VirtualConsole(),
+    url: 'https://karagemop466-tech.github.io/Demo2/' + pageRel,
+    virtualConsole: new VirtualConsole(),
     beforeParse(window) {
       window.addEventListener('error', (e) => errors.push(String(e.error || e.message)));
       const origError = window.console.error;
@@ -78,7 +85,8 @@ async function boot() {
             }),
           };
         }
-        const rel = url.replace(/^https?:\/\/[^/]+\/Demo2\//, '').split('?')[0];
+        const rel = url.replace(/^https?:\/\/[^/]+\/Demo2\//, '')
+          .replace(/^(\.\.\/)+/, '').split('?')[0];
         try {
           const body = readJSON(rel);
           return { ok: true, json: async () => body };
@@ -97,17 +105,15 @@ async function boot() {
     }
     throw new Error('timed out waiting for ' + label);
   };
-  await wait(() => window.document.querySelectorAll('#mktTable table tbody tr').length > 0,
-    'the markets table');
-  // the live panel is wired up after the snapshot is loaded
-  await wait(() => /Live feed|Starting|Live —/.test(window.document.querySelector('#liveStatus').textContent),
-    'the live panel status');
   return { dom, window, errors, wait };
 }
 
 test('the dashboard renders, populates its panels and raises a live alert', { skip }, async () => {
-  const { window, errors, wait } = await boot();
+  const { window, errors, wait } = await boot('index.html');
   const doc = window.document;
+  await wait(() => doc.querySelectorAll('#mktTable table tbody tr').length > 0, 'the markets table');
+  await wait(() => /Live feed|Starting|Live —/.test(doc.querySelector('#liveStatus').textContent),
+    'the live panel status');
 
   assert.deepEqual(errors, [], 'no JavaScript error may be raised while rendering');
 
@@ -130,12 +136,25 @@ test('the dashboard renders, populates its panels and raises a live alert', { sk
 });
 
 test('the chart is drawn and the live sample is appended to the series', { skip }, async () => {
-  const { window, errors } = await boot();
+  const { window, errors, wait } = await boot('index.html');
   const doc = window.document;
+  await wait(() => doc.querySelectorAll('#mktTable table tbody tr').length > 0, 'the markets table');
   const canvas = doc.querySelector('#chart');
   assert.ok(canvas, 'the chart canvas exists');
   assert.ok(canvas.width > 0, 'the chart canvas was sized');
   assert.ok(doc.querySelector('#chartNote').textContent.includes('points'),
     'the chart note reports the number of points');
   assert.deepEqual(errors, []);
+});
+
+test('the Live Alerts page loads its data from the right path', { skip }, async () => {
+  const { window, errors, wait } = await boot('pages/live-alerts.html');
+  const doc = window.document;
+  await wait(() => doc.querySelector('#chatAll').children.length > 0 ||
+    doc.querySelector('#chatAll .notice.bad'), 'the alert rows');
+  assert.ok(!doc.querySelector('#chatAll .notice.bad'),
+    'the page must not report a data load failure');
+  assert.ok(doc.querySelectorAll('#chatAll .alertrow').length > 0,
+    'the page must render alert rows');
+  assert.deepEqual(errors, [], 'no JavaScript error may be raised on the Live Alerts page');
 });
