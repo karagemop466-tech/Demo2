@@ -28,6 +28,7 @@ import base64
 import datetime as dt
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -283,7 +284,9 @@ def series_topic(series: dict) -> str | None:
             # title has to say gas or diesel, and this fallback only applies when no
             # narrower tag matched.
             hay = f"{series.get('ticker','')} {series.get('title','')}".lower()
-            if "gas" in hay or "diesel" in hay:
+            # Word boundaries matter: "Georgia" contains "gas" and Kalshi has dozens of
+            # Georgia election series under the Oil and energy tag's parent category.
+            if re.search(r"\b(gas|gasoline|diesel|fuel)\b", hay):
                 return "gas"
             continue
         if mapped:
@@ -847,6 +850,8 @@ def main() -> int:
             "per_topic": {t: len(by_topic[t]) for t in TOPICS},
             "resolved_in_scope": len(resolutions),
             "resolved_this_run": res["discovered_this_run"],
+            "resolved_in_this_run_scope": len([r for r in resolutions
+                                               if r.get("topic") in TOPICS]),
             "failed_series_requests": sum(len(v) for v in scope["failed_series"].values()),
             "orderbooks": len(books),
             "candle_sets": len(candles),
@@ -957,6 +962,10 @@ def main() -> int:
             "in_scope_series": {t: len(v) for t, v in scope["series_inventory"]["in_scope_series"].items()},
         },
         "definitions": snapshot["definitions"],
+        "series_with_live_markets_total": sum(
+            len(v.get("series_with_live_markets") or [])
+            for v in scope["topic_catalog"].values()),
+        "series_read_total": sum(v.get("series_read", 0) for v in scope["topic_catalog"].values()),
         "resolutions_by_topic": {
             t: len([r for r in resolutions if r.get("topic") == t]) for t in TOPICS
         },
