@@ -1078,3 +1078,47 @@ Actions (44753235358, exit 1) — reproduced offline: `GET /series/{ticker}` can
 dict records with a ticker and never lets one series kill the run (logged as an api_log note
 instead), `inventory` tolerates records without a ticker. Adversarial-shape regression case
 added to `session-eeb796d7/tools/test_collector_fix.py` (13/13 PASS).
+
+---
+
+# Session `arena/b326b649-demo2` — final integration (current session, 2026-11-20)
+
+Branch: `arena/b326b649-demo2`, branched from `e7fabd4` on `main`. Session ID: `b326b649`.
+This checkout is at the same commit as `main` (`e7fabd4`), so the final-integration work lands as
+new commits on this branch, is offered as a pull request to `main`, merged without waiting, and
+this section is then updated with the PR link, merge result and Pages deploy status.
+
+Prior work is preserved, not rewritten: `pages/` (canonical CI-checked site), `verified/`,
+`dashboard/`, `site/`, `intelligence/`, `live/`, `monitor/`, `jumps/`, `tools/`, `data/`.
+No prior session's file is edited here; shared outputs change only via this integration branch.
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| I-1 | Claim integration tasks + push claim immediately | **in progress** | b326b649 | `COORDINATION.md` |
+| I-2 | Re-verify a sample of combined table rows against official docs + live demo API | **in progress** | b326b649 | `pages/verification.html`, `pages/flagged.html`, `pages/sources.html`, `data/snapshot.json` (read-only) |
+| I-3 | Confirm full build + internal+external link check pass; no broken links | unclaimed | b326b649 | `tools/check.py`, `scripts/check_links.py` |
+| I-4 | Trigger GitHub Pages deploy + confirm the live site | unclaimed | b326b649 | `.github/workflows/pages.yml` (workflow dispatch only) |
+| I-5 | PR `arena/b326b649-demo2` → `main`, merge without waiting, record PR link + merge result | unclaimed | b326b649 | `COORDINATION.md` |
+
+### Sources re-checked this session (official only, fetched 2026-11-20)
+
+| Claim checked | Official source | Status |
+|---|---|---|
+| Demo REST root `https://external-api.demo.kalshi.co/trade-api/v2` (also `https://demo-api.kalshi.co/trade-api/v2`) | https://docs.kalshi.com/getting_started/demo_env | **Verified** — live GET returned `{"exchange_active":true,"trading_active":true}` |
+| Demo = mock funds, prices may not reflect real markets | https://docs.kalshi.com/getting_started/demo_env | **Verified** |
+| WebSocket handshake requires signed `KALSHI-ACCESS-*` headers (not possible browser-side) | https://docs.kalshi.com/getting_started/quick_start_websockets | **Verified** (doc text) |
+| Public market-data endpoints need no auth | https://docs.kalshi.com/getting_started/quick_start_market_data | **Verified** (doc text) |
+| Orderbook returns yes/no bids only; ask side is derived `1 − p` | https://docs.kalshi.com/api-reference/market/get-market-orderbook | **Verified** (doc text) |
+| Legacy `POST /portfolio/orders` removed → 410; use `POST /portfolio/events/orders` | https://docs.kalshi.com/api-reference/orders/create-order-v2 | **Verified** (doc text) |
+
+## PR / deploy record (filled in after I-5)
+
+- PR: _to be created_
+- Merge result: _to be recorded_
+- Pages deploy: _to be recorded_
+
+## Notes
+
+- Sandbox bash egress to `*.kalshi.co` is blocked (TLS handshake fails — flagged F1); live source
+  checks above were done with the fetch tool, which can reach the demo host and docs. GitHub
+  Actions runners have normal egress, so the collection workflows run there.
