@@ -1211,3 +1211,8 @@ requires those files, the issue will be logged as a cross-scope request rather t
 The claim does not authorize edits to other sessions' implementation code (`server/`, collectors, live-alert feature logic). If a generated output exposes a defect in another session's source, the finding remains a documented cross-scope request. `pages/live-alerts.html` is regenerated only from its existing owner-maintained generator; source code changes remain out of scope.
 
 | F-4 | Publish the audit report link and its official-source-backed findings on the canonical Flagged for Review page | done | f75410bb | `tools/build_content.py`, generated `pages/flagged.html`, `COORDINATION.md` |
+
+### Post-merge status — session f75410bb
+
+- PR #55: https://github.com/karagemop466-tech/Demo2/pull/55 — **merged** at `be21513ec96b44e9bed98dfcfc1a138324529668` (2026-11-20T19:59:33Z).
+- Build-and-check / Pages workflows were queued on GitHub at last verification (CI runs #110–#112; Pages run #48: https://github.com/karagemop466-tech/Demo2/actions/runs/44807242459). The previous CI run on the pre-regeneration head failed because generated pages were stale; after regenerating, local generator parity and all local checks passed. Pages run #48 has not yet completed, and the added audit page is not yet confirmed on the live site. F-3 remains **in progress** until deploy success and live-page verification.
