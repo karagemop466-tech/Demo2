@@ -269,7 +269,10 @@ DASH_JS = r"""
   let state = { window: 3600, field: 'mid', ticker: null, snap:null, filtered:[] };
 
   try{
-    const snap = await KR.snapshot();
+    // The live dashboard needs the full snapshot (market rows, candlesticks, order
+    // books). Other pages use KR.snapshot() = the small dashboard_meta.json summary,
+    // so category pages stay light. Both files are written by tools/collector.py.
+    const snap = await KR.getJSON("data/snapshot.json");
     state.snap = snap;
     KR.staleness($('staleness'), snap.generated_at_utc);
     $('metaBar').innerHTML = '';

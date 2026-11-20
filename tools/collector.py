@@ -417,6 +417,31 @@ def collect_scope(signer: Signer | None, series_per_topic: int = 0,
     }
 
 
+def _compact_sources(srcs, max_entries: int = 3,
+                     name_max: int = 100, url_max: int = 160):
+    """Bound a settlement_sources array.
+
+    Official entries are short {name, url} pairs, but some demo records carry
+    rules-prose in this field (flag R-8). Keeping at most a few short entries per
+    row keeps every published file far below GitHub's 100 MB file limit; the row
+    records how many entries existed (`settlement_sources_total`) and the full
+    record stays reachable at the row's official series/market URL. Nothing is
+    inferred: entries are copied, only shortened.
+    """
+    if srcs is None:
+        return None
+    if not isinstance(srcs, list):
+        return []
+    out = []
+    for s in srcs[:max_entries]:
+        if isinstance(s, dict):
+            out.append({"name": str(s.get("name") or "")[:name_max],
+                        "url": str(s.get("url") or "")[:url_max]})
+        elif isinstance(s, str):
+            out.append({"name": s[:name_max], "url": ""})
+    return out
+
+
 def _market_row(topic: str, series_ticker: str, m: dict,
                 series: dict | None = None, event: dict | None = None) -> dict:
     """One row per market. Dollar fields are copied VERBATIM from the API response.
@@ -453,9 +478,19 @@ def _market_row(topic: str, series_ticker: str, m: dict,
         "open_time": m.get("open_time"),
         "updated_time": m.get("updated_time"),
         "price_level_structure": m.get("price_level_structure"),
-        "rules_primary": m.get("rules_primary"),
+        # Rules text is legal prose and can be arbitrarily long; the 2026-11-20 runs
+        # proved that copying it verbatim into every row pushes data/snapshot.json over
+        # GitHub's 100 MB hard file limit (GH001), which blocked every data push and
+        # froze the site. The verbatim PREFIX is kept (labelled) and the FULL rules stay
+        # reachable at the row's official `market_url` / `contract_terms_url`.
+        "rules_primary": (m.get("rules_primary") or "")[:300] or None,
+        "rules_truncated": bool(len(m.get("rules_primary") or "") > 300),
         "exchange_index": m.get("exchange_index"),
-        "settlement_sources": series.get("settlement_sources"),
+        "settlement_sources": _compact_sources(series.get("settlement_sources")),
+        "settlement_sources_total": (
+            len(series.get("settlement_sources") or [])
+            if isinstance(series.get("settlement_sources"), list) else None
+        ),
         "series_category": series.get("category"),
         "series_categories": series.get("categories"),
         "contract_terms_url": series.get("contract_terms_url"),
@@ -775,14 +810,18 @@ def collect_resolutions(signer: Signer | None, series_by_topic: dict[str, list[s
                           "first_seen_utc": old.get("first_seen_utc") or row["first_seen_utc"]}
     out = list(merged.values())
     out.sort(key=lambda r: (r.get("settlement_ts") or ""), reverse=True)
-    write_json("resolutions_log.json", {
+    # Bound the rolling log (K-1): keep the most recent 5,000 settled markets so the
+    # file cannot grow without limit across runs. `count` is the retained count.
+    out = out[:5000]
+    write_json_if_changed("resolutions_log.json", {
         "updated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "note": ("Rolling log: each run adds the settled markets it managed to read; rows from "
-                 "earlier runs are kept. `complete` says whether every in-scope series was read."),
+                 "earlier runs are kept, up to the 5,000 most recent by settlement time. "
+                 "`complete` says whether every in-scope series was read."),
         "count": len(out),
         "complete": complete,
         "resolutions": out,
-    })
+    }, compact=True)
     return {"rows": out, "discovered_this_run": len(discovered), "complete": complete}
 
 
@@ -792,15 +831,92 @@ def exchange_status(signer: Signer | None) -> dict:
 
 
 # --------------------------------------------------------------------------- main
-def write_json(name: str, payload: Any) -> None:
+# Publish guard: GitHub hard-blocks any push containing a file over 100 MB (GH001),
+# which is exactly what froze the data pipeline on 2026-11-20 (run 44800417665:
+# "File data/snapshot.json is 111.97 MB; this exceeds GitHub's file size limit").
+# Refuse to write anything that could not be pushed, and fail the run instead.
+WRITE_LIMIT_BYTES = 45_000_000
+
+
+def write_json(name: str, payload: Any, compact: bool = False) -> None:
     DATA.mkdir(exist_ok=True)
     p = DATA / name
-    p.write_text(json.dumps(payload, indent=1, sort_keys=False) + "\n")
+    text = ((json.dumps(payload, separators=(",", ":"), sort_keys=False) if compact
+             else json.dumps(payload, indent=1, sort_keys=False)) + "\n")
+    if len(text) > WRITE_LIMIT_BYTES:
+        print(f"::error::refusing to write {name}: {len(text):,} bytes exceeds the "
+              f"{WRITE_LIMIT_BYTES:,}-byte publish guard; GitHub blocks files over "
+              f"100 MB and a 50 MB file draws a warning. Fix the caps instead of "
+              f"raising the guard.", file=sys.stderr)
+        raise SystemExit(2)
+    p.write_text(text)
     try:
         shown = p.relative_to(ROOT)
     except ValueError:          # DATA redirected (offline test writes to a temp dir)
         shown = p
     print(f"wrote {shown} ({p.stat().st_size} bytes)")
+
+
+def write_json_if_changed(name: str, payload: Any,
+                          volatile_keys: tuple = ("fetched_at", "updated_at_utc"),
+                          compact: bool = False) -> bool:
+    """Write only when the content actually changed.
+
+    data/ is committed to git on every run and git keeps every blob, so rewriting a
+    ~12 MB catalogue file just to bump a timestamp burns ~170 MB of repo history per
+    day. When the content (minus timestamp keys) is identical to what is already on
+    disk the file is left untouched and the commit step has nothing to stage.
+    Returns True when a write happened.
+    """
+    p = DATA / name
+    if p.exists():
+        try:
+            old = json.loads(p.read_text())
+            old_cmp = {k: v for k, v in old.items() if k not in volatile_keys}
+            new_cmp = {k: v for k, v in payload.items() if k not in volatile_keys}
+            if old_cmp == new_cmp:
+                print(f"kept {name} unchanged (content identical apart from {volatile_keys})")
+                return False
+        except (json.JSONDecodeError, OSError):
+            pass
+    write_json(name, payload, compact=compact)
+    return True
+
+
+def _slim_series(series: dict) -> dict:
+    """Compact one official series record for data/series_index.json.
+
+    The full GET /series dump is ~26 MB of catalogue metadata and is rewritten on
+    every run; published files must stay small (see WRITE_LIMIT_BYTES). Long text
+    fields are shortened, small list fields are capped, and `source` keeps the exact
+    official URL of the untruncated record for manual review. Values are copied,
+    never inferred.
+    """
+    keep_small = ("ticker", "title", "category", "categories", "tags",
+                  "product_metadata", "price_level_structure", "contract_terms_url",
+                  "contract_url", "settlement_sources")
+    out: dict = {}
+    for k, v in (series or {}).items():
+        if k in ("settlement_sources",):
+            out[k] = _compact_sources(v, max_entries=3)
+            continue
+        if k == "additional_prohibitions":
+            # ~8 MB of legal boilerplate repeated across the catalogue; nothing in
+            # the site or tools reads it and the full record stays reachable at
+            # `source`. Dropped deliberately (K-1), not silently.
+            continue
+        if isinstance(v, str):
+            out[k] = v[:300]
+        elif isinstance(v, list):
+            out[k] = v[:12]
+        else:
+            out[k] = v
+    # always retain the small keys above when present, plus the trimmed rest
+    for k in keep_small:
+        if k in (series or {}) and k not in out:
+            out[k] = series[k]
+    out["source"] = f"{DEMO_REST}/series/{urllib.parse.quote(series.get('ticker') or '')}"
+    return out
 
 
 def main() -> int:
@@ -818,6 +934,11 @@ def main() -> int:
     ap.add_argument("--series-per-topic", type=int, default=0,
                     help="cap in-scope series queried per topic this run (0 = all). "
                          "Coverage rotates between runs so nothing is skipped forever")
+    ap.add_argument("--publish-per-topic", type=int, default=500,
+                    help="max market ROWS published per topic in the data files, ranked "
+                         "by dollar volume (0 = no cap). Full counts are always kept in "
+                         "counts.per_topic; this only bounds what is written to git so "
+                         "every file stays under GitHub's 100 MB limit")
     args = ap.parse_args()
 
     signer = signer_from_env()
@@ -875,6 +996,15 @@ def main() -> int:
     for t in TOPICS:
         by_topic[t].sort(key=lambda r: (r.get("usd_volume_24h") if r.get("usd_volume_24h") is not None
                                         else r.get("est_dollar_volume") or -1), reverse=True)
+    # Publish cap (K-1, session b7bc848c): the data files are committed to git on
+    # every run, so their size decides whether the push is even possible. The full
+    # counts stay in `counts.per_topic`; the published rows are the top of each
+    # topic's ranking, which is what the dashboard tracks ("highest dollar amount
+    # live events"). counts.per_topic_published and each topic file's `capped` flag
+    # keep the distinction visible on the site.
+    per_topic_full = {t: len(by_topic[t]) for t in TOPICS}
+    if args.publish_per_topic > 0:
+        by_topic = {t: by_topic[t][:args.publish_per_topic] for t in TOPICS}
 
     finished = dt.datetime.now(dt.timezone.utc)
     snapshot = {
@@ -891,7 +1021,11 @@ def main() -> int:
             "series_index": scope["series_index_size"],
             "events_scanned": scope["events_scanned"],
             "markets_in_scope": len(rows),
-            "per_topic": {t: len(by_topic[t]) for t in TOPICS},
+            "markets_published": sum(len(by_topic[t]) for t in TOPICS),
+            "per_topic": per_topic_full,
+            "per_topic_published": {t: len(by_topic[t]) for t in TOPICS},
+            "rows_capped": args.publish_per_topic > 0 and
+                           any(per_topic_full[t] > len(by_topic[t]) for t in TOPICS),
             "resolved_in_scope": len(resolutions),
             "resolved_this_run": res["discovered_this_run"],
             "resolved_in_this_run_scope": len([r for r in resolutions
@@ -903,7 +1037,7 @@ def main() -> int:
             "book_history_markets": len(book_history),
             "truncated_topics": sorted(scope["truncated"].keys()),
         },
-        "markets": rows,
+        "markets": [r for t in TOPICS for r in by_topic[t]],
         "by_topic": by_topic,
         "orderbooks": books,
         "orderbook_history": book_history,
@@ -915,6 +1049,19 @@ def main() -> int:
         "failed_series": scope["failed_series"],
         "scope_rotation": scope["rotation"],
         "scope_limits": scope["truncated"],
+        # Derived summary keys (also present in dashboard_meta.json). They live here
+        # too so KR.snapshot() can serve the full snapshot.json — dashboard.html needs
+        # markets/candles/orderbooks from it, while index/verification pages need these
+        # summaries (K-2 fix for the empty-dashboard defect found on takeover).
+        "series_with_live_markets_total": sum(
+            len(v.get("series_with_live_markets") or [])
+            for v in scope["topic_catalog"].values()),
+        "series_read_total": sum(v.get("series_read", 0)
+                                for v in scope["topic_catalog"].values()),
+        "resolutions_by_topic": {
+            t: len([r for r in resolutions if r.get("topic") == t]) for t in TOPICS},
+        "api_request_count": len(API_LOG),
+        "api_request_failures": len([r for r in API_LOG if not r["ok"]]),
         "definitions": {
             "est_dollar_volume": (
                 "ESTIMATE = volume_fp x last_price_dollars, computed by this collector. "
@@ -947,7 +1094,7 @@ def main() -> int:
         },
         "api_log": API_LOG,
     }
-    write_json("snapshot.json", snapshot)
+    write_json("snapshot.json", snapshot, compact=True)
 
     # compact per-topic files keep each page payload small
     for t in TOPICS:
@@ -957,6 +1104,11 @@ def main() -> int:
                 "generated_at_utc": snapshot["generated_at_utc"],
                 "topic": t,
                 "count": len(by_topic[t]),
+                "count_total": per_topic_full[t],
+                "capped": per_topic_full[t] > len(by_topic[t]),
+                "cap_note": ("Rows are capped at the top of the dollar-volume ranking so "
+                             "every published file stays under GitHub's 100 MB limit; "
+                             "count_total is the full in-scope count."),
                 "markets": by_topic[t],
                 "resolutions": [r for r in resolutions if r["topic"] == t],
                 "orderbook_history": {
@@ -964,6 +1116,7 @@ def main() -> int:
                     if any(r["market_ticker"] == k for r in by_topic[t])
                 },
             },
+            compact=True,
         )
 
     write_json("resolutions.json", {
@@ -990,19 +1143,19 @@ def main() -> int:
         "api_log": API_LOG,
     })
 
-    write_json("series_index.json", {
+    write_json_if_changed("series_index.json", {
         "fetched_at": snapshot["generated_at_utc"],
         "source": f"{DEMO_REST}/series",
         "note": ("Official GET /series response, every series the demo exchange lists, with "
                  "the topic this collector mapped it to from its category/tags. "
-                 "settlement_sources are the publications Kalshi names for that series."),
+                 "settlement_sources are the publications Kalshi names for that series. "
+                 "Long text fields are shortened for file size (K-1); each record keeps "
+                 "its `source` URL with the full official record."),
         "series": [
-            dict(series,
-                 topic=series_topic(series),
-                 source=f"{DEMO_REST}/series/{urllib.parse.quote(series.get('ticker') or '')}")
+            _slim_series(dict(series, topic=series_topic(series)))
             for series in (load_series_index(signer) or {}).values()
         ],
-    })
+    }, compact=True)
 
     write_json("dashboard_meta.json", {
         "generated_at_utc": snapshot["generated_at_utc"],
@@ -1065,22 +1218,31 @@ def main() -> int:
     })
 
     # history ledger: append one compact point per market per run (for the price chart)
+    # Bounded twice (K-1): only the top markets are tracked and only the last points
+    # are kept. Without bounds this file grew toward hundreds of MB and re-wrote that
+    # blob on every run; with bounds its ceiling is ~3 MB (300 markets x 288 points).
     hist_path = DATA / "history.json"
     hist = json.loads(hist_path.read_text()) if hist_path.exists() else {"points": {}}
     pts = hist.setdefault("points", {})
+    tracked = {r.get("market_ticker") for r in ranked_all[:300] if r.get("market_ticker")}
     for r in rows:
         t = r["market_ticker"]
         lp = r.get("last_price_dollars")
         yb = r.get("yes_bid_dollars")
-        if lp in (None, ""):
+        if lp in (None, "") or t not in tracked:
             continue
         pts.setdefault(t, []).append(
             {"t": int(finished.timestamp()), "last": lp, "yes_bid": yb,
              "yes_ask": r.get("yes_ask_dollars")}
         )
-        pts[t] = pts[t][-2000:]
+        pts[t] = pts[t][-288:]
+    for t in list(pts):
+        if t not in tracked:
+            del pts[t]
     hist["updated_at_utc"] = snapshot["generated_at_utc"]
-    write_json("history.json", hist)
+    hist["tracked_markets"] = len(tracked)
+    hist["retention_points"] = 288
+    write_json("history.json", hist, compact=True)
 
     print(f"OK  in-scope markets={len(rows)}  resolved={len(resolutions)}  "
           f"books={len(books)}  auth={signer is not None}")

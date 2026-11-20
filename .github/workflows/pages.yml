@@ -25,7 +25,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-and-data
+  # Shared with every other workflow that commits data: one writer at a time.
+  group: kalshi-data-writers
   cancel-in-progress: false   # a running collection must finish before the next starts
 
 jobs:

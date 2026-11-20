@@ -8,9 +8,29 @@ name: Refresh Kalshi demo data
 
 on:
   workflow_dispatch:
+    inputs:
+      max_runtime:
+        description: "Soft wall-clock budget in seconds (default 2100)"
+        required: false
+        default: "2100"
+      volume_markets:
+        description: "Markets to pull trade prints for (default 30)"
+        required: false
+        default: "30"
+      book_samples:
+        description: "Order-book samples per market (default 12)"
+        required: false
+        default: "12"
+      series_per_topic:
+        description: "In-scope series queried per topic, rotating between runs (default 90)"
+        required: false
+        default: "90"
   schedule:
-    # every 10 minutes (GitHub cron is best-effort and may run late)
-    - cron: "*/10 * * * *"
+    # Every 30 minutes (GitHub cron is best-effort and may run late).
+    # Cadence is bounded on purpose: each run commits a few MB of data and git keeps
+    # every blob, so a 10-minute cadence grew the repo ~750 MB/day (K-1 finding).
+    # The live alert page polls the API from the browser between snapshots.
+    - cron: "*/30 * * * *"
   push:
     branches: [main]
     paths:
@@ -21,7 +41,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: kalshi-refresh
+  # One shared key for every job that commits data, so two runs can never
+  # push to main at the same time (previously 4 different keys -> push races).
+  group: kalshi-data-writers
   cancel-in-progress: false
 
 jobs:
@@ -29,8 +51,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        # Check out the ref that triggered the run (main for the schedule, the branch
+        # for a manual dispatch), so the collector can be exercised on a branch before
+        # it ever runs on main.
         with:
-          ref: main
+          ref: ${{ github.ref_name }}
 
       - uses: actions/setup-python@v5
         with:
@@ -40,12 +65,25 @@ jobs:
         run: pip install --quiet cryptography
 
       - name: Collect demo snapshot
+        timeout-minutes: 45
         env:
+          # A manual run may pass a lighter scope (used to validate this workflow on a
+          # branch); scheduled runs on main always take the full sweep below.
+          MAX_RUNTIME: ${{ inputs.max_runtime || '2100' }}
+          VOLUME_MARKETS: ${{ inputs.volume_markets || '30' }}
+          BOOK_SAMPLES: ${{ inputs.book_samples || '12' }}
+          SERIES_PER_TOPIC: ${{ inputs.series_per_topic || '90' }}
           # Optional. Without keys the collector still works: every market-data
           # endpoint used here is public. Keys only add portfolio/trading coverage.
           KALSHI_DEMO_API_KEY_ID: ${{ secrets.KALSHI_DEMO_API_KEY_ID }}
           KALSHI_DEMO_PRIVATE_KEY: ${{ secrets.KALSHI_DEMO_PRIVATE_KEY }}
-        run: python tools/collector.py
+        run: |
+          python tools/collector.py \
+            --max-runtime "$MAX_RUNTIME" \
+            --volume-markets "$VOLUME_MARKETS" \
+            --book-markets 10 \
+            --book-samples "$BOOK_SAMPLES" \
+            --series-per-topic "${SERIES_PER_TOPIC:-90}"
 
       - name: Show result summary
         run: |
@@ -55,6 +93,10 @@ jobs:
           print("generated:", s["generated_at_utc"])
           print("authenticated:", s["authenticated"])
           print("counts:", json.dumps(s["counts"], indent=2))
+          print("per-topic:", json.dumps(s["counts"]["per_topic"]))
+          print("failed series:", {k: len(v) for k, v in (s.get("failed_series") or {}).items()})
+          print("resolutions this run:", s["counts"].get("resolved_this_run"),
+                "total in rolling log:", s["counts"].get("resolved_in_scope"))
           bad = [r for r in s["api_log"] if not r["ok"]]
           print(f"api calls logged: {len(s['api_log'])}, failed: {len(bad)}")
           for r in bad[:10]:
@@ -68,10 +110,33 @@ jobs:
           s = json.load(open("data/snapshot.json"))
           n = s["counts"]["markets_in_scope"]
           print("markets_in_scope:", n)
+          per = s["counts"]["per_topic"]
+          print("per_topic:", per)
+          empty = [t for t, c in per.items() if c == 0]
+          if empty:
+              # Not a failure: a topic can legitimately have no open markets on the
+              # demo exchange today (Culture did not, verified 2026-11-20). Reported
+              # so the number is never silently zero.
+              print(f"::notice title=Empty topics::{', '.join(empty)} had no open markets this run")
           if n == 0:
               print("::error::Collector returned zero in-scope markets; keeping previous data.")
               sys.exit(1)
           PY
+
+      - name: Keep the raw snapshot as an artifact (not committed)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kalshi-demo-snapshot
+          path: |
+            data/snapshot.json
+            data/snapshot_api_log.json
+            data/dashboard_meta.json
+            data/top.json
+            data/resolutions.json
+            data/liquidity.json
+          retention-days: 7
+          if-no-files-found: warn
 
       - name: Commit snapshot
         run: |
@@ -79,6 +144,9 @@ jobs:
           exec 2>&1
           git config user.name  "kalshi-demo-bot"
           git config user.email "kalshi-demo-bot@users.noreply.github.com"
+          # data/snapshot.json IS committed (kept slim by tools/collector.py's publish
+          # caps, ~3 MB): tools/analyze.py and tools/execute_strategy.py read it for
+          # the trade pipeline. It is also kept as a run artifact below.
           git add data/
           if git diff --cached --quiet; then
             echo "no data changes"
@@ -98,15 +166,15 @@ jobs:
           # Every failure surfaces as a ::warning::/::error:: annotation with the real
           # git output (session eeb796d7: run logs are unreachable this session).
           for attempt in 1 2 3 4 5 6; do
-            out=$(git push origin HEAD:main 2>&1)
+            out=$(git push origin "HEAD:${GITHUB_REF_NAME}" 2>&1)
             rc=$?
             if [ $rc -eq 0 ]; then
               echo "snapshot pushed on attempt $attempt"
               exit 0
             fi
             echo "::warning::push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -25 | tr '\n' '|' | cut -c1-3500)"
-            git fetch origin main 2>&1 | tail -1
-            git reset --soft origin/main
+            git fetch origin "${GITHUB_REF_NAME}" 2>&1 | tail -1
+            git reset --soft "origin/${GITHUB_REF_NAME}"
             git add data/
             git commit --allow-empty -m "$MSG"
             sleep $((attempt * 5))

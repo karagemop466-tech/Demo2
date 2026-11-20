@@ -29,7 +29,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: kalshi-portfolio
+  # One shared key for every job that commits data, so two runs can never
+  # push to main at the same time (previously 4 different keys -> push races).
+  group: kalshi-data-writers
   cancel-in-progress: false
 
 jobs:
