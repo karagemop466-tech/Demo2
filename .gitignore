@@ -1,17 +1,8 @@
-# Node
+# Machine-written data snapshots are produced by the refresh workflows and committed
+# deliberately (they are the site's evidence trail). Nothing else belongs here.
 node_modules/
-npm-debug.log*
-
-# Backend runtime data (tracking store, snapshots)
-.data/
-
-# Python
 __pycache__/
 *.pyc
-
-# Environment / secrets — NEVER commit Kalshi keys
+.DS_Store
 .env
 .env.*
-*.key
-*.pem
-kalshi*.key
