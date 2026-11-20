@@ -1,33 +1,33 @@
-run 44737343195 commit 543d5f60d16f0ec69441bf347d5afffac23c4dc3
+run 44737674422 commit f436b96a929e0ade31745a12324e4836d335fb08
 --- collect ---
 {
  "series_in_scope": 174,
- "open_markets_in_scope": 1311,
+ "open_markets_in_scope": 1582,
  "resolved_in_scope_collected": 1601,
  "orderbooks": 48,
  "trade_histories": 12,
  "culture_adjacent_series": 2630,
- "culture_adjacent_markets": 0
+ "culture_adjacent_markets": 3
 }
-requests: 440 errors: 0
+requests: 444 errors: 0
 --- validate ---
-rows checked: 3086
-requests: 440  errors: 0
-WARN: series KXZECPERP: no settlement source returned by API
+rows checked: 3357
+requests: 444  errors: 0
+WARN: series KXDOGEPERP: no settlement source returned by API
+WARN: series KXKSHIBPERP: no settlement source returned by API
 WARN: series KXBCHPERP: no settlement source returned by API
 WARN: topic culture: no open markets matched its scope queries
 OK: data is sourced, price fields are in range, derived values reconcile, snapshot is fresh.
 --- build ---
-Traceback (most recent call last):
-  File "/home/runner/work/Demo2/Demo2/instrument-panel/tools/build_dashboard_site.py", line 728, in <module>
-    main()
-  File "/home/runner/work/Demo2/Demo2/instrument-panel/tools/build_dashboard_site.py", line 718, in main
-    page_analysis()
-  File "/home/runner/work/Demo2/Demo2/instrument-panel/tools/build_dashboard_site.py", line 392, in page_analysis
-    topic_rows = "".join(
-                 ^^^^^^^^
-  File "/home/runner/work/Demo2/Demo2/instrument-panel/tools/build_dashboard_site.py", line 396, in <genexpr>
-    f'<td class="num">{t["resolved_yes"]}</td><td class="num">{t["resolved_no"]}</td>'
-                       ~^^^^^^^^^^^^^^^^
-KeyError: 'resolved_yes'
+built pages in /home/runner/work/Demo2/Demo2/instrument-panel/site
 --- links ---
+     1  www.thjodminjasafn.is
+     1  www.justice.gov
+     1  www.fec.gov
+     1  seia.org
+     1  truflation.com
+     1  www.cbssports.com
+     1  www.twitch.tv
+     1  karagemop466-tech.github.io
+
+OK: owned pages have no broken internal links or anchors, carry the demo disclaimer, and are all reachable from the navigation.
