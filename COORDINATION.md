@@ -955,3 +955,37 @@ These are logged, not fixed, because the files belong to the instrument-panel se
 - Two sharp-jump features exist beside this one (`e36292f6`, `8b9a46b4`). The final integration session should pick one.
 
 **Process note:** one `git pull --rebase` on this branch was attempted after a merge of `origin/main`. Rebasing would have replayed merged `main` history and stopped on another session's commit. It was aborted, nothing was lost, and the branch was pushed as a fast-forward. For this branch, use `git merge origin/main` rather than `pull --rebase`.
+
+---
+
+## Session `d0bea7de` — branch `arena/d0bea7de-demo2` (claim written 2026-11-20 13:14 UTC, before edits)
+
+Session owner: `d0bea7de`. Base of this branch: `4c13151` (PR #31), reset onto `origin/main`
+after PRs #27/#33/#35/#37 landed. The board and the open-PR list were re-read at claim time:
+open PRs were #32 (`8b9a46b4`), #34 (`21eed9ff`), #36 (`220913cb`), #38 (`3371a533`) — all four
+sessions active (last commits minutes old), so no session's task is taken over.
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| D-1 | Integration verification & merge: monitor `main` health, merge settled session PRs (green + quiet) without discarding any session's content — in particular keep the sharp-jump landing card that `027edfe` ported into `tools/build_site.py` / `tools/build_content.py` — re-run every gate after each merge, confirm the Pages deploy, and write the final PR/deploy record | claimed | d0bea7de | `COORDINATION.md` (this section only, except a union resolve forced by another merge); GitHub PR operations; regenerated `index.html` / `pages/*` only as the output of the merged generators |
+| D-2 | Contingent generator-diff-gate repair (root cause of main's red run `44740812355`) | withdrawn — the fix landed in `027edfe` (carried by PR #37) before this claim's trigger fired; no other session's files are edited for it | — | — |
+
+Evidence recorded at claim time (reproduced locally, not assumed):
+
+- At `9319862`, `python3 tools/build_site.py && python3 tools/build_content.py` rewrote exactly
+  `index.html`, `pages/flagged.html`, `pages/suggestions.html`, `pages/verification.html`, dropping
+  the sharp-jump card / F13 / S9 / verification row that commit `24e1b13` (PR #35) had added by hand
+  to generated files without updating the generators.
+- PR #35's own `check` run `44740168641` concluded **failure**; the PR was merged at
+  2026-11-20T12:57:56Z anyway (irregularity — merged with a red gate); main's
+  `Build and check the site` run `44740812355` then failed at step "Fail if regenerating produced a
+  diff (pages must match the generator)".
+- Commit `027edfe` later ported those hand-edits into the generators and fixed the shell-expanded
+  `$0.10` bug in the F13 bullet. Verified at `6118fd0`: re-running both generators produces **zero
+  diff**; main runs `44742084436` (Build and check the site) and `44742084469` (Deploy GitHub Pages)
+  are **success**.
+- PR #6 (browser credential removal) was closed 13:02:42Z as superseded by PR #27's full
+  `assets/app.js` rewrite ("No keys are ever requested or stored"); PR #15 (`monitor/` subsite) was
+  merged 13:02:26Z inside PR #27. Both stale PRs (>60 min without commits) are therefore resolved
+  without takeover.
+
