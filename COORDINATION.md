@@ -401,3 +401,24 @@ recording so another session does not repeat them:
 
 In both cases the Pages deploy itself was fine; only the consistency job was red. The site was never
 broken, and it is worth distinguishing the two when reading Actions.
+
+---
+
+## Session `eeb796d7` — branch `arena/eeb796d7-demo2` (claim written 2026-11-20 13:03 UTC, before edits)
+
+Platform constraint: this session's rules fix the branch name to `arena/eeb796d7-demo2`,
+so `session-<id>/<task>` branches are not created; all work lands on that one branch.
+Scope is **additive**: owned files are `session-eeb796d7/**` plus this appended board
+section. At final-integration time only, shared outputs may be touched (logged there).
+
+State of the board when this claim was written (read first): sessions `arena-5330bffb`
+(PR #27, last commit 12:56Z), `arena-8b9a46b4` (PR #32, 12:54Z) and `arena-21eed9ff`
+(PR #34, 12:57Z) are **active**; PRs #6 (11:19Z) and #15 (11:46Z) are past the 60-minute
+stale limit with no commits and are eligible for takeover.
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| E-1 | Line-by-line verification pass: every checked claim in the merged tree vs official docs + live demo API, per-row source links | in progress | eeb796d7 | `session-eeb796d7/**` |
+| E-2 | Irregularities register (repo hygiene: duplicate workflows/tools/data, committed `.pyc`, stale PRs, conflicting schedules) with evidence links | in progress | eeb796d7 | `session-eeb796d7/**` |
+| E-3 | Stale-PR takeover per the 60-minute rule: review PR #6 and #15 and record action | in progress | eeb796d7 | (PR operations only) |
+| E-4 | Final integration once other sessions are done: merge ready PRs, re-verify combined data line by line, confirm build + no broken links, PR to `main`, merge, confirm Pages, record | unclaimed | eeb796d7 | `COORDINATION.md` (append), any shared output strictly as needed and logged |
