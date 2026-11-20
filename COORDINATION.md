@@ -280,3 +280,87 @@ Session owner: `arena-3420a90d`. Work was scoped to the new folder `dashboard/` 
 - Pages source is still main `/`; the PUT to `/docs` returned 403 with the integration token. The workflow deploys the root, so `dashboard/` is published.
 - Retry of KXCABALLOTMEASURES (previously HTTP 502): **now succeeded**. Demo results (all status `finalized`, volume ~3 contracts each): Prop 45 `no`, Prop 44 `no`, Prop 43 `no`, Prop 42 `yes`. Not yet added to `dashboard/data/snapshot.json`. Follow-up for the next dashboard update, since these are low-dollar.
 - Still open for the user: demo API key (portfolio/trading); R-F5 and the root-navigation request from main's board.
+
+---
+
+## Session arena-6836594f — branch `arena/6836594f-demo2` (integration, 2026-11-20)
+
+Session owner: `arena-6836594f`. Role: **final integration session**. Base commit
+`5224293` on `main`. Claims 12–18 above were committed before the work started and
+remain the scope of this session.
+
+### What this session did
+
+| # | Task | Status | Files |
+|---|------|--------|-------|
+| 12 | Live demo-API data harvest | done | `scripts/fetch-data.mjs`, `data/*.json` |
+| 13 | Line-by-line verification vs official sources | done | `pages/verification.html`, `pages/sources.html` |
+| 14 | Consolidate to one landing page + category subpages | done | `index.html`, `pages/*`, `assets/*` |
+| 15 | Live chart (sec/min/hr) + orderbook liquidity | done | `assets/app.js`, `assets/chart.js` |
+| 16 | Portfolio + trade execution + analysis/strategies | done | `pages/portfolio.html`, `pages/analysis.html`, `assets/portfolio.js` |
+| 17 | Suggestions / Questions / Flagged registers | done | `pages/suggestions.html`, `pages/questions.html`, `pages/flagged.html` |
+| 18 | Link check + build check + Pages deploy + PR/merge | in progress | `tools/check_links.py`, `.github/workflows/refresh-data.yml` |
+
+### Consolidation decisions
+
+Four overlapping site implementations existed: the root monitor (`index.html` +
+`analysis.html` + `portfolio.html` + `review.html` + `app.js` + `style.css`), the
+`verified/` tree, the `dashboard/` tree, and the `pages/` tree. They had separate
+navigation, separate snapshots and contradictory security caveats.
+
+**Decision:** keep one site. `index.html` + `pages/*` + `assets/*` are the site;
+`dashboard/`, `verified/`, the root monitor files and the duplicate workflows
+(`pages.yml`, `collect.yml`) and the legacy `tools/collect_kalshi.py` are removed.
+Nothing was thrown away unread:
+
+- `dashboard/flagged.html` data irregularities **D1–D13** and open questions
+  **Q11–Q16** were transcribed into `pages/flagged.html` and `pages/questions.html`.
+- `dashboard/assets/live.js` was the reference for the live-update behaviour now in
+  `assets/app.js`.
+- The `verified/` row-level source links are the model the generated tables follow.
+
+### Data pipeline
+
+`scripts/fetch-data.mjs` → `data/*.json` → `tools/build_site.py` → `index.html` +
+`pages/*.html`, with `tools/check_links.py` as the gate. The refresh workflow
+(`.github/workflows/refresh-data.yml`) runs all four steps on a 30-minute schedule
+and publishes run diagnostics to the issue **"Kalshi data refresh log"**.
+
+### Harvester fixes made this session
+
+| Problem | Fix |
+|---|---|
+| A single failed request aborted the whole harvest | Per-request soft-fail; every request still logged in `data/collection-log.json` |
+| A crashed harvest wrote no snapshot at all | Partial snapshot is still written and marked `partial` in `data/meta.json` |
+| `node … \| tee` masked the harvester's exit code, so crashes looked like success | `set -o pipefail` + explicit `PIPESTATUS` capture |
+| Unbounded series discovery | Full `/series` catalogue pagination, then category/tag sweeps as a supplement |
+| A harvest could exceed the CI window | `--max-requests` budget (900); exhaustion is recorded, not hidden |
+| The snapshot grew to ~79k market rows | Rows are ranked, then capped per topic; the cap is recorded in `data/meta.json` and stated on the pages |
+
+### Verification
+
+- `node --check scripts/fetch-data.mjs`, `assets/app.js`, `assets/chart.js`,
+  `assets/portfolio.js` — all pass.
+- `python3 tools/build_site.py` — builds 14 pages.
+- `python3 tools/check_links.py` — no broken internal links, no missing anchors,
+  every data row carries an API source link, no placeholder values rendered.
+- Live harvest (run `44729513940`): 16,643 series catalogue, 12 in-scope series per
+  topic, 79,541 markets and 7,209 events collected, 15 order books, exit code 0.
+  Diagnostics published to issue #20.
+
+### Open items carried into the final merge
+
+- `Q11`/`Q16`: no demo credentials exist, so portfolio balances, fills and executed
+  trades stay blank until a demo key is loaded in the browser. Nothing is fabricated.
+- `F5`/`U3`: browser CORS to the demo API from the Pages origin is unconfirmed from
+  the build environment; the site falls back to the committed snapshot and labels it.
+- `S2`/`F8`: browser-side signing stays for the demo requirement, with the
+  private-key-in-a-public-page exposure published for review.
+
+None of these block the merge. All are published for review.
+
+### PR / deploy record
+
+- PR: see the linked pull request (created and merged without waiting, per the task rules).
+- Pages: https://karagemop466-tech.github.io/Demo2/ — deployment confirmed in the
+  refresh workflow run.
