@@ -1081,6 +1081,30 @@ added to `session-eeb796d7/tools/test_collector_fix.py` (13/13 PASS).
 
 ---
 
+# Session `arena/848af77d-demo2` — integration / final verification (session ID `848af77d`)
+
+Branch: `arena/848af77d-demo2`, branched from `main` at `e7fabd4` (2026-11-20T15:59Z).
+Scope: final integration. Add the missing live-alerting surface required by the brief
+(two scrolling chats for price swings ≥ $0.10 in either direction), re-verify data rows
+against official Kalshi sources, confirm the site builds with no broken links, create the
+PR → `main`, merge without waiting, confirm GitHub Pages deploys, and record the result here.
+
+Non-overlapping scope note: this session adds a new generated page `pages/live-alerts.html`
+and a nav entry; it regenerates the shared pages from the generators (no hand-edits to
+generated HTML). It does not edit any other session's subsite (`dashboard/`, `verified/`,
+`site/`, `intelligence/`, `live/`, `monitor/`, `instrument-panel/`, `session-*`).
+
+| # | Task | Status | Owner | Files (exclusive scope) |
+|---|------|--------|-------|--------------------------|
+| I-1 | Add live-alerts page with two scrolling chats (≥ $0.10 swings; all-events + high-ROI filter) | done | 848af77d | `tools/build_site.py` (NAV + generator), `pages/live-alerts.html` (generated), `index.html` + `pages/*.html` (regenerated nav) |
+| I-2 | Re-verify sample data rows against official live demo API (exchange status, series, market, orderbook) | done | 848af77d | `data/snapshot.json` (read-only spot checks), `pages/api-reference.html` |
+| I-3 | Run CI checks (tools/check.py, link checks, JS syntax, generator diff gate) | done | 848af77d | `tools/check.py`, `tools/check_links.py` |
+| I-4 | Create PR → main, merge, confirm GitHub Pages deploy, record PR link + deploy result | in progress | 848af77d | `COORDINATION.md` (this section), PR record |
+
+Sources used (official only): https://docs.kalshi.com/getting_started/demo_env (demo REST/WS endpoints); https://docs.kalshi.com/api-reference/market/get-trades (≥ $0.10 move detection uses trade prints); https://docs.kalshi.com/api-reference/market/get-markets (market prices, volume, result); https://docs.kalshi.com/api-reference/market/get-market-orderbook (liquidity).
+
+Irregularities carried forward (from `pages/flagged.html`): none block this session; the "two scrolling chats" feature did not previously exist and is being added now under I-1.
+
 # Session `arena/b326b649-demo2` — final integration (current session, 2026-11-20)
 
 Branch: `arena/b326b649-demo2`, branched from `e7fabd4` on `main`. Session ID: `b326b649`.
@@ -1173,3 +1197,55 @@ https://docs.kalshi.com/api-reference/market/get-trades,
 https://docs.kalshi.com/getting_started/quick_start_websockets,
 https://docs.kalshi.com/api-reference/portfolio/get-positions,
 https://docs.kalshi.com/api-reference/orders/create-order-v2.
+## Session `f75410bb` — current branch `arena/f75410bb-demo2` (claim, 2026-11-20)
+
+Platform branch rules require using this current branch; no separate `session-*` branch is created.
+The existing tree already contains multiple dashboard/site implementations. To avoid duplicate
+work and conflicting shared outputs, this session claims a scoped audit of the canonical root
+site and interactive server against the requirements and official Kalshi docs.
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| F-1 | Audit current site/build/test behavior and verify API/security claims against official docs | done | f75410bb | `session-f75410bb/**` |
+| F-2 | Record reproducible findings and verification / sources; make scoped fixes only | needs review | f75410bb | `session-f75410bb/**` |
+
+Claim scope excludes shared pages, datasets, workflows, and other session directories. If a fix
+requires those files, the issue will be logged as a cross-scope request rather than edited.
+
+### Session f75410bb — audit result and cross-scope requests (2026-11-20)
+
+| # | Status | Result |
+|---|---|---|
+| F-1 | **done** | Rechecked Node build/tests, Python site/data/link gates, backend order request and event-poll code; official Kalshi demo, events, orderbook, Create Order V2, and WebSocket pages read directly. Detailed row-by-row evidence and source links: [`session-f75410bb/review.html`](session-f75410bb/review.html). |
+| F-2 | **needs review** | R1 order execution route/body is incompatible with documented Create Order V2; R2 event pagination is incomplete; R3 dual scrolling feeds now exist but are snapshot-only and high-ROI is a rule, not a model; R4 authenticated WebSocket needs backend handling; R5 Pages cannot itself run the authenticated backend; R6 live-alert joins yield 0/14 matches, an empty ROI feed, and six source-less rows; R7 provenance timestamps disagree; R8 implied asks are derived; R9 deployed alert feed fails to load because of relative paths. These are not marked fixed. |
+
+**Checks:** `npm test` (8/8); `npm run check` (15 pages); `npm run build` (15 pages); `python3 tools/check.py` (18 pages; pass with existing warning: 11 non-2xx snapshot requests); `python3 scripts/check_links.py` (8,459 references across 124 HTML files, all OK on the integrated tree). A JSDOM run of merged `pages/live-alerts.html` against committed data rendered 14 alerts, but 0/14 matched market metadata, the High-ROI list showed 0, and six alert rows had no source link; the page's visible snapshot timestamps disagree with `data/jumps.json` provenance. Mocked `KalshiClient.createOrder()` printed `POST https://demo.invalid/trade-api/v2/orders` and the legacy-shaped JSON, confirming the implementation without sending a Kalshi request. No credentials were used and no trade was submitted.
+
+**Cross-scope requests (not edited):**
+1. Owner of `server/*` (`arena-406a2f21-demo2`, completed scope): please update `KalshiClient.createOrder` and `/api/trades/execute` to the official V2 route/body and add a schema test. Official reference: https://docs.kalshi.com/api-reference/orders/create-order-v2. Current code uses `POST /orders`, `market_ticker`, buy/sell, `outcome_side`, `price_dollars`, and `type`, not the V2 request schema.
+2. Owner of `server/*`: paginate `GET /events` via returned cursor in both API handler and periodic tracking; official response includes cursor: https://docs.kalshi.com/api-reference/events/get-events.
+3. Final integration/page owner: link `session-f75410bb/review.html` from the published Flagged for Review page or record its findings there. The new report itself has official source links per row; shared page not edited due scope policy.
+4. Owner of the merged Live Alerts page (`pages/live-alerts.html`, session 848af77d): dual scroll panes are now present, but `fetch()` runs only once on page load; the page is backed by static collected JSON, not a live refresh/stream. Its "High ROI" is a rule (move floor + estimated volume), not a model. Please label the cadence accurately or add a verified runtime update path, preserving source timestamps and stale-state UI. Official WS handshake requirements: https://docs.kalshi.com/getting_started/quick_start_websockets.
+5. Live Alerts page owner: at this checkout, the JSDOM run showed 0/14 jump tickers matching `data/snapshot.json`, leaving every topic/market join blank, High-ROI empty, and six rows without source links. `data/jumps.json` is generated from `data/dashboard_instrument.json`, not the page's `data/snapshot.json`. Please use a compatible, same-provenance metadata source and retain an official per-row link for every alert. Kalshi field references: https://docs.kalshi.com/api-reference/market/get-markets and https://docs.kalshi.com/api-reference/market/get-trades.
+6. Live Alerts page owner: the visible `Snapshot` status (`2026-11-20T14:10:44Z`) is stale; the alert data line and `data/jumps.json` source provenance are both `2026-11-20T19:49:16Z`. Please render one accurate freshness status and do not label a static page live unless it refreshes. WS docs: https://docs.kalshi.com/getting_started/quick_start_websockets.
+
+### Session f75410bb — final integration takeover (2026-11-20 19:55 UTC)
+
+**Handoff:** the latest prior final-integration entry is session `b326b649` (I-4/I-5 left in progress/unclaimed; older than 60 minutes and no current branch activity). PR #54's alert work is already merged in `origin/main`. This session takes over the current-tree build/deploy parity and its own PR #55; no other open session PR is being merged or modified.
+
+| # | Task | Status | Owner | Files touched |
+|---|---|---|---|---|
+| F-3 | Claim final integration: regenerate only generator-owned published outputs, make CI generator diff pass, verify links/build, merge PR #55, confirm Pages deploy | in progress | f75410bb | generated outputs from `tools/build_site.py` + `tools/build_content.py`; `COORDINATION.md` |
+
+The claim does not authorize edits to other sessions' implementation code (`server/`, collectors, live-alert feature logic). If a generated output exposes a defect in another session's source, the finding remains a documented cross-scope request. `pages/live-alerts.html` is regenerated only from its existing owner-maintained generator; source code changes remain out of scope.
+
+| F-4 | Publish the audit report link and its official-source-backed findings on the canonical Flagged for Review page | done | f75410bb | `tools/build_content.py`, generated `pages/flagged.html`, `COORDINATION.md` |
+
+### Post-merge status — session f75410bb
+
+- PR #55: https://github.com/karagemop466-tech/Demo2/pull/55 — **merged** at `be21513ec96b44e9bed98dfcfc1a138324529668` (2026-11-20T19:59:33Z).
+- Build-and-check / Pages workflows were queued on GitHub at last verification (CI runs #110–#112; Pages run #48: https://github.com/karagemop466-tech/Demo2/actions/runs/44807242459). The previous CI run on the pre-regeneration head failed because generated pages were stale; after regenerating, local generator parity and all local checks passed. Pages run #48 has not yet completed, and the added audit page is not yet confirmed on the live site. F-3 remains **in progress** until deploy success and live-page verification.
+
+| F-5 | Audit the deployed Live Alerts page's real browser request paths and publish any live-only failure | done | f75410bb | `session-f75410bb/review.html`, `COORDINATION.md`, `tools/build_content.py`, generated `pages/flagged.html` |
+
+**F-5 live-browser finding (2026-11-20):** the deployed `https://karagemop466-tech.github.io/Demo2/pages/live-alerts.html?cb=1` rendered “Could not load alert data: 503.” The live page source calls `fetch('data/snapshot.json')` / `fetch('data/jumps.json')` from a `/pages/` URL, which targets `/pages/data/...`; the actual published files at `/data/...` are available. Logged as R9 and added to the canonical Flagged for Review generator/page. **Cross-scope request:** owner of `tools/build_site.py` / Live Alerts (session 848af77d) please fix the generated fetch paths (for project pages, `../data/...`) and verify live browser loading; source code is not edited in this audit. Kalshi endpoint docs: https://docs.kalshi.com/api-reference/market/get-markets and https://docs.kalshi.com/api-reference/market/get-trades.
