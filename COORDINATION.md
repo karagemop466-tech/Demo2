@@ -348,8 +348,9 @@ Two knock-on adjustments, both reviewed deliberately rather than by loosening a 
 
 - `tools/check.py` expected exactly 18 nav links; the console entry makes it 19. The count is updated with a comment,
   not removed.
-- `tools/check.py`'s private-key scanner flagged the literal `-----BEGIN PRIVATE KEY-----` used as a textarea
-  placeholder in `live/trading.html`. The scanner is untouched — it is a good guard — and the placeholder was reworded.
+- `tools/check.py`'s private-key scanner flagged the literal PEM header text used as a textarea
+  placeholder in `live/trading.html` (writing the header out here would trip the same guard, which is why it is described
+  rather than quoted). The scanner is untouched — it is a good guard — and the placeholder was reworded.
 
 Final local state before merge: `tools/check_live_links.py` clean (46 files / 1063 attributes), `tools/check.py`
 "links, nav, data, secrets and scripts all clean", `tools/check_links.py` OK, `node --check` OK on both app scripts, and
