@@ -1078,3 +1078,60 @@ Actions (44753235358, exit 1) — reproduced offline: `GET /series/{ticker}` can
 dict records with a ticker and never lets one series kill the run (logged as an api_log note
 instead), `inventory` tolerates records without a ticker. Adversarial-shape regression case
 added to `session-eeb796d7/tools/test_collector_fix.py` (13/13 PASS).
+
+---
+
+## Session `cf02f340` — branch `arena/cf02f340-demo2` (final integration)
+
+**Claimed 2026-11-20 ~19:45 UTC, before any edit.** Base commit `e7fabd4` (`main` tip at
+claim time). Platform fixes this session's branch name to `arena/cf02f340-demo2`, so no
+`session-<id>/<task>` branch is created; all work lands on this one branch.
+
+**State read before claiming.** `main` tip is `e7fabd4` (data commit 15:59Z). The most recent
+commit from any other session was `56526df2` (PR #52, merged 15:57Z) — 3h48m before this
+claim, so every other session is past the 60-minute stale limit and no other session holds an
+open claim. This session therefore acts as the **final integration session** named in the
+coordination rules: it merges/reconciles the remaining branches, re-verifies the combined
+data line by line, confirms the build with no broken links, and publishes to GitHub Pages.
+
+| # | Task | Status | Owner | Files touched (exclusive scope) |
+|---|------|--------|-------|----------------------------------|
+| I-1 | Coordination claim, pushed before any edit | done | cf02f340 | `COORDINATION.md` |
+| I-2 | Data pipeline repair: stop the failing `refresh-data` commit step; one writer per path; compact JSON; drop the duplicated `by_topic` payload; cap the history ledger | in progress | cf02f340 | `tools/collector.py`, `.github/workflows/refresh-data.yml`, `.github/workflows/pages.yml`, `.github/workflows/collect.yml`, `.github/workflows/data-refresh.yml` |
+| I-3 | Live dashboard v2: two scrolling chats (all events + ROI-filtered), live ≥$0.10 swing alerts, chart window selector, order-book liquidity | pending | cf02f340 | `tools/build_site.py`, `assets/site.js`, `assets/style.css`, `assets/feed.js` (new) |
+| I-4 | Site IA simplification: one clean primary nav + grouped secondary nav; landing page rebuilt around the brief's five asks | pending | cf02f340 | `tools/build_site.py`, `tools/build_content.py`, generated `index.html`, `pages/*.html` |
+| I-5 | Line-by-line re-verification against official Kalshi docs and the live demo Trade API; one source link per table row; blank + flagged where unconfirmed | pending | cf02f340 | `pages/verification.html`, `pages/sources.html`, `pages/flagged.html`, `pages/api-reference.html`, `tools/verify_live.py` (new) |
+| I-6 | Repo review + irregularity register refresh (duplicate site trees, duplicate pipelines, oversized snapshots) | pending | cf02f340 | `pages/repo-review.html`, `tools/build_content.py` |
+| I-7 | Resolve the four stale, conflicting PRs (#34, #36, #40, #44): merge unique value, close the rest with reasons | pending | cf02f340 | (GitHub PR operations only) |
+| I-8 | Release gates: generator determinism, internal link check, JS syntax, render test, data schema | pending | cf02f340 | `tools/check.py`, `scripts/check_links.py`, `.github/workflows/ci.yml` |
+| I-9 | PR → merge → Pages deploy confirmed → record | pending | cf02f340 | `COORDINATION.md` |
+
+### Scope note
+`I-2`, `I-3`, `I-4`, `I-5`, `I-6` and `I-8` touch **shared outputs** (the site's index and
+navigation, `data/`, the generators). Per the coordination rules those are changed only by the
+final integration session — this one. Every other session's work is preserved: no file from
+another session's scope is deleted, and the legacy subsites (`verified/`, `dashboard/`,
+`site/`, `intelligence/`, `live/`, `monitor/`, `instrument-panel/`, `jumps/`,
+`session-8b9a46b4/`) stays on the site under a grouped secondary navigation rather than being
+removed.
+
+### Findings carried into this session (read before claiming)
+1. **The site data pipeline is broken.** `Refresh Kalshi demo data` has failed at the
+   `Commit snapshot` step on 11 consecutive runs (runs `44750844593`…`44800417665`); the last
+   successful push to `main` was `e7fabd4` at 15:59Z, so the deployed snapshot is stale.
+2. **Two workflows write the same directory.** `refresh-data.yml` runs `git add data/`, which
+   includes `data/dashboard_instrument.json` and `data/history_instrument/` — files that
+   `pages.yml` also owns and commits. Both push to `main`, so the two bots overwrite each
+   other's data and race on the push.
+3. **The committed snapshot is far larger than it needs to be.** `data/snapshot.json` is
+   47 MB because it is written with `indent=1` (3.4× inflation) **and** carries the market
+   list twice (`markets` and `by_topic` are the same rows). `data/topic-elections.json` is
+   22 MB for the same reason. The landing page therefore downloads 47 MB of JSON to draw one
+   table.
+4. **The history ledger is unbounded.** `tools/collector.py` appends one point per market per
+   run for every in-scope market and keeps 288 points each; at 10-minute runs that is
+   10,241 × 288 points and would grow past 250 MB in under two days.
+5. **No session has yet produced the two scrolling chats the brief asks for** (all-events feed
+   plus a high-ROI filtered feed). `grep -rn "ROI"` over the tree returns nothing.
+6. **The site has nine parallel site trees** and a 25-entry flat navigation, which is the
+   opposite of the "clean, simple, easy to use" the brief asks for.
