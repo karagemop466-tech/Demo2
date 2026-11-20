@@ -21,18 +21,14 @@ DOCS = "https://docs.kalshi.com"
 
 NAV = [
     ("index.html", "Dashboard", "dash"),
+    ("desk/index.html", "Desk", "desk"),
     ("pages/executive-summary.html", "Executive Summary", "exec"),
     ("pages/gas.html", "Gas", "gas"),
     ("pages/elections.html", "Elections", "elections"),
     ("pages/culture.html", "Culture", "culture"),
     ("pages/crypto.html", "Crypto", "crypto"),
     ("pages/golf.html", "Golf", "golf"),
-    ("verified/index.html", "Verified Data", "verified"),
-    ("dashboard/index.html", "Static Dashboard", "static"),
-    ("review.html", "Decision Register", "decide"),
     ("rankings.html", "Dollar Rankings", "rank"),
-    ("instrument-panel/site/index.html", "Instrument Panel", "inst"),
-    ("live/index.html", "Live Console", "live"),
     ("pages/resolutions.html", "Resolutions", "res"),
     ("pages/portfolio.html", "Portfolio", "port"),
     ("pages/analysis.html", "Analysis", "an"),
@@ -45,17 +41,34 @@ NAV = [
     ("pages/sources.html", "Sources", "src"),
 ]
 
+# The parallel dashboards built by earlier sessions are kept and still reachable,
+# but they are grouped on a second row so the primary navigation stays short
+# enough to scan while trading.
+NAV_MORE = [
+    ("verified/index.html", "Verified Data", "verified"),
+    ("dashboard/index.html", "Static Dashboard", "static"),
+    ("review.html", "Decision Register", "decide"),
+    ("instrument-panel/site/index.html", "Instrument Panel", "inst"),
+    ("live/index.html", "Live Console", "live"),
+]
+
 
 def nav_html(active: str, prefix: str) -> str:
     items = []
     for href, label, key in NAV:
         cur = ' aria-current="page"' if key == active else ""
         items.append(f'<a href="{prefix}{href}"{cur}>{label}</a>')
+    more = []
+    for href, label, key in NAV_MORE:
+        cur = ' aria-current="page"' if key == active else ""
+        more.append(f'<a href="{prefix}{href}"{cur}>{label}</a>')
     return (
         '<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard'
         "<small>demo environment · not real money</small></div>"
         '<button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button>'
-        '<nav class="main">' + "".join(items) + "</nav></div></header>"
+        '<nav class="main">' + "".join(items) + "</nav></div>"
+        '<div class="hbar sub"><span class="morelabel">Other dashboards in this repository</span>'
+        '<nav class="more">' + "".join(more) + "</nav></div></header>"
     )
 
 
@@ -130,9 +143,15 @@ DASH_BODY = r"""
 elections, culture, crypto, golf</b>. Ranked by <i>estimated</i> dollar volume, charted by
 contract price over time, with order-book liquidity at each price, tracked until the market
 resolves <b>yes</b> or <b>no</b>.</p>
-<p class="lead" style="font-size:.95em">All sections: <a href="rankings.html">Dollar Rankings</a> ·
-<a href="verified/index.html">Verified rows</a> · <a href="dashboard/index.html">Dashboard</a> ·
+<p class="lead" style="font-size:.95em"><b>Start here:</b>
+<a href="desk/index.html">Kalshi Demo Desk</a> — one consolidated dashboard for the five topics,
+with the requirements register, the line-by-line verification report and the sharp-move monitor.
+Everything else this repository built: <a href="rankings.html">Dollar Rankings</a> ·
+<a href="verified/index.html">Verified rows</a> · <a href="dashboard/index.html">Static dashboard</a> ·
 <a href="site/index.html">Site</a> · <a href="intelligence/index.html">Intelligence</a> ·
+<a href="monitor/index.html">Read-only monitor</a> ·
+<a href="instrument-panel/site/index.html">Instrument panel</a> ·
+<a href="live/index.html">Live console</a> ·
 <a href="analysis.html">Analysis (root)</a> · <a href="portfolio.html">Portfolio status (root)</a> ·
 <a href="review.html">Review (root)</a></p>
 <div id="metaBar"></div>
@@ -178,6 +197,15 @@ tables on the category, resolution and verification pages still work without it.
       period 1 min / 1 h / 1 day, max 5,000 periods per request). Short windows use the
       collector's own tick history, which is sampled every 10 minutes — a 60-second window
       will legitimately be empty. Nothing is interpolated.</p>
+  </div>
+
+  <div class="card">
+    <h3>Sharp price moves <span class="muted">— jumps ≥ $0.10 between consecutive price points</span></h3>
+    <p class="muted" style="margin-top:0">Each red marker on the chart is a move of $0.10 or more
+      between two consecutive points. The API returns price and volume but not the news or event
+      behind a move, so the cause is not inferred — each row links to the market's own page on
+      Kalshi and is flagged <span class="pill flag">cause unverified</span>.</p>
+    <div id="jumpTable"></div>
   </div>
 
   <div class="card">
@@ -320,8 +348,10 @@ DASH_JS = r"""
                                   yes_ask_close:c.yes_ask_close, derived_mid:c.derived_mid}));
     const series = KR.buildSeries(candles, hist, fieldMap[state.field])
       .filter(p=>p.t >= Date.now()-state.window*1000 && p.t <= Date.now()+60000);
+    const jumps = KR.detectJumps(series, 0.10);
     KR.drawChart(document.getElementById('chart'), series, {
       spanSeconds: state.window,
+      jumps: jumps,
       emptyMessage: state.window<=300
         ? 'No ticks inside this window yet. The collector samples every 10 minutes, so a 60-second or 5-minute window only fills when a run has just completed.'
         : 'No price points in this window. Candlestick price objects are empty in periods with no trade - try the quoted-mid series or a longer window.'
@@ -331,7 +361,18 @@ DASH_JS = r"""
       : state.field==='close' ? 'last traded price - empty in periods with no trade'
       : state.field==='yes_bid_close' ? 'yes bid close' : 'yes ask close';
     $('chartNote').innerHTML = `${series.length} points · ${tickCount} collector ticks + ${srcCount} candlesticks `
-      + `(period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`;
+      + `(period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`
+      + (jumps.length ? ` · ${jumps.length} sharp move${jumps.length!==1?'s':''} ≥ $0.10` : '');
+
+    const m = (state.snap.markets||[]).find(x=>x.market_ticker===state.ticker) || {};
+    KR.renderTable($('jumpTable'), [
+      {label:'When (UTC)', get:j=>`<span class="small">${KR.when(new Date(j.toTime).toISOString())}</span>`},
+      {label:'From → To', num:true, get:j=>`${KR.usd(j.fromV,4)} → ${KR.usd(j.toV,4)}`},
+      {label:'Change', num:true, get:j=>(j.change>0?'▲ ':'▼ ')+KR.usd(Math.abs(j.change),4)},
+      {label:'Direction', get:j=>`<span class="pill ${j.dir==='up'?'up':'down'}">${j.dir}</span>`},
+      {label:'Market', get:j=>`<b>${KR.esc(m.market_title||m.market_ticker||'—')}</b><br><span class="muted small">${KR.esc(m.market_ticker||'—')}</span>`},
+      {label:'Source', get:j=>KR.link(m.market_url||'','Kalshi market')+' <span class="pill flag">cause unverified</span>'}
+    ], jumps, 'No sharp moves (≥ $0.10 between consecutive points) in this window. A blank table means the price moved in smaller steps — nothing is inferred.');
   }
 
   async function renderLiquidity(){
