@@ -240,6 +240,12 @@ Both sets of pages are published by the root-deploying `pages.yml` workflow.
   Both the existing root dashboard and this session's `site/` dashboard are served:
   - Root: https://karagemop466-tech.github.io/Demo2/
   - This session: https://karagemop466-tech.github.io/Demo2/site/index.html
+- Follow-up coordination-record PR #17:
+  https://github.com/karagemop466-tech/Demo2/pull/17 — **MERGED** 2026-11-20T11:37:54Z,
+  merge commit `306d8dd`. Required a second merge of `origin/main` (which had advanced
+  via PR #14) and re-resolution of the `COORDINATION.md` conflict (kept main's
+  consolidated log + appended this session's section). Final Pages deploy run
+  https://github.com/karagemop466-tech/Demo2/actions/runs/44729182053 — **success**.
 - Link check: 14 HTML pages in `site/`, 18 internal link targets, 0 broken links.
 - Combined-data re-verification: all `site/` table rows carry source links to
   official Kalshi pages; unverified items are flagged on `site/flagged.html` and
