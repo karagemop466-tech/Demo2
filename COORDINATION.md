@@ -111,6 +111,6 @@ Note: this session's rules name the branch `arena/6822d767-demo2` and allow work
 4. Demo portfolio, trade execution, and per-trade performance are BLOCKED until a Kalshi demo account and API key exist. Creating them needs a human login at Kalshi. This is a manual step and cannot be done from the sandbox.
 
 ### PR / deploy record
-- PR: (filled after `gh pr create`)
-- Merge result: (filled after merge)
-- Pages deploy: (filled after deploy check)
+- PR: https://github.com/karagemop466-tech/Demo2/pull/5 (branch `arena/6822d767-demo2` into `main`), MERGED 2026-11-20 11:18 UTC, merge commit 7fb1eebbd8c42a49d33d91be5a1b5fb8e9409bbe (`gh pr merge 5 --merge`; mergeable and CLEAN before merge).
+- Pages deploy: build for 7fb1eeb reported `built` (no error). Verified live at https://karagemop466-tech.github.io/Demo2/verified/index.html and `.../verified/crypto.html` (rows and source links render).
+- Integration request still open: link `verified/index.html` from the root navigation (shared file; not edited here).
