@@ -91,6 +91,12 @@ s = A.screen(mkAlert({ toV: 0.85, change: 0.10,
   closeTime: new Date(Date.now() + 400 * 86400000).toISOString() }));
 check("screen rejects a market that closes beyond the window", s.ok === false, JSON.stringify(s));
 
+// an up move to exactly 1.00: the favoured NO side is free, so the potential ROI is not
+// a number - it must be reported as such rather than rendered as 0%
+s = A.screen(mkAlert({ fromV: 0.90, toV: 1.00, change: 0.10 }));
+check("screen handles a free entry (price 1.00) without inventing an ROI",
+  s.ok === true && s.potentialROI === null, JSON.stringify(s));
+
 // missing price / missing close time must fail, never throw
 s = A.screen(mkAlert({ toV: null, change: 0.10 }));
 check("screen rejects a missing post-move price", s.ok === false && !!s.reason, JSON.stringify(s));

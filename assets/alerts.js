@@ -273,7 +273,9 @@
       : '<span class="pill">snapshot (10-min samples)</span>';
     var screenTag = a.screen && a.screen.ok
       ? '<span class="pill up">model screen · potential ROI ' +
-        KR.num(Math.round(a.screen.potentialROI), 0) + "%</span>"
+        (a.screen.potentialROI === null || a.screen.potentialROI === undefined
+          ? "n/a (entry at $0.00)"
+          : KR.num(Math.round(a.screen.potentialROI), 0) + "%") + "</span>"
       : (a.screen ? '<span class="pill muted" title="' + KR.esc(a.screen.reason) +
         '">screen: ' + KR.esc(a.screen.reason) + "</span>" : "");
     var link = KR.link(a.marketUrl, "market", "chat-link");
