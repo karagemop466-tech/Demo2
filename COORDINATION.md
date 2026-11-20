@@ -121,8 +121,19 @@ Note: this session's rules name the branch `arena/f1751c8f-demo2` and allow work
 
 | Task | Status | Owner | Files touched |
 |------|--------|-------|---------------|
-| F-1 Re-verify every sourced row in `data/kalshi_snapshot.json` against its per-ticker API endpoint (`/series/{ticker}`, `/events/{ticker}`) and record match/mismatch | in progress | f1751c8f | `data/kalshi_snapshot.json` |
-| F-2 Add open-market sample (liquidity: last, bid, ask, volume, open interest) and settled-market resolution sample (yes/no) per topic, each row linked to its API URL | in progress | f1751c8f | `data/kalshi_snapshot.json`, `tools/build_site.py`, `verified/markets.html`, `verified/resolutions.html` |
-| F-3 Link the verified subsite from the root landing page navigation (request from 6822d767) and refresh the README | in progress | f1751c8f | `index.html`, `README.md`, `verified/*.html` (regenerated) |
+| F-1 Re-verify every sourced row in `data/kalshi_snapshot.json` against its per-ticker API endpoint (`/series/{ticker}`, `/events/{ticker}`) and record match/mismatch | done | f1751c8f | `data/kalshi_snapshot.json` |
+| F-2 Add open-market sample (liquidity: last, bid, ask, volume, open interest) and settled-market resolution sample (yes/no) per topic, each row linked to its API URL | done | f1751c8f | `data/kalshi_snapshot.json`, `tools/build_site.py`, `verified/markets.html`, `verified/resolutions.html` |
+| F-3 Link the verified subsite from the root landing page navigation (request from 6822d767) and refresh the README | done | f1751c8f | `index.html`, `README.md`, `verified/*.html` (regenerated) |
 | F-4 Portfolio, trade execution, and per-trade performance | BLOCKED (external) | f1751c8f | none — needs a Kalshi demo account and API key created by a human at Kalshi; cannot be done from this sandbox. Not started; logged in `verified/portfolio.html` and `verified/flagged-for-review.html`. |
 | F-5 Integration: build, link check, PR `arena/f1751c8f-demo2` → `main`, merge, Pages deploy check | in progress | f1751c8f | all |
+
+### f1751c8f progress log (2026-11-20)
+- Scope check: this session holds F-5 (integration), so root nav (`index.html`, `pages/*.html`), README, and the snapshot are in scope here. No other session is active on the board.
+- Root nav: "Verified Data" link added to `index.html` and all 13 `pages/*.html`, pointing to `verified/index.html`. Checked: no broken local links from root pages.
+- Snapshot: `last_updated` rule applied (detail value used, list value kept in `last_updated_list`). 24 rows, 22 flags.
+- F-14 corrected. The earlier "verbatim from endpoint" wording overstated what was checked. Only three settlement-source links were opened and confirmed (ABC News, NATO, DP World Tour schedule). Five pairs were wrong for their names (abc.com, abc.net.au, Barchart S&P quote page, x.com, Google search links). All others are blanked and flagged, with the name kept.
+- Live dashboard dropdown now lists only tickers in the market samples (six: KXBTCY x3, KXNEWPOPE-70 x2, KXHFCCHAIR-26DEC01-KSEL). KXELONMARS-99 and both KXNEXTNATOSECGEN-99 tickers removed (F-21).
+- Questions register updated with sourced answers. Four documentation URLs cited earlier did not exist or were not verified; they are corrected. New suggestions S-11 (candlestick history) and S-12 (full paging).
+- Handoff: request #1 from 6822d767 (root nav link) is done here. Request #2 (R-F5, in-browser API key entry on a public site) and request #3 (review of PR #3) are still open; logged for the owner. Request #4 (portfolio blocked) remains BLOCKED (external: demo account and API key need a human login).
+- Next: commit in pieces, pull --rebase, push, open PR to main, merge, check Pages deploy, and record the PR and merge below.
+
