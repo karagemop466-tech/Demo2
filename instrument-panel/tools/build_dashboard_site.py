@@ -432,7 +432,7 @@ Arithmetic only. A band with n &lt; 30 is labelled too small to interpret, becau
 {band_rows(bands) or '<tr><td colspan="6" class="empty">No traded resolved markets were collected.</td></tr>'}
 </tbody></table></div>
 {f'<p class="small">Largest interpretable band: <b>{E(biggest["band"])}</b> with n={biggest["n"]}, mean implied {price(biggest["implied_prob_mean"])}, realised {biggest["realised_yes_rate"]:.1%} ({biggest["realised_yes_rate"] - biggest["implied_prob_mean"]:+.1%} points).</p>' if biggest else ''}
-<p class="small muted">Source per row: {ext(META.get("endpoints", {}).get("markets"), "settled market queries")} — one per series, so attribution is exact. Every resolved row on the <a href="resolved.html">Resolutions</a> page links to its own response.</p>
+<p class="small muted">Source per row: {ext("https://docs.kalshi.com/api-reference/market/get-markets", "settled market queries")} (<code>{E(META.get("endpoints", {}).get("markets") or "")}</code> — pattern with the series ticker filled in per series) — so attribution is exact. Every resolved row on the <a href="resolved.html">Resolutions</a> page links to its own response.</p>
 
 <h2>2. Resolutions by topic, split by whether the market traded</h2>
 <div class="tablewrap"><table><thead><tr><th>Topic</th><th class="num">Resolved</th><th class="num">Traded</th><th class="num">Never traded</th><th class="num">YES</th><th class="num">NO</th><th class="num">YES rate</th></tr></thead><tbody>{topic_rows or '<tr><td colspan="7" class="empty">No resolved markets yet.</td></tr>'}</tbody></table></div>

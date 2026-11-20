@@ -6,6 +6,15 @@ HERE = pathlib.Path(__file__).resolve().parent.parent
 DATA = HERE / "data"; SITE = HERE / "site"; SITE.mkdir(exist_ok=True)
 jumps = json.loads((DATA / "jumps.json").read_text())
 bt = json.loads((DATA / "backtest.json").read_text())
+def src_link(url, label):
+    """Link real URLs; render endpoint *patterns* as code (a '{placeholder}' href
+    is not reachable). Integration fix, session bdb4d2d0 - found by
+    tools/check_live_links.py."""
+    if "{" in url:
+        return f"<code>{esc(label)}</code>"
+    return f'<a href="{esc(url)}">{esc(label)}</a>'
+
+
 NAV = [("index.html","Executive summary"),("jumps.html","Sharp jumps & live chart"),
        ("strategies.html","Simulated strategies"),("flagged.html","Flagged for review"),
        ("verification.html","Verification")]
@@ -36,9 +45,9 @@ This subsite adds two things the main site did not have: a <b>sharp-jump detecto
 resolved demo markets that actually traded. Everything else (rankings, resolutions,
 portfolio gating) is already covered by the main site and is linked, not duplicated.</p>
 <table><tr><th>Finding</th><th>Value</th><th>Source</th></tr>
-<tr><td>Trade prints scanned for jumps</td><td>{jumps['prints_scanned']:,} across {jumps['markets_scanned']} markets</td><td><a href="{esc(jumps['source_url'])}">GET /markets/trades</a></td></tr>
+<tr><td>Trade prints scanned for jumps</td><td>{jumps['prints_scanned']:,} across {jumps['markets_scanned']} markets</td><td>{src_link(jumps['source_url'], 'GET /markets/trades')}</td></tr>
 <tr><td>Sharp jumps (≥ $0.10)</td><td>{jumps['jump_count']}</td><td><a href="../data/jumps.json">jumps.json</a></td></tr>
-<tr><td>Resolved markets collected</td><td>{bt['population']['resolved_collected']:,}</td><td><a href="{esc(bt['source_url'])}">GET /markets (settled)</a></td></tr>
+<tr><td>Resolved markets collected</td><td>{bt['population']['resolved_collected']:,}</td><td>{src_link(bt['source_url'], 'GET /markets (settled)')}</td></tr>
 <tr><td>Of which ever traded (backtest population)</td><td>{bt['population']['traded_and_priced']}</td><td><a href="../data/backtest.json">backtest.json</a></td></tr>
 <tr><td>Snapshot generated</td><td>{esc(jumps['generated_at'])}</td><td><a href="../../data/dashboard_instrument.json">snapshot</a></td></tr></table>
 <h3>Most recent jumps</h3><table><tr><th>Ticker</th><th>Time (UTC)</th><th>YES price</th><th>Δ</th><th>Dir.</th><th>Cause / news link</th><th>Source</th></tr>{rows}</table>
@@ -102,7 +111,7 @@ P&L is per 1 contract bought at the final print, settled at $1/$0 by the officia
 resolved NO. This is a calibration observation about demo prices, <b>not</b> a recommendation.
 Live demo-account execution requires the user's own API keys and stays behind the existing gated
 executor (<code>tools/execute_strategy.py</code>); no keys exist in this workspace.</p>
-<p>Source: <a href="../data/backtest.json">backtest.json</a> · <a href="{esc(bt['source_url'])}">GET /markets?status=settled</a></p>"""
+<p>Source: <a href="../data/backtest.json">backtest.json</a> · {src_link(bt['source_url'], 'GET /markets?status=settled')}</p>"""
 
 flagged_body = """
 <h2>Flagged for review</h2>

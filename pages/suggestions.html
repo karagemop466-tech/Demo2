@@ -162,9 +162,9 @@ knowledge. No decision is transmitted anywhere.</div>
   <h3>S9 · Mark sharp price jumps (≥ $0.10) on the live chart</h3>
   <p><b>Problem.</b> A sharp price move has no visible marker on the chart, so a trader can miss a significant move.</p>
   <p style="margin-bottom:.2em"><b>Options on the table.</b></p>
-  <ul class="clean"><li>Mark jumps ≥ $0.10 with red vertical markers + a table below the chart (implemented)</li><li>No markers, keep chart clean (rejected)</li><li>Add news/event links for each jump (not possible from the API — cause unverified)</li></ul>
-  <p><b>Recommendation.</b> Implemented — see the "Sharp price moves" card on the Dashboard. Each jump is flagged <span class="pill flag">cause unverified</span> because the Trade API returns price and volume only.</p>
-  <p class="small muted">Effort Low · Impact High · Risk: A reader could mistake a jump marker for a confirmed causal event — mitigated by the unverified flag and the F13 flag.</p>
+  <ul class="clean"><li>Mark jumps ≥ $0.10 with red vertical markers + a table below the chart (implemented)</li><li>No markers, keep chart clean (rejected)</li><li>News/event links per jump: the cause is not derivable from the API, so each jump instead gets a clearly labelled “possible context” search link plus a “cause unverified” flag (implemented)</li></ul>
+  <p><b>Recommendation.</b> Implemented — see the “Sharp price moves” card on the Dashboard. Each jump is flagged “cause unverified” because the Trade API returns price and volume only.</p>
+  <p class="small muted">Effort Low · Impact High · Risk: A reader could mistake a jump marker for a confirmed causal event — mitigated by the unverified flag (F13).</p>
   <p class="small">Source: <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/market/get-market-candlesticks</a></p>
   <div class="row">
     <button class="sm" data-decide="choose" data-id="S9">Choose this path</button>
