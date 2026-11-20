@@ -1094,10 +1094,10 @@ No prior session's file is edited here; shared outputs change only via this inte
 
 | # | Task | Status | Owner | Files touched |
 |---|------|--------|-------|---------------|
-| I-1 | Claim integration tasks + push claim immediately | **in progress** | b326b649 | `COORDINATION.md` |
-| I-2 | Re-verify a sample of combined table rows against official docs + live demo API | **in progress** | b326b649 | `pages/verification.html`, `pages/flagged.html`, `pages/sources.html`, `data/snapshot.json` (read-only) |
-| I-3 | Confirm full build + internal+external link check pass; no broken links | unclaimed | b326b649 | `tools/check.py`, `scripts/check_links.py` |
-| I-4 | Trigger GitHub Pages deploy + confirm the live site | unclaimed | b326b649 | `.github/workflows/pages.yml` (workflow dispatch only) |
+| I-1 | Claim integration tasks + push claim immediately | **done** | b326b649 | `COORDINATION.md` (commit 731b626, pushed) |
+| I-2 | Re-verify a sample of combined table rows against official docs + live demo API | **done** | b326b649 | `data/snapshot.json` (read-only) + live fetches below |
+| I-3 | Confirm full build + internal+external link check pass; no broken links | **done** | b326b649 | `tools/check.py`, `scripts/check_links.py` |
+| I-4 | Trigger GitHub Pages deploy + confirm the live site | **in progress** | b326b649 | `.github/workflows/pages.yml` (workflow dispatch only) |
 | I-5 | PR `arena/b326b649-demo2` → `main`, merge without waiting, record PR link + merge result | unclaimed | b326b649 | `COORDINATION.md` |
 
 ### Sources re-checked this session (official only, fetched 2026-11-20)
@@ -1110,6 +1110,25 @@ No prior session's file is edited here; shared outputs change only via this inte
 | Public market-data endpoints need no auth | https://docs.kalshi.com/getting_started/quick_start_market_data | **Verified** (doc text) |
 | Orderbook returns yes/no bids only; ask side is derived `1 − p` | https://docs.kalshi.com/api-reference/market/get-market-orderbook | **Verified** (doc text) |
 | Legacy `POST /portfolio/orders` removed → 410; use `POST /portfolio/events/orders` | https://docs.kalshi.com/api-reference/orders/create-order-v2 | **Verified** (doc text) |
+
+### Market rows re-verified against the live demo API (read-only GET, fetched 2026-11-20)
+
+Every field below was read from `data/snapshot.json` and then re-fetched from the official demo
+endpoint `GET /trade-api/v2/markets/{ticker}`. All matched exactly; nothing inferred.
+
+| Snapshot row (topic) | Ticker | last_price_dollars | yes_bid_dollars | yes_ask_dollars | volume_fp | Live-API match? |
+|---|---|---|---|---|---|---|
+| elections | KXNEWPOPE-70-PPIZ | 0.1000 | 0.0000 | 1.0000 | 11434.49 | Yes — official response identical |
+| crypto | KXBTCD-33MAY2100-T67099.99 | 0.0100 | 0.0000 | 1.0000 | 3.18 | Yes — official response identical |
+| golf | KXPGAFUTURE-36MRUS-1 | 0.0200 | 0.0000 | 1.0000 | 1.16 | Yes — official response identical |
+| gas | — | — | — | — | — | No live markets (catalogue only: DIESEL, DIESELM — flagged F12) |
+
+### Checker results (local, 2026-11-20)
+
+| Checker | Command | Result |
+|---|---|---|
+| Site pre-publish checks | `python3 tools/check.py` | links ok, nav ok, data ok, secrets ok, js ok; 17 HTML pages; one warning (11 snapshot API requests non-2xx — all documented 429 rate limits) |
+| Whole-site internal link check | `python3 scripts/check_links.py` | 9,290 references across 107 HTML files, all OK, 0 broken |
 
 ## PR / deploy record (filled in after I-5)
 
