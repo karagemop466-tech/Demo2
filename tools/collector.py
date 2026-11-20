@@ -329,7 +329,8 @@ def load_series_index(signer: Signer | None) -> dict[str, dict]:
 
 
 # ----------------------------------------------------------------- collector core
-def collect_scope(signer: Signer | None) -> dict:
+def collect_scope(signer: Signer | None, series_per_topic: int = 0,
+                  rotation: int = 0, deadline_ts: float = 0.0) -> dict:
     """Open markets for the in-scope topics, fetched SERIES BY SERIES.
 
     Why not `GET /events?status=open&with_nested_markets=true` (the previous design):
@@ -353,15 +354,21 @@ def collect_scope(signer: Signer | None) -> dict:
         if tp in TOPICS:
             in_scope[tp].append(ticker)
 
-    # Every in-scope series is queried. Nothing is capped silently: a series whose
-    # request failed is listed in `failed_series` with the HTTP status, and the site
-    # says "N of M series read" instead of pretending the list is complete.
+    # A run reads as many in-scope series as its budget allows. When a cap applies it
+    # ROTATES through the catalogue (`rotation` changes every run) so successive runs
+    # cover different series and none is skipped forever. Nothing is capped silently:
+    # the cap, the rotation and every failed request are reported on the site.
     rows: list[dict] = []
     failed: dict[str, list[dict]] = {t: [] for t in TOPICS}
     read: dict[str, int] = {t: 0 for t in TOPICS}
     for topic in TOPICS:
-        for st in sorted(in_scope[topic]):
-            if STOP["requested"]:
+        tickers = sorted(in_scope[topic])
+        if series_per_topic and len(tickers) > series_per_topic:
+            start = rotation % len(tickers)
+            tickers = (tickers + tickers)[start:start + series_per_topic]
+        for st in tickers:
+            if STOP["requested"] or (deadline_ts and time.time() > deadline_ts):
+                STOP["requested"] = True
                 failed[topic].append({"series": st, "http": "skipped: time budget reached"})
                 continue
             url = (
@@ -388,9 +395,11 @@ def collect_scope(signer: Signer | None) -> dict:
                 "series_read": read[t],
                 "series_failed": len(failed[t]),
                 "series_with_live_markets": sorted({r["series_ticker"] for r in rows if r["topic"] == t}),
+                "cap_this_run": series_per_topic or None,
             }
             for t in TOPICS
         },
+        "rotation": rotation,
         "failed_series": {t: v[:200] for t, v in failed.items() if v},
         "truncated": {},
         "unmapped_series": unmapped,
@@ -759,6 +768,9 @@ def main() -> int:
                     help="markets to sample the order book for")
     ap.add_argument("--book-samples", type=int, default=12,
                     help="order-book samples per market, ~22 s apart")
+    ap.add_argument("--series-per-topic", type=int, default=0,
+                    help="cap in-scope series queried per topic this run (0 = all). "
+                         "Coverage rotates between runs so nothing is skipped forever")
     args = ap.parse_args()
 
     signer = signer_from_env()
@@ -773,7 +785,9 @@ def main() -> int:
 
     status = exchange_status(signer)
 
-    scope = collect_scope(signer)
+    rotation = int(time.time() // 900)      # changes every 15 minutes
+    scope = collect_scope(signer, args.series_per_topic, rotation,
+                          deadline_ts=(deadline - dt.timedelta(seconds=180)).timestamp())
     rows = scope["markets_in_scope"]
 
     # enrich with the estimate, clearly named as such
@@ -850,6 +864,7 @@ def main() -> int:
         "resolutions_this_run": res["discovered_this_run"],
         "resolutions_complete": res["complete"],
         "failed_series": scope["failed_series"],
+        "scope_rotation": scope["rotation"],
         "scope_limits": scope["truncated"],
         "definitions": {
             "est_dollar_volume": (
