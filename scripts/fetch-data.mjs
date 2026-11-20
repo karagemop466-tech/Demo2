@@ -45,6 +45,14 @@ const SERIES_PER_TOPIC = parseInt(argOf('--series-per-topic', '12'), 10);
 // grinding on rate limits. When the budget is hit, collection stops cleanly and
 // the partial snapshot is still written and flagged.
 const MAX_REQUESTS = parseInt(argOf('--max-requests', '900'), 10);
+// Rows kept per topic in each published snapshot file. The collector sees far
+// more markets than a reader can use, and a multi-megabyte JSON file would
+// bloat both the repository and the Pages artifact. The cap is applied after
+// ranking, so the rows that are kept are the highest-value ones, and the cap
+// is recorded in data/meta.json.
+const MAX_OPEN_MARKETS_PER_TOPIC = parseInt(argOf('--open-markets-per-topic', '250'), 10);
+const MAX_SETTLED_PER_TOPIC = parseInt(argOf('--settled-per-topic', '150'), 10);
+const MAX_EVENTS_PER_TOPIC = parseInt(argOf('--events-per-topic', '150'), 10);
 
 const DOCS = {
   base: 'https://docs.kalshi.com/getting_started/demo_env',
@@ -512,6 +520,13 @@ async function main() {
       settled_markets: settled.length,
       open_events: events.length,
     },
+    caps: {
+      series_per_topic: SERIES_PER_TOPIC,
+      open_markets_per_topic: MAX_OPEN_MARKETS_PER_TOPIC,
+      settled_markets_per_topic: MAX_SETTLED_PER_TOPIC,
+      events_per_topic: MAX_EVENTS_PER_TOPIC,
+      note: 'Rows are ranked first, then capped per topic. The rows kept are the highest-value ones; rows beyond the cap are not published.',
+    },
     metric_definitions: {
       contract_value_traded_usd: 'DERIVED: volume_fp (contracts traded) x last_price_dollars ($ per contract). Not an API field. Sources: ' + DOCS.markets + ' , ' + DOCS.fixedPoint,
       open_interest_usd: 'DERIVED: open_interest_fp (open contracts) x last_price_dollars ($ per contract). Not an API field.',
@@ -541,20 +556,23 @@ async function main() {
     generated_at: generatedAt,
     source: DOCS.markets,
     metric: 'rows sorted by contract_value_traded_usd (derived)',
-    topics: Object.fromEntries(Object.entries(byTopic(open)).map(([k, v]) => [k, sortByValue(v)])),
+    cap_per_topic: MAX_OPEN_MARKETS_PER_TOPIC,
+    topics: Object.fromEntries(Object.entries(byTopic(open)).map(([k, v]) => [k, sortByValue(v).slice(0, MAX_OPEN_MARKETS_PER_TOPIC)])),
   });
   await write('open-events.json', {
     generated_at: generatedAt,
     source: DOCS.events,
     metric: 'rows sorted by contract_value_traded_usd (derived)',
-    topics: Object.fromEntries(Object.entries(byTopic(events)).map(([k, v]) => [k, sortByValue(v)])),
+    cap_per_topic: MAX_EVENTS_PER_TOPIC,
+    topics: Object.fromEntries(Object.entries(byTopic(events)).map(([k, v]) => [k, sortByValue(v).slice(0, MAX_EVENTS_PER_TOPIC)])),
   });
   await write('settled-markets.json', {
     generated_at: generatedAt,
     source: DOCS.markets,
     metric: 'rows sorted by settlement_ts (newest first)',
+    cap_per_topic: MAX_SETTLED_PER_TOPIC,
     topics: Object.fromEntries(Object.entries(byTopic(settled)).map(([k, v]) => [
-      k, [...v].sort((a, b) => String(b.settlement_ts || '').localeCompare(String(a.settlement_ts || ''))),
+      k, [...v].sort((a, b) => String(b.settlement_ts || '').localeCompare(String(a.settlement_ts || ''))).slice(0, MAX_SETTLED_PER_TOPIC),
     ])),
   });
   await write('orderbooks.json', { generated_at: generatedAt, source: DOCS.orderbook, books: orderbooks });

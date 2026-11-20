@@ -1,7 +1,7 @@
 name: Refresh Kalshi demo data snapshot
 
-# Keeps data/*.json in sync with the public Kalshi *demo* Trade API so the
-# GitHub Pages site always ships a current, source-linked snapshot.
+# Keeps data/*.json in sync with the public Kalshi *demo* Trade API, rebuilds
+# the static site from that snapshot, and deploys the result to GitHub Pages.
 #
 # The harvester uses only unauthenticated endpoints:
 #   GET /markets, /events, /series, /search/tags_by_categories,
@@ -20,6 +20,7 @@ on:
     branches: ['**']
     paths:
       - 'scripts/fetch-data.mjs'
+      - 'tools/build_site.py'
       - '.github/workflows/refresh-data.yml'
 
 permissions:
@@ -37,10 +38,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history so the snapshot commit can be rebased onto the branch.
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
       - name: Probe Kalshi demo API reachability
         id: probe
@@ -69,28 +77,53 @@ jobs:
           echo "exit_code=${code}" | tee -a /tmp/fetch.log
           exit ${code}
 
-      - name: Commit refreshed snapshot
+      - name: Rebuild the site from the snapshot
+        id: build
+        if: steps.fetch.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python3 tools/build_site.py 2>&1 | tee /tmp/build.log
+          code=${PIPESTATUS[0]}
+          echo "exit_code=${code}" | tee -a /tmp/build.log
+          exit ${code}
+
+      - name: Check links and sources
+        id: linkcheck
+        if: steps.fetch.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python3 tools/check_links.py 2>&1 | tee /tmp/linkcheck.log
+          code=${PIPESTATUS[0]}
+          echo "exit_code=${code}" | tee -a /tmp/linkcheck.log
+          exit ${code}
+
+      - name: Commit refreshed snapshot and rebuilt site
         id: commit
         if: steps.fetch.outcome == 'success'
         continue-on-error: true
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A data
-          if git diff --staged --quiet; then
-            echo "Snapshot unchanged - nothing to commit."
-          else
-            git commit -m "data: refresh Kalshi demo snapshot" || true
-            for attempt in 1 2 3 4; do
-              git pull --rebase origin "${GITHUB_REF_NAME}" || true
-              if git push origin "HEAD:${GITHUB_REF_NAME}"; then
-                echo "Pushed snapshot."
-                exit 0
-              fi
-              echo "push attempt ${attempt} failed; retrying"
-              sleep 10
-            done
-            echo "::warning::Could not push the refreshed snapshot after 4 attempts."
+          {
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A data index.html pages
+            if git diff --staged --quiet; then
+              echo "Snapshot and site are unchanged - nothing to commit."
+            else
+              git commit -m "data: refresh Kalshi demo snapshot and rebuild site" || true
+              for attempt in 1 2 3 4 5; do
+                git pull --rebase origin "${GITHUB_REF_NAME}" || true
+                if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+                  echo "Pushed snapshot at attempt ${attempt}."
+                  exit 0
+                fi
+                echo "push attempt ${attempt} failed; retrying"
+                sleep 10
+              done
+              echo "::warning::Could not push the refreshed snapshot after 5 attempts."
+            fi
+          } 2>&1 | tee /tmp/commit.log
 
       - name: Publish run diagnostics to the tracking issue
         if: always()
@@ -111,6 +144,15 @@ jobs:
             echo
             echo "## Snapshot harvest"
             cat /tmp/fetch.log 2>/dev/null || echo "(not run)"
+            echo
+            echo "## Site build"
+            cat /tmp/build.log 2>/dev/null || echo "(not run)"
+            echo
+            echo "## Link and source check"
+            cat /tmp/linkcheck.log 2>/dev/null || echo "(not run)"
+            echo
+            echo "## Snapshot commit"
+            cat /tmp/commit.log 2>/dev/null || echo "(not run)"
           } > /tmp/diagnostics.md
           {
             echo "<!-- kalshi-refresh-diagnostics -->"

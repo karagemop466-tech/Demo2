@@ -191,8 +191,29 @@ def cell(value, formatter=money):
     return esc(out)
 
 
+# Depth of the page currently being built. Sub-pages live in pages/ so any
+# root-relative link to another page needs a "../" prefix. Every builder sets
+# this before it renders, so links stay correct at every nesting level.
+DEPTH = {"value": 0}
+
+
+def set_depth(value: int) -> None:
+    DEPTH["value"] = value
+
+
+def internal(href: str) -> str:
+    """Resolve a site-root-relative page link for the current depth."""
+    if href.startswith(("http://", "https://", "#", "mailto:")):
+        return href
+    prefix = "../" * DEPTH["value"]
+    return prefix + href
+
+
 def link(url, text=None):
-    return f'<a href="{esc(url)}" target="_blank" rel="noopener">{esc(text or url)}</a>'
+    target = internal(url) if url.startswith("pages/") else url
+    external = target.startswith(("http://", "https://"))
+    attrs = ' target="_blank" rel="noopener"' if external else ""
+    return f'<a href="{esc(target)}"{attrs}>{esc(text or url)}</a>'
 
 
 def source_cell(row):
@@ -216,12 +237,17 @@ def load(name, default=None):
 def layout(title: str, active: str, body: str, depth: int = 0, scripts: str = "",
            description: str = "") -> str:
     prefix = "../" * depth
+    # NAV entries are written relative to the site root; from a sub-page they
+    # need the depth prefix so every link resolves on GitHub Pages.
     nav = "".join(
         f'<a href="{prefix}{href}"'
         + (' aria-current="page"' if href == active else "")
         + f">{esc(label)}</a>"
         for href, label in NAV
     )
+    def sub(href: str) -> str:
+        """Root-relative href resolved from the current page depth."""
+        return prefix + href
     desc = description or "Kalshi demo markets for gas prices, elections, culture, crypto and golf."
     return f"""<!doctype html>
 <html lang="en">
@@ -251,9 +277,9 @@ def layout(title: str, active: str, body: str, depth: int = 0, scripts: str = ""
     Build snapshot: <span id="snapshotStamp">—</span></p>
     <p><a href="{DOCS['welcome']}">Kalshi API documentation</a> ·
     <a href="{DOCS['demo_site']}">Kalshi demo</a> ·
-    <a href="pages/sources.html">Sources</a> ·
-    <a href="pages/verification.html">Verification</a> ·
-    <a href="pages/flagged.html">Flagged for review</a></p>
+    <a href="{sub('pages/sources.html')}">Sources</a> ·
+    <a href="{sub('pages/verification.html')}">Verification</a> ·
+    <a href="{sub('pages/flagged.html')}">Flagged for review</a></p>
   </div>
 </footer>
 {scripts}
@@ -353,7 +379,30 @@ def settled_rows(rows, limit=25) -> str:
 # --------------------------------------------------------------------------
 # pages
 # --------------------------------------------------------------------------
+def coverage_note(meta) -> str:
+    """One sentence stating exactly how much of the catalogue the snapshot covers."""
+    meta = meta or {}
+    caps = meta.get("caps") or {}
+    counts = meta.get("counts") or {}
+    collected = counts.get("markets_collected")
+    cap = caps.get("open_markets_per_topic")
+    bits = []
+    if collected is not None:
+        bits.append(f"The collector read <b>{collected}</b> in-scope markets in this run.")
+    if cap:
+        bits.append(
+            f"The published tables keep the highest-value <b>{cap}</b> per topic, so the tables are a ranked "
+            "sample of the catalogue rather than the whole catalogue."
+        )
+    if meta.get("budget_exhausted"):
+        bits.append("<b>The request budget was reached in this run</b>, so coverage is partial; see the diagnostics issue.")
+    if meta.get("partial"):
+        bits.append("<b>This snapshot was written after a collection failure</b> and is incomplete; see the diagnostics issue.")
+    return " ".join(bits)
+
+
 def build_index(meta, markets, events, settled, books) -> str:
+    set_depth(0)
     topic_options = "".join(f'<option value="{t["id"]}">{esc(t["label"])}</option>' for t in TOPICS)
     metric_options = (
         '<option value="traded">Contract value traded ($) — volume_fp × last_price_dollars</option>'
@@ -398,6 +447,7 @@ def build_index(meta, markets, events, settled, books) -> str:
   <code>notional_value_dollars</code> is <em>the value of a single contract at settlement</em>, not turnover, so the ranking
   uses a derived measure, clearly labelled on every row. See
   {link("pages/flagged.html", "Flagged for review")} (F2) and {link("pages/verification.html", "Verification")}.</p>
+  <p class="muted" id="coverageNote">{coverage_note(meta)}</p>
   <div class="table-wrap">
     <table id="marketTable">
       <caption>Snapshot rows carry the exact API response they were read from. The browser refreshes prices live from the demo API.</caption>
@@ -478,15 +528,18 @@ def build_index(meta, markets, events, settled, books) -> str:
 
 
 def build_topic_page(topic, meta, markets, events, settled, books) -> str:
+    set_depth(1)
     options = "".join(f'<option value="{t["id"]}"{" selected" if t["id"] == topic["id"] else ""}>{esc(t["label"])}</option>'
                        for t in TOPICS)
     tabs = "".join(
-        '<a href="pages/%s"%s>%s</a>' % (t["file"], ' class="active"' if t["id"] == topic["id"] else "", esc(t["label"]))
+        '<a href="%s"%s>%s</a>' % (internal("pages/" + t["file"]),
+                                  ' class="active"' if t["id"] == topic["id"] else "",
+                                  esc(t["label"]))
         for t in TOPICS
     )
     top = markets[0] if markets else None
     body = f"""
-{crumb([("", "Dashboard"), (f'pages/{topic["file"]}', topic["label"])])}
+{crumb([(internal("index.html"), "Dashboard"), (internal(f'pages/{topic["file"]}'), topic["label"])])}
 <p class="eyebrow">Category</p>
 <h1>{esc(topic["label"])}</h1>
 <p class="lede">{esc(topic["blurb"])}</p>
@@ -580,6 +633,7 @@ def build_topic_page(topic, meta, markets, events, settled, books) -> str:
 
 
 def build_executive_summary(meta, markets, events, settled, books) -> str:
+    set_depth(1)
     counts = meta.get("counts", {}) if meta else {}
     generated = when((meta or {}).get("generated_at"))
     total_traded = sum(num(m.get("contract_value_traded_usd")) or 0 for m in markets)
@@ -654,6 +708,7 @@ tracking, a verified data snapshot, and an explicit register of everything that 
   <b>{len(events)}</b> in-scope events, <b>{len(settled)}</b> settled in-scope markets
   ({yes} resolved yes, {no} resolved no), {money(total_traded, 0)} of derived contract value traded.
   Contract value traded is a derived measure (contracts × last price), not an API field.</p>
+  <p class="muted">{coverage_note(meta)}</p>
 </div>
 
 <div class="grid grid-3">
@@ -699,6 +754,7 @@ tracking, a verified data snapshot, and an explicit register of everything that 
 
 
 def build_portfolio(meta, markets, events, settled, books) -> str:
+    set_depth(1)
     body = f"""
 {crumb([("", "Kalshi Demo Monitor"), (None, "Portfolio & trading")])}
 <p class="eyebrow">Demo account</p>
@@ -785,6 +841,7 @@ documents ({link(DOCS["auth"], "quick start: authenticated requests")}).</p>
 
 
 def build_analysis(meta, markets, events, settled, books) -> str:
+    set_depth(1)
     topic_rows = []
     for t in TOPICS:
         rows = [m for m in markets if m.get("topic") == t["id"]]
@@ -872,6 +929,7 @@ fills exist — until then the correct output is “no strategy”.</p>
 
 
 def build_suggestions(meta, markets, events, settled, books) -> str:
+    set_depth(1)
     suggestions = [
         ("S1", "Publish a signed series allowlist per topic",
          "The topic allowlists on the category pages are official Kalshi tag strings, but they were assembled by hand from the taxonomy endpoint. A generated allowlist file (topic → series tickers, refreshed by the collector) would make the scope reproducible and reviewable.",
@@ -945,6 +1003,7 @@ defer or reject it <b>before</b> any change is made. Your decision is stored in 
 
 
 def build_questions(meta, markets, events, settled, books) -> str:
+    set_depth(1)
     rows = [
         ("Q1", "What exactly does “highest dollar amount” mean?",
          "Get Markets returns <code>volume_fp</code> (contracts), <code>open_interest_fp</code> (contracts), <code>last_price_dollars</code> ($/contract) and <code>notional_value_dollars</code>, which Kalshi defines as the value of a single contract at settlement.",
@@ -996,6 +1055,36 @@ def build_questions(meta, markets, events, settled, books) -> str:
          "Demo P&L cannot validate a strategy for live trading.",
          "Agree up front that demo results are a pipeline test only, and require out-of-sample validation before any live use.",
          DOCS["demo"]),
+        ("Q11", "Which demo account, key and subaccount will be used?",
+         "Portfolio balance, positions, fills and orders all require a signed demo key. No credential is held by this repository.",
+         "Until a key is loaded in the browser, portfolio performance and executed trades cannot be reported — every portfolio figure on the site stays blank rather than invented.",
+         "Create a demo key at demo.kalshi.co, load it in the browser on the Portfolio page, or provide a private backend (suggestion S2).",
+         DOCS["keys"]),
+        ("Q12", "Will the browser be able to reach the Kalshi demo API from the published site?",
+         "Public demo endpoints need no authentication, so no credential blocks the request. Whether the demo host sends permissive CORS headers for the GitHub Pages origin was not confirmed from the build environment.",
+         "If the browser is blocked, live prices and the order book will not load in the reader's browser; the page falls back to the committed snapshot.",
+         "Confirm in a browser from the deployed URL and, if blocked, add a same-origin proxy (suggestion S3).",
+         DOCS["market_data"]),
+        ("Q13", "Should third-party gas-price and “record” figures be quoted anywhere?",
+         "National-average gas prices and record claims appear in third-party articles. Kalshi publishes no equivalent authoritative series.",
+         "A third-party figure is not an official source, so quoting it would break the rule that every value comes from an official source.",
+         "They are not used anywhere on this site. If they are wanted later, state the publisher and link on every row.",
+         DOCS["demo"]),
+        ("Q14", "Should the Kalshi fee schedule be opened and quoted?",
+         "The API documentation links a fee schedule PDF. It was not opened during this build.",
+         "Fees affect net P&L and the strategy table, so the exact schedule matters once fills exist.",
+         "Open the fee schedule PDF and record the per-series fee inputs on the Analysis page.",
+         DOCS["fees"]),
+        ("Q15", "How complete is the collected catalogue?",
+         "The collector reads a bounded number of series per topic and paginates the API; earlier collection runs were truncated by rate limits.",
+         "The snapshot is a sample of the catalogue, not the whole catalogue. Coverage is a percentage of what exists, not everything.",
+         "Publish the generated allowlist with the collection log (suggestion S1) and record the coverage per topic.",
+         DOCS["pagination"]),
+        ("Q16", "Should production (real-money) markets be included?",
+         "Kalshi runs a separate production environment. Every figure published here comes from the demo environment.",
+         "Demo values are mock values. Mixing environments without labelling would produce misleading comparisons.",
+         "Keep the site on demo and label every figure; only extend to production behind a separate, clearly marked deployment.",
+         DOCS["envs"]),
     ]
     body = f"""
 {crumb([("", "Kalshi Demo Monitor"), (None, "Questions")])}
@@ -1028,6 +1117,7 @@ open with the missing information named and a way to obtain it. No answer is inv
 
 
 def build_flagged(meta, markets, events, settled, books) -> str:
+    set_depth(1)
     rows = [
         ("F1", "Demo data is not real-market data",
          "Kalshi states demo prices and market behaviour “may not be reflective of those in real markets”. Demo series also carry 2099 close dates and synthetic strikes.",
@@ -1094,6 +1184,71 @@ def build_flagged(meta, markets, events, settled, books) -> str:
          "Duplicate navigation and contradictory figures were possible.",
          "This integration keeps one site, one design system and one snapshot pipeline; the previous trees are removed and their content is folded in.",
          "https://github.com/karagemop466-tech/Demo2"),
+        ("D1", "Settlement sources contain placeholder text",
+         "Demo series list settlement sources with unfilled template text (for example “account holder of ”) or generic phrasing such as “official government sources of ”. Some point at search-engine pages rather than a named source.",
+         "The named resolution source is unclear, so an outcome cannot be checked against a primary source.",
+         "Every market row links to the API response; the contract terms PDF is the manual check.",
+         DOCS["get_series_one"]),
+        ("D2", "Search-engine and unrelated pages used as settlement sources",
+         "Culture series (for example the Grok-ban series) list google.com search links, a Barchart page for an index, and an EIA energy page as settlement sources for a single question.",
+         "A search page is not a primary source, so the resolution rule cannot be verified from the link alone.",
+         "Flagged here rather than treated as a trusted source.",
+         DOCS["get_series_one"]),
+        ("D3", "Demo and production metadata differ",
+         "Demo series metadata reports fee_type “quadratic” where production reports “quadratic_with_maker_fees”, and demo contract URLs point at a staging bucket while production points at assets.kalshi.com. Last-updated timestamps differ between environments.",
+         "Fee and contract-document models differ, so a production-fee analysis applied to demo data would be wrong.",
+         "All figures on this site are demo figures and are labelled as such.",
+         DOCS["get_series_one"]),
+        ("D4", "Documented status values differ from the values actually returned",
+         "The Get Markets status filter documents unopened, open, paused, closed and settled, while the Market schema documents initialized, inactive, active, closed, determined, disputed, amended and finalized. Responses use active and finalized.",
+         "Filtering on a documented value that the API never returns silently yields nothing.",
+         "The collector classifies on the values observed in the response (active / finalized) and records them.",
+         DOCS["get_markets"]),
+        ("D5", "Last traded price can be stale against the current quote",
+         "A BTC market reported last_price_dollars of $0.50 while the live YES quote was bid $0.23 / ask $0.24; the $0.50 print belonged to an earlier candle with none since.",
+         "Using the last price as an entry price or a mark can mislead.",
+         "The dashboard shows the live bid/ask next to the last price so the two can be compared.",
+         DOCS["get_market"]),
+        ("D6", "Large open interest behind a one-sided quote",
+         "A gas market showed open interest of 55,567.52 contracts with a best YES bid of $0.00 and a best YES ask of $1.00.",
+         "Entry and exit may be impractical even though the open-interest figure looks large.",
+         "The order-book panel exposes the actual resting size at each price.",
+         DOCS["get_orderbook"]),
+        ("D7", "Incomplete series metadata",
+         "One crypto series has an empty contract URL, null settlement sources and a contract_terms_url with no file name; another reuses a generic crypto terms PDF.",
+         "Documentation for those series is incomplete, so the resolution rule cannot be read from the API.",
+         "Listed here for manual review of the terms PDF.",
+         DOCS["get_series_one"]),
+        ("D8", "The demo environment contains synthetic markets",
+         "The demo catalogue includes an hourly “Demo only” futures market, a quick-settle “1+1 = 3” test market, and custom strikes labelled “demo strike”.",
+         "Demo outcomes are not real-world evidence and must not be read as predictions.",
+         "Demo-only rows are visible in the snapshot and are labelled as demo data.",
+         DOCS["get_markets"]),
+        ("D9", "Topic labels are not API categories",
+         "“Gas prices” and “Golf” are not Kalshi API categories. Gas sits under the category “Economics” with the tags “Oil &amp; Gas” and “Oil and energy”; Golf is the tag “Golf” under the category “Sports”.",
+         "A reader checking the site against the API will not find a category with the site’s name.",
+         "Each category page states the official category and tag allowlist it uses.",
+         DOCS["tags_by_categories"]),
+        ("D10", "Market titles can contain markdown",
+         "One gas market title embeds bold markers: “Will average **gas prices** be above $4.18?”.",
+         "Cosmetic, but it makes a title look odd on the page.",
+         "Titles are shown exactly as the API returns them.",
+         DOCS["get_markets"]),
+        ("D11", "Close time can precede the measurement date in the rule",
+         "A gas market’s close_time was 2026-10-31T03:59Z while its rule measures a monthly average on 2026-10-31.",
+         "Trading closes before the measurement date completes, which affects any timing-based strategy.",
+         "The close time is displayed next to every market row for review.",
+         DOCS["get_markets"]),
+        ("D12", "Event and series settlement sources can disagree",
+         "One event lists “The Washington Post” with a URL pointing at a different publication, while the matching series lists the same name with the correct URL.",
+         "Name and link disagree, and the two official levels contradict each other.",
+         "Both levels are published on the Sources page for review.",
+         DOCS["get_events"]),
+        ("D13", "One collection request failed with HTTP 502",
+         "A markets request for one election-measurement series returned HTTP 502 during collection and was not recovered.",
+         "A gap in the snapshot for that series.",
+         "The collector now soft-fails and logs every request, so the gap is visible in the collection log.",
+         DOCS["rate_limits"]),
     ]
     body = f"""
 {crumb([("", "Kalshi Demo Monitor"), (None, "Flagged for review")])}
@@ -1101,12 +1256,25 @@ def build_flagged(meta, markets, events, settled, books) -> str:
 <h1>Flagged for review</h1>
 <p class="lede">Irregularities and unverified items, each with the source needed to check it by hand.
 None of them block the site. Review them after the site is live and ask for changes.</p>
+<h3>Process and method flags</h3>
 <div class="table-wrap">
   <table>
     <thead><tr><th>#</th><th>Item</th><th>What was observed</th><th>Why it matters</th>
       <th>What was done</th><th>Source</th></tr></thead>
     <tbody>
-      {''.join(f"<tr><td class='nowrap'>{esc(n)}</td><td><b>{esc(t)}</b></td><td>{obs}</td><td>{why}</td><td>{done}</td><td class='nowrap'>{link(src)}</td></tr>" for n, t, obs, why, done, src in rows)}
+      {''.join(f"<tr><td class='nowrap'>{esc(n)}</td><td><b>{esc(t)}</b></td><td>{obs}</td><td>{why}</td><td>{done}</td><td class='nowrap'>{link(src)}</td></tr>" for n, t, obs, why, done, src in rows if not n.startswith("D"))}
+    </tbody>
+  </table>
+</div>
+<h3>Data irregularities found in the API responses</h3>
+<p class="muted">These were observed directly in Kalshi demo API responses during collection. They are
+published so a reviewer can check each one by hand against the linked source.</p>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>#</th><th>Item</th><th>What was observed</th><th>Why it matters</th>
+      <th>What was done</th><th>Source</th></tr></thead>
+    <tbody>
+      {''.join(f"<tr><td class='nowrap'>{esc(n)}</td><td><b>{esc(t)}</b></td><td>{obs}</td><td>{why}</td><td>{done}</td><td class='nowrap'>{link(src)}</td></tr>" for n, t, obs, why, done, src in rows if n.startswith("D"))}
     </tbody>
   </table>
 </div>
@@ -1123,6 +1291,7 @@ None of them block the site. Review them after the site is live and ask for chan
 
 
 def build_sources(meta, markets, events, settled, books) -> str:
+    set_depth(1)
     groups = [
         ("Environment and getting started", ["welcome", "demo", "envs", "market_data", "auth", "keys", "create_order", "order_errors", "websockets", "order_direction", "orderbook", "fixed_point", "pagination", "rate_limits", "settlement", "lifecycle", "fees", "historical", "mcp"]),
         ("Market and event data", ["get_markets", "get_market", "get_events", "get_series", "get_series_one", "get_orderbook", "get_candles", "get_trades", "tags_by_categories"]),
@@ -1167,6 +1336,7 @@ documentation are used. Third-party values are not used anywhere on this site.</
 
 
 def build_verification(meta, markets, events, settled, books) -> str:
+    set_depth(1)
     rows = [
         ("Recommended demo REST base is https://external-api.demo.kalshi.co/trade-api/v2", "https://external-api.demo.kalshi.co/trade-api/v2", DOCS["demo"], "Verified"),
         ("Also supported demo REST base is https://demo-api.kalshi.co/trade-api/v2", "https://demo-api.kalshi.co/trade-api/v2", DOCS["demo"], "Verified"),
