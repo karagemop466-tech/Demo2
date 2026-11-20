@@ -795,3 +795,21 @@ broken, and it is worth distinguishing the two when reading Actions.
 | E-6 | PR from this branch to main, merge, Pages deploy confirm, record | in progress | e36292f6 | this section, PR record |
 
 Sources to verify against (official only): https://docs.kalshi.com/api-reference/market/get-market-candlesticks, https://docs.kalshi.com/api-reference/market/get-trades, https://docs.kalshi.com/api-reference/market/get-market-orderbook, https://docs.kalshi.com/getting_started/demo_env.
+
+## Session `0cb69749` — branch `arena/0cb69749-demo2` (claim written 2026-11-20, before edits)
+
+Session owner: `0cb69749`. Base: `4c13151` (PR #31 merge). This session acts as final integration for its own scope and does not edit other sessions' subsites (`dashboard/`, `verified/`, `site/`, `intelligence/`, `instrument-panel/`, `live/`, `pages/` content, `assets/`, `app.js`, `style.css`).
+
+**Scope (additive only, non-overlapping):** new `pulse/` subsite + `tools/pulse_*.py` engines + `data/pulse_*.json` outputs + additive nav entry in `tools/build_site.py` (one line) + this section. No other session's page content is rewritten.
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| P-1 | Claim + push | in progress | 0cb69749 | `COORDINATION.md` |
+| P-2 | Sharp-jump detector (≥$0.10) with cause links | unclaimed | 0cb69749 | `tools/pulse_jumps.py`, `data/pulse_jumps.json` |
+| P-3 | Automated simulated-trading engine + backtest + categorisation | unclaimed | 0cb69749 | `tools/pulse_simulate.py`, `data/pulse_simulated.json`, `data/pulse_backtest.json` |
+| P-4 | Pulse subsite (landing, live chart, jumps, simulated, resolved, verification, flagged) | unclaimed | 0cb69749 | `pulse/*.html`, `pulse/assets/*` |
+| P-5 | Executive summary refresh with verified numbers | unclaimed | 0cb69749 | `docs/EXECUTIVE_SUMMARY.md` (append section), `pulse/index.html` summary |
+| P-6 | Verification (link check, JS/Python checks, source-link audit) | unclaimed | 0cb69749 | `pulse/verification.html`, this section |
+| P-7 | Integration: nav link, regen check, PR → main, merge, Pages confirm | unclaimed | 0cb69749 | `tools/build_site.py` (1 line), `index.html`+`pages/*.html` regen, PR record |
+
+Rules honored: claim committed+pushed before edits; small frequent commits; `git pull --rebase` before push; conflicts resolved without discarding others' work; nothing marked verified without an official source link; flagged items do not block merge.
