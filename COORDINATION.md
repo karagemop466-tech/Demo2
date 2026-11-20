@@ -828,6 +828,7 @@ landing page at.
 | D-5 | Consolidated desk dashboard: clean landing + one subpage per topic + trading/strategy page, all tables row-sourced | in progress | 220913cb | `desk/index.html`, `desk/categories/*.html`, `desk/trading.html`, `desk/assets/desk.css`, `desk/tools/build_desk.py` |
 | D-6 | CI: run the verification gate + jump detector on a schedule and commit the reports | in progress | 220913cb | `.github/workflows/desk-verify.yml` |
 | D-7 | End-of-session integration: nav entry, whole-site link check, PR → `main`, merge, Pages deploy confirmation, record | unclaimed | — | — |
+| D-8 | Offline browser-behaviour tests for the consolidated desk chart, jumps, order book, and API failure state | in progress | 220913cb | `desk/tests/desk.test.js` |
 
 ### Overlap notes for other sessions
 
