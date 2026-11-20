@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Verification — Kalshi Demo (session 8b9a46b4)</title>
+<link rel="stylesheet" href="style.css"></head><body>
+<header><h1>Kalshi Demo — sharp jumps & simulated strategies</h1><nav><a href="index.html">Executive summary</a> · <a href="jumps.html">Sharp jumps & live chart</a> · <a href="strategies.html">Simulated strategies</a> · <a href="flagged.html">Flagged for review</a> · <a href="verification.html">Verification</a></nav>
+<p class="disc">Demo environment only · mock funds · not investment advice · session arena-8b9a46b4</p></header>
+<main>
+<h2>Verification</h2>
+<table><tr><th>Claim</th><th>How checked</th><th>Source</th></tr>
+<tr><td>Demo REST base URL</td><td>Read from official docs; snapshot meta records same base</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td></tr>
+<tr><td>Trade prints endpoint & fields (yes_price_dollars, count_fp, created_time)</td><td>Field names copied verbatim from collected responses</td><td><a href="https://docs.kalshi.com/api-reference/market/get-trades">get-trades</a></td></tr>
+<tr><td>Candlestick periods 1/60/1440 min</td><td>Official docs</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">candlesticks</a></td></tr>
+<tr><td>Orderbook [price, count] pairs</td><td>Official docs</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook">orderbook</a></td></tr>
+<tr><td>Browser CORS from GitHub Pages origin</td><td>Observed by pipeline probe (not assumed)</td><td><a href="../../data/cors.json">data/cors.json</a></td></tr>
+<tr><td>Settlement pays $1 / $0 by result</td><td>Official docs</td><td><a href="https://docs.kalshi.com/getting_started/market_settlement">settlement</a></td></tr>
+<tr><td>Jump/backtest arithmetic</td><td>Re-run: <code>python3 session-8b9a46b4/tools/jump_backtest.py</code></td><td><a href="../data/jumps.json">jumps.json</a></td></tr></table></main><footer><p>Data: <a href="../../data/dashboard_instrument.json">data/dashboard_instrument.json</a>
+(collected from the official demo API). Every row links its source. Blank = unverified.</p></footer>
+</body></html>
