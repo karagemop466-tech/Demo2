@@ -34,3 +34,18 @@ The other branch's original implementation and research materials are retained. 
 - [GitHub Pages documentation](https://docs.github.com/en/pages)
 
 See [COORDINATION.md](COORDINATION.md) for history and verification notes.
+
+
+---
+
+## Dashboard added by session arena-3420a90d (`dashboard/`)
+
+A separate dashboard lives in `dashboard/` (published by the same Pages workflow): https://karagemop466-tech.github.io/Demo2/dashboard/index.html
+
+- `dashboard/markets.html`: markets and series by category, each row linked to its Kalshi API response
+- `dashboard/resolutions.html`: settled markets with YES/NO results
+- `dashboard/live.html`: candlestick chart, live tape (timestamped polling) and orderbook liquidity, public endpoints only
+- `dashboard/portfolio.html`: BLOCKED until a Kalshi demo API key is supplied; no trades placed
+- `dashboard/analysis.html`, `suggestions.html` (decision-first), `questions.html`, `flagged.html`
+
+Data: `dashboard/data/snapshot.json`. Verified values only; blanks are marked UNVERIFIED. See `COORDINATION.md` for sources and irregularities.
