@@ -401,3 +401,24 @@ recording so another session does not repeat them:
 
 In both cases the Pages deploy itself was fine; only the consistency job was red. The site was never
 broken, and it is worth distinguishing the two when reading Actions.
+
+---
+
+## Session `3371a533` — branch `arena/3371a533-demo2` (claim written 2026-11-20 UTC, before edits)
+
+Base: `main` at `4c13151` (PR #31). Board re-read at claim time: every existing task is `done`, no task
+is unclaimed or in progress, so this session claims only the gaps it verified.
+
+**Gap check (verified by grep on the branch, not assumed).** No page on `main` shows a ≥ $0.10 price
+move with a time window, and none links candidate causes. Kalshi connector: `list_connector_tools` →
+`unsupported`; no demo API key exists in this sandbox, so demo-account portfolio and order execution
+cannot be run from here (see flags below).
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| J-1 | Price-jump alerts: sample-to-sample moves ≥ $0.10 from the official demo-API snapshots, with time window, coverage counts, and an explicit blank cause column | claimed | 3371a533 | `tools/build_jumps.py` (new), `jumps/index.html` (new, generated), `data/jumps.json` (new, generated) |
+| J-2 | Repo irregularity review: each claim checked against the file, git history, or an official GitHub/Kalshi doc page | claimed | 3371a533 | `jumps/repo-review.html` (new, generated); flag rows appended via `tools/build_jumps.py` |
+| J-3 | Integration: nav link to `jumps/` added to the generator, CI gates re-run, PR to `main`, merge, Pages deploy check, record | claimed | 3371a533 | `tools/build_site.py` NAV (one additive row), `pages/flagged.html` via `tools/build_content.py` (additive flag rows), this section |
+
+Scope rules: no edit to another session's page content; shared generated files are regenerated only by
+their own generator; every other edit is additive and logged below.
