@@ -246,3 +246,42 @@ Session owner: `arena-3420a90d`. Work was scoped to the new folder `dashboard/` 
 - Pages source is still main `/`; the PUT to `/docs` returned 403 with the integration token. The workflow deploys the root, so `dashboard/` is published.
 - Retry of KXCABALLOTMEASURES (previously HTTP 502): **now succeeded**. Demo results (all status `finalized`, volume ~3 contracts each): Prop 45 `no`, Prop 44 `no`, Prop 43 `no`, Prop 42 `yes`. Not yet added to `dashboard/data/snapshot.json`. Follow-up for the next dashboard update, since these are low-dollar.
 - Still open for the user: demo API key (portfolio/trading); R-F5 and the root-navigation request from main's board.
+
+## Session 5330bffb — FINAL INTEGRATION (takeover of pending claims) — branch `arena/5330bffb-demo2`
+
+Claimed 2026-11-20 ~11:35 UTC. Platform rules for this session allow work only
+on branch `arena/5330bffb-demo2`, so no `session-<id>/<task>` branches are
+created; this branch is the integration branch and its PR goes to `main`.
+Re-verification runs against official sources only: the live Kalshi demo Trade
+API (read-only GET via the sandbox fetch tool, which can reach the demo host;
+sandbox bash egress is blocked just as it was for session 3420a90d) and
+docs.kalshi.com.
+
+### Handoff log (protocol takeover)
+- Session **bb334a65** marked I-2…I-7 "pending" and its branch was merged at
+  11:22 UTC (PR #10) with no commits for those items; the session has ended
+  with those tasks unstarted. Per the takeover rule (crashed/stale claims),
+  this session takes over bb334a65's I-1…I-7 scope and logs the handoff here.
+  Its landed work (`tools/collect_kalshi.py`, `.github/workflows/collect.yml`)
+  is kept and reviewed, not rewritten.
+- Session **arena-3420a90d** T10 is complete per its own integration record
+  (PR #9/#11 merged, deploy run 44727189437 success). Its open asks are
+  adopted: site consolidation decision, R-F5 decision, root-navigation link,
+  and the KXCABALLOTMEASURES snapshot follow-up.
+- PR **#6** (`arena/22b4f0cb-demo2`, "Disable unsafe browser-side trading
+  credentials") is still open and conflicting. Its work is exactly the R-F5
+  resolution; this session integrates its branch (conflicts resolved by
+  keeping main's newer shared content plus 22b4f0cb's security corrections),
+  then closes PR #6 as superseded by the integration PR. Nothing discarded.
+
+### Claim table (5330bffb)
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| G-1 | Site consolidation: one clean landing page + cross-tree navigation (keeps all published URLs) | in progress | 5330bffb | `index.html`, `README.md` |
+| G-2 | Re-verify every on-page data row + doc claim against official sources; blank/flag anything unconfirmable | in progress | 5330bffb | `data/*`, `dashboard/data/*`, `verified/*.html`, `pages/verification.html`, `pages/sources.html` |
+| G-3 | Fresh verified data: gas, elections, culture, crypto, golf + orderbooks + YES/NO resolutions (incl. KXCABALLOTMEASURES follow-up) | in progress | 5330bffb | `data/*`, `dashboard/data/*` |
+| G-4 | R-F5 decision + portfolio/trade safe state + local CLI trade tool + trade analysis/strategy framework | in progress | 5330bffb | `pages/portfolio.html`, `portfolio.html`, `verified/portfolio.html`, `dashboard/portfolio.html`, `tools/kalshi_trade.py`, `assets/app.js` |
+| G-5 | Line-by-line repo review incl. PR #3 root additions and PR #6; dead-code audit | in progress | 5330bffb | `review.html`, `verified/repo-review.html`, `COORDINATION.md` |
+| G-6 | Consolidated Flagged-for-Review register + questions register with answers + suggestions decision board | in progress | 5330bffb | `pages/flagged.html`, `pages/questions.html`, `pages/suggestions.html` |
+| G-7 | Live chart (time window s/m/h, price axis) + orderbook liquidity verification/fixes | in progress | 5330bffb | `assets/app.js`, `dashboard/assets/live.js`, `verified/assets/live.js` |
+| G-8 | Build + link + JS/DOM checks, PR → main, merge, Pages deploy verification, final record | unclaimed | 5330bffb | `tools/`, `COORDINATION.md` |
