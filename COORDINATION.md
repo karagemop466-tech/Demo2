@@ -883,3 +883,13 @@ Arena branch constraint; this work stays on the assigned branch.
 **Irregularities recorded rather than obscured:** account-specific values and actual orders remain unverified (no key; `data/portfolio.json` unauthenticated; `data/executions.json` dry-run with no results); no verified news feed/causal attribution for price jumps; seconds-level chart is browser polling rather than official candle resolution or WebSocket; multiple distinct dashboards and ranking definitions remain; a single repo-wide table-row-source assertion does not exist; checked-in top-level `data/snapshot.json` is absent. The data snapshot reviewed was timestamped `2026-11-20T12:43:59Z`; not represented as a current quote after that time. The docs now distinguish official API documentation claims from repository artifacts and live observations.
 
 **Branch constraint:** claim was committed as `ac27e3c` and pushed to the Arena-assigned branch `arena/21eed9ff-demo2`. The required initial `git pull --rebase origin arena/21eed9ff-demo2` could not resolve because the remote branch did not yet exist; rebased against `origin/main` (up to date) and then pushed this same current branch. No other branch was created or modified.
+
+### Integration follow-up claim — external-link CI triage
+
+The PR's `Link check (all pages, internal + external)` failed after 15m54s. The failing URLs are not all equivalent: the run annotated unexpanded Kalshi URL templates (400), the non-page REST root (404), an invalid terms URL generated from a blank path (404), and remote rate limiting/timeouts (429/timeout). Internal links still pass. As the user requires no broken links and flags for unverified sources, this is a final-integration follow-up, not a re-opening of another session's task.
+
+| ID | Task | Status | Owner | Files touched |
+|---|---|---|---|---|
+| A-4 | Fix generated dead/templated links and classify transient external checker failures without hiding them | in progress | arena-21eed9ff | `instrument-panel/tools/site_build_core.py`, `instrument-panel/tools/build_dashboard_site.py`, `instrument-panel/tools/validate_data.py`, `scripts/check_links.py`, generated `instrument-panel/site/` |
+
+No changes are made to a currently active session's files; all prior board claims for these paths are completed/merged. This is final integration work needed because the required PR check exposed the issue. Every transient status will remain visible as a warning; permanent invalid URLs must be blanked and flagged, not converted into successful links.
