@@ -10,7 +10,7 @@ Open `index.html` in a browser or serve this repository with `python3 -m http.se
 
 The root-level monitor sorts only documented contract volume, not dollar turnover; its chart is local YES-bid REST snapshots rather than a historical series; topic matching is heuristic. `portfolio.html` deliberately leaves private account values blank and does not execute trades. Do not place private signing keys in a public static site. Review `review.html` for open questions and `pages/flagged.html` for the main site's existing review list.
 
-The other branch's original implementation and research materials are retained. Its original README described browser-side private-key signing and trade execution; that approach requires a security review before use. Do not enter credentials in a public GitHub Pages application.
+Portfolio access and order submission are deliberately disabled in the static site. Browser-side private-key signing is not suitable for a public GitHub Pages application. Do not enter API credentials into this site. Enabling authenticated portfolio analysis or demo order execution requires a separately secured backend; see `pages/suggestions.html` and `pages/flagged.html`.
 
 ## Official references
 
