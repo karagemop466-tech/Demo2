@@ -1,0 +1,285 @@
+{
+  "meta": {
+    "title": "Kalshi demo topic watchlist (series-level)",
+    "collected_at_utc": "2026-11-20T11:20:09Z",
+    "environment": "Kalshi demo (https://external-api.demo.kalshi.co/trade-api/v2)",
+    "method": "Series enumerated via official GET /series with category and tags filters (see per-topic query + completeness). volume_fp is the official series-level total contracts traded across all events in the series (GET /series?include_volume=true).",
+    "completeness_legend": {
+      "complete": "All series returned by the topic query were enumerated (query finished, cursor empty).",
+      "partial": "Enumeration not finished; watchlist contains only series observed in fetched pages. Top-by-volume within topic is NOT guaranteed. Live dashboard re-computes from API at runtime."
+    }
+  },
+  "topics": [
+    {
+      "topic": "gas prices",
+      "queries": [
+        {
+          "query": "GET /series?category=Commodities&tags=Oil+%26+Gas&include_volume=true",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Commodities&tags=Oil+%26+Gas&include_volume=true",
+          "completeness": "complete",
+          "chunks_total": 4,
+          "series": [
+            {"ticker": "KXWTI", "title": "WTI oil election day", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "332483087.00", "frequency": "custom", "settlement_source": {"name": "ICE", "url": "https://www.theice.com/products/213/WTI-Crude-Futures"}},
+            {"ticker": "KXWTIW", "title": "WTI oil weekly range", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "96382957.00", "frequency": "weekly", "settlement_source": {"name": "ICE", "url": "https://www.theice.com/products/213/WTI-Crude-Futures"}},
+            {"ticker": "KXBRENTW", "title": "Brent Oil", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "23305781.00", "frequency": "weekly", "settlement_source": {"name": "Pyth - Brent", "url": "https://app.pyth.com/explore/Commodities.Index.BRENT%2FUSD"}},
+            {"ticker": "KXBRENTD", "title": "Brent Oil Daily", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "13587404.00", "frequency": "daily", "settlement_source": {"name": "Pyth - Brent", "url": "https://app.pyth.com/explore/Commodities.Index.BRENT%2FUSD"}},
+            {"ticker": "KXWTIMAX", "title": "WTI oil high", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "9074492.00", "frequency": "annual", "settlement_source": {"name": "ICE", "url": "https://www.ice.com/report/10"}},
+            {"ticker": "KXBRENTMON", "title": "Brent Monthly", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "2718234.00", "frequency": "monthly", "settlement_source": {"name": "Pyth - Brent", "url": "https://app.pyth.com/explore/Commodities.Index.BRENT%2FUSD"}},
+            {"ticker": "KXNATGASW", "title": "Natural Gas Weekly", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "1622527.00", "frequency": "weekly", "settlement_source": {"name": "Pyth - NATGAS", "url": "https://app.pyth.com/explore/Commodities.Index.NATGAS%2FUSD"}},
+            {"ticker": "KXWTIMIN", "title": "WTI oil low", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "55388.00", "frequency": "annual", "settlement_source": {"name": "ICE", "url": "https://www.ice.com/report/10"}},
+            {"ticker": "KXWTIH", "title": "WTI Hourly", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "7646.00", "frequency": "hourly", "settlement_source": {"name": "Pyth - WTI", "url": "https://app.pyth.com/explore/Commodities.Index.PYTHOIL%2FUSD"}},
+            {"ticker": "KXWTI15M", "title": "WTI 15-minute", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "4546.00", "frequency": "fifteen_min", "settlement_source": {"name": "Pyth - WTI", "url": "https://app.pyth.com/explore/Commodities.Index.PYTHOIL%2FUSD"}},
+            {"ticker": "KXNATGASMON", "title": "Natural Gas Monthly", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "646.00", "frequency": "monthly", "settlement_source": {"name": "Pyth - NATGAS", "url": "https://app.pyth.com/explore/Commodities.Index.NATGAS%2FUSD"}},
+            {"ticker": "KXBRENT15M", "title": "Brent 15-minute", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "109.00", "frequency": "fifteen_min", "settlement_source": {"name": "Pyth - Brent", "url": "https://app.pyth.com/explore/Commodities.Index.BRENT%2FUSD"}},
+            {"ticker": "KXWTIWHEN", "title": "WTI When", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "24.00", "frequency": "one_off", "settlement_source": {"name": "ICE", "url": "https://www.ice.com/report/10"}},
+            {"ticker": "KXWTIMINM", "title": "WTI oil monthly low", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "14.00", "frequency": "one_off", "settlement_source": {"name": "ICE", "url": "https://www.ice.com/report/10"}},
+            {"ticker": "KXWTIDIRY", "title": "WTIDIRY", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "11.00", "frequency": "annual", "settlement_source": {"name": "ICE", "url": "https://www.ice.com/report/10"}},
+            {"ticker": "KXWTIEU", "title": "WTI oil up after election", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "0.00", "frequency": "custom", "settlement_source": {"name": "ICE", "url": "https://www.theice.com/products/213/WTI-Crude-Futures"}},
+            {"ticker": "KXWTIMAXM", "title": "WTI oil monthly high", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "0.00", "frequency": "one_off", "settlement_source": {"name": "ICE", "url": "https://www.ice.com/report/10"}},
+            {"ticker": "KXHOILW", "title": "Heating Oil Weekly", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "0.00", "frequency": "weekly", "settlement_source": {"name": "Trading Economics - Heating Oil", "url": "https://tradingeconomics.com/commodity/heating-oil"}},
+            {"ticker": "KXTTFMON", "title": "Dutch TTF gas monthly", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "0.00", "frequency": "monthly", "settlement_source": {"name": "Pyth - Dutch TTF Gas", "url": "https://app.pyth.com/explore/Commodities.Index.TGAS%2FUSD"}},
+            {"ticker": "KXTTFW", "title": "Dutch TTF gas weekly", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "0.00", "frequency": "weekly", "settlement_source": {"name": "Pyth - Dutch TTF Gas", "url": "https://app.pyth.com/explore/Commodities.Index.TGAS%2FUSD"}},
+            {"ticker": "KXTTFD", "title": "Dutch TTF gas daily", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "0.00", "frequency": "daily", "settlement_source": {"name": "Pyth - Dutch TTF Gas", "url": "https://app.pyth.com/explore/Commodities.Index.TGAS%2FUSD"}},
+            {"ticker": "KXHOILMON", "title": "Heating Oil Monthly", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "0.00", "frequency": "monthly", "settlement_source": {"name": "Trading Economics - Heating Oil", "url": "https://tradingeconomics.com/commodity/heating-oil"}},
+            {"ticker": "KXWTIE", "title": "WTI oil election day", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "0.00", "frequency": "custom", "settlement_source": {"name": "ICE", "url": "https://www.theice.com/products/213/WTI-Crude-Futures"}},
+            {"ticker": "KXBRENTWEX", "title": "Brent Oil Weekly Exclusive", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "0.00", "frequency": "one_off", "settlement_source": {"name": "Pyth Commodities", "url": "https://app.pyth.com/explore?asset_type=commodity"}},
+            {"ticker": "KXWTIMONTHLY", "title": "WTI oil monthly", "category": "Commodities", "tags": ["Oil & Gas"], "volume_fp": "0.00", "frequency": "monthly", "settlement_source": {"name": "ICE", "url": "https://www.ice.com/report/10"}}
+          ]
+        },
+        {
+          "query": "GET /series?category=Economics&tags=Oil+and+energy&include_volume=true",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Economics&tags=Oil+and+energy&include_volume=true",
+          "completeness": "partial",
+          "chunks_fetched": 3,
+          "chunks_total": 26,
+          "note": "AAA retail gasoline (pump-price) series are the direct 'gas prices' markets. Only fetched pages are listed; volume values are all-time series totals as reported by the API.",
+          "series": [
+            {"ticker": "KXAAAGASDWA", "title": "Washington gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "506.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=WA"}},
+            {"ticker": "KXAAAGASDAL", "title": "Alabama gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "406.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=AL"}},
+            {"ticker": "KXAAAGASDCT", "title": "Connecticut gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "95.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=CT"}},
+            {"ticker": "KXAAAGASDSC", "title": "South Carolina gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "166.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=SC"}},
+            {"ticker": "KXAAAGASDNV", "title": "Nevada gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "59.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=NV"}},
+            {"ticker": "KXAAAGASDMA", "title": "Massachusetts gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "10.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=MA"}},
+            {"ticker": "KXKYCOAL", "title": "Kentucky coal production", "category": "Economics", "tags": ["Oil and energy"], "volume_fp": "120.00", "frequency": "annual", "settlement_source": {"name": "Federal Reserve Bank of New York", "url": "https://www.newyorkfed.org/markets/reference-rates/sofr"}},
+            {"ticker": "OILW", "title": "Price of oil weekly", "category": "Economics", "tags": ["Oil and energy"], "volume_fp": "0.00", "frequency": "weekly", "settlement_source": {"name": "Energy Information Administration", "url": "https://www.eia.gov/dnav/pet/PET_PRI_SPT_S1_D.htm"}},
+            {"ticker": "KXAAAGASCDNY", "title": "New York gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "0.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=NY"}},
+            {"ticker": "KXAAAGASCDWV", "title": "West Virginia gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "0.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=WV"}},
+            {"ticker": "KXAAAGASCDMI", "title": "Michigan gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "0.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=MI"}},
+            {"ticker": "KXAAAGASDMT", "title": "Montana gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "0.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=MT"}},
+            {"ticker": "KXAAAGASCDGA", "title": "Georgia gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "0.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=GA"}},
+            {"ticker": "KXAAAGASCDND", "title": "North Dakota gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "0.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=ND"}},
+            {"ticker": "KXAAAGASCDSC", "title": "South Carolina gas price", "category": "Economics", "tags": ["Oil and energy", "Econ Daily"], "volume_fp": "0.00", "frequency": "daily", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/?state=SC"}},
+            {"ticker": "KXNDKOIL", "title": "North Dakota crude oil production", "category": "Economics", "tags": ["Oil and energy"], "volume_fp": "0.00", "frequency": "annual", "settlement_source": {"name": "Federal Reserve Bank of New York", "url": "https://www.newyorkfed.org/markets/reference-rates/sofr"}},
+            {"ticker": "KXDIESELYE", "title": "Diesel prices at year end", "category": "Economics", "tags": ["Oil and energy"], "volume_fp": "0.00", "frequency": "annual", "settlement_source": {"name": "AAA", "url": "https://gasprices.aaa.com/"}},
+            {"ticker": "KXCHINAOILINV", "title": "China strategic oil inventories", "category": "Economics", "tags": ["Oil and energy"], "volume_fp": "0.00", "frequency": "quarterly", "settlement_source": {"name": "Federal Reserve Bank of New York", "url": "https://www.newyorkfed.org/markets/reference-rates/sofr"}}
+          ]
+        }
+      ],
+      "topic_mapping_basis": "Official series categories 'Commodities' (tag 'Oil & Gas') and 'Economics' (tag 'Oil and energy'), discovered via GET /search/tags_by_categories."
+    },
+    {
+      "topic": "elections",
+      "queries": [
+        {
+          "query": "GET /series?category=Elections&tags=2028&include_volume=true",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Elections&tags=2028&include_volume=true",
+          "completeness": "partial",
+          "chunks_fetched": 1,
+          "chunks_total": 21,
+          "series": [
+            {"ticker": "KXVPRESNOMR", "title": "Republican VP nom", "category": "Elections", "tags": ["2028", "US Elections"], "volume_fp": "1273383.00", "frequency": "custom", "settlement_source": {"name": "Republican Party", "url": "https://gop.com/"}},
+            {"ticker": "KXPRESDISTRICT", "title": "Presidential election winner by district?", "category": "Elections", "tags": ["2028", "US Elections", "President by state"], "volume_fp": "120.00", "frequency": "custom", "settlement_source": {"name": "United States Congress", "url": "https://www.congress.gov/"}},
+            {"ticker": "KXDSAENDORSE28", "title": "Who will DSA endorse for president?", "category": "Elections", "tags": ["2028", "US Elections"], "volume_fp": "0.00", "frequency": "one_off", "settlement_source": {"name": "Democratic Socialists of America", "url": "https://www.dsausa.org/"}},
+            {"ticker": "KXGOPDELMAJ", "title": "When will a Republican candidate win a delegate majority?", "category": "Elections", "tags": ["2028", "Nomination race", "US Elections"], "volume_fp": "0.00", "frequency": "one_off", "settlement_source": {"name": "the Associated Press", "url": "https://apnews.com/"}}
+          ]
+        },
+        {
+          "query": "GET /series?category=Elections&tags=US+Elections&include_volume=true",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Elections&tags=US+Elections&include_volume=true",
+          "completeness": "partial",
+          "chunks_fetched": 1,
+          "chunks_total": 198,
+          "series": [
+            {"ticker": "KXMIDTERMVOTETURN", "title": "Midterm Voter Turnout", "category": "Elections", "tags": ["US Elections"], "volume_fp": "7567.00", "frequency": "one_off", "settlement_source": {"name": "the relevant election commission of the country in which takes place", "url": "https://kalshi.com/"}},
+            {"ticker": "KXSENDEMLEADVOTE", "title": "Will Senate Democrats vote on their leader before Dec 1?", "category": "Elections", "tags": ["Senate", "US Elections", "Leadership races"], "volume_fp": "160.00", "frequency": "one_off"},
+            {"ticker": "KXNAVAJOPRES", "title": "Navajo Nation presidential election", "category": "Elections", "tags": ["US Elections"], "volume_fp": "18.00", "frequency": "one_off", "settlement_source": {"name": "Navajo Election Administration", "url": "https://navajoelections.navajo-nsn.gov/"}},
+            {"ticker": "PRES", "title": "Presidential elections", "category": "Elections", "tags": ["US Elections"], "volume_fp": "0.00", "frequency": "custom", "settlement_source": {"name": "Office of the Presidency", "url": "https://www.whitehouse.gov/administration/executive-office-of-the-president/"}}
+          ]
+        },
+        {
+          "query": "GET /series?category=Elections&include_volume=true",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Elections&include_volume=true",
+          "completeness": "partial",
+          "chunks_fetched": 1,
+          "chunks_total": 529,
+          "series": [
+            {"ticker": "KXCABALLOTMEASURES", "title": "Which California ballot measures will pass?", "category": "Elections", "tags": ["Referendums", "US Elections", "Other US Elections"], "volume_fp": "40.00", "frequency": "one_off"},
+            {"ticker": "KXUSPSELECTION", "title": "Will Trump's election order lead to large-scale ballot blocking?", "category": "Elections", "tags": ["Trump"], "volume_fp": "1.00", "frequency": "one_off"},
+            {"ticker": "KXTALARICOPAXTONDEBATE", "title": "Talarico and Paxton debate", "category": "Elections", "tags": ["Senate", "US Elections"], "volume_fp": "0.00", "frequency": "one_off"},
+            {"ticker": "KXAGNOMDVA", "title": "Democratic Nominee for Attorney General in Virginia?", "category": "Elections", "tags": ["Primaries"], "volume_fp": "0.00", "frequency": "one_off"}
+          ]
+        }
+      ],
+      "observed_in_live_trades": ["KXPRESNOMD", "KXPRESPERSON", "KXFRENCHPRES"],
+      "observed_in_live_trades_note": "Series tickers observed trading in GET /markets/trades sample on 2026-11-20T11:19Z; series metadata not fetched, volume unknown (left blank by rule).",
+      "topic_mapping_basis": "Official series category 'Elections' (GET /search/tags_by_categories)."
+    },
+    {
+      "topic": "culture",
+      "queries": [
+        {
+          "query": "GET /series?category=Entertainment&tags=People&include_volume=true",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Entertainment&tags=People&include_volume=true",
+          "completeness": "partial",
+          "chunks_fetched": 1,
+          "chunks_total": 15,
+          "series": [
+            {"ticker": "KXMETGALA", "title": "WHO WILL ATTEND THE MET GALA", "category": "Entertainment", "tags": ["People"], "volume_fp": "42441900.00", "frequency": "one_off"},
+            {"ticker": "KXENGAGEMENTTATEJACKHUGHES", "title": "Will Tate McRae and Jack Hughes get engaged before 2027", "category": "Entertainment", "tags": ["People"], "volume_fp": "3.00", "frequency": "one_off"},
+            {"ticker": "KXPUBLICSWIFTLIVELY", "title": "Taylor Swift and Blake Lively seen together by the end of this year?", "category": "Entertainment", "tags": ["People"], "volume_fp": "1.00", "frequency": "one_off"},
+            {"ticker": "KXMEDIACOVEREAFC", "title": "who will be on the cover", "category": "Entertainment", "tags": ["People", "Video games"], "volume_fp": "0.00", "frequency": "one_off"}
+          ]
+        },
+        {
+          "query": "GET /series?category=Entertainment&tags=Dancing+with+the+Stars&include_volume=true",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Entertainment&tags=Dancing+with+the+Stars&include_volume=true",
+          "completeness": "complete",
+          "chunks_total": 1,
+          "series": [
+            {"ticker": "KXDANCINGWITHTHESTARS", "title": "Who will win dancing with the stars?", "category": "Entertainment", "tags": ["Television", "Dancing with the Stars"], "volume_fp": "13362399.00", "frequency": "one_off", "settlement_source": {"name": "official broadcaster or streaming platform", "url": "https://kalshi.com/"}},
+            {"ticker": "KXDWTSELIMINATION", "title": "DANCING WITH THE STARS ELIMINATION", "category": "Entertainment", "tags": ["Television", "Dancing with the Stars"], "volume_fp": "7936231.00", "frequency": "one_off"},
+            {"ticker": "KXDWTSFINALS", "title": "Dancing with the Stars finalists", "category": "Entertainment", "tags": ["Reality TV", "Television", "Dancing with the Stars"], "volume_fp": "0.00", "frequency": "one_off", "settlement_source": {"name": "ABC News", "url": "https://abcnews.go.com/"}},
+            {"ticker": "KXDWTSRANK", "title": "what rank participant finish", "category": "Entertainment", "tags": ["Reality TV", "Television", "Dancing with the Stars"], "volume_fp": "0.00", "frequency": "one_off"},
+            {"ticker": "KXDWTSTOP3", "title": "who will finish top 3 in dwts", "category": "Entertainment", "tags": ["Reality TV", "Television", "Dancing with the Stars"], "volume_fp": "0.00", "frequency": "one_off"}
+          ]
+        },
+        {
+          "query": "GET /series?category=Entertainment&include_volume=true",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Entertainment&include_volume=true",
+          "completeness": "partial",
+          "chunks_fetched": 1,
+          "chunks_total": 330,
+          "series": [
+            {"ticker": "KXTVSEASONRELEASEACOURTOFTHORNSANDROSES", "title": "Will ACOTAR (A Court Of Thorns and Roses) obtain a running tv series before 2030?", "category": "Entertainment", "tags": ["Television"], "volume_fp": "25381.00", "frequency": "one_off"},
+            {"ticker": "KXENGAGEMENTSWIFTKELCE", "title": "Swift Kelce", "category": "Entertainment", "tags": ["People"], "volume_fp": "20033.00", "frequency": "custom"},
+            {"ticker": "KX10SONG", "title": "WHICH SONG WILL BE TOP 10 ON THE BILLBOARD HOT 100 CHART", "category": "Entertainment", "tags": ["Music charts"], "volume_fp": "329.00", "frequency": "one_off", "settlement_source": {"name": "Billboard", "url": "https://www.billboard.com/"}},
+            {"ticker": "KXSPOTML", "title": "monthly listeners on spotify", "category": "Entertainment", "tags": ["Music"], "volume_fp": "0.00", "frequency": "monthly", "settlement_source": {"name": "Spotify", "url": "https://www.spotify.com"}},
+            {"ticker": "KXBESTACRESSTONYS", "title": "Best Performance by an Actress in a Leading Role in a Play", "category": "Entertainment", "tags": ["Awards", "Tonys"], "volume_fp": "0.00", "frequency": "annual", "settlement_source": {"name": "Tony Awards", "url": "https://www.tonyawards.com/"}},
+            {"ticker": "KXGRAMBJP", "title": "Best Jazz Performance", "category": "Entertainment", "tags": ["Awards", "Grammys"], "volume_fp": "0.00", "frequency": "one_off", "settlement_source": {"name": "Recording Academy", "url": "https://www.grammy.com/"}},
+            {"ticker": "RTCIVILWAR", "title": "Rotten Tomatoes score", "category": "Entertainment", "tags": ["Movies", "Rotten Tomatoes"], "volume_fp": "0.00", "frequency": "one_off", "settlement_source": {"name": "Rotten Tomatoes", "url": "https://www.rottentomatoes.com/"}}
+          ]
+        }
+      ],
+      "series_with_volume_not_in_queries": [
+        {"ticker": "KXTOPSONG", "title": "Billboard Hot 100 #1", "category": "Entertainment", "tags": ["Music charts", "Music"], "frequency": "weekly", "volume_fp": "", "volume_note": "Single-series GET /series/{ticker} does not include volume (include_volume is a list-query parameter); value blanked per no-inference rule.", "src": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXTOPSONG", "settlement_source": {"name": "Billboard", "url": "https://www.billboard.com"}}
+      ],
+      "topic_mapping_basis": "Official series category 'Entertainment' used as the culture category (tags include Music, Awards, Television, Movies, People), discovered via GET /search/tags_by_categories. Note: official category list also contains 'Social' (null tags) — mapping culture→Entertainment is a documented project decision, flagged for review."
+    },
+    {
+      "topic": "crypto",
+      "queries": [
+        {
+          "query": "GET /series?category=Crypto&include_volume=true",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&include_volume=true",
+          "completeness": "partial",
+          "chunks_fetched": 1,
+          "chunks_total": 36,
+          "series": [
+            {"ticker": "KXLINK", "title": "Chainlink range", "category": "Crypto", "tags": ["Crypto"], "volume_fp": "24510512.00", "frequency": "daily", "settlement_source": {"name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/data/indices/LINKUSD_RTI"}},
+            {"ticker": "KXBTCMINY", "title": "How low will Bitcoin fall this year?", "category": "Crypto", "tags": ["Crypto", "Bitcoin"], "volume_fp": "19464180.00", "frequency": "annual", "settlement_source": {"name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"}},
+            {"ticker": "KXAVAX", "title": "Avalanche range", "category": "Crypto", "tags": ["Crypto"], "volume_fp": "17532299.00", "frequency": "daily", "settlement_source": {"name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/data/indices/AVAXUSD_RTI"}},
+            {"ticker": "KXCRYPTORETURNY", "title": "Crypto being positive", "category": "Crypto", "tags": ["Crypto"], "volume_fp": "165735.00", "frequency": "annual", "settlement_source": {"name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/"}},
+            {"ticker": "KXDOTMINY", "title": "Polkadot min", "category": "Crypto", "tags": ["Crypto"], "volume_fp": "71848.00", "frequency": "annual", "settlement_source": {"name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/"}},
+            {"ticker": "KXPRCBTC", "title": "Bitcoin legalization in PRC", "category": "Crypto", "tags": ["Crypto", "Bitcoin"], "volume_fp": "16875.00", "frequency": "custom", "settlement_source": {"name": "Bloomberg", "url": "https://www.bloomberg.com/"}},
+            {"ticker": "BTCETHRETURN", "title": "BTC vs. ETH performance", "category": "Crypto", "tags": ["BTC", "ETH"], "volume_fp": "30.00", "frequency": "custom", "settlement_source": {"name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/data/indices/ETHUSD_RTI"}},
+            {"ticker": "KXBNBMINY", "title": "BNB Min Year", "category": "Crypto", "tags": ["BNB", "Crypto"], "volume_fp": "24.00", "frequency": "annual", "settlement_source": {"name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/"}},
+            {"ticker": "KXDOGEPERP", "title": "100 DOGE", "category": "Crypto", "tags": ["Crypto"], "volume_fp": "0.00", "frequency": "often"},
+            {"ticker": "KXNEAR", "title": "NEAR range", "category": "Crypto", "tags": ["Hourly"], "volume_fp": "0.00", "frequency": "hourly"},
+            {"ticker": "KXFDVFOGO", "title": "FOGO FDV", "category": "Crypto", "tags": ["Crypto", "Pre-Market"], "volume_fp": "0.00", "frequency": "one_off", "settlement_source": {"name": "CoinGecko", "url": "https://www.coingecko.com"}}
+          ]
+        },
+        {
+          "query": "GET /series?category=Crypto&tags=BTC&include_volume=true",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&tags=BTC&include_volume=true",
+          "completeness": "complete",
+          "chunks_total": 4,
+          "series": [
+            {"ticker": "KXMAXSHARDINGTEST", "title": "shard", "category": "Crypto", "tags": ["BTC"], "volume_fp": "26521066.00", "frequency": "one_off", "flag": "Title 'shard' suggests a test series; kept because API reports it. See Flagged for Review."},
+            {"ticker": "BTCD-B", "title": "Above/below", "category": "Crypto", "tags": ["BTC"], "volume_fp": "0.00", "frequency": "daily", "settlement_source": {"name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"}},
+            {"ticker": "KXBTCABOVEBY", "title": "Bitcoin above a threshold by a date", "category": "Crypto", "tags": ["BTC"], "volume_fp": "0.00", "frequency": "custom"},
+            {"ticker": "KXBTCHIT85K", "title": "Bitcoin above $85,000 by a date", "category": "Crypto", "tags": ["BTC"], "volume_fp": "0.00", "frequency": "custom"},
+            {"ticker": "KXBTCMAX130", "title": "When will bitcoin hit 100k?", "category": "Crypto", "tags": ["BTC"], "volume_fp": "0.00", "frequency": "annual", "flag": "Title says 100k while ticker says 130 — title/ticker mismatch; see Flagged for Review."},
+            {"ticker": "KXBTCABOVE95BY", "title": "Bitcoin above $95,000 by a date", "category": "Crypto", "tags": ["BTC"], "volume_fp": "0.00", "frequency": "custom"},
+            {"ticker": "BTCETHRETURN", "title": "BTC vs. ETH performance", "category": "Crypto", "tags": ["BTC", "ETH"], "volume_fp": "30.00", "frequency": "custom"},
+            {"ticker": "KXBTCMAXQ", "title": "BTC Max Quarterly", "category": "Crypto", "tags": ["BTC"], "volume_fp": "0.00", "frequency": "custom"},
+            {"ticker": "KXBTCEVENT", "title": "Bitcoin after economic events", "category": "Crypto", "tags": ["Crypto", "BTC", "Bitcoin"], "volume_fp": "0.00", "frequency": "custom"}
+          ]
+        },
+        {
+          "query": "GET /series?category=Crypto&tags=Hourly&include_volume=true",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&tags=Hourly&include_volume=true",
+          "completeness": "partial",
+          "chunks_fetched": 2,
+          "chunks_total": 3,
+          "series": [
+            {"ticker": "KXETH", "title": "Ethereum range", "category": "Crypto", "tags": ["Crypto", "Hourly", "Ethereum"], "volume_fp": "72112699.00", "frequency": "hourly", "settlement_source": {"name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/data/indices/ETHUSD_RTI"}},
+            {"ticker": "KXDOGE", "title": "Dogecoin range", "category": "Crypto", "tags": ["Crypto", "Hourly", "DOGE"], "volume_fp": "27276886.00", "frequency": "hourly", "settlement_source": {"name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/data/indices/DOGEUSD_RTI"}},
+            {"ticker": "KXSOLE", "title": "SOL Range", "category": "Crypto", "tags": ["Crypto", "Hourly", "Solana"], "volume_fp": "1343.00", "frequency": "hourly"},
+            {"ticker": "KXDOGEY", "title": "DOGE yearly", "category": "Crypto", "tags": ["Crypto", "Hourly", "DOGE"], "volume_fp": "63.00", "frequency": "annual"},
+            {"ticker": "KXBNBY", "title": "BNB Yearly", "category": "Crypto", "tags": ["Crypto", "Hourly", "BNB"], "volume_fp": "54.00", "frequency": "annual"},
+            {"ticker": "KXNEARY", "title": "NEAR Yearly", "category": "Crypto", "tags": ["Crypto", "Hourly", "NEAR Protocol"], "volume_fp": "21.00", "frequency": "annual"},
+            {"ticker": "KXZECD", "title": "Zcash Directional", "category": "Crypto", "tags": ["Hourly"], "volume_fp": "0.00", "frequency": "hourly"},
+            {"ticker": "KXNEARD", "title": "NEAR Directional", "category": "Crypto", "tags": ["Hourly"], "volume_fp": "0.00", "frequency": "hourly"},
+            {"ticker": "KXSUIATH", "title": "Sui ATH 2026", "category": "Crypto", "tags": ["Hourly"], "volume_fp": "0.00", "frequency": "one_off"},
+            {"ticker": "KXBTC", "title": "Bitcoin range", "category": "Crypto", "tags": ["Crypto", "Hourly", "Bitcoin"], "volume_fp": "", "volume_note": "Volume not returned on the non-volume page fetch; blanked per no-inference rule. Source shows same URL without include_volume.", "settlement_source": {"name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"}},
+            {"ticker": "KXBTCD", "title": "Bitcoin price Above/below", "category": "Crypto", "tags": ["Crypto", "Hourly", "Bitcoin"], "volume_fp": "", "volume_note": "Blanked per no-inference rule (volume not captured).", "settlement_source": {"name": "CF Benchmarks", "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"}}
+          ]
+        }
+      ],
+      "topic_mapping_basis": "Official series category 'Crypto' (GET /search/tags_by_categories)."
+    },
+    {
+      "topic": "golf",
+      "queries": [
+        {
+          "query": "GET /series?category=Sports&tags=Golf&include_volume=true",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Sports&tags=Golf&include_volume=true",
+          "completeness": "partial",
+          "chunks_fetched": 4,
+          "chunks_total": 27,
+          "series": [
+            {"ticker": "KXDPWORLDTOUR", "title": "DP World Tour Tournament Winner", "category": "Sports", "tags": ["Golf"], "volume_fp": "8245802181.00", "frequency": "custom", "settlement_source": {"name": "DP World Tour", "url": "https://www.europeantour.com/dpworld-tour/schedule/"}},
+            {"ticker": "KXPGAR1LEAD", "title": "PGA Round 1 Leader", "category": "Sports", "tags": ["Golf"], "volume_fp": "6949777084.00", "frequency": "custom", "settlement_source": {"name": "the Governing League", "url": "https://www.pgatour.com/"}},
+            {"ticker": "KXPGATOP40", "title": "PGA Top 40 Finisher", "category": "Sports", "tags": ["Golf"], "volume_fp": "1791408.00", "frequency": "custom", "settlement_source": {"name": "ESPN", "url": "https://www.espn.com/"}},
+            {"ticker": "KXPRESCUPMATCH", "title": "Presidents Cup Match Winner", "category": "Sports", "tags": ["Golf"], "volume_fp": "1114965.00", "frequency": "custom", "settlement_source": {"name": "ESPN", "url": "https://www.espn.com/"}},
+            {"ticker": "KXPGAHOLEINONE", "title": "PGA Hole in One", "category": "Sports", "tags": ["Golf"], "volume_fp": "12583.00", "frequency": "custom", "settlement_source": {"name": "the Governing League", "url": "https://www.pgatour.com/"}},
+            {"ticker": "KXCHAMPTOUR", "title": "PGA Champions Tour", "category": "Sports", "tags": ["Golf"], "volume_fp": "170.00", "frequency": "custom", "settlement_source": {"name": "ESPN", "url": "https://www.espn.com"}},
+            {"ticker": "KXDPWTTOP10", "title": "DPWT Top 10 Finisher", "category": "Sports", "tags": ["Golf"], "volume_fp": "42.00", "frequency": "one_off", "settlement_source": {"name": "DP World Tour", "url": "https://www.europeantour.com/dpworld-tour/schedule/"}},
+            {"ticker": "KXGOLFTENNISMAJORS", "title": "More Major Wins, Tennis vs Golf", "category": "Sports", "tags": ["Golf", "Tennis"], "volume_fp": "9.00", "frequency": "one_off", "settlement_source": {"name": "AP", "url": "https://apnews.com/"}},
+            {"ticker": "KXPGAMAJORWIN", "title": "PGA Major Winner", "category": "Sports", "tags": ["Golf"], "volume_fp": "1.00", "frequency": "custom", "settlement_source": {"name": "ESPN", "url": "https://www.espn.com/"}},
+            {"ticker": "KXTIGERMASTERS", "title": "Will Tiger Woods play in the Masters", "category": "Sports", "tags": ["Golf"], "volume_fp": "0.00", "frequency": "custom", "settlement_source": {"name": "The Wall Street Journal", "url": "https://www.wsj.com/"}},
+            {"ticker": "KXCHAMPTOURR1LEAD", "title": "round 1 leader", "category": "Sports", "tags": ["Golf"], "volume_fp": "0.00", "frequency": "custom", "settlement_source": {"name": "the Governing League", "url": "https://www.pgatour.com/"}},
+            {"ticker": "KXPGARYDERCUPD3", "title": "Ryder Cup Day 3 Winner", "category": "Sports", "tags": ["Golf"], "volume_fp": "0.00", "frequency": "one_off"},
+            {"ticker": "KXPRESCUPPTS", "title": "Presidents Cup Points by Golfer", "category": "Sports", "tags": ["Golf"], "volume_fp": "0.00", "frequency": "one_off"},
+            {"ticker": "KXRYDERCUP", "title": "Ryder Cup", "category": "Sports", "tags": ["Golf"], "volume_fp": "0.00", "frequency": "one_off"},
+            {"ticker": "KXLIVH2H", "title": "LIV Head-to-Head Matchups", "category": "Sports", "tags": ["Golf"], "volume_fp": "0.00", "frequency": "custom", "settlement_source": {"name": "LIV Golf", "url": "https://www.livgolf.com/"}},
+            {"ticker": "KXPGAC", "title": "Golfers to Participate in the PGA championship", "category": "Sports", "tags": ["Golf"], "volume_fp": "0.00", "frequency": "custom"},
+            {"ticker": "KXPGATOURCHAMP", "title": "Golfers to Participate in the Tour Championship", "category": "Sports", "tags": ["Golf"], "volume_fp": "0.00", "frequency": "custom"},
+            {"ticker": "KXPGAGOLFERSCORE", "title": "Golf Round Strokes", "category": "Sports", "tags": ["Golf"], "volume_fp": "0.00", "frequency": "custom"},
+            {"ticker": "KXLPGAR2LEAD", "title": "LPGA Round 2 Leader", "category": "Sports", "tags": ["Golf"], "volume_fp": "0.00", "frequency": "custom"},
+            {"ticker": "KXLIVR2LEAD", "title": "Liv Round 2 Leader", "category": "Sports", "tags": ["Golf"], "volume_fp": "0.00", "frequency": "custom"}
+          ]
+        },
+        {
+          "query": "GET /series/KXPGATOUR",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGATOUR",
+          "completeness": "single-series lookup",
+          "series": [
+            {"ticker": "KXPGATOUR", "title": "PGA Tour", "category": "Sports", "tags": ["Golf"], "frequency": "custom", "volume_fp": "", "volume_note": "Single-series GET does not return volume_fp; blanked per no-inference rule.", "settlement_source": [{"name": "Fox Sports", "url": "https://www.foxsports.com"}, {"name": "ESPN", "url": "https://www.espn.com/"}, {"name": "the Governing League", "url": "https://www.pgatour.com/"}]}
+          ]
+        }
+      ],
+      "topic_mapping_basis": "Official series category 'Sports' with official tag 'Golf' (GET /search/tags_by_categories)."
+    }
+  ]
+}
