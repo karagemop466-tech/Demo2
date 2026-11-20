@@ -15,6 +15,17 @@ straight from <code>GET /markets?status=settled</code>; the <code>result</code> 
 Kalshi's own, not computed here.</p>
 <div id="metaBar"><div class="card tight"><div class="status" id="staleness">Loading…</div></div></div>
 <div class="kpis" id="kpis"></div>
+<h2>Topics at a glance</h2>
+<p class="muted">Five topics, kept separate. Each card is that topic's own page; the counts and the
+24-hour dollar figures come from the same snapshot as the tables below.</p>
+<div class="kpis" id="topicStrip"></div>
+<h2>How the events resolved, by topic</h2>
+<p class="muted">Counts of settled in-scope markets by the official <code>result</code> field.
+A market that never traded still has a result: it settles at $1.00 (yes) or $0.00 (no) regardless
+of whether anyone bought it, so it is counted here and flagged on
+<a href="flagged.html">Flagged for Review</a> when its volume is zero — a YES on a market nobody
+traded is not evidence about anything.</p>
+<div id="byTopic"></div>
 <div class="row" style="margin:10px 0">
   <div><label for="topicFilter">Topic</label>
     <select id="topicFilter"><option value="">All</option><option value="gas">Gas</option>
@@ -60,6 +71,28 @@ Kalshi's own, not computed here.</p>
       <div class="kpi-card"><div class="k">Resolved NO</div><div class="v bad">${no}</div><div class="s">result = no</div></div>
       <div class="kpi-card"><div class="k">Topics with data</div><div class="v">${Object.keys(per).length}</div>
         <div class="s">${Object.entries(per).map(([k,v])=>k+': '+v.total).join(' · ')||'none'}</div></div>`;
+    // per-topic YES/NO breakdown, so "how did events resolve" is answerable at a glance
+    const ORDER = ['gas','elections','culture','crypto','golf'];
+    const bt = ORDER.map(tp=>{
+      const rs = rows.filter(r=>r.topic===tp);
+      const yes = rs.filter(r=>r.result==='yes').length;
+      const no  = rs.filter(r=>r.result==='no').length;
+      const traded = rs.filter(r=>Number(r.volume_fp||0) > 0).length;
+      return {topic:tp, resolved:rs.length, yes, no,
+              yesShare: (yes+no) ? (yes/(yes+no)) : null,
+              traded, untraded: rs.length - traded};
+    });
+    KR.renderTable($('byTopic'), [
+      {label:'Topic', get:r=>KR.topicPill(r.topic)},
+      {label:'Settled markets', num:true, get:r=>KR.num(r.resolved,0)},
+      {label:'Resolved YES', num:true, get:r=>KR.num(r.yes,0)},
+      {label:'Resolved NO', num:true, get:r=>KR.num(r.no,0)},
+      {label:'YES share', num:true, get:r=>r.yesShare===null?KR.dash(''):KR.pct(r.yesShare)},
+      {label:'Ever traded', num:true, get:r=>`${KR.num(r.traded,0)} <span class="muted small">of ${KR.num(r.resolved,0)}</span>`},
+      {label:'Never traded', num:true, get:r=>r.untraded?`${KR.num(r.untraded,0)} <span class="pill flag">no volume</span>`:KR.num(0,0)},
+      {label:'Source', get:r=>`<a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=1000" target="_blank" rel="noopener">settled markets</a>`}
+    ], bt, 'No resolved markets in the current snapshot.');
+
     function render(){
       const t=$('topicFilter').value, rf=$('resFilter').value;
       const f = rows.filter(r=>(!t||r.topic===t)&&(!rf||r.result===rf));

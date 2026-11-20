@@ -39,6 +39,10 @@ def check_links() -> None:
                 continue
             if raw.startswith(("mailto:", "#", "javascript:", "data:")):
                 continue
+            if "${" in raw:
+                # Built at runtime from data (e.g. pages/${topic}.html). There is no static
+                # target to resolve; the equivalent static links are checked on the same page.
+                continue
             rel = raw.split("#")[0].split("?")[0]
             # a page that links to a sibling subsite uses ../ from pages/, which lands on
             # the repo root; normalise so the check tests the real repository path.

@@ -141,6 +141,10 @@ resolves <b>yes</b> or <b>no</b>.</p>
 tables on the category, resolution and verification pages still work without it.</div></noscript>
 
 <div class="kpis" id="kpis"></div>
+<h2>Topics at a glance</h2>
+<p class="muted">Five topics, kept separate. Each card is that topic's own page; the counts and the
+24-hour dollar figures come from the same snapshot as the tables below.</p>
+<div class="kpis" id="topicStrip"></div>
 
 <div class="grid two" style="margin-top:6px">
   <div class="card">
@@ -193,7 +197,18 @@ tables on the category, resolution and verification pages still work without it.
   </div>
 
   <div class="card">
-    <h3>Liquidity <span class="muted">— contracts available at each price</span></h3>
+    <h3>Liquidity over time <span class="muted">— contracts resting, sampled every ~22 s</span></h3>
+    <p class="small muted" style="margin-top:0">Kalshi publishes no order-book history, so the
+      collector polls <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Get
+      Market Orderbook</a> while it runs. This chart is those polls: total contracts bid and total
+      offered on the selected market. A flat line means the book did not change; a gap means no
+      sample was taken then. Nothing is interpolated.</p>
+    <div class="chartwrap"><canvas id="liqChart" class="chart" style="height:220px"></canvas></div>
+    <div class="legend"><span id="liqChartNote" class="muted"></span></div>
+  </div>
+
+  <div class="card">
+    <h3>Liquidity now <span class="muted">— contracts available at each price</span></h3>
     <p class="small muted" style="margin-top:0">Raw bids from
       <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook">Get Market Orderbook</a>.
       Kalshi returns <b>yes bids and no bids only</b>; a NO bid at price <i>p</i> is the same
@@ -279,14 +294,34 @@ DASH_JS = r"""
     state.ticker = rows.length ? rows[0].market_ticker : null;
     if(state.ticker) $('mktSel').value = state.ticker;
 
+    renderTopicStrip(snap);
     renderTable(rows);
     await drawChart();
     await renderLiquidity();
+    await drawLiqHistory();
     renderResolved(snap.resolutions||[]);
   }catch(e){
     $('kpis').innerHTML = `<div class="notice bad">Data snapshot could not be loaded: ${KR.esc(e.message)}.
       The snapshot is produced by <code>.github/workflows/refresh-data.yml</code>; if this is the first
       run, wait for the workflow (Actions → “Refresh Kalshi demo data”). No values are invented.</div>`;
+  }
+
+  function renderTopicStrip(snap){
+    const c = snap.counts || {}, cat = snap.topic_catalog || {}, pt = c.per_topic || {};
+    const usd = {};
+    (snap.markets||[]).forEach(m=>{ if(m.usd_volume_24h!=null){ usd[m.topic]=(usd[m.topic]||0)+m.usd_volume_24h; } });
+    const order = ['gas','elections','culture','crypto','golf'];
+    const el = $('topicStrip'); if(!el) return;
+    el.innerHTML = order.map(t=>{
+      const n = pt[t]||0, live = c.markets_in_scope||0;
+      const share = live ? Math.round(100*n/live) : 0;
+      const cat1 = cat[t]||{};
+      return `<a class="kpi-card" href="{PREFIX}pages/${t}.html" style="text-decoration:none">
+        <div class="k">${KR.esc(t[0].toUpperCase()+t.slice(1))}</div>
+        <div class="v">${KR.num(n,0)}</div>
+        <div class="s">${KR.esc(String(share))}% of live · ${KR.num(cat1.series_in_catalog,0)} series in catalogue${
+          usd[t]!==undefined ? ` · ${KR.usd(usd[t],2)} traded in 24 h` : ''}</div></a>`;
+    }).join('');
   }
 
   function renderTable(rows){
@@ -359,6 +394,31 @@ DASH_JS = r"""
     ], jumps, 'No sharp moves (≥ $0.10 between consecutive points) in this window. A blank table means the price moved in smaller steps — nothing is inferred.');
   }
 
+  async function drawLiqHistory(){
+    const cv = document.getElementById('liqChart'); if(!cv) return;
+    const note = $('liqChartNote');
+    let h = null;
+    try { h = await KR.getJSON("data/liquidity.json"); } catch(e){
+      note.textContent = 'data/liquidity.json could not be loaded: ' + e.message; return;
+    }
+    const m = (h.markets||{})[state.ticker];
+    if(!m || !(m.points||[]).length){
+      note.textContent = 'No order-book samples for this market in the current snapshot. '
+        + 'The collector samples the top markets by dollar volume, one per topic first.';
+      KR.drawChart(cv, [], {spanSeconds: 3600, emptyMessage: 'No liquidity samples for this market.'});
+      return;
+    }
+    const bid = m.points.map(p=>({t:p.ts*1000, v:p.yes_bid_contracts, src:'sample'}));
+    const ask = m.points.map(p=>({t:p.ts*1000, v:p.derived_ask_contracts, src:'sample'}));
+    // drawChart takes one series; draw the bid series and overlay the ask series.
+    KR.drawChart(cv, bid, {spanSeconds: 3600, secondary: ask, priceAxis: false, unit: "",
+      emptyMessage: 'No liquidity samples.'});
+    const last = m.points[m.points.length-1];
+    note.innerHTML = `${m.points.length} samples · latest: <b>${KR.num(last.yes_bid_contracts,2)}</b> contracts bid, `
+      + `<b>${KR.num(last.derived_ask_contracts,2)}</b> offered (derived from NO bids) · `
+      + `best yes bid ${KR.usd(last.best_yes_bid,2)} · best yes ask ${KR.usd(last.best_yes_ask_derived,2)}`;
+  }
+
   async function renderLiquidity(){
     const snap = state.snap, ob = (snap.orderbooks||{})[state.ticker];
     if(!ob || ob.error){ $('liqSummary').innerHTML=''; $('liqBid').innerHTML='<div class="empty">No order book in this snapshot.</div>'; $('liqAsk').innerHTML=''; $('liqNote').textContent = ob&&ob.error?('Order book request failed: '+ob.error):''; return; }
@@ -396,7 +456,7 @@ DASH_JS = r"""
   }
 
   // events
-  $('mktSel').addEventListener('change', async e=>{ state.ticker=e.target.value; await drawChart(); await renderLiquidity(); });
+  $('mktSel').addEventListener('change', async e=>{ state.ticker=e.target.value; await drawChart(); await renderLiquidity(); await drawLiqHistory(); });
   document.querySelectorAll('#winSeg button').forEach(b=>b.addEventListener('click', async ()=>{
     document.querySelectorAll('#winSeg button').forEach(x=>x.setAttribute('aria-pressed','false'));
     b.setAttribute('aria-pressed','true'); state.window=parseInt(b.dataset.w,10); await drawChart();
@@ -507,6 +567,10 @@ def category_page(topic: str, title: str, blurb: str, series_hint: str) -> None:
 <p class="lead">{blurb}</p>
 <div id="metaBar"><div class="card tight"><div class="status" id="staleness">Loading snapshot…</div></div></div>
 <div class="kpis" id="kpis"></div>
+<h2>Topics at a glance</h2>
+<p class="muted">Five topics, kept separate. Each card is that topic's own page; the counts and the
+24-hour dollar figures come from the same snapshot as the tables below.</p>
+<div class="kpis" id="topicStrip"></div>
 <div class="card tight" style="margin-bottom:14px"><div class="status" id="catNote">Checking the series catalogue…</div></div>
 
 <h2>Live markets — highest estimated dollar volume first</h2>
@@ -543,6 +607,17 @@ straight from <code>GET /markets?status=settled</code>; the <code>result</code> 
 Kalshi's own, not computed here.</p>
 <div id="metaBar"><div class="card tight"><div class="status" id="staleness">Loading…</div></div></div>
 <div class="kpis" id="kpis"></div>
+<h2>Topics at a glance</h2>
+<p class="muted">Five topics, kept separate. Each card is that topic's own page; the counts and the
+24-hour dollar figures come from the same snapshot as the tables below.</p>
+<div class="kpis" id="topicStrip"></div>
+<h2>How the events resolved, by topic</h2>
+<p class="muted">Counts of settled in-scope markets by the official <code>result</code> field.
+A market that never traded still has a result: it settles at $1.00 (yes) or $0.00 (no) regardless
+of whether anyone bought it, so it is counted here and flagged on
+<a href="flagged.html">Flagged for Review</a> when its volume is zero — a YES on a market nobody
+traded is not evidence about anything.</p>
+<div id="byTopic"></div>
 <div class="row" style="margin:10px 0">
   <div><label for="topicFilter">Topic</label>
     <select id="topicFilter"><option value="">All</option><option value="gas">Gas</option>
@@ -585,6 +660,28 @@ RES_JS = r"""
       <div class="kpi-card"><div class="k">Resolved NO</div><div class="v bad">${no}</div><div class="s">result = no</div></div>
       <div class="kpi-card"><div class="k">Topics with data</div><div class="v">${Object.keys(per).length}</div>
         <div class="s">${Object.entries(per).map(([k,v])=>k+': '+v.total).join(' · ')||'none'}</div></div>`;
+    // per-topic YES/NO breakdown, so "how did events resolve" is answerable at a glance
+    const ORDER = ['gas','elections','culture','crypto','golf'];
+    const bt = ORDER.map(tp=>{
+      const rs = rows.filter(r=>r.topic===tp);
+      const yes = rs.filter(r=>r.result==='yes').length;
+      const no  = rs.filter(r=>r.result==='no').length;
+      const traded = rs.filter(r=>Number(r.volume_fp||0) > 0).length;
+      return {topic:tp, resolved:rs.length, yes, no,
+              yesShare: (yes+no) ? (yes/(yes+no)) : null,
+              traded, untraded: rs.length - traded};
+    });
+    KR.renderTable($('byTopic'), [
+      {label:'Topic', get:r=>KR.topicPill(r.topic)},
+      {label:'Settled markets', num:true, get:r=>KR.num(r.resolved,0)},
+      {label:'Resolved YES', num:true, get:r=>KR.num(r.yes,0)},
+      {label:'Resolved NO', num:true, get:r=>KR.num(r.no,0)},
+      {label:'YES share', num:true, get:r=>r.yesShare===null?KR.dash(''):KR.pct(r.yesShare)},
+      {label:'Ever traded', num:true, get:r=>`${KR.num(r.traded,0)} <span class="muted small">of ${KR.num(r.resolved,0)}</span>`},
+      {label:'Never traded', num:true, get:r=>r.untraded?`${KR.num(r.untraded,0)} <span class="pill flag">no volume</span>`:KR.num(0,0)},
+      {label:'Source', get:r=>`<a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=1000" target="_blank" rel="noopener">settled markets</a>`}
+    ], bt, 'No resolved markets in the current snapshot.');
+
     function render(){
       const t=$('topicFilter').value, rf=$('resFilter').value;
       const f = rows.filter(r=>(!t||r.topic===t)&&(!rf||r.result===rf));
@@ -736,7 +833,7 @@ def build_live_pages() -> None:
     snap = snapshot_meta()
     page(path="index.html", title="Live dashboard", active="dash",
          body=meta_bar(snap) + DASH_BODY.replace("{PREFIX}", ""),
-         extra_js=DASH_JS,
+         extra_js=DASH_JS.replace("{PREFIX}", ""),
          desc="Live Kalshi demo markets for gas prices, elections, culture, crypto and golf with price charts, liquidity and resolution tracking.")
 
     category_page(
