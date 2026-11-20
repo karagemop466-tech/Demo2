@@ -38,3 +38,15 @@ A separate dashboard lives in `dashboard/` (published by the same Pages workflow
 - `dashboard/analysis.html`, `suggestions.html` (decision-first), `questions.html`, `flagged.html`
 
 Data: `dashboard/data/snapshot.json`. Verified values only; blanks are marked UNVERIFIED. See `COORDINATION.md` for sources and irregularities.
+
+---
+
+## Final integration — session 5330bffb (`pages/`, `assets/`, `tools/`, `data/`)
+
+The landing page is [`index.html`](index.html) (live dashboard). Everything is cross-linked; entry points:
+
+- `pages/executive-summary.html` — executive summary; `pages/gas|elections|culture|crypto|golf.html` — per-topic verified tables (every row links to its official API response, rendered from `data/` by `assets/tables.js`)
+- `pages/portfolio.html` — portfolio & trading: **this site never accepts credentials** (PR #6 security fix); run `tools/kalshi_trade.py` locally with your own Kalshi demo key to track the portfolio, execute demo orders, and generate the categorized trade/strategy report (`python3 tools/kalshi_trade.py selftest` verifies the signing offline)
+- `pages/flagged.html` — the consolidated Flagged for Review register (all archives linked); `pages/questions.html`, `pages/suggestions.html` (decision board), `pages/verification.html`, `pages/sources.html`, `pages/repo-review.html`
+- `data/` — verified snapshots refreshed by the GitHub Action `Collect Kalshi demo data` (`tools/collect_kalshi.py`, every 2h + on demand): markets (open/settled), events, series, orderbooks, candlesticks (1-min/24h + 60-min/7d), taxonomy, and `collection_log.json` (every request URL/status logged). Each row carries its `source_url`.
+- Live browser fetch to the demo API is attempted first and falls back to the labelled snapshot; WebSocket streaming is impossible in a browser (signed handshake headers) — see Flagged G-1/G-2.
