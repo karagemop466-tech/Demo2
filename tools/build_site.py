@@ -474,7 +474,7 @@ CATEGORY_JS = r"""
       {label:'Open int.', num:true, get:m=>KR.num(m.open_interest_fp,0)},
       {label:'Est. $ vol', num:true, get:m=>`${KR.usd(m.est_dollar_volume,0)} <span class="pill flag">est.</span>`},
       {label:'Closes', get:m=>`<span class="small">${KR.when(m.close_time)}</span>`},
-      {label:'Rules', get:m=>m.rules_primary?`<span class="small" title="${KR.esc(m.rules_primary)}">${KR.esc(m.rules_primary.slice(0,90))}${m.rules_primary.length>90?'…':''}</span>`:'—'},
+      {label:'Rules', get:m=>m.rules_primary_head?`<span class="small" title="${KR.esc(m.rules_primary_head)}">${KR.esc(m.rules_primary_head.slice(0,90))}${m.rules_primary_head.length>90?'…':''}</span>`:'—'},
       {label:'Source', get:m=>KR.link(m.market_url,'Kalshi market')}
     ], highest, 'No live markets for this topic in the current snapshot.');
 
@@ -601,7 +601,7 @@ RES_JS = r"""
         {label:'Settlement $', num:true, get:r=>KR.usd(r.settlement_value_dollars,2)},
         {label:'Settled (UTC)', get:r=>`<span class="small">${KR.when(r.settlement_ts)}</span>`},
         {label:'Volume', num:true, get:r=>KR.num(r.volume_fp,0)},
-        {label:'Rules', get:r=>r.rules_primary?`<span class="small" title="${KR.esc(r.rules_primary)}">${KR.esc(r.rules_primary.slice(0,80))}…</span>`:'—'},
+        {label:'Rules', get:r=>r.rules_primary_head?`<span class="small" title="${KR.esc(r.rules_primary_head)}">${KR.esc(r.rules_primary_head.slice(0,80))}…</span>`:'—'},
         {label:'Source', get:r=>`<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">settled markets</a>`}
       ], f, 'No resolved markets for this filter in the current snapshot.');
     }

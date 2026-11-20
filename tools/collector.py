@@ -354,7 +354,12 @@ def collect_scope(signer: Signer | None) -> dict:
                     "open_time": m.get("open_time"),
                     "updated_time": m.get("updated_time"),
                     "price_level_structure": m.get("price_level_structure"),
-                    "rules_primary": m.get("rules_primary"),
+                    # Full rules text omitted for file size (the 2026-11-20 run hit
+                    # GitHub's 100 MB file limit: snapshot.json 112 MB, mostly legal
+                    # text). The verbatim prefix is kept as `rules_primary_head`
+                    # (clearly named) and the FULL rules stay reachable at the row's
+                    # official `market_url`. Nothing inferred or rewritten.
+                    "rules_primary_head": (m.get("rules_primary") or "")[:160] or None,
                     "exchange_index": m.get("exchange_index"),
                     "settlement_sources": ev.get("settlement_sources"),
                     "series_category": series.get("category"),
@@ -525,7 +530,7 @@ def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list
                 "expiration_value": m.get("expiration_value"),
                 "volume_fp": m.get("volume_fp"),
                 "open_interest_fp": m.get("open_interest_fp"),
-                "rules_primary": m.get("rules_primary"),
+                "rules_primary_head": (m.get("rules_primary") or "")[:160] or None,
                 "market_url": f"{DEMO_REST}/markets/{m.get('ticker')}" if m.get("ticker") else None,
             }
         )
@@ -652,7 +657,7 @@ def main() -> int:
             {"t": int(finished.timestamp()), "last": lp, "yes_bid": yb,
              "yes_ask": r.get("yes_ask_dollars")}
         )
-        pts[t] = pts[t][-2000:]
+        pts[t] = pts[t][-288:]
     hist["updated_at_utc"] = snapshot["generated_at_utc"]
     write_json("history.json", hist)
 

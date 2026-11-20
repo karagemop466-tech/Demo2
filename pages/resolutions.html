@@ -70,7 +70,7 @@ Kalshi's own, not computed here.</p>
         {label:'Settlement $', num:true, get:r=>KR.usd(r.settlement_value_dollars,2)},
         {label:'Settled (UTC)', get:r=>`<span class="small">${KR.when(r.settlement_ts)}</span>`},
         {label:'Volume', num:true, get:r=>KR.num(r.volume_fp,0)},
-        {label:'Rules', get:r=>r.rules_primary?`<span class="small" title="${KR.esc(r.rules_primary)}">${KR.esc(r.rules_primary.slice(0,80))}…</span>`:'—'},
+        {label:'Rules', get:r=>r.rules_primary_head?`<span class="small" title="${KR.esc(r.rules_primary_head)}">${KR.esc(r.rules_primary_head.slice(0,80))}…</span>`:'—'},
         {label:'Source', get:r=>`<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">settled markets</a>`}
       ], f, 'No resolved markets for this filter in the current snapshot.');
     }

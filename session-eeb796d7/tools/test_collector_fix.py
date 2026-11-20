@@ -108,6 +108,13 @@ check(lead["yes_bid_dollars"] == "0.3500" and lead["volume_fp"] == "12.98"
       and lead["open_interest_fp"] == "9.84",
       "dollar/count fields copied verbatim (yes_bid 0.3500, volume_fp 12.98, OI 9.84)")
 
+# file-size fix: full rules text must not be in the row (GitHub 100 MB limit was
+# hit on 2026-11-20: snapshot.json 112 MB, mostly rules legalese); the verbatim
+# head is kept and the full text stays reachable at market_url
+check(lead.get("rules_primary") is None
+      and (lead.get("rules_primary_head") or "").startswith("If average regular gas prices"),
+      "rules stored as a 160-char verbatim head only (full text at market_url)")
+
 # --- 5: classification uses the official scope; Oil & Gas tag is not enough ---
 check(collector.series_topic(series_gas) == "gas",
       "KXAAAGASD (product_metadata.scope=Gasoline) classifies as gas")
