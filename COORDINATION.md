@@ -21,7 +21,7 @@ Branch in use by this session: `arena/1d709f30-demo2` (Arena-assigned; session c
 | ID | Task | Status | Owner | Files | Notes |
 |---|---|---|---|---|---|
 | T1 | Create/claim coordination board | done | 1d709f30 | COORDINATION.md | Claimed 2026-11-20 |
-| T2 | Official-source verification pass (Kalshi docs + demo API) | in progress | 1d709f30 | data/sources.json, docs/VERIFICATION.md | See Sources & Verification log below |
+| T2 | Official-source verification pass (Kalshi docs + demo API) | done | 1d709f30 | data/sources.json, docs/VERIFICATION.md | See Sources & Verification log below |
 | T3 | Repo review & irregularities | in progress | 1d709f30 | docs/REPO-REVIEW.md | Flagged irregularities listed below |
 | T4 | Executive summary | in progress | 1d709f30 | index.html, docs/EXECUTIVE-SUMMARY.md | |
 | T5 | Live events dashboard (gas, elections, culture, crypto, golf) | in progress | 1d709f30 | events.html, js/app.js, data/events.json | |
