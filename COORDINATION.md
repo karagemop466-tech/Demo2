@@ -335,4 +335,24 @@ found in main was fixed.
 3. `tools/check_links.py` — name collision with main's checker; upstream file kept untouched, this session's stricter
    checker published as `tools/check_live_links.py`.
 4. Root `index.html` and `pages/` — upstream's newer rebuild kept; only the nav link to `live/` and the `verified/`
+
+### Follow-up: the broken links were generator-side
+
+The first push of this work failed CI at the "regenerating produced a diff" gate, which was correct: the `verified/`
+link defect lived in `tools/build_site.py`'s `NAV` table, where the entry was written as `../verified/index.html` and
+then concatenated with a per-page prefix — producing `../../verified/...` from `pages/` and `../verified/...` from the
+root. Both are wrong. Fixed at the source (`verified/index.html` relative to the prefix), and the "Live Console" entry
+was added to the same table so a regeneration cannot drop it again.
+
+Two knock-on adjustments, both reviewed deliberately rather than by loosening a guard:
+
+- `tools/check.py` expected exactly 18 nav links; the console entry makes it 19. The count is updated with a comment,
+  not removed.
+- `tools/check.py`'s private-key scanner flagged the literal `-----BEGIN PRIVATE KEY-----` used as a textarea
+  placeholder in `live/trading.html`. The scanner is untouched — it is a good guard — and the placeholder was reworded.
+
+Final local state before merge: `tools/check_live_links.py` clean (46 files / 1063 attributes), `tools/check.py`
+"links, nav, data, secrets and scripts all clean", `tools/check_links.py` OK, `node --check` OK on both app scripts, and
+re-running both generators produces no diff.
+
    link fix were applied on top.
