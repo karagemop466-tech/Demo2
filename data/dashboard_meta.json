@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-20T14:00:24+00:00",
+ "generated_at_utc": "2026-11-20T14:08:56+00:00",
  "environment": "demo",
  "rest_base": "https://external-api.demo.kalshi.co/trade-api/v2",
  "authenticated": false,
@@ -44,21 +44,21 @@
  "counts": {
   "series_index": 16643,
   "events_scanned": 115,
-  "markets_in_scope": 7550,
+  "markets_in_scope": 7534,
   "per_topic": {
-   "gas": 322,
-   "elections": 265,
+   "gas": 327,
+   "elections": 245,
    "culture": 0,
    "crypto": 6155,
-   "golf": 808
+   "golf": 807
   },
-  "resolved_in_scope": 6822,
-  "resolved_this_run": 6822,
-  "resolved_in_this_run_scope": 6822,
+  "resolved_in_scope": 6896,
+  "resolved_this_run": 6844,
+  "resolved_in_this_run_scope": 6896,
   "failed_series_requests": 2,
   "orderbooks": 12,
   "candle_sets": 8,
-  "trade_volume_markets": 20,
+  "trade_volume_markets": 21,
   "book_history_markets": 10,
   "truncated_topics": []
  },
@@ -92,7 +92,8 @@
     "KXDIESELYE",
     "KXEIAGASINVM",
     "KXMARCELLUSGAS",
-    "KXNGASMAX"
+    "KXNGASMAX",
+    "KXNGASMIN"
    ],
    "cap_this_run": 40
   },
@@ -101,7 +102,6 @@
    "series_read": 40,
    "series_failed": 0,
    "series_with_live_markets": [
-    "KXGA14S",
     "KXGABOTTOMSOSSOFF",
     "KXGAGAUZIAGOV",
     "KXGAMBIAPARLI",
@@ -111,7 +111,8 @@
     "KXGENERALCOUNTY",
     "KXGENERALMOV",
     "KXGEORGIAPARLI",
-    "KXGERELECTION"
+    "KXGERELECTION",
+    "KXGERPRES"
    ],
    "cap_this_run": 40
   },
@@ -127,7 +128,6 @@
    "series_read": 40,
    "series_failed": 2,
    "series_with_live_markets": [
-    "KXETHEVENT",
     "KXETHMAXMON",
     "KXETHMINMON",
     "KXETHMINY",
@@ -136,7 +136,8 @@
     "KXFDVRAINBOW",
     "KXHYPE",
     "KXHYPE15M",
-    "KXHYPED"
+    "KXHYPED",
+    "KXHYPEEVENT"
    ],
    "cap_this_run": 40
   },
@@ -145,7 +146,6 @@
    "series_read": 40,
    "series_failed": 0,
    "series_with_live_markets": [
-    "KXPGACURRY",
     "KXPGAFUTURE",
     "KXPGAH2H",
     "KXPGAHOLEINONE",
@@ -187,12 +187,12 @@
  "series_with_live_markets_total": 61,
  "series_read_total": 162,
  "resolutions_by_topic": {
-  "gas": 2028,
+  "gas": 2033,
   "elections": 45,
   "culture": 0,
-  "crypto": 1407,
+  "crypto": 1476,
   "golf": 3342
  },
- "api_request_count": 367,
- "api_request_failures": 5
+ "api_request_count": 363,
+ "api_request_failures": 0
 }

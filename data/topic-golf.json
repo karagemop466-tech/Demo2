@@ -1,33 +1,8 @@
 {
- "generated_at_utc": "2026-11-20T14:00:24+00:00",
+ "generated_at_utc": "2026-11-20T14:08:56+00:00",
  "topic": "golf",
- "count": 808,
+ "count": 807,
  "markets": [
-  {
-   "topic": "golf",
-   "event_ticker": "KXPGAFUTURE-36JKOI",
-   "series_ticker": "KXPGAFUTURE",
-   "market_ticker": "KXPGAFUTURE-36JKOI-4",
-   "market_title": "How many golf major championships will Jackson Koivun win before 2036?",
-   "yes_sub_title": "4+ golf major championship wins",
-   "status": "active",
-   "result": "",
-   "yes_bid_dollars": "0.0000",
-   "yes_ask_dollars": "1.0000",
-   "no_bid_dollars": "0.0000",
-   "no_ask_dollars": "1.0000",
-   "last_price_dollars": "0.9000",
-   "yes_bid_size_fp": "0.00",
-   "yes_ask_size_fp": "0.00",
-   "volume_fp": "1.17",
-   "volume_24h_fp": "0.00",
-   "open_interest_fp": "0.01",
-   "close_time": "2036-01-01T04:59:00Z",
-   "open_time": "2026-06-12T16:43:40Z",
-   "updated_time": "2026-07-09T13:34:45.973113Z",
-   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAFUTURE-36JKOI-4",
-   "est_dollar_volume": 1.05
-  },
   {
    "topic": "golf",
    "event_ticker": "KXPGAFUTURE-36MRUS",
@@ -305,11 +280,11 @@
   },
   {
    "topic": "golf",
-   "event_ticker": "KXPGACURRY-28",
-   "series_ticker": "KXPGACURRY",
-   "market_ticker": "KXPGACURRY-28",
-   "market_title": "Steph Curry to compete in a PGA Tour event before 2028",
-   "yes_sub_title": "Yes",
+   "event_ticker": "KXPGAFUTURE-36JKOI",
+   "series_ticker": "KXPGAFUTURE",
+   "market_ticker": "KXPGAFUTURE-36JKOI-4",
+   "market_title": "How many golf major championships will Jackson Koivun win before 2036?",
+   "yes_sub_title": "4+ golf major championship wins",
    "status": "active",
    "result": "",
    "yes_bid_dollars": "0.0000",
@@ -322,14 +297,14 @@
    "volume_fp": "1.17",
    "volume_24h_fp": "0.00",
    "open_interest_fp": "0.01",
-   "close_time": "2028-01-08T17:00:00Z",
-   "open_time": "2026-03-06T18:58:38Z",
-   "updated_time": "2026-04-09T17:06:32.531256Z",
-   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGACURRY-28",
+   "close_time": "2036-01-01T04:59:00Z",
+   "open_time": "2026-06-12T16:43:40Z",
+   "updated_time": "2026-07-09T13:34:45.973113Z",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAFUTURE-36JKOI-4",
    "est_dollar_volume": 1.05,
    "usd_volume_24h": 0.0,
    "contracts_24h_from_trades": 0.0,
-   "usd_volume_24h_source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGACURRY-28&limit=1000"
+   "usd_volume_24h_source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXPGAFUTURE-36JKOI-4&limit=1000"
   },
   {
    "topic": "golf",
@@ -83717,7 +83692,7 @@
   "KXPGAR1LEAD-MAST27-HENG": {
    "points": [
     {
-     "ts": 1795183102,
+     "ts": 1795183605,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -83726,7 +83701,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183126,
+     "ts": 1795183630,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -83735,7 +83710,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183149,
+     "ts": 1795183654,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -83744,7 +83719,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183173,
+     "ts": 1795183679,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -83753,7 +83728,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183196,
+     "ts": 1795183704,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -83762,7 +83737,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183219,
+     "ts": 1795183728,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,

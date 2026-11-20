@@ -1,12 +1,12 @@
 {
- "generated_at_utc": "2026-11-20T14:00:24+00:00",
+ "generated_at_utc": "2026-11-20T14:08:56+00:00",
  "note": "Sampled by this collector from GET /markets/{ticker}/orderbook. Kalshi publishes no orderbook history; each point is one poll, about 22 s apart.",
  "sample_interval_s": 22,
  "markets": {
   "KXAAAGASM-26NOV30-3.90": {
    "points": [
     {
-     "ts": 1795183101,
+     "ts": 1795183605,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -15,7 +15,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183125,
+     "ts": 1795183629,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -24,7 +24,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183149,
+     "ts": 1795183654,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -33,7 +33,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183172,
+     "ts": 1795183678,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -42,7 +42,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183195,
+     "ts": 1795183703,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -51,7 +51,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183219,
+     "ts": 1795183728,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -64,125 +64,71 @@
    "topic": "gas",
    "title": "Will average **gas prices** be above $3.90?"
   },
-  "KXGA14S-26-SHAR": {
+  "KXGEORGIAPARLI-28-UNM": {
    "points": [
     {
-     "ts": 1795183102,
+     "ts": 1795183605,
      "yes_bids": [],
-     "derived_yes_asks": [
-      [
-       0.98,
-       1.0
-      ],
-      [
-       0.99,
-       3.0
-      ]
-     ],
+     "derived_yes_asks": [],
      "yes_bid_contracts": 0,
-     "derived_ask_contracts": 4.0,
+     "derived_ask_contracts": 0,
      "best_yes_bid": null,
-     "best_yes_ask_derived": 0.98
+     "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183125,
+     "ts": 1795183629,
      "yes_bids": [],
-     "derived_yes_asks": [
-      [
-       0.98,
-       1.0
-      ],
-      [
-       0.99,
-       3.0
-      ]
-     ],
+     "derived_yes_asks": [],
      "yes_bid_contracts": 0,
-     "derived_ask_contracts": 4.0,
+     "derived_ask_contracts": 0,
      "best_yes_bid": null,
-     "best_yes_ask_derived": 0.98
+     "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183149,
+     "ts": 1795183654,
      "yes_bids": [],
-     "derived_yes_asks": [
-      [
-       0.98,
-       1.0
-      ],
-      [
-       0.99,
-       3.0
-      ]
-     ],
+     "derived_yes_asks": [],
      "yes_bid_contracts": 0,
-     "derived_ask_contracts": 4.0,
+     "derived_ask_contracts": 0,
      "best_yes_bid": null,
-     "best_yes_ask_derived": 0.98
+     "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183172,
+     "ts": 1795183679,
      "yes_bids": [],
-     "derived_yes_asks": [
-      [
-       0.98,
-       1.0
-      ],
-      [
-       0.99,
-       3.0
-      ]
-     ],
+     "derived_yes_asks": [],
      "yes_bid_contracts": 0,
-     "derived_ask_contracts": 4.0,
+     "derived_ask_contracts": 0,
      "best_yes_bid": null,
-     "best_yes_ask_derived": 0.98
+     "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183196,
+     "ts": 1795183703,
      "yes_bids": [],
-     "derived_yes_asks": [
-      [
-       0.98,
-       1.0
-      ],
-      [
-       0.99,
-       3.0
-      ]
-     ],
+     "derived_yes_asks": [],
      "yes_bid_contracts": 0,
-     "derived_ask_contracts": 4.0,
+     "derived_ask_contracts": 0,
      "best_yes_bid": null,
-     "best_yes_ask_derived": 0.98
+     "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183219,
+     "ts": 1795183728,
      "yes_bids": [],
-     "derived_yes_asks": [
-      [
-       0.98,
-       1.0
-      ],
-      [
-       0.99,
-       3.0
-      ]
-     ],
+     "derived_yes_asks": [],
      "yes_bid_contracts": 0,
-     "derived_ask_contracts": 4.0,
+     "derived_ask_contracts": 0,
      "best_yes_bid": null,
-     "best_yes_ask_derived": 0.98
+     "best_yes_ask_derived": null
     }
    ],
-   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGA14S-26-SHAR/orderbook?depth=25",
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGEORGIAPARLI-28-UNM/orderbook?depth=25",
    "topic": "elections",
-   "title": "Who will win the 2026 GA-14 special election (including any runoffs)?"
+   "title": "Who will win the next Georgian parliamentary election?"
   },
   "KXETHY-27JAN0100-T4999.99": {
    "points": [
     {
-     "ts": 1795183102,
+     "ts": 1795183605,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -191,7 +137,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183125,
+     "ts": 1795183630,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -200,7 +146,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183149,
+     "ts": 1795183654,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -209,7 +155,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183172,
+     "ts": 1795183679,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -218,7 +164,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183196,
+     "ts": 1795183703,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -227,7 +173,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183219,
+     "ts": 1795183728,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -243,7 +189,7 @@
   "KXPGAR1LEAD-MAST27-HENG": {
    "points": [
     {
-     "ts": 1795183102,
+     "ts": 1795183605,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -252,7 +198,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183126,
+     "ts": 1795183630,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -261,7 +207,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183149,
+     "ts": 1795183654,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -270,7 +216,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183173,
+     "ts": 1795183679,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -279,7 +225,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183196,
+     "ts": 1795183704,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -288,7 +234,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183219,
+     "ts": 1795183728,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -304,7 +250,7 @@
   "KXETHY-27JAN0100-B3875": {
    "points": [
     {
-     "ts": 1795183102,
+     "ts": 1795183606,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -313,7 +259,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183126,
+     "ts": 1795183630,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -322,7 +268,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183149,
+     "ts": 1795183655,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -331,7 +277,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183173,
+     "ts": 1795183679,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -340,7 +286,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183196,
+     "ts": 1795183704,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -349,7 +295,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183219,
+     "ts": 1795183728,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -365,7 +311,7 @@
   "KXETHY-27JAN0100-B2125": {
    "points": [
     {
-     "ts": 1795183102,
+     "ts": 1795183606,
      "yes_bids": [
       [
        0.01,
@@ -392,7 +338,7 @@
      "best_yes_ask_derived": 0.24
     },
     {
-     "ts": 1795183126,
+     "ts": 1795183630,
      "yes_bids": [
       [
        0.01,
@@ -419,7 +365,7 @@
      "best_yes_ask_derived": 0.24
     },
     {
-     "ts": 1795183149,
+     "ts": 1795183655,
      "yes_bids": [
       [
        0.01,
@@ -446,7 +392,7 @@
      "best_yes_ask_derived": 0.24
     },
     {
-     "ts": 1795183173,
+     "ts": 1795183680,
      "yes_bids": [
       [
        0.01,
@@ -473,7 +419,7 @@
      "best_yes_ask_derived": 0.24
     },
     {
-     "ts": 1795183196,
+     "ts": 1795183704,
      "yes_bids": [
       [
        0.01,
@@ -500,7 +446,7 @@
      "best_yes_ask_derived": 0.24
     },
     {
-     "ts": 1795183220,
+     "ts": 1795183729,
      "yes_bids": [
       [
        0.01,
@@ -534,7 +480,7 @@
   "KXETHY-27JAN0100-B2625": {
    "points": [
     {
-     "ts": 1795183102,
+     "ts": 1795183606,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -543,7 +489,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183126,
+     "ts": 1795183631,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -552,7 +498,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183150,
+     "ts": 1795183655,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -561,7 +507,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183173,
+     "ts": 1795183680,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -570,7 +516,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183196,
+     "ts": 1795183704,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -579,7 +525,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183220,
+     "ts": 1795183729,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -595,7 +541,7 @@
   "KXETHY-27JAN0100-B3125": {
    "points": [
     {
-     "ts": 1795183103,
+     "ts": 1795183606,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -604,7 +550,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183126,
+     "ts": 1795183631,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -613,7 +559,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183150,
+     "ts": 1795183655,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -622,7 +568,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183173,
+     "ts": 1795183680,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -631,7 +577,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183197,
+     "ts": 1795183705,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -640,7 +586,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183220,
+     "ts": 1795183729,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -656,7 +602,7 @@
   "KXETHY-27JAN0100-B2875": {
    "points": [
     {
-     "ts": 1795183103,
+     "ts": 1795183607,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -665,7 +611,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183126,
+     "ts": 1795183631,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -674,7 +620,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183150,
+     "ts": 1795183656,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -683,7 +629,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183173,
+     "ts": 1795183680,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -692,7 +638,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183197,
+     "ts": 1795183705,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -701,7 +647,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183220,
+     "ts": 1795183729,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -717,7 +663,7 @@
   "KXETHY-27JAN0100-B1125": {
    "points": [
     {
-     "ts": 1795183103,
+     "ts": 1795183607,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -726,7 +672,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183127,
+     "ts": 1795183631,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -735,7 +681,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183150,
+     "ts": 1795183656,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -744,7 +690,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183173,
+     "ts": 1795183681,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -753,7 +699,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183197,
+     "ts": 1795183705,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -762,7 +708,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795183220,
+     "ts": 1795183730,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
