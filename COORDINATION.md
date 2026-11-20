@@ -1254,6 +1254,20 @@ belonged to another tree's register), and two decision rows are added.
 - **Resolutions are a lower bound** — N-5: per-series queries with a per-series cap.
 - **Simulated fills assume full size at the posted quote** — N-6: the order book is not consulted;
   the desk publishes how many rule matches produced no order and why.
+- **The `by_topic` copy was pure duplication** — N-2: 20.23 MB of the 47.26 MB snapshot re-sliced
+  the same rows; no page reads it, and it is not re-added.
+- **The high-ROI screen is a heuristic, not a forecast** — N-7: thresholds are printed, every
+  passing line is tagged, and the potential ROI is described as arithmetic. The two alert streams
+  are labelled so a 10-minute sample is never read as a live tick.
+- **What the chats watch is a documented choice** — the top of the snapshot by estimated dollar
+  volume is far-dated election markets (close times in 2030–2035) that can never resolve inside the
+  screen's 30-day window, so the desk watches the in-scope markets that close soonest (within 45
+  days), then the largest by estimated dollar volume, and prints that rule in the status line. On
+  the stale committed snapshot only 2 in-scope markets close within 45 days and `near_term_*` is
+  absent, because that snapshot predates the near-term pass.
+- **Float tolerance on the $0.10 threshold** — N-7: `1.00 - 0.90` is `0.09999999999999998` in binary
+  floats, which silently dropped real $0.10 moves from both the alert desk and the chart's jump
+  markers; both comparisons now use a 1e-9 tolerance.
 - **README's "no sandbox egress" claim is inaccurate** — the authoring sandbox's `fetch_page` reaches
   docs.kalshi.com and the demo API; only `bash`/python egress fails (TLS EOF). Recorded here rather than
   silently propagated.
