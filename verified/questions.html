@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questions · Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<header class="top">
+  <div class="brand"><a href="index.html">Kalshi Demo Dashboard</a><span class="tag">DEMO DATA · read-only</span></div>
+  <nav><a href="index.html">Home</a><a href="gas-prices.html">Gas Prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live-dashboard.html">Live Dashboard</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="questions.html" class="active">Questions</a><a href="suggestions.html">Suggestions</a><a href="flagged-for-review.html">Flagged for Review</a><a href="repo-review.html">Repo Review</a><a href="../index.html">Main dashboard ↗</a></nav>
+</header>
+<main>
+
+<section class="hero small">
+  <h1>Questions</h1>
+  <p>What must be answered before a trading decision can reasonably be made. Part A lists what the collected data already answers. Part B lists what is still missing, and how to find it.</p>
+</section>
+<section>
+<h2>Part A. Answered from verified sources</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Question</th><th>Answer</th><th>Note</th><th>Source</th></tr></thead>
+<tbody><tr><td>What is the base URL for the demo REST API?</td><td>https://external-api.demo.kalshi.co/trade-api/v2</td><td>Kalshi demo env doc recommends this root.</td><td><a href="https://docs.kalshi.com/getting_started/demo_env.md" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/demo_env.md</a></td></tr><tr><td>Is market data available without authentication?</td><td>Yes. The GET market endpoints returned data with no credentials.</td><td>Kalshi&#x27;s quick-start list describes market data &#x27;without authentication&#x27;; observed responses confirm it.</td><td><a href="https://docs.kalshi.com/llms.txt" target="_blank" rel="noopener">https://docs.kalshi.com/llms.txt</a></td></tr><tr><td>Are demo prices real-market prices?</td><td>Not guaranteed. Kalshi says demo prices may not reflect real markets.</td><td>Demo env doc warning.</td><td><a href="https://docs.kalshi.com/getting_started/demo_env.md" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/demo_env.md</a></td></tr><tr><td>Is volume_fp in dollars?</td><td>No. &#x27;_fp&#x27; fields are contract quantities; &#x27;_dollars&#x27; fields are prices.</td><td>Fixed-point doc.</td><td><a href="https://docs.kalshi.com/getting_started/fixed_point_migration.md" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/fixed_point_migration.md</a></td></tr><tr><td>How does the orderbook show asks?</td><td>It returns yes bids and no bids only. A yes bid at X is the same as a no ask at 1 − X.</td><td>Get Market Orderbook doc.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook.md" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/market/get-market-orderbook.md</a></td></tr></tbody>
+</table></div>
+</section>
+<section>
+<h2>Part B. Still missing (with how to discover each one)</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>ID</th><th>Question / missing information</th><th>How to discover it</th><th>Reference</th></tr></thead>
+<tbody><tr><td>Q-06</td><td>Which open markets exist in each of the five topics, and how many?</td><td>Follow the cursor on /markets and /series pages until empty. Not done; first pages only.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noopener">Get Markets doc</a></td></tr><tr><td>Q-07</td><td>Which markets have the most dollar volume?</td><td>Compute dollar volume from the Trades endpoint (price × contracts) per market. Volume fields alone do not give dollars.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-trades.md" target="_blank" rel="noopener">Get Trades</a></td></tr><tr><td>Q-08</td><td>What are current prices for the AAA gas-price series?</td><td>Find the open market tickers for KXAAAGASCDOK and KXAAAGASDTN, then read them with Get Market. A series-level query returned none.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-market.md" target="_blank" rel="noopener">Get Market</a></td></tr><tr><td>Q-09</td><td>How did resolved events settle (yes or no)?</td><td>Query settled markets and read the result field. Not yet done.</td><td><a href="https://docs.kalshi.com/getting_started/market_settlement.md" target="_blank" rel="noopener">Market Settlement doc</a></td></tr><tr><td>Q-10</td><td>What are the trading fees per contract?</td><td>Series rows carry fee_type &#x27;quadratic&#x27; and fee_multiplier 1. The fee formula has not been read or checked.</td><td><a href="https://docs.kalshi.com/getting_started/fee_rounding.md" target="_blank" rel="noopener">Fee rounding doc</a></td></tr><tr><td>Q-11</td><td>Does the browser (GitHub Pages) get CORS access to the demo API?</td><td>Test from a real browser on the live site. Not verified from the sandbox.</td><td><a href="live-dashboard.html">Live Dashboard status line</a></td></tr><tr><td>Q-12</td><td>Which data is production vs. demo, and which should drive the analysis?</td><td>Decision needed. See Suggestion S-01.</td><td><a href="https://docs.kalshi.com/getting_started/demo_env.md" target="_blank" rel="noopener">Demo env doc</a></td></tr><tr><td>Q-13</td><td>How much demo funding is available, and what position sizes are allowed?</td><td>Visible only after the demo account exists. Needs your action.</td><td><a href="https://docs.kalshi.com/getting_started/demo_env.md" target="_blank" rel="noopener">Demo env doc</a></td></tr><tr><td>Q-14</td><td>What risk limits and entry rules should apply to demo trades?</td><td>Decision needed from you before any trade. See Suggestions S-05 and S-06.</td><td><a href="suggestions.html">Your decision</a></td></tr><tr><td>Q-15</td><td>Are there markets whose settlement sources are unclear?</td><td>Yes, see flags F-03, F-04, F-05, F-07, F-09. Each needs a contract-terms read.</td><td><a href="flagged-for-review.html">Flagged for Review</a></td></tr></tbody>
+</table></div>
+</section>
+
+</main>
+<footer>
+  <p>Data source: Kalshi <strong>demo</strong> Trade API, <a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a>.
+  Kalshi says demo prices and behavior may not reflect real markets. Not financial advice.
+  Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a>.</p>
+  <p>Site built 2026-11-20 11:17 UTC from data/kalshi_snapshot.json (collected 2026-11-20).</p>
+</footer>
+
+</body>
+</html>
