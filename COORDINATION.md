@@ -3,6 +3,40 @@
 Session ID: `e3f65782` (branch `arena/e3f65782-demo2`, base `6072808` on `main`)
 Last updated: 2026-11-20
 
+---
+
+## ACTIVE SESSION: `arena6836594f` — branch `arena/6836594f-demo2`, base `5224293` on `main`
+
+**Role: final integration session.** Prior sessions (`e3f65782`, `407c72e2`) are complete and merged
+(PR #1, PR #3). No other session is active in this checkout.
+
+### Claim (committed before starting work)
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| 12 | Live demo-API data harvest (open/settled markets, orderbooks) | in progress | arena6836594f | `data/*.json` |
+| 13 | Line-by-line verification of every claim vs official docs | in progress | arena6836594f | `pages/verification.html`, `pages/sources.html` |
+| 14 | Consolidate site to one clean landing page + category subpages | unclaimed | arena6836594f | `index.html`, `assets/*`, `pages/*` |
+| 15 | Live interactive chart (sec/min/hr) + orderbook liquidity | unclaimed | arena6836594f | `assets/app.js`, `assets/chart.js` |
+| 16 | Portfolio tracking + trade execution + analysis/strategies | unclaimed | arena6836594f | `pages/portfolio.html`, `pages/analysis.html` |
+| 17 | Suggestions / Questions / Flagged registers | unclaimed | arena6836594f | `pages/suggestions.html`, `pages/questions.html`, `pages/flagged.html` |
+| 18 | Link check + build check + Pages deploy + PR/merge | unclaimed | arena6836594f | all, `.github/workflows/pages.yml` |
+
+### Important correction to prior session's finding
+
+Prior sessions recorded "sandbox cannot reach Kalshi API (TLS SSL_ERROR_SYSCALL)". That is true for
+the sandbox's own `curl` egress path only. The **agent web-fetch path reaches the Kalshi demo API
+successfully** — verified live this session, e.g. `GET https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=2`
+returned a 200 with a real market payload (verified 2026-11-20). Live demo data is therefore
+verifiable and is captured into `data/*.json` snapshots with per-row source links.
+
+### Scope rule
+
+Shared outputs (site index, navigation, table data) are changed only by this integration session,
+as allowed by the coordination protocol.
+
+---
+
 > Single-session execution: all tasks below are claimed by this session.
 > No other session is active in this checkout. If another session starts,
 > it must claim a non-overlapping scope here first.
