@@ -60,3 +60,12 @@ Last updated: 2026-11-20
 ## Update 2026-11-20 (post-merge)
 - PR #1: https://github.com/karagemop466-tech/Demo2/pull/1 — MERGED (merge commit acf8ef38292d7aaff1591a077742798b3a0ddde2)
 - Pages: https://karagemop466-tech.github.io/Demo2/ (legacy build from main /)
+
+## Follow-up integration update — branch `arena/407c72e2-demo2`
+
+- This checkout found that `origin/main` had advanced with PR #1 and already contains the complete multi-page dashboard. To avoid overwriting that work, retained the existing `index.html`, `.github/workflows/pages.yml`, and this coordination board from `origin/main`; additional root-level analysis, portfolio-safe-state, and review pages are additive. README now explains both sets of pages and security cautions.
+- Added links and analysis references based on official docs: market data quick start, orderbook schema, WebSocket quick start, events endpoint, portfolio balance endpoint, order guide, and changelog.
+- Follow-up implementation: `analysis.html`, `portfolio.html`, `review.html`, root `app.js` and `style.css`; does not alter existing `pages/` content or `assets/` implementation. The root portfolio page purposely exposes no account metrics and no trade form.
+- Verification: `node --check app.js` passed; checked local links in the newly added root pages before reconciliation. Existing site remains unchanged after resolving rebase conflicts by retaining the main versions.
+- Rebase conflict encountered after `origin/main` advanced. Preserved main's shared dashboard, workflow, and coordination content; no main implementation was discarded. Root README was updated to document the additional pages, and any earlier branch-only top-level monitor mockup was omitted because it conflicted with main's dashboard landing page. Follow-up run of the main site's link checker and deployment is still required.
+- PR #3: https://github.com/karagemop466-tech/Demo2/pull/3 . Rebased on `origin/main` after resolving the conflict by preserving main's dashboard/workflow/coordinator. Updated branch pushed with `--force-with-lease`; PR is open and GitHub reports no checks configured/reported on this branch. Pages deployment remains the existing main deployment; new additive pages are included with the PR but have not been deployed.
