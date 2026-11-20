@@ -18,6 +18,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Offline smoke test
+        run: python instrument-panel/tests_smoke.py
       - name: Collect demo market data
         env:
           KALSHI_MAX_SERIES: '400'

@@ -366,6 +366,11 @@ def collect_markets(series_ticker, status):
     return j.get("markets", []) or [], url
 
 
+def chunked(seq, n):
+    for i in range(0, len(seq), n):
+        yield seq[i:i + n]
+
+
 def collect_events_paged(first_url, max_pages=12):
     """Follow the cursor for an events query. Returns (rows, url_of_first_page)."""
     rows, url, pages = [], first_url, 0
@@ -543,6 +548,35 @@ def main():
         for s0 in found.get(tid, []):
             if str(s0.get("ticker")) in covered or s0 in missing[:40]:
                 series_rows.append(slim_series(s0, tid))
+
+        # ---- resolved markets: batch the documented series_ticker filter ----
+        # /markets accepts one series_ticker per call, so series are batched round-robin and
+        # each call returns that series' settled markets with status/result already populated.
+        # Attribution is exact here because the filter is the series itself - no prefix guessing.
+        per_topic_resolved = 0
+        for batch in chunked([x.get("ticker") for x in found.get(tid, [])], 1):
+            if per_topic_resolved >= MAX_RESOLVED_PER_TOPIC:
+                break
+            stk = batch[0]
+            sm, sm_url = collect_markets(stk, "settled")
+            s_obj = series_by_ticker.get(str(stk)) or {}
+            for m in sm:
+                if per_topic_resolved >= MAX_RESOLVED_PER_TOPIC:
+                    break
+                if (m.get("result") or "") == "":
+                    continue          # not actually resolved yet: never counted
+                row = {k: m.get(k) for k in MARKET_FIELDS}
+                row.update({
+                    "topic": tid,
+                    "series_ticker": stk,
+                    "series_title": s_obj.get("title"),
+                    "event_title": (event_titles.get(m.get("event_ticker")) or {}).get("title"),
+                    "source_url": sm_url,
+                    "source_market_url": ENDPOINTS["market"].format(ticker=urllib.parse.quote(str(m.get("ticker")))),
+                })
+                row.update(derive(m))
+                resolved_rows.append(row)
+                per_topic_resolved += 1
 
         mkts.sort(key=lambda m: (derive(m)["open_interest_usd"] or -1), reverse=True)
         mkts = mkts[:MAX_MARKETS_PER_TOPIC]

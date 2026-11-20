@@ -98,6 +98,15 @@ def main():
     else:
         errors.append("meta.generated_epoch missing")
 
+    # A resolved-market block that returns nothing is a bug, not a quiet day: Kalshi's demo
+    # exchange always lists settled markets. Fail loudly instead of publishing a zero.
+    if not (d.get("resolved") or []):
+        errors.append("no resolved markets collected - the settled-market query is broken, "
+                      "do not publish a dashboard with an empty resolutions page")
+    for tid, n in (d.get("markets") or {}).items():
+        if not n:
+            warnings.append(f"topic {tid}: no open markets matched its scope queries")
+
     if d.get("health", {}).get("exchange_status_http") != 200:
         warnings.append("exchange/status was not 200 during collection")
 

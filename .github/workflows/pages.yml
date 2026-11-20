@@ -38,6 +38,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Offline smoke test
+        run: python instrument-panel/tests_smoke.py
       - name: Collect demo market data
         run: python instrument-panel/tools/kalshi_collect.py
       - name: Validate the snapshot
