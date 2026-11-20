@@ -273,7 +273,7 @@ Both sets of pages are published by the root-deploying `pages.yml` workflow.
 | T8 | Suggestions + Questions | done | 9 suggestions (S-06 implemented), 5 decisions D-01…D-05; 14 Q&As + missing-information discovery table. |
 | T9 | Flagged for Review | done | `intelligence/flagged.html` — 17 flags with verbatim API values + sources. |
 | T10 | Verification pass | done | `node intelligence/scripts/linkcheck.mjs` → PASS (9 pages, 272 links, 177 source fields); `node --check` on all JS; local smoke test 16/16 HTTP 200. |
-| T11 | Integration + PR + merge + Pages | done | PR: https://github.com/karagemop466-tech/Demo2/pull/16 — `gh pr merge 16 --merge` executed 2026-11-20 (merge result recorded in PR). Conflicts with `main` resolved add/add-style: README + COORDINATION combined (both sessions preserved), site relocated to `intelligence/` so no root files were overwritten. Pages: https://karagemop466-tech.github.io/Demo2/intelligence/ (root site untouched). |
+| T11 | Integration + PR + merge + Pages | DONE | PR #16 **MERGED** 2026-11-20, merge commit `2ccd57c` (`gh pr merge 16 --merge`). Conflicts with `main` resolved additively twice (README + COORDINATION union-resolved — every session preserved); site relocated to `intelligence/` so no root file was overwritten. CI `Build and check the site` run `44729787843` → **success** (66 HTML incl. subsite); `Deploy GitHub Pages` run `44729787760` → **success**; `pages build and deployment` run `44729786102` → **success**. Pages verified **live with content**: root https://karagemop466-tech.github.io/Demo2/ (existing site intact) + subsite https://karagemop466-tech.github.io/Demo2/intelligence/ (17 flags, 5 topics, all 9 pages). |
 
 ## Irregularities / handoffs (session arena-ddc587ae)
 
@@ -284,6 +284,6 @@ Both sets of pages are published by the root-deploying `pages.yml` workflow.
 
 ## PR / Pages record (session arena-ddc587ae)
 
-- PR #16: https://github.com/karagemop466-tech/Demo2/pull/16 — merged to `main` 2026-11-20 via `gh pr merge 16 --merge` (see PR for merge commit).
+- PR #16: https://github.com/karagemop466-tech/Demo2/pull/16 — **MERGED** 2026-11-20, merge commit `2ccd57c` (`gh pr merge 16 --merge`; verified `gh pr view 16` state=MERGED).
 - Pages root (existing site): https://karagemop466-tech.github.io/Demo2/ — unchanged by this PR.
-- Pages subsite (this session): https://karagemop466-tech.github.io/Demo2/intelligence/ — verified after merge (post-merge check appended in the follow-up commit below).
+- Pages subsite (this session): https://karagemop466-tech.github.io/Demo2/intelligence/ — **verified live with full content** post-merge (fetched title "Kalshi Demo Intelligence — Overview", stats 5/124/10/8/17 render, all nav links present).
