@@ -29,6 +29,7 @@ NAV = [
     ("pages/golf.html", "Golf", "golf"),
     ("verified/index.html", "Verified Data", "verified"),
     ("rankings.html", "Dollar Rankings", "rank"),
+    ("instrument-panel/site/index.html", "Instrument Panel", "inst"),
     ("live/index.html", "Live Console", "live"),
     ("pages/resolutions.html", "Resolutions", "res"),
     ("pages/portfolio.html", "Portfolio", "port"),
