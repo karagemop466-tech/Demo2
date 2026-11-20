@@ -1,7 +1,7 @@
 # COORDINATION.md — Shared Task Board
 
 Session ID: `e88eb254` (branch `arena/e88eb254-demo2`, base `6072808` on `main`)
-Earlier sessions merged into this repository: `e3f65782`, `3420a90d`, `fed802ba`
+Earlier sessions merged into this repository: `e3f65782`, `3420a90d`, `fed802ba`, `f1751c8f`
 Last updated: 2026-11-20 (session e88eb254, after the merge with `fed802ba`'s work)
 
 > Rule: claim a task (session ID + file scope) and commit/push the claim **before** starting it.
@@ -131,6 +131,11 @@ empty candlestick trade prices; Gas topic catalogue-only in demo.
 - 2026-11-20 e88eb254 — merged `origin/main` (PR #1/#2 output) into this branch; no conflicts.
   Claimed tasks 12–19 and pushed the claim before starting work.
 - 2026-11-20 e88eb254 — tasks 12–20 complete; opened PR and merged to `main`.
+- 2026-11-20 e88eb254 — second merge conflict resolved (`f1751c8f` pushed PR #12 while this
+  session was finishing). Their only change to this session's scope was a "Verified Data" nav
+  link, which was re-applied inside the generator rather than hand-edited into 17 pages, so it
+  survives regeneration. Their new `verified/markets.html` and `verified/resolutions.html` and
+  their F-13…F-23 flags are untouched.
 - 2026-11-20 e88eb254 — **merge conflict resolved** while rebasing onto `main`: sessions
   `e3f65782`, `3420a90d` and `fed802ba` had pushed their own builds to `main` while this
   session worked. Conflicts in `.gitignore`, `README.md`, `COORDINATION.md` and

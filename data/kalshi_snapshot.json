@@ -15,7 +15,8 @@
       "Only the first page of each query was read. Pagination (cursor) was not followed for Elections, Sports/Golf, Crypto, or Economics.",
       "Demo environment data. Kalshi states prices and behavior in demo may not reflect real markets.",
       "No market-level price history or liquidity was collected for the category tables. Live prices appear on the Live Dashboard page."
-    ]
+    ],
+    "session_update": "2026-11-20, session f1751c8f (branch arena/f1751c8f-demo2): rows re-checked against per-ticker detail endpoints (data/api_reverification.json); verbatim settlement sources (data/api_settlement_sources.json); open-market and resolution samples (data/api_market_samples.json); flags F-13 to F-22 added."
   },
   "categories": [
     {
@@ -55,18 +56,24 @@
       "tags": "Oil and energy; Econ Daily",
       "frequency": "daily",
       "sub_title": "",
-      "last_updated": "2026-11-18T18:16:25.451733Z",
+      "last_updated": "2026-11-18T17:33:45.216575Z",
       "source_api": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Economics&limit=200",
       "contract_terms": "https://assets.kalshi.com/contract_terms/AAAGASNEW.pdf",
       "settlement_sources": [
         {
           "name": "AAA",
-          "url": "https://gasprices.aaa.com/?state=OK"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://gasprices.aaa.com/?state=OK"
         }
       ],
       "flags": [
         "F-06"
-      ]
+      ],
+      "last_updated_list": "2026-11-18T18:16:25.451733Z",
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASCDOK",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-GAS-02",
@@ -74,7 +81,7 @@
       "type": "series",
       "ticker": "KXAAAGASDTN",
       "title": "Tennessee gas price",
-      "kalshi_category": "Economics, Commodities",
+      "kalshi_category": "Economics",
       "tags": "Oil and energy; Econ Daily",
       "frequency": "daily",
       "sub_title": "",
@@ -84,10 +91,16 @@
       "settlement_sources": [
         {
           "name": "AAA",
-          "url": "https://gasprices.aaa.com/?state=TN"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://gasprices.aaa.com/?state=TN"
         }
       ],
-      "flags": []
+      "flags": [],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASDTN",
+      "kalshi_category_list": "Economics, Commodities",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-ELC-01",
@@ -105,42 +118,71 @@
       "settlement_sources": [
         {
           "name": "Georgia Secretary of State",
-          "url": "https://results.sos.ga.gov/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://results.sos.ga.gov/"
         },
         {
           "name": "Maine Secretary of State",
-          "url": "https://www.maine.gov/sos/cec/elec/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.maine.gov/sos/cec/elec/"
         },
         {
           "name": "Florida Department of State",
-          "url": "https://dos.fl.gov/elections/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://dos.fl.gov/elections/"
         },
         {
           "name": "Federal Election Commission",
-          "url": "https://www.fec.gov"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.fec.gov"
         },
         {
           "name": "New York State Board of Elections",
-          "url": "https://elections.ny.gov/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://elections.ny.gov/"
         },
         {
           "name": "Oregon Secretary of State",
-          "url": "https://sos.oregon.gov/elections/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://sos.oregon.gov/elections/"
         },
         {
           "name": "Michigan Department of State",
-          "url": "https://www.michigan.gov/sos/elections"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.michigan.gov/sos/elections"
         },
         {
           "name": "New Hampshire Secretary of State",
-          "url": "https://www.sos.nh.gov/elections"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.sos.nh.gov/elections"
         },
         {
           "name": "Minnesota Secretary of State",
-          "url": "https://www.sos.mn.gov/elections-voting/election-results/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.sos.mn.gov/elections-voting/election-results/"
         }
       ],
-      "flags": []
+      "flags": [],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXUNDERHARRIS",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-ELC-02",
@@ -158,10 +200,15 @@
       "settlement_sources": [
         {
           "name": "North Carolina State Board of Elections",
-          "url": "https://www.ncsbe.gov/results-data/election-results"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.ncsbe.gov/results-data/election-results"
         }
       ],
-      "flags": []
+      "flags": [],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXNCSENTURNOUTDVSR",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-ELC-03",
@@ -179,10 +226,15 @@
       "settlement_sources": [
         {
           "name": "House Freedom Caucus",
-          "url": "https://freedomcaucus.org/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://freedomcaucus.org/"
         }
       ],
-      "flags": []
+      "flags": [],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXHFCCHAIR",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-ELC-04",
@@ -194,16 +246,22 @@
       "tags": "House",
       "frequency": "custom",
       "sub_title": "",
-      "last_updated": "2026-11-20T08:14:39.184059Z",
+      "last_updated": "2026-11-20T11:18:59.190435Z",
       "source_api": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Elections&limit=20",
       "contract_terms": "https://assets.kalshi.com/contract_terms/HOUSEPARTY.pdf",
       "settlement_sources": [
         {
           "name": "Library of Congress",
-          "url": "https://www.congress.gov/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.congress.gov/"
         }
       ],
-      "flags": []
+      "flags": [],
+      "last_updated_list": "2026-11-20T08:14:39.184059Z",
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/HOUSENY4",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-ELC-05",
@@ -221,28 +279,109 @@
       "settlement_sources": [
         {
           "name": "The New York Times",
-          "url": "https://www.nytimes.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.nytimes.com/"
         },
         {
           "name": "the Associated Press",
-          "url": "https://apnews.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://apnews.com/"
         },
         {
           "name": "Reuters",
-          "url": "https://www.reuters.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.reuters.com/"
         },
         {
           "name": "Axios",
-          "url": "https://www.axios.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.axios.com/"
         },
         {
           "name": "Politico",
-          "url": "https://www.politico.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.politico.com/"
+        },
+        {
+          "name": "Semafor",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.semafor.com/"
+        },
+        {
+          "name": "The Information",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.theinformation.com/"
+        },
+        {
+          "name": "The Washington Post",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Wrong organisation: fetched page is ABC Network (TV), not The Washington Post.",
+          "url_as_recorded": "https://abc.com/"
+        },
+        {
+          "name": "The Wall Street Journal",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.wsj.com/"
+        },
+        {
+          "name": "ABC",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Wrong organisation: fetched page is the Australian Broadcasting Corporation, not the US ABC in these rows.",
+          "url_as_recorded": "https://www.abc.net.au/"
+        },
+        {
+          "name": "CBS",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cbsnews.com/"
+        },
+        {
+          "name": "CNN",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cnn.com/"
+        },
+        {
+          "name": "Fox News",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.foxnews.com/"
+        },
+        {
+          "name": "MSNBC",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.msnbc.com/"
         }
       ],
       "flags": [
         "F-07"
-      ]
+      ],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEWPOPE-70",
+      "settlement_sources_list_count": 5,
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-ELC-06",
@@ -254,19 +393,24 @@
       "tags": "",
       "frequency": "",
       "sub_title": "Before Jan 1, 2099",
-      "last_updated": "2026-08-26T04:17:56.556868Z",
+      "last_updated": "2026-06-29T19:34:05.654838Z",
       "source_api": "https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=200",
       "contract_terms": "",
       "settlement_sources": [
         {
           "name": "North Atlantic Treaty Organization",
-          "url": "https://www.nato.int/"
+          "url": "https://www.nato.int/",
+          "url_status": "confirmed",
+          "url_status_note": "Fetched 2026-11-20: title 'North Atlantic Treaty Organization'."
         }
       ],
       "flags": [
         "F-01",
         "F-07"
-      ]
+      ],
+      "last_updated_list": "2026-08-26T04:17:56.556868Z",
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEXTNATOSECGEN-99",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-CUL-01",
@@ -284,36 +428,171 @@
       "settlement_sources": [
         {
           "name": "ABC",
-          "url": "https://abcnews.go.com/"
+          "url": "https://abcnews.go.com/",
+          "url_status": "confirmed",
+          "url_status_note": "Fetched 2026-11-20: page resolves to abcnews.com, title 'ABC News'."
+        },
+        {
+          "name": "account holder of ",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Search-results URL, not an official source; name is a placeholder.",
+          "url_as_recorded": "https://www.google.com/search?q=account+holder+of+"
         },
         {
           "name": "Fox News",
-          "url": "https://www.foxnews.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.foxnews.com/"
         },
         {
           "name": "MSNBC",
-          "url": "https://www.msnbc.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.msnbc.com/"
         },
         {
           "name": "The Wall Street Journal",
-          "url": "https://www.wsj.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.wsj.com/"
+        },
+        {
+          "name": "Semafor",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.semafor.com/"
+        },
+        {
+          "name": "Barchart",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Page is an S&P 500 index quote page; it is not shown to be a settlement source.",
+          "url_as_recorded": "https://www.barchart.com/stocks/quotes/$INX/overview"
+        },
+        {
+          "name": "Ars Technica",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Search-results URL, not an official source.",
+          "url_as_recorded": "https://www.google.com/search?q=Ars+Technica"
+        },
+        {
+          "name": "New York Times",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.nytimes.com/"
+        },
+        {
+          "name": "CBS",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cbsnews.com/"
+        },
+        {
+          "name": "The Washington Post",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.washingtonpost.com/"
+        },
+        {
+          "name": "Axios",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.axios.com/"
+        },
+        {
+          "name": "CNN",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cnn.com/"
+        },
+        {
+          "name": "Engadget",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Search-results URL, not an official source.",
+          "url_as_recorded": "https://www.google.com/search?q=Engadget"
         },
         {
           "name": "Reuters",
-          "url": "https://www.reuters.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.reuters.com/"
+        },
+        {
+          "name": "Mashable",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Search-results URL, not an official source.",
+          "url_as_recorded": "https://www.google.com/search?q=Mashable"
+        },
+        {
+          "name": "Bloomberg News",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.bloomberg.com"
+        },
+        {
+          "name": "Elon Musk",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "A personal account, not an official source for the settlement value.",
+          "url_as_recorded": "https://x.com/elonmusk"
         },
         {
           "name": "the Associated Press",
-          "url": "https://apnews.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://apnews.com/"
         },
         {
-          "name": "Elon Musk (X account)",
-          "url": "https://x.com/elonmusk"
+          "name": "Energy Information Administration",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.eia.gov/totalenergy/data/monthly/index.php"
+        },
+        {
+          "name": "Politico",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.politico.com/"
+        },
+        {
+          "name": "TechCrunch",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://techcrunch.com/"
+        },
+        {
+          "name": "Verge",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Search-results URL, not an official source.",
+          "url_as_recorded": "https://www.google.com/search?q=Verge"
         }
       ],
       "flags": [
         "F-05"
-      ]
+      ],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXXBANNEDMURRAYHILLGUY1",
+      "settlement_sources_list_count": 7,
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-CUL-02",
@@ -331,36 +610,171 @@
       "settlement_sources": [
         {
           "name": "ABC",
-          "url": "https://abcnews.go.com/"
+          "url": "https://abcnews.go.com/",
+          "url_status": "confirmed",
+          "url_status_note": "Fetched 2026-11-20: page resolves to abcnews.com, title 'ABC News'."
+        },
+        {
+          "name": "account holder of ",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Search-results URL, not an official source; name is a placeholder.",
+          "url_as_recorded": "https://www.google.com/search?q=account+holder+of+"
         },
         {
           "name": "Fox News",
-          "url": "https://www.foxnews.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.foxnews.com/"
         },
         {
           "name": "MSNBC",
-          "url": "https://www.msnbc.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.msnbc.com/"
         },
         {
           "name": "The Wall Street Journal",
-          "url": "https://www.wsj.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.wsj.com/"
+        },
+        {
+          "name": "Semafor",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.semafor.com/"
+        },
+        {
+          "name": "Barchart",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Page is an S&P 500 index quote page; it is not shown to be a settlement source.",
+          "url_as_recorded": "https://www.barchart.com/stocks/quotes/$INX/overview"
+        },
+        {
+          "name": "Ars Technica",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Search-results URL, not an official source.",
+          "url_as_recorded": "https://www.google.com/search?q=Ars+Technica"
+        },
+        {
+          "name": "New York Times",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.nytimes.com/"
+        },
+        {
+          "name": "CBS",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cbsnews.com/"
+        },
+        {
+          "name": "The Washington Post",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.washingtonpost.com/"
+        },
+        {
+          "name": "Axios",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.axios.com/"
+        },
+        {
+          "name": "CNN",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cnn.com/"
+        },
+        {
+          "name": "Engadget",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Search-results URL, not an official source.",
+          "url_as_recorded": "https://www.google.com/search?q=Engadget"
         },
         {
           "name": "Reuters",
-          "url": "https://www.reuters.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.reuters.com/"
+        },
+        {
+          "name": "Mashable",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Search-results URL, not an official source.",
+          "url_as_recorded": "https://www.google.com/search?q=Mashable"
+        },
+        {
+          "name": "Bloomberg News",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.bloomberg.com"
+        },
+        {
+          "name": "Elon Musk",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "A personal account, not an official source for the settlement value.",
+          "url_as_recorded": "https://x.com/elonmusk"
         },
         {
           "name": "the Associated Press",
-          "url": "https://apnews.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://apnews.com/"
         },
         {
-          "name": "Elon Musk (X account)",
-          "url": "https://x.com/elonmusk"
+          "name": "Energy Information Administration",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.eia.gov/totalenergy/data/monthly/index.php"
+        },
+        {
+          "name": "Politico",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.politico.com/"
+        },
+        {
+          "name": "TechCrunch",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://techcrunch.com/"
+        },
+        {
+          "name": "Verge",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "Search-results URL, not an official source.",
+          "url_as_recorded": "https://www.google.com/search?q=Verge"
         }
       ],
       "flags": [
         "F-05"
-      ]
+      ],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXXBANNEDGROK",
+      "settlement_sources_list_count": 7,
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-CRY-01",
@@ -372,16 +786,22 @@
       "tags": "Crypto; Solana",
       "frequency": "monthly",
       "sub_title": "",
-      "last_updated": "2026-10-13T18:34:01.879891Z",
+      "last_updated": "2026-10-07T07:02:48.492343Z",
       "source_api": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&limit=100",
       "contract_terms": "https://assets.kalshi.com/contract_terms/CRYPTOMINMAX.pdf",
       "settlement_sources": [
         {
           "name": "CF Benchmarks",
-          "url": "https://www.cfbenchmarks.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cfbenchmarks.com/"
         }
       ],
-      "flags": []
+      "flags": [],
+      "last_updated_list": "2026-10-13T18:34:01.879891Z",
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXSOLMINMON",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-CRY-02",
@@ -399,12 +819,17 @@
       "settlement_sources": [
         {
           "name": "CoinGecko",
-          "url": "https://www.coingecko.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.coingecko.com"
         }
       ],
       "flags": [
         "F-08"
-      ]
+      ],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXFDVBIRB",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-CRY-03",
@@ -421,13 +846,19 @@
       "contract_terms": "https://assets.kalshi.com/contract_terms/BTCMINMAX.pdf",
       "settlement_sources": [
         {
-          "name": "CF Benchmarks (BRTI index)",
-          "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          "name": "CF Benchmarks",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
         }
       ],
       "flags": [
         "F-04"
-      ]
+      ],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMAX130",
+      "settlement_sources_list_count": 1,
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-CRY-04",
@@ -445,64 +876,108 @@
       "settlement_sources": [
         {
           "name": "ABC",
-          "url": "https://abcnews.go.com/"
+          "url": "https://abcnews.go.com/",
+          "url_status": "confirmed",
+          "url_status_note": "Fetched 2026-11-20: page resolves to abcnews.com, title 'ABC News'."
         },
         {
           "name": "Fox News",
-          "url": "https://www.foxnews.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.foxnews.com/"
         },
         {
           "name": "MSNBC",
-          "url": "https://www.msnbc.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.msnbc.com/"
         },
         {
           "name": "The Wall Street Journal",
-          "url": "https://www.wsj.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.wsj.com/"
         },
         {
           "name": "Semafor",
-          "url": "https://www.semafor.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.semafor.com/"
         },
         {
           "name": "The Information",
-          "url": "https://www.theinformation.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.theinformation.com/"
         },
         {
           "name": "CBS",
-          "url": "https://www.cbsnews.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cbsnews.com/"
         },
         {
           "name": "The Washington Post",
-          "url": "https://www.washingtonpost.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.washingtonpost.com/"
         },
         {
           "name": "Axios",
-          "url": "https://www.axios.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.axios.com/"
         },
         {
           "name": "CNN",
-          "url": "https://www.cnn.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cnn.com/"
         },
         {
           "name": "Reuters",
-          "url": "https://www.reuters.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.reuters.com/"
         },
         {
           "name": "The New York Times",
-          "url": "https://www.nytimes.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.nytimes.com/"
         },
         {
           "name": "the Associated Press",
-          "url": "https://apnews.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://apnews.com/"
         },
         {
           "name": "Politico",
-          "url": "https://www.politico.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.politico.com/"
         }
       ],
       "flags": [
         "F-09"
-      ]
+      ],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBOASTABLE",
+      "settlement_sources_list_count": 14,
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-CRY-05",
@@ -514,16 +989,22 @@
       "tags": "",
       "frequency": "weekly",
       "sub_title": "",
-      "last_updated": "2026-10-13T18:34:01.879891Z",
+      "last_updated": "2026-09-29T17:36:46.343651Z",
       "source_api": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&limit=100",
       "contract_terms": "https://assets.kalshi.com/contract_terms/CRYPTO.pdf",
       "settlement_sources": [
         {
           "name": "CF Benchmarks",
-          "url": "https://www.cfbenchmarks.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cfbenchmarks.com/"
         }
       ],
-      "flags": []
+      "flags": [],
+      "last_updated_list": "2026-10-13T18:34:01.879891Z",
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXTONW",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-CRY-06",
@@ -535,16 +1016,22 @@
       "tags": "Crypto; Zcash",
       "frequency": "monthly",
       "sub_title": "",
-      "last_updated": "2026-10-13T18:34:01.879891Z",
+      "last_updated": "2026-10-07T07:03:15.792203Z",
       "source_api": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&limit=100",
       "contract_terms": "https://assets.kalshi.com/contract_terms/CRYPTOMINMAX.pdf",
       "settlement_sources": [
         {
           "name": "CF Benchmarks",
-          "url": "https://www.cfbenchmarks.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cfbenchmarks.com/"
         }
       ],
-      "flags": []
+      "flags": [],
+      "last_updated_list": "2026-10-13T18:34:01.879891Z",
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXZECMINMON",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-CRY-07",
@@ -556,16 +1043,22 @@
       "tags": "Bitcoin; Crypto",
       "frequency": "annual",
       "sub_title": "",
-      "last_updated": "2026-10-13T18:26:35.309038Z",
+      "last_updated": "2026-10-07T16:04:38.412915Z",
       "source_api": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&limit=100",
       "contract_terms": "https://assets.kalshi.com/contract_terms/CRYPTO.pdf",
       "settlement_sources": [
         {
           "name": "CF Benchmarks",
-          "url": "https://www.cfbenchmarks.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cfbenchmarks.com/"
         }
       ],
-      "flags": []
+      "flags": [],
+      "last_updated_list": "2026-10-13T18:26:35.309038Z",
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCY",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-CRY-08",
@@ -582,11 +1075,17 @@
       "contract_terms": "https://assets.kalshi.com/contract_terms/ETH.pdf",
       "settlement_sources": [
         {
-          "name": "CF Benchmarks (ETHUSD RTI)",
-          "url": "https://www.cfbenchmarks.com/data/indices/ETHUSD_RTI"
+          "name": "CF Benchmarks",
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cfbenchmarks.com/data/indices/ETHUSD_RTI"
         }
       ],
-      "flags": []
+      "flags": [],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/ETHD",
+      "settlement_sources_list_count": 1,
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-CRY-09",
@@ -604,10 +1103,15 @@
       "settlement_sources": [
         {
           "name": "CF Benchmarks",
-          "url": "https://www.cfbenchmarks.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.cfbenchmarks.com/"
         }
       ],
-      "flags": []
+      "flags": [],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXXRPMAXATH",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-GLF-01",
@@ -619,24 +1123,36 @@
       "tags": "Golf",
       "frequency": "custom",
       "sub_title": "",
-      "last_updated": "2026-11-20T08:31:24.5513Z",
+      "last_updated": "2026-11-20T11:14:52.946294Z",
       "source_api": "https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Golf&limit=20",
       "contract_terms": "https://assets.kalshi.com/contract_terms/GOLFH2H.pdf",
       "settlement_sources": [
         {
           "name": "LIV Golf",
-          "url": "https://www.livgolf.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.livgolf.com/"
         },
         {
           "name": "ESPN",
-          "url": "https://www.espn.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.espn.com"
         },
         {
           "name": "Fox Sports",
-          "url": "https://www.foxsports.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.foxsports.com"
         }
       ],
-      "flags": []
+      "flags": [],
+      "last_updated_list": "2026-11-20T08:31:24.5513Z",
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXLIVH2H",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-GLF-02",
@@ -646,7 +1162,7 @@
       "title": "Ryder Cup Top 3 Points Scorer",
       "kalshi_category": "Sports",
       "tags": "Golf",
-      "frequency": "annual",
+      "frequency": "custom",
       "sub_title": "",
       "last_updated": "2026-11-20T08:38:54.63143Z",
       "source_api": "https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Golf&limit=20",
@@ -654,10 +1170,16 @@
       "settlement_sources": [
         {
           "name": "ESPN",
-          "url": "https://www.espn.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.espn.com/"
         }
       ],
-      "flags": []
+      "flags": [],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGARYDERTOP3",
+      "frequency_list": "annual",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-GLF-03",
@@ -669,32 +1191,51 @@
       "tags": "Golf",
       "frequency": "custom",
       "sub_title": "",
-      "last_updated": "2026-11-20T08:29:56.776621Z",
+      "last_updated": "2026-11-20T11:15:15.72236Z",
       "source_api": "https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Golf&limit=20",
       "contract_terms": "https://assets.kalshi.com/contract_terms/GOLFSCORE.pdf",
       "settlement_sources": [
         {
           "name": "NBC Sports",
-          "url": "http://www.nbcsports.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "http://www.nbcsports.com/"
         },
         {
           "name": "Fox Sports",
-          "url": "https://foxsports.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://foxsports.com"
         },
         {
-          "name": "PGA Tour (listed as the Governing League)",
-          "url": "https://www.pgatour.com/"
+          "name": "the Governing League",
+          "url": "",
+          "url_status": "wrong_url",
+          "url_status_note": "'the Governing League' is not a named organisation, so the PGA Tour URL is an inference.",
+          "url_as_recorded": "https://www.pgatour.com/"
         },
         {
           "name": "the Associated Press",
-          "url": "https://apnews.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://apnews.com/"
         },
         {
           "name": "Golf Channel",
-          "url": "https://golfchannel.com"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://golfchannel.com"
         }
       ],
-      "flags": []
+      "flags": [],
+      "last_updated_list": "2026-11-20T08:29:56.776621Z",
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGAGOLFERSCORE",
+      "settlement_sources_list_count": 5,
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-GLF-04",
@@ -712,12 +1253,16 @@
       "settlement_sources": [
         {
           "name": "DP World Tour",
-          "url": "https://www.europeantour.com/dpworld-tour/schedule/"
+          "url": "https://www.europeantour.com/dpworld-tour/schedule/",
+          "url_status": "confirmed",
+          "url_status_note": "Fetched 2026-11-20: title 'DP World Tour Schedule'."
         }
       ],
       "flags": [
         "F-10"
-      ]
+      ],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDPWORLDTOUR",
+      "reverified": "2026-11-20 against detail endpoint"
     },
     {
       "id": "R-GLF-05",
@@ -735,18 +1280,29 @@
       "settlement_sources": [
         {
           "name": "The Wall Street Journal",
-          "url": "https://www.wsj.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.wsj.com/"
         },
         {
           "name": "ESPN",
-          "url": "https://www.espn.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.espn.com/"
         },
         {
           "name": "Fox Sports",
-          "url": "https://www.foxsports.com/"
+          "url": "",
+          "url_status": "not_confirmed",
+          "url_status_note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint).",
+          "url_as_recorded": "https://www.foxsports.com/"
         }
       ],
-      "flags": []
+      "flags": [],
+      "detail_endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGASOLHEIM",
+      "reverified": "2026-11-20 against detail endpoint"
     }
   ],
   "flags": [
@@ -834,7 +1390,7 @@
       "id": "F-06",
       "severity": "low",
       "topic": "Gas-price series listed without a market-level snapshot",
-      "detail": "The AAA gas series rows come from the series list. A market-level price for these series was not returned by a market query during collection (markets?series_ticker=KXAAAGASDTN&status=open returned an empty list). Current prices are therefore not in the table.",
+      "detail": "The AAA gas series rows come from the series list. A market-level price for these series was not returned by a market query during collection (markets?series_ticker=KXAAAGASDTN&status=open returned an empty list). Current prices are therefore not in the table. Update (session f1751c8f, 2026-11-20): open daily markets for KXAAAGASCDOK (e.g. KXAAAGASCDOK-26NOV21-SI/-SD/-MC) were returned with zero volume and zero bid/ask, and three KXAAAGASCDOK-26NOV20 buckets settled NO. See the Market Samples and Resolutions pages. KXAAAGASDTN was not re-queried for open markets in this session.",
       "sources": [
         {
           "name": "Get Markets endpoint doc",
@@ -937,6 +1493,210 @@
           "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&limit=100"
         }
       ]
+    },
+    {
+      "id": "F-13",
+      "severity": "medium",
+      "topic": "List and detail endpoints show different last-updated times",
+      "detail": "For 9 of 24 rows, the timestamp in the list response (the value first recorded in this snapshot) differs from the same ticker's detail response (last_updated_ts). The table now shows the detail value. The earlier list value is kept in last_updated_list. The Get Series doc defines last_updated_ts as 'Timestamp of when this series' metadata was last updated'. The meaning of the list field was not checked, so the gap is not explained. Rows: R-GAS-01, R-ELC-04, R-ELC-06, R-CRY-01, R-CRY-05, R-CRY-06, R-CRY-07, R-GLF-01, R-GLF-03.",
+      "sources": [
+        {
+          "name": "Series detail, KXAAAGASCDOK (last_updated_ts)",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASCDOK"
+        },
+        {
+          "name": "Series detail, KXSOLMINMON (last_updated_ts)",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXSOLMINMON"
+        },
+        {
+          "name": "Series list, Economics (observed earlier)",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Economics&limit=200"
+        },
+        {
+          "name": "Get Series doc (last_updated_ts definition)",
+          "url": "https://docs.kalshi.com/api-reference/market/get-series.md"
+        }
+      ]
+    },
+    {
+      "id": "F-14",
+      "severity": "high",
+      "topic": "Settlement-source links: only three confirmed; the rest blanked",
+      "detail": "The settlement-source NAMES in each row were returned by the Kalshi demo detail endpoints (checked by name against data/api_reverification.json). The URLs are a different matter. Only three were opened and confirmed in this session (ABC News, NATO, DP World Tour schedule). Five were wrong for the name (abc.com as The Washington Post, abc.net.au as ABC, a Barchart S&P 500 quote page, an x.com personal account, and Google search URLs). The rest were not opened, so they are blanked under the verification rule. The name stays visible, with a marker, and the URL is recorded in url_as_recorded in the snapshot. Earlier wording said every source was copied verbatim from the endpoint. That overstated what was checked. The earlier list values are kept in settlement_sources_list_count. Counts: confirmed=5, not_confirmed=88, wrong_url=17.",
+      "sources": [
+        {
+          "name": "Series detail, KXXBANNEDGROK",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXXBANNEDGROK"
+        },
+        {
+          "name": "Series detail, KXDPWORLDTOUR",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDPWORLDTOUR"
+        },
+        {
+          "name": "ABC News (fetched)",
+          "url": "https://abcnews.go.com/"
+        },
+        {
+          "name": "NATO (fetched)",
+          "url": "https://www.nato.int/"
+        },
+        {
+          "name": "DP World Tour schedule (fetched)",
+          "url": "https://www.europeantour.com/dpworld-tour/schedule/"
+        }
+      ]
+    },
+    {
+      "id": "F-15",
+      "severity": "low",
+      "topic": "Category label differs for one series",
+      "detail": "KXAAAGASDTN (Tennessee gas price) was recorded as 'Economics, Commodities' from the list endpoint. Its detail endpoint lists categories ['Economics'] only. The table now shows 'Economics'. KXAAAGASCDOK still lists both categories.",
+      "sources": [
+        {
+          "name": "Series detail, KXAAAGASDTN",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASDTN"
+        },
+        {
+          "name": "Series detail, KXAAAGASCDOK",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASCDOK"
+        }
+      ]
+    },
+    {
+      "id": "F-16",
+      "severity": "low",
+      "topic": "Frequency differs for one series",
+      "detail": "KXPGARYDERTOP3 (Ryder Cup Top 3 Points Scorer) was recorded as 'annual' from the list endpoint. Its detail endpoint returns frequency 'custom'. The table now shows 'custom'. The title says 'Ryder Cup' while the contract file is NEWACHIEVEMENT.pdf, so the reviewer should confirm the contract terms.",
+      "sources": [
+        {
+          "name": "Series detail, KXPGARYDERTOP3",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXPGARYDERTOP3"
+        },
+        {
+          "name": "Contract terms PDF (from detail)",
+          "url": "https://assets.kalshi.com/contract_terms/NEWACHIEVEMENT.pdf"
+        }
+      ]
+    },
+    {
+      "id": "F-17",
+      "severity": "medium",
+      "topic": "Several series share one contract-terms PDF",
+      "detail": "The detail endpoints give the same contract-terms file to more than one series: CRYPTOMINMAX.pdf (KXSOLMINMON, KXZECMINMON), CRYPTO.pdf (KXTONW, KXBTCY), and PGATOUR.pdf (KXDPWORLDTOUR, KXPGASOLHEIM). KXBTCMAX130 uses BTCMINMAX.pdf. Shared files may not state the threshold, date, or source for each series. This session did not read the PDFs. A reviewer should open each file and confirm it covers the series before relying on it.",
+      "sources": [
+        {
+          "name": "Contract terms PDF: CRYPTOMINMAX.pdf",
+          "url": "https://assets.kalshi.com/contract_terms/CRYPTOMINMAX.pdf"
+        },
+        {
+          "name": "Contract terms PDF: CRYPTO.pdf",
+          "url": "https://assets.kalshi.com/contract_terms/CRYPTO.pdf"
+        },
+        {
+          "name": "Contract terms PDF: PGATOUR.pdf",
+          "url": "https://assets.kalshi.com/contract_terms/PGATOUR.pdf"
+        }
+      ]
+    },
+    {
+      "id": "F-18",
+      "severity": "medium",
+      "topic": "Gas daily outcome not fully recorded",
+      "detail": "For the 2026-11-20 Oklahoma gas daily event, the three sampled buckets (small increase, small decrease, minimal change) all settled NO. Their rule texts cover non-overlapping ranges of the daily change, so the YES result, if the event has one, is in an unsampled bucket. This table does not record that outcome. A reviewer should query the full event before using the daily result.",
+      "sources": [
+        {
+          "name": "Settled markets, KXAAAGASCDOK (sample)",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASCDOK&status=settled&limit=3"
+        },
+        {
+          "name": "Market settlement rules (Kalshi docs)",
+          "url": "https://docs.kalshi.com/getting_started/market_settlement"
+        }
+      ]
+    },
+    {
+      "id": "F-19",
+      "severity": "medium",
+      "topic": "No open markets returned for several series",
+      "detail": "At collection time, the open-market query returned no markets for KXLIVH2H (LIV head-to-head), KXPGAGOLFERSCORE (golf round strokes), KXDPWORLDTOUR (DP World Tour winner), and KXXBANNEDGROK (Grok ban). The golf topic therefore has no open-market sample. Gas (KXAAAGASCDOK), crypto (KXBTCY), elections (KXHFCCHAIR, KXNEWPOPE-70) returned open markets. The open-market sample for this session was limited to the first 3 to 5 markets per query.",
+      "sources": [
+        {
+          "name": "Open markets, KXLIVH2H",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXLIVH2H&status=open&limit=3"
+        },
+        {
+          "name": "Open markets, KXPGAGOLFERSCORE",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGAGOLFERSCORE&status=open&limit=3"
+        },
+        {
+          "name": "Open markets, KXDPWORLDTOUR",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXDPWORLDTOUR&status=open&limit=3"
+        },
+        {
+          "name": "Open markets, KXXBANNEDGROK",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXXBANNEDGROK&status=open&limit=3"
+        }
+      ]
+    },
+    {
+      "id": "F-20",
+      "severity": "low",
+      "topic": "Demo test markets appear in settled results",
+      "detail": "A settled-market query returned demo test markets outside the five topics: KXDEMOFUTHOURLY-26NOV20H11-UP (a BTC threshold with result yes) and KXQUICKSETTLE-20NOV26H0530-2 and -3 ('1+1 = 2' and '1+1 = 3'). They are not in the topic tables and are not used for analysis. They are listed here so a reviewer knows they exist in the API.",
+      "sources": [
+        {
+          "name": "Settled markets sample (demo test markets)",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=5"
+        }
+      ]
+    },
+    {
+      "id": "F-21",
+      "severity": "high",
+      "topic": "Live dashboard listed a ticker that is not in verified data",
+      "detail": "The live dashboard ticker menu included KXELONMARS-99 (Elon Musk visits Mars). That ticker was not in the verified data and was not checked in this session. It has been removed from the menu. The menu now offers only the six open tickers in the Market Samples page (KXBTCY-27JAN0100 x3, KXNEWPOPE-70 x2, KXHFCCHAIR-26DEC01-KSEL). The two KXNEXTNATOSECGEN-99 tickers were also removed because they are not in the samples (their event response was read, but no market-level price was sampled).",
+      "sources": [
+        {
+          "name": "Event detail, KXNEXTNATOSECGEN-99",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEXTNATOSECGEN-99"
+        },
+        {
+          "name": "Event detail, KXNEWPOPE-70",
+          "url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEWPOPE-70"
+        }
+      ]
+    },
+    {
+      "id": "F-22",
+      "severity": "high",
+      "topic": "Portfolio, trade execution, and per-trade performance are blocked",
+      "detail": "Tracking the demo account's portfolio, executing trades, and measuring trade performance need a Kalshi demo account and a signed API key. Both require a human to log in to Kalshi, and this sandbox cannot create them. No credentials were requested, stored, or used. Nothing has been traded. A private key must not be entered into a public GitHub Pages site (see repo flag R-F5).",
+      "sources": [
+        {
+          "name": "Demo account how-to (Kalshi help)",
+          "url": "https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account"
+        },
+        {
+          "name": "API keys (Kalshi docs)",
+          "url": "https://docs.kalshi.com/getting_started/api_keys"
+        },
+        {
+          "name": "Demo environment (Kalshi docs)",
+          "url": "https://docs.kalshi.com/getting_started/demo_env"
+        }
+      ]
+    },
+    {
+      "id": "F-23",
+      "severity": "low",
+      "detail": "Main now publishes two sites: verified/ and pages/ (this session, f1751c8f), and dashboard/ (from session arena-3420a90d, PR #9). They overlap in topics, with different data files (data/kalshi_snapshot.json vs dashboard/data/snapshot.json). Both were kept, nothing was removed, and this integration did not consolidate them. A later decision is needed on which one is the primary site.",
+      "sources": [
+        {
+          "name": "Pull request #9 (session arena-3420a90d): dashboard/ site",
+          "url": "https://github.com/karagemop466-tech/Demo2/pull/9"
+        }
+      ],
+      "topic": "Two parallel demo sites are published"
     }
   ]
 }

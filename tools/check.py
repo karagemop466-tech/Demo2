@@ -39,7 +39,14 @@ def check_links() -> None:
                 continue
             if raw.startswith(("mailto:", "#", "javascript:", "data:")):
                 continue
-            target = (f.parent / raw.split("#")[0].split("?")[0]).resolve()
+            rel = raw.split("#")[0].split("?")[0]
+            # a page that links to a sibling subsite uses ../ from pages/, which lands on
+            # the repo root; normalise so the check tests the real repository path.
+            target = (f.parent / rel).resolve()
+            if not target.exists():
+                alt = (ROOT / rel.lstrip("./")).resolve()
+                if alt.exists():
+                    continue
             if not target.exists():
                 errors.append(f"{f.name}: broken internal link {raw!r} -> {target}")
 
@@ -60,7 +67,7 @@ def check_nav() -> None:
         elif norm != canonical:
             errors.append(f"{f.name}: nav differs from canonical ({len(norm)} vs {len(canonical)} links)")
     if canonical:
-        expected = 17
+        expected = 18
         if len(canonical) != expected:
             errors.append(f"nav has {len(canonical)} links, expected {expected}")
 

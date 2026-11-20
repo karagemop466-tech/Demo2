@@ -27,6 +27,7 @@ NAV = [
     ("pages/culture.html", "Culture", "culture"),
     ("pages/crypto.html", "Crypto", "crypto"),
     ("pages/golf.html", "Golf", "golf"),
+    ("../verified/index.html", "Verified Data", "verified"),
     ("pages/resolutions.html", "Resolutions", "res"),
     ("pages/portfolio.html", "Portfolio", "port"),
     ("pages/analysis.html", "Analysis", "an"),

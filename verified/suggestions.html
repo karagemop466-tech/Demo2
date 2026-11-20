@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <div class="brand"><a href="index.html">Kalshi Demo Dashboard</a><span class="tag">DEMO DATA · read-only</span></div>
-  <nav><a href="index.html">Home</a><a href="gas-prices.html">Gas Prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live-dashboard.html">Live Dashboard</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="questions.html">Questions</a><a href="suggestions.html" class="active">Suggestions</a><a href="flagged-for-review.html">Flagged for Review</a><a href="repo-review.html">Repo Review</a><a href="../index.html">Main dashboard ↗</a></nav>
+  <nav><a href="index.html">Home</a><a href="gas-prices.html">Gas Prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live-dashboard.html">Live Dashboard</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="questions.html">Questions</a><a href="suggestions.html" class="active">Suggestions</a><a href="markets.html">Market Samples</a><a href="resolutions.html">Resolutions</a><a href="flagged-for-review.html">Flagged for Review</a><a href="repo-review.html">Repo Review</a><a href="../index.html">Main dashboard ↗</a></nav>
 </header>
 <main>
 
@@ -65,6 +65,16 @@
 <p><strong>Why:</strong> Demo events close in 2099 (F-01). They produce no useful short-term signal.</p>
 <div class="opts"><label class="opt"><input type="radio" name="S-09" value="A" class="pick" data-id="S-09"> <strong>Option A.</strong> Exclude markets whose close time is more than one year away.</label><label class="opt"><input type="radio" name="S-09" value="B" class="pick" data-id="S-09"> <strong>Option B.</strong> Keep them, but label them as demo-only.</label><label class="opt"><input type="radio" name="S-09" value="C" class="pick" data-id="S-09"> <strong>Option C.</strong> Keep as is.</label></div>
 <p class="note">Choosing an option here does not change the site. It only records your choice in this browser. Tell the agent which option to implement.</p>
+</article><article class="sugg" id="S-11">
+<header><span class="pill">S-11</span> <h3>Historical price chart from candlesticks</h3> <span class="pill warn-pill">Awaiting your decision</span></header>
+<p><strong>Why:</strong> The live chart only holds what this browser has seen since the page opened. Get Market Candlesticks gives 1-minute, 1-hour, and 1-day history (Q-06 and the Get Market Candlesticks doc).</p>
+<div class="opts"><label class="opt"><input type="radio" name="S-11" value="A" class="pick" data-id="S-11"> <strong>Option A.</strong> Keep the live chart only (simple; no history before the page opened).</label><label class="opt"><input type="radio" name="S-11" value="B" class="pick" data-id="S-11"> <strong>Option B.</strong> Backfill the chart with 1-minute candles for the last few hours, then add live points (CORS must be tested from a browser first).</label><label class="opt"><input type="radio" name="S-11" value="C" class="pick" data-id="S-11"> <strong>Option C.</strong> Use hourly or daily candles for longer windows (one request covers up to 5,000 periods).</label></div>
+<p class="note">Choosing an option here does not change the site. It only records your choice in this browser. Tell the agent which option to implement.</p>
+</article><article class="sugg" id="S-12">
+<header><span class="pill">S-12</span> <h3>Show full lists, not samples</h3> <span class="pill warn-pill">Awaiting your decision</span></header>
+<p><strong>Why:</strong> The tables show the first page of each query (F-12, F-19). Full coverage needs cursor paging on the Get Markets and Get Series endpoints.</p>
+<div class="opts"><label class="opt"><input type="radio" name="S-12" value="A" class="pick" data-id="S-12"> <strong>Option A.</strong> Page through every series in the five topics and rebuild the snapshot (more requests; cursor per the Get Markets doc).</label><label class="opt"><input type="radio" name="S-12" value="B" class="pick" data-id="S-12"> <strong>Option B.</strong> Keep samples and label them clearly (current state).</label><label class="opt"><input type="radio" name="S-12" value="C" class="pick" data-id="S-12"> <strong>Option C.</strong> Limit the scope to the markets the analysis needs (for example one topic first).</label></div>
+<p class="note">Choosing an option here does not change the site. It only records your choice in this browser. Tell the agent which option to implement.</p>
 </article><article class="sugg" id="S-10">
 <header><span class="pill">S-10</span> <h3>Add fee-aware profit and loss</h3> <span class="pill warn-pill">Awaiting your decision</span></header>
 <p><strong>Why:</strong> Series carry fee_type &#x27;quadratic&#x27; and fee_multiplier 1, but the fee formula has not been verified (Q-10).</p>
@@ -78,7 +88,7 @@
   <p>Data source: Kalshi <strong>demo</strong> Trade API, <a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a>.
   Kalshi says demo prices and behavior may not reflect real markets. Not financial advice.
   Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a>.</p>
-  <p>Site built 2026-11-20 11:17 UTC from data/kalshi_snapshot.json (collected 2026-11-20).</p>
+  <p>Site built 2026-11-20 11:28 UTC from data/kalshi_snapshot.json (collected 2026-11-20).</p>
 </footer>
 <script src="assets/suggestions.js"></script>
 </body>
