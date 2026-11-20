@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elections · Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<header class="top">
+  <div class="brand"><a href="index.html">Kalshi Demo Dashboard</a><span class="tag">DEMO DATA · read-only</span></div>
+  <nav><a href="index.html">Home</a><a href="gas-prices.html">Gas Prices</a><a href="elections.html" class="active">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live-dashboard.html">Live Dashboard</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="markets.html">Market Samples</a><a href="resolutions.html">Resolutions</a><a href="flagged-for-review.html">Flagged for Review</a><a href="repo-review.html">Repo Review</a><a href="../index.html">Main dashboard ↗</a></nav>
+</header>
+<main>
+
+<section class="hero small">
+  <h1>Elections</h1>
+  <p>Election and appointment contracts found under the Kalshi Elections category.</p>
+  <p class="meta">Rows: <strong>6</strong> · Every row links to the Kalshi API response it came from, and to the contract terms.
+  Blank cells are values the source did not provide. They are never inferred.</p>
+  <p class="note">First page of results only. The NATO and Pope rows are events, not series, and the NATO row is dated to 2099 in demo data (F-01).</p>
+</section>
+<section>
+<div class="tablewrap">
+<table>
+<thead><tr>
+<th>Ticker</th><th>Title</th><th>Type</th><th>Kalshi category / tags</th><th>Frequency</th>
+<th>Last updated (API)</th><th>Settlement sources</th><th>Contract terms</th><th>Source</th><th>Status</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>KXUNDERHARRIS</code></td>
+<td>Democrats underperforming Harris 2024</td>
+<td>series</td>
+<td>Elections<br><small>Senate; US Elections; Governor</small></td>
+<td>one_off</td>
+<td>2026-11-20T08:51:04.202849Z</td>
+<td>Georgia Secretary of State <span class="flag">(link not verified, F-14)</span><br>Maine Secretary of State <span class="flag">(link not verified, F-14)</span><br>Florida Department of State <span class="flag">(link not verified, F-14)</span><br>Federal Election Commission <span class="flag">(link not verified, F-14)</span><br>New York State Board of Elections <span class="flag">(link not verified, F-14)</span><br>Oregon Secretary of State <span class="flag">(link not verified, F-14)</span><br>Michigan Department of State <span class="flag">(link not verified, F-14)</span><br>New Hampshire Secretary of State <span class="flag">(link not verified, F-14)</span><br>Minnesota Secretary of State <span class="flag">(link not verified, F-14)</span></td>
+<td><a href="https://assets.kalshi.com/contract_terms/POLITICALSTAT.pdf" target="_blank" rel="noopener">Contract terms</a></td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Elections&amp;limit=20" target="_blank" rel="noopener">List API response</a><br><a href="https://external-api.demo.kalshi.co/trade-api/v2/series/KXUNDERHARRIS" target="_blank" rel="noopener">Detail API response</a></td>
+<td><span class="ok">Verified: detail API</span></td>
+</tr>
+<tr>
+<td><code>KXNCSENTURNOUTDVSR</code></td>
+<td>Democratic vs Republican turnout in the North Carolina Senate primary?</td>
+<td>series</td>
+<td>Elections<br><small>Primaries; US Elections</small></td>
+<td>one_off</td>
+<td>2026-11-20T08:51:10.88275Z</td>
+<td>North Carolina State Board of Elections <span class="flag">(link not verified, F-14)</span></td>
+<td><a href="https://assets.kalshi.com/contract_terms/POLITICALSTATVALUECOMPARISON.pdf" target="_blank" rel="noopener">Contract terms</a></td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Elections&amp;limit=20" target="_blank" rel="noopener">List API response</a><br><a href="https://external-api.demo.kalshi.co/trade-api/v2/series/KXNCSENTURNOUTDVSR" target="_blank" rel="noopener">Detail API response</a></td>
+<td><span class="ok">Verified: detail API</span></td>
+</tr>
+<tr>
+<td><code>KXHFCCHAIR</code></td>
+<td>House Freedom Caucus Chair (120th Congress)</td>
+<td>series</td>
+<td>Elections<br><small>House; US Elections; Leadership races</small></td>
+<td>one_off</td>
+<td>2026-11-20T11:00:58.908811Z</td>
+<td>House Freedom Caucus <span class="flag">(link not verified, F-14)</span></td>
+<td><a href="https://assets.kalshi.com/contract_terms/ELECTION.pdf" target="_blank" rel="noopener">Contract terms</a></td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Elections&amp;limit=20" target="_blank" rel="noopener">List API response</a><br><a href="https://external-api.demo.kalshi.co/trade-api/v2/series/KXHFCCHAIR" target="_blank" rel="noopener">Detail API response</a></td>
+<td><span class="ok">Verified: detail API</span></td>
+</tr>
+<tr>
+<td><code>HOUSENY4</code></td>
+<td>House New York 4th</td>
+<td>series</td>
+<td>Elections<br><small>House</small></td>
+<td>custom</td>
+<td>2026-11-20T11:18:59.190435Z</td>
+<td>Library of Congress <span class="flag">(link not verified, F-14)</span></td>
+<td><a href="https://assets.kalshi.com/contract_terms/HOUSEPARTY.pdf" target="_blank" rel="noopener">Contract terms</a></td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Elections&amp;limit=20" target="_blank" rel="noopener">List API response</a><br><a href="https://external-api.demo.kalshi.co/trade-api/v2/series/HOUSENY4" target="_blank" rel="noopener">Detail API response</a></td>
+<td><span class="ok">Verified: detail API</span></td>
+</tr>
+<tr>
+<td><code>KXNEWPOPE-70</code></td>
+<td>Who will the next Pope be?<br><small>Before 2070</small></td>
+<td>event</td>
+<td>Elections</td>
+<td></td>
+<td>2026-11-12T00:57:52.045191Z</td>
+<td>The New York Times <span class="flag">(link not verified, F-14)</span><br>the Associated Press <span class="flag">(link not verified, F-14)</span><br>Reuters <span class="flag">(link not verified, F-14)</span><br>Axios <span class="flag">(link not verified, F-14)</span><br>Politico <span class="flag">(link not verified, F-14)</span><br>Semafor <span class="flag">(link not verified, F-14)</span><br>The Information <span class="flag">(link not verified, F-14)</span><br>The Washington Post <span class="flag">(link not verified, F-14)</span><br>The Wall Street Journal <span class="flag">(link not verified, F-14)</span><br>ABC <span class="flag">(link not verified, F-14)</span><br>CBS <span class="flag">(link not verified, F-14)</span><br>CNN <span class="flag">(link not verified, F-14)</span><br>Fox News <span class="flag">(link not verified, F-14)</span><br>MSNBC <span class="flag">(link not verified, F-14)</span></td>
+<td></td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&amp;limit=200" target="_blank" rel="noopener">List API response</a><br><a href="https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEWPOPE-70" target="_blank" rel="noopener">Detail API response</a></td>
+<td><span class="ok">Verified: detail API</span><br><a class="flagchip" href="flagged-for-review.html#F-07">F-07</a></td>
+</tr>
+<tr>
+<td><code>KXNEXTNATOSECGEN-99</code></td>
+<td>Who will be the next Secretary General of NATO?<br><small>Before Jan 1, 2099</small></td>
+<td>event</td>
+<td>Elections</td>
+<td></td>
+<td>2026-06-29T19:34:05.654838Z</td>
+<td><a href="https://www.nato.int/" target="_blank" rel="noopener">North Atlantic Treaty Organization</a></td>
+<td></td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&amp;limit=200" target="_blank" rel="noopener">List API response</a><br><a href="https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEXTNATOSECGEN-99" target="_blank" rel="noopener">Detail API response</a></td>
+<td><span class="ok">Verified: detail API</span><br><a class="flagchip" href="flagged-for-review.html#F-01">F-01</a> <a class="flagchip" href="flagged-for-review.html#F-07">F-07</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+<footer>
+  <p>Data source: Kalshi <strong>demo</strong> Trade API, <a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a>.
+  Kalshi says demo prices and behavior may not reflect real markets. Not financial advice.
+  Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a>.</p>
+  <p>Site built 2026-11-20 11:28 UTC from data/kalshi_snapshot.json (collected 2026-11-20).</p>
+</footer>
+
+</body>
+</html>

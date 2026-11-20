@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Culture · Kalshi Demo Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="category" data-topic="culture">
+  <header class="topbar">
+    <div class="brand"><span class="logo">K</span> Kalshi Demo Dashboard</div>
+    <nav class="nav">
+      <a href="index.html">Dashboard</a>
+      <a href="events.html">Live Events</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="trades.html">Trades</a>
+      <a href="strategies.html">Strategies</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+    </nav>
+    <span id="conn-status" class="status-pill"><span class="dot"></span><span>Connecting…</span></span>
+  </header>
+
+  <main>
+    <h1 id="cat-title">Culture Markets</h1>
+    <p class="subtitle">Live Culture markets. Click a market for the price chart and liquidity depth.</p>
+    <div class="panel">
+      <div id="cat-table"></div>
+    </div>
+    <div class="note">
+      <b>Topic filtering.</b> Culture markets are identified by a reviewable keyword mapping to Kalshi
+      series/event titles. The exact category mapping is flagged as unverified —
+      see <a href="flagged.html#FLAG-04">FLAG-04</a> and <a href="suggestions.html#S3">Suggestion S3</a>.
+      Source: <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>.
+    </div>
+  </main>
+
+  <footer>
+    Kalshi Demo Dashboard · data verified from <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a>
+  </footer>
+  <script src="js/app.js"></script>
+</body>
+</html>
