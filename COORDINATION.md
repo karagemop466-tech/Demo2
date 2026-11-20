@@ -422,3 +422,62 @@ cannot be run from here (see flags below).
 
 Scope rules: no edit to another session's page content; shared generated files are regenerated only by
 their own generator; every other edit is additive and logged below.
+
+### Results — session 3371a533 (J-1, J-2 done; J-3 integration in progress)
+
+| # | Status | Result | Where |
+|---|--------|--------|-------|
+| J-1 | done | 39 trade-print moves ≥ $0.10 across 12 markets (newest first, each with both prints' size and the official trades-API source); snapshot moves ≥ $0.10: 0 (733 pairs, gaps 2.2–47.2 min). Cause column is blank and marked unverified on every row. | `jumps/index.html`, `data/jumps.json`, `tools/build_jumps.py`, `pages.yml` step (added) |
+| J-2 | done | Repo findings R12–R19 and flags F13–F20 added (each with a source link). Two items are security/scope flags, not just notes: **F20 / R18** — `live/trading.html` takes a pasted demo private key in the browser; **R19** — two instrument-panel source links still contain literal `{ticker}` / `{category}`. | `tools/build_content.py` → `pages/flagged.html`, `pages/repo-review.html` |
+| J-3 | in progress | Nav entry added (`jumps/index.html`, "Price Jumps"); executive summary "Bottom line" corrected (it said everything was built and sourced; it is not — see F13, F16, F18, F19, F20). | `tools/build_site.py` (one NAV row), `tools/build_content.py` (executive summary paragraph), regenerated pages |
+
+#### Sources read this session (official; each fetched or queried on 2026-11-20 UTC)
+
+- https://docs.kalshi.com/api-reference/market/get-trades — `limit` max 1000, `cursor` pagination, trade fields (used for J-1 and F15).
+- https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXSCOTTIESLAM-28&limit=3 — live check: the three newest prints match the snapshot (trade `0725a27c…` at 0.55 and `0724c91a…` at 0.45, times and counts equal).
+- https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture — live: 2 series (`KXXBANNEDMURRAYHILLGUY1`, `KXXBANNEDGROK`), both one-off (F19).
+- https://kalshi.com/markets/kxaaagasd — the series web-page pattern `kalshi.com/markets/<series>` redirects to the full market page (checked for one series only; used for the "Kalshi page" link on J-1).
+- https://docs.kalshi.com/api-reference/market/get-series-list — `category` filter (matches `categories` list), `tags`, `frequency` (F13, F14, F19).
+- https://docs.kalshi.com/getting_started/quick_start_websockets — the `trade` channel is public data, but the handshake requires API-key headers (F16, F18).
+- https://docs.kalshi.com/getting_started/api_keys — key types, signing, storage; the private key is shown once (F18, F20).
+- https://docs.kalshi.com/getting_started/demo_env — demo base URL; demo setup tutorial link (F18, R17, R19).
+- https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency — a concurrency group serialises only runs that share its key (R12).
+- https://git-scm.com/docs/gitignore — NOTES: "To stop tracking a file that is currently tracked, use git rm --cached" (R14).
+
+#### Verification performed
+
+- Regenerated every page with `tools/build_site.py` and `tools/build_content.py`; the CI diff gate still passes on the committed output.
+- `tools/check.py` → all clean; `scripts/check_links.py` → 0 broken internal links (8,217+ references across 86 HTML files).
+- `tools/build_jumps.py` run on the committed snapshot; output checked: every table row has a source link (39/39 move rows, 12/12 coverage rows); no `None`/`nan`/`undefined` values.
+- `instrument-panel/tests_smoke.py`, `instrument-panel/tools/validate_data.py`, `instrument-panel/tools/check_site.py` → pass. `.github/workflows/pages.yml` parses as YAML (checked in a venv).
+- Every claim in F13–F20 and R12–R19 was checked against the file, the API response, or the official doc listed above. Two earlier draft claims were **wrong** and were corrected before commit: R18 said no page takes a key (it does: F20), and the executive summary overstated completeness.
+
+#### Irregularities flagged (open for review; none block merge)
+
+- F13 gas topic includes solar, electricity, refinery and Louisiana oil-and-gas jobs (18 markets).
+- F14 elections: 2,409 series dropped by the 300-per-topic cap.
+- F15 trade history: one page per market, first 600 prints kept, cursor never followed.
+- F16 snapshots too coarse for intraday moves of $0.10 (733 pairs, gaps up to 47 min).
+- F17 no official source gives a cause for a price move; cause column left blank.
+- F18 demo portfolio and order execution cannot run from this workspace (no key; `gh secret list` → HTTP 403).
+- F19 culture has 0 open markets (2 one-off series exist).
+- F20 public page `live/trading.html` takes a demo private key in the browser (sessionStorage).
+- R12 five workflows, five concurrency keys, all pushing to `main`.
+- R13 four bots push straight to `main`; `collect.yml` uses `git pull --rebase ... || true`.
+- R14 two `.pyc` files tracked despite `.gitignore`.
+- R15 four collectors and three link checkers with overlapping jobs.
+- R16 eight-plus parallel sites with overlapping pages.
+- R19 two instrument-panel source links contain unfilled `{ticker}` / `{category}`.
+
+#### Shared-file edits made by this session (all additive or regenerated; logged here as required)
+
+- `.github/workflows/pages.yml`: one new step (`python3 tools/build_jumps.py`) and the `jumps/` + `data/jumps.json` paths added to the existing `git add` line. No other lines changed.
+- `tools/build_site.py`: one NAV row for `jumps/index.html`.
+- `tools/build_content.py`: F13–F20 appended to `FLAGGED`, R12–R19 appended to `REPO_FINDINGS`, the flagged-table source column accepts full URLs, and the executive-summary "Bottom line" paragraph was rewritten to match the verified state.
+- Regenerated: `index.html`, `pages/*.html` (nav change and new rows only).
+
+#### Not done (blocked or out of scope for this session)
+
+- Demo-account portfolio tracking and order execution (F18): needs a demo key and secrets from the owner. No key was invented.
+- Live (seconds/minutes/hours) price stream: the jump page is a static build of collected data; a WebSocket trade feed needs the same key (F16, F18).
+- Consolidating the eight sites (R16) and removing the tracked `.pyc` files (R14): recommended, not done here because the files belong to other sessions.

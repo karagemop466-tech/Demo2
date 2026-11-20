@@ -31,6 +31,7 @@ NAV = [
     ("rankings.html", "Dollar Rankings", "rank"),
     ("instrument-panel/site/index.html", "Instrument Panel", "inst"),
     ("live/index.html", "Live Console", "live"),
+    ("jumps/index.html", "Price Jumps", "jumps"),
     ("pages/resolutions.html", "Resolutions", "res"),
     ("pages/portfolio.html", "Portfolio", "port"),
     ("pages/analysis.html", "Analysis", "an"),
