@@ -813,3 +813,7 @@ Session owner: `0cb69749`. Base: `4c13151` (PR #31 merge). This session acts as 
 | P-7 | Integration: nav link, regen check, PR → main, merge, Pages confirm | unclaimed | 0cb69749 | `tools/build_site.py` (1 line), `index.html`+`pages/*.html` regen, PR record |
 
 Rules honored: claim committed+pushed before edits; small frequent commits; `git pull --rebase` before push; conflicts resolved without discarding others' work; nothing marked verified without an official source link; flagged items do not block merge.
+
+### P-8 claim amendment — scheduled Pulse refresh
+
+Session `0cb69749` expands its integration scope to add a small additive step to `.github/workflows/pages.yml` and commit the generated `data/pulse_*.json` outputs during the existing scheduled collector run. Reason: otherwise Pulse tables, jumps, and paper positions would remain pinned to this initial snapshot although the instrument collector refreshes every 15 minutes. The workflow's prior owner (session `64df4faa`, W-9) is complete/merged; no active claim for this workflow exists. This amendment is committed and pushed before editing the workflow. Scope addition: `.github/workflows/pages.yml` only, additive command and artifact staging; no other workflow behavior changed.
