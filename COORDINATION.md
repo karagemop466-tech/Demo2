@@ -401,3 +401,61 @@ recording so another session does not repeat them:
 
 In both cases the Pages deploy itself was fine; only the consistency job was red. The site was never
 broken, and it is worth distinguishing the two when reading Actions.
+
+---
+
+## Session `220913cb` — branch `arena/220913cb-demo2` (claimed 2026-11-20)
+
+**Owner:** `220913cb`. **Scope:** the new `desk/` tree + one new workflow file. This session does
+**not** edit `index.html`, `pages/`, `site/`, `verified/`, `dashboard/`, `intelligence/`, `live/`,
+`instrument-panel/`, `data/`, `tools/` or any existing workflow — those belong to other sessions.
+The only shared file touched is `COORDINATION.md` (append-only, this section) and the end-of-session
+integration record.
+
+### Why this scope exists
+
+The brief asks for **one** clean, live, source-linked dashboard, a **full list of requirements**
+collected and analysed, and a **line-by-line verification** where every table row carries an
+official source link. As of this claim `main` carries six parallel dashboards
+(`pages/` + `verified/`, `site/`, `dashboard/`, `intelligence/`, `live/`, `instrument-panel/site/`),
+and the requirement register and the row-level source-link audit each exist only in fragments inside
+individual session notes. `desk/` is a **single consolidated surface** that answers the brief
+directly without touching anyone else's files, and it is what the final integration can point the
+landing page at.
+
+### Claim table (files listed are owned by this session; everything else untouched)
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| D-1 | Requirements register: every requirement from the brief → status → where it is implemented → official evidence link | in progress | 220913cb | `desk/data/requirements.json`, `desk/requirements.html` |
+| D-2 | Verification gate: every data row in the repo must carry an official Kalshi source URL; re-verify rows against the live official demo API; write a machine-checked report | in progress | 220913cb | `desk/tools/verify.py`, `desk/data/audit_report.json`, `desk/verification.html` |
+| D-3 | Repo irregularity register: claim-by-claim repo review, defects and duplications, with evidence links | in progress | 220913cb | `desk/data/irregularities.json`, `desk/irregularities.html` |
+| D-4 | Sharp-jump monitor: detect moves ≥ $0.10 in either direction from official candlesticks/trades, with the official source for every jump and an explicit "cause not published by Kalshi" column | in progress | 220913cb | `desk/tools/jump_detect.py`, `desk/data/jumps.json`, `desk/jumps.html` |
+| D-5 | Consolidated desk dashboard: clean landing + one subpage per topic + trading/strategy page, all tables row-sourced | in progress | 220913cb | `desk/index.html`, `desk/categories/*.html`, `desk/trading.html`, `desk/assets/desk.css`, `desk/tools/build_desk.py` |
+| D-6 | CI: run the verification gate + jump detector on a schedule and commit the reports | in progress | 220913cb | `.github/workflows/desk-verify.yml` |
+| D-7 | End-of-session integration: nav entry, whole-site link check, PR → `main`, merge, Pages deploy confirmation, record | unclaimed | — | — |
+
+### Overlap notes for other sessions
+
+- PR #32 (`session 8b9a46b4`) also builds a sharp-jump detector. D-4 is **not** a duplicate of it:
+  #32 detects jumps from its own collected snapshot in a separate subsite; D-4 detects jumps from
+  the **official candlestick/trade endpoints** of the canonical in-scope markets and publishes the
+  official source URL for every jump plus an explicit column stating that Kalshi publishes no news
+  feed, so a cause can be *linked* but never *asserted*. If #32 merges first, D-4's page will link
+  to it; this session will not edit #32's files either way.
+- The root landing page (`index.html`) and its nav are **generated** by `tools/build_site.py`; D-7
+  will change the generator, not the generated file, because CI fails when the two disagree.
+
+### Sources this session will use (official only)
+
+`docs.kalshi.com` — `getting_started/demo_env`, `getting_started/api_environments`,
+`getting_started/quick_start_market_data`, `getting_started/quick_start_websockets`,
+`getting_started/market_lifecycle`, `getting_started/market_settlement`,
+`getting_started/rate_limits`, `getting_started/api_keys`,
+`api-reference/market/get-markets`, `api-reference/market/get-series-list`,
+`api-reference/events/get-events`, `api-reference/market/get-market-orderbook`,
+`api-reference/market/get-market-candlesticks`, `api-reference/market/get-trades`,
+`api-reference/portfolio/get-balance`, `api-reference/portfolio/get-positions`,
+`api-reference/portfolio/get-fills`, `api-reference/orders/create-order-v2`;
+plus the live demo API itself (`external-api.demo.kalshi.co/trade-api/v2/...`), which is the source
+of record for every market, series, order-book, candlestick, trade and settlement value.
