@@ -350,6 +350,38 @@ Raw API responses cited per row: `/series?category=Economics|Elections|Culture|C
    page indexes all four instead. Consolidation is Suggestion S5 on the site.
 3. The board's earlier claim that CORS is unverified is out of date — see above.
 
+### Results actually obtained (not planned)
+
+| Fact | Value | How it was verified |
+|---|---|---|
+| Open in-scope markets collected | 1,311 | `data/dashboard_instrument.json` `counts.open_markets_in_scope`, from one shared `/markets?status=open` stream intersected with each topic's series list |
+| In-scope series | 174 | `/series?category=…` and `/series?tags=Golf` |
+| Resolved markets collected | 1,601 | `/markets?series_ticker=…&status=settled` per series, `result` copied verbatim |
+| — of which ever traded | 270 | `volume_fp > 0` |
+| — of which never traded | 1,331 | `volume_fp == 0`; API returns `last_price_dollars` `0.0000` for these |
+| Live orderbook snapshots | 48 (20 non-empty) | `/markets/{ticker}/orderbook?depth=20` |
+| Trade histories | 12 markets | `/markets/trades?ticker=…` |
+| Requests per run | ~440, 0 errors | `meta.https_requests`, `meta.request_errors` |
+| Run duration | ~2 minutes | GitHub run 44737674422 |
+
+### Two bugs this session found in its own work, and what now prevents them
+
+1. **Resolved-market block silently emptied.** Restructuring the topic loop dropped the settled-markets
+   call; the run still "passed" with 0 resolved rows. `tools/validate_data.py` now **fails** when the
+   resolved set is empty, and `instrument-panel/tests_smoke.py` (offline, no network) runs first in CI.
+2. **A calibration that measured a default value.** 1,331 of 1,601 resolved markets never traded and
+   carry `last_price_dollars = 0.0000`. Calibrating them reported a fake +26-point edge on long shots.
+   The Analysis page now calibrates **only traded markets** (n=270), labels bands with n<30 as too small
+   to interpret, and keeps the uncorrected table in a collapsible block so the correction is checkable.
+   Recorded as flag **F-15**.
+
+### Rate limiting, verified rather than assumed
+The 300-series run produced **539 x HTTP 429**. Kalshi documents that public endpoints “charge your IP
+address's budget first”, that publicly cacheable responses carry **no** `X-RateLimit-*` headers, and that
+a 429 has no penalty — so backoff is the only remedy. The collector now spaces requests globally
+(widening x1.5 per 429, narrowing 0.5% per success, 4 workers) and publishes the observed 429 count on
+the Verification page. After the restructure: 440 requests, 0 errors, 5 observed 429s.
+
 ### PR / deploy record
 - PR: (filled after `gh pr create`)
 - Merge result: (filled after merge)

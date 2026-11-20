@@ -26,7 +26,7 @@ permissions:
 
 concurrency:
   group: pages-and-data
-  cancel-in-progress: false
+  cancel-in-progress: false   # a running collection must finish before the next starts
 
 jobs:
   collect:
