@@ -845,10 +845,29 @@ Summary of what this session changed and why (all verified after the change):
    requirement — all re-fetched from their official source URLs 13:15–13:25 UTC.
    Provenance audit covered 11,430 rows across every `data/` list: every
    rendered table row carries an official URL except F16's tick rows.
-6. **PR bookkeeping:** PR #15 (`0c901fea`) is superseded by PR #27
-   (`5330bffb`) — identical `monitor/` scope; integration treats #27 as the
-   superset and closes #15 with that note at merge time. PRs #32/#34/#27 were
-   active during this session (commits within the hour) and were left untouched.
+6. **PR bookkeeping (updated 13:50 UTC after the landscape moved):**
+   PR #27, #15 and #32 **merged themselves** at 13:02–13:15 and PR #6 was
+   closed by another session at 13:02 (the earlier "superseded by #27" note
+   about #15 is obsolete — #15 landed; record corrected here, history kept).
+   Main also independently removed the browser-signing code inside PR #27's
+   `assets/app.js` rewrite, which supersedes part of this session's commit
+   `49e706e` — no work discarded, both paths agree. This session merged
+   `origin/main` (through `0dc7749`) into its branch and union-resolved the
+   generator conflicts (both sessions' sharp-jump content kept; the richer
+   context-link wording + F14 kept), resolving generated files by
+   regeneration. New placeholder defects that arrived with PR #32's subsite
+   (`session-8b9a46b4/site/*`) were fixed at its generator the same way
+   (`{placeholder}` patterns render as code).
+7. **R-4 complete (13:5x UTC).** Combined-tree state after the merge:
+   `tools/check.py` clean (incl. `[data]`), `scripts/check_links.py` all OK
+   (8,000+ references), `tools/check_live_links.py` 0 placeholders across 91
+   files, `instrument-panel/tests_smoke.py` passed, `node --check` clean.
+   Open PRs at this point: #34 (docs, active 13:33), #36/#38 (new features),
+   #40/#41 (**duplicate** the sharp-jump generator port that is already on
+   this branch — their authors should close them as superseded once this PR
+   lands, or rebase on it; nothing of theirs is lost, the same fix is here).
+8. **R-5 in progress:** PR from this branch → main next, then Pages confirm
+   and the final record below.
 
 Outputs of this session live under `integration/bdb4d2d0/` (new directory,
 non-overlapping with every other session's scope). Any edit to a shared file is
