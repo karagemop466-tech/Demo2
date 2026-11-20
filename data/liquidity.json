@@ -1,0 +1,3289 @@
+{
+ "generated_at_utc": "2026-11-20T13:08:12+00:00",
+ "note": "Sampled by this collector from GET /markets/{ticker}/orderbook. Kalshi publishes no orderbook history; each point is one poll, about 22 s apart.",
+ "sample_interval_s": 22,
+ "markets": {
+  "GOVPARTYUT-28-R": {
+   "points": [
+    {
+     "ts": 1795179844,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179866,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179888,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179910,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179932,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179955,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179977,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179999,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180021,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180043,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180065,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180087,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    }
+   ],
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/GOVPARTYUT-28-R/orderbook?depth=25",
+   "topic": "elections",
+   "title": "Will the Republican party win the governorship in Utah"
+  },
+  "KXBTC50VS100-BTC-26DEC31": {
+   "points": [
+    {
+     "ts": 1795179844,
+     "yes_bids": [
+      [
+       0.25,
+       666.66
+      ],
+      [
+       0.24,
+       694.44
+      ],
+      [
+       0.23,
+       724.63
+      ],
+      [
+       0.14,
+       23.8
+      ],
+      [
+       0.08,
+       5.57
+      ],
+      [
+       0.01,
+       100.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.27,
+       34.01
+      ],
+      [
+       0.28,
+       595.23
+      ]
+     ],
+     "yes_bid_contracts": 2215.1,
+     "derived_ask_contracts": 629.24,
+     "best_yes_bid": 0.25,
+     "best_yes_ask_derived": 0.27
+    },
+    {
+     "ts": 1795179866,
+     "yes_bids": [
+      [
+       0.25,
+       666.66
+      ],
+      [
+       0.24,
+       694.44
+      ],
+      [
+       0.23,
+       724.63
+      ],
+      [
+       0.14,
+       23.8
+      ],
+      [
+       0.08,
+       5.57
+      ],
+      [
+       0.01,
+       100.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.27,
+       32.47
+      ],
+      [
+       0.28,
+       595.23
+      ]
+     ],
+     "yes_bid_contracts": 2215.1,
+     "derived_ask_contracts": 627.7,
+     "best_yes_bid": 0.25,
+     "best_yes_ask_derived": 0.27
+    },
+    {
+     "ts": 1795179888,
+     "yes_bids": [
+      [
+       0.25,
+       666.66
+      ],
+      [
+       0.24,
+       694.44
+      ],
+      [
+       0.23,
+       724.63
+      ],
+      [
+       0.14,
+       23.8
+      ],
+      [
+       0.08,
+       5.57
+      ],
+      [
+       0.01,
+       100.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.27,
+       30.74
+      ],
+      [
+       0.28,
+       595.23
+      ]
+     ],
+     "yes_bid_contracts": 2215.1,
+     "derived_ask_contracts": 625.97,
+     "best_yes_bid": 0.25,
+     "best_yes_ask_derived": 0.27
+    },
+    {
+     "ts": 1795179910,
+     "yes_bids": [
+      [
+       0.25,
+       666.66
+      ],
+      [
+       0.24,
+       694.44
+      ],
+      [
+       0.23,
+       724.63
+      ],
+      [
+       0.14,
+       23.8
+      ],
+      [
+       0.08,
+       5.57
+      ],
+      [
+       0.01,
+       100.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.27,
+       29.31
+      ],
+      [
+       0.28,
+       595.23
+      ]
+     ],
+     "yes_bid_contracts": 2215.1,
+     "derived_ask_contracts": 624.54,
+     "best_yes_bid": 0.25,
+     "best_yes_ask_derived": 0.27
+    },
+    {
+     "ts": 1795179932,
+     "yes_bids": [
+      [
+       0.25,
+       666.66
+      ],
+      [
+       0.24,
+       694.44
+      ],
+      [
+       0.23,
+       724.63
+      ],
+      [
+       0.14,
+       23.8
+      ],
+      [
+       0.08,
+       5.57
+      ],
+      [
+       0.01,
+       100.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.27,
+       27.38
+      ],
+      [
+       0.28,
+       595.23
+      ]
+     ],
+     "yes_bid_contracts": 2215.1,
+     "derived_ask_contracts": 622.61,
+     "best_yes_bid": 0.25,
+     "best_yes_ask_derived": 0.27
+    },
+    {
+     "ts": 1795179955,
+     "yes_bids": [
+      [
+       0.25,
+       666.66
+      ],
+      [
+       0.24,
+       694.44
+      ],
+      [
+       0.23,
+       724.63
+      ],
+      [
+       0.14,
+       23.8
+      ],
+      [
+       0.08,
+       5.57
+      ],
+      [
+       0.01,
+       100.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.27,
+       22.83
+      ],
+      [
+       0.28,
+       595.23
+      ]
+     ],
+     "yes_bid_contracts": 2215.1,
+     "derived_ask_contracts": 618.06,
+     "best_yes_bid": 0.25,
+     "best_yes_ask_derived": 0.27
+    },
+    {
+     "ts": 1795179977,
+     "yes_bids": [
+      [
+       0.25,
+       666.66
+      ],
+      [
+       0.24,
+       694.44
+      ],
+      [
+       0.23,
+       724.63
+      ],
+      [
+       0.14,
+       23.8
+      ],
+      [
+       0.08,
+       5.57
+      ],
+      [
+       0.01,
+       100.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.27,
+       21.87
+      ],
+      [
+       0.28,
+       595.23
+      ]
+     ],
+     "yes_bid_contracts": 2215.1,
+     "derived_ask_contracts": 617.1,
+     "best_yes_bid": 0.25,
+     "best_yes_ask_derived": 0.27
+    },
+    {
+     "ts": 1795179999,
+     "yes_bids": [
+      [
+       0.25,
+       666.66
+      ],
+      [
+       0.24,
+       694.44
+      ],
+      [
+       0.23,
+       724.63
+      ],
+      [
+       0.14,
+       23.8
+      ],
+      [
+       0.08,
+       5.57
+      ],
+      [
+       0.01,
+       100.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.27,
+       16.72
+      ],
+      [
+       0.28,
+       595.23
+      ]
+     ],
+     "yes_bid_contracts": 2215.1,
+     "derived_ask_contracts": 611.95,
+     "best_yes_bid": 0.25,
+     "best_yes_ask_derived": 0.27
+    },
+    {
+     "ts": 1795180021,
+     "yes_bids": [
+      [
+       0.25,
+       666.66
+      ],
+      [
+       0.24,
+       694.44
+      ],
+      [
+       0.23,
+       724.63
+      ],
+      [
+       0.14,
+       23.8
+      ],
+      [
+       0.08,
+       5.57
+      ],
+      [
+       0.01,
+       100.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.27,
+       12.79
+      ],
+      [
+       0.28,
+       595.23
+      ]
+     ],
+     "yes_bid_contracts": 2215.1,
+     "derived_ask_contracts": 608.02,
+     "best_yes_bid": 0.25,
+     "best_yes_ask_derived": 0.27
+    },
+    {
+     "ts": 1795180043,
+     "yes_bids": [
+      [
+       0.25,
+       666.66
+      ],
+      [
+       0.24,
+       694.44
+      ],
+      [
+       0.23,
+       724.63
+      ],
+      [
+       0.14,
+       23.8
+      ],
+      [
+       0.08,
+       5.57
+      ],
+      [
+       0.01,
+       100.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.27,
+       11.35
+      ],
+      [
+       0.28,
+       595.23
+      ]
+     ],
+     "yes_bid_contracts": 2215.1,
+     "derived_ask_contracts": 606.58,
+     "best_yes_bid": 0.25,
+     "best_yes_ask_derived": 0.27
+    },
+    {
+     "ts": 1795180065,
+     "yes_bids": [
+      [
+       0.25,
+       666.66
+      ],
+      [
+       0.24,
+       694.44
+      ],
+      [
+       0.23,
+       724.63
+      ],
+      [
+       0.14,
+       23.8
+      ],
+      [
+       0.08,
+       5.57
+      ],
+      [
+       0.01,
+       100.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.27,
+       10.89
+      ],
+      [
+       0.28,
+       595.23
+      ]
+     ],
+     "yes_bid_contracts": 2215.1,
+     "derived_ask_contracts": 606.12,
+     "best_yes_bid": 0.25,
+     "best_yes_ask_derived": 0.27
+    },
+    {
+     "ts": 1795180087,
+     "yes_bids": [
+      [
+       0.25,
+       666.66
+      ],
+      [
+       0.24,
+       694.44
+      ],
+      [
+       0.23,
+       724.63
+      ],
+      [
+       0.14,
+       23.8
+      ],
+      [
+       0.08,
+       5.57
+      ],
+      [
+       0.01,
+       100.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.27,
+       10.12
+      ],
+      [
+       0.28,
+       595.23
+      ]
+     ],
+     "yes_bid_contracts": 2215.1,
+     "derived_ask_contracts": 605.35,
+     "best_yes_bid": 0.25,
+     "best_yes_ask_derived": 0.27
+    }
+   ],
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC50VS100-BTC-26DEC31/orderbook?depth=25",
+   "topic": "crypto",
+   "title": "Will BTC hit $50,000 before $100,000 by Dec 31, 2026?"
+  },
+  "KXLPGATOUR-CMEGTC26-ALIKIM": {
+   "points": [
+    {
+     "ts": 1795179844,
+     "yes_bids": [
+      [
+       0.062,
+       2688.17
+      ],
+      [
+       0.061,
+       2732.24
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.006,
+       55555.54
+      ],
+      [
+       0.005,
+       66666.66
+      ],
+      [
+       0.004,
+       124999.98
+      ],
+      [
+       0.003,
+       55555.55
+      ],
+      [
+       0.002,
+       83333.33
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.079,
+       2109.7
+      ],
+      [
+       0.08,
+       2083.33
+      ],
+      [
+       0.081,
+       2057.61
+      ]
+     ],
+     "yes_bid_contracts": 394309.24,
+     "derived_ask_contracts": 6250.64,
+     "best_yes_bid": 0.062,
+     "best_yes_ask_derived": 0.079
+    },
+    {
+     "ts": 1795179866,
+     "yes_bids": [
+      [
+       0.062,
+       2688.17
+      ],
+      [
+       0.061,
+       2732.24
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.006,
+       55555.54
+      ],
+      [
+       0.005,
+       66666.66
+      ],
+      [
+       0.004,
+       124999.98
+      ],
+      [
+       0.003,
+       55555.55
+      ],
+      [
+       0.002,
+       83333.33
+      ],
+      [
+       0.001,
+       20.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.079,
+       2109.7
+      ],
+      [
+       0.08,
+       2083.33
+      ],
+      [
+       0.081,
+       2057.61
+      ]
+     ],
+     "yes_bid_contracts": 394329.24,
+     "derived_ask_contracts": 6250.64,
+     "best_yes_bid": 0.062,
+     "best_yes_ask_derived": 0.079
+    },
+    {
+     "ts": 1795179888,
+     "yes_bids": [
+      [
+       0.062,
+       2688.17
+      ],
+      [
+       0.061,
+       2732.24
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.006,
+       55555.54
+      ],
+      [
+       0.005,
+       66666.66
+      ],
+      [
+       0.004,
+       124999.98
+      ],
+      [
+       0.003,
+       55555.55
+      ],
+      [
+       0.002,
+       83333.33
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.079,
+       2109.7
+      ],
+      [
+       0.08,
+       2083.33
+      ],
+      [
+       0.081,
+       2057.61
+      ]
+     ],
+     "yes_bid_contracts": 394309.24,
+     "derived_ask_contracts": 6250.64,
+     "best_yes_bid": 0.062,
+     "best_yes_ask_derived": 0.079
+    },
+    {
+     "ts": 1795179910,
+     "yes_bids": [
+      [
+       0.062,
+       2688.17
+      ],
+      [
+       0.061,
+       2732.24
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.006,
+       55555.54
+      ],
+      [
+       0.005,
+       66666.66
+      ],
+      [
+       0.004,
+       124999.98
+      ],
+      [
+       0.003,
+       55555.55
+      ],
+      [
+       0.002,
+       83333.33
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.079,
+       2109.7
+      ],
+      [
+       0.08,
+       2083.33
+      ],
+      [
+       0.081,
+       2057.61
+      ]
+     ],
+     "yes_bid_contracts": 394309.24,
+     "derived_ask_contracts": 6250.64,
+     "best_yes_bid": 0.062,
+     "best_yes_ask_derived": 0.079
+    },
+    {
+     "ts": 1795179932,
+     "yes_bids": [
+      [
+       0.062,
+       2688.17
+      ],
+      [
+       0.061,
+       2732.24
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.006,
+       55555.54
+      ],
+      [
+       0.005,
+       66666.66
+      ],
+      [
+       0.004,
+       124999.98
+      ],
+      [
+       0.003,
+       55555.55
+      ],
+      [
+       0.002,
+       83333.33
+      ],
+      [
+       0.001,
+       20.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.079,
+       2109.7
+      ],
+      [
+       0.08,
+       2083.33
+      ],
+      [
+       0.081,
+       2057.61
+      ]
+     ],
+     "yes_bid_contracts": 394329.24,
+     "derived_ask_contracts": 6250.64,
+     "best_yes_bid": 0.062,
+     "best_yes_ask_derived": 0.079
+    },
+    {
+     "ts": 1795179955,
+     "yes_bids": [
+      [
+       0.062,
+       2688.17
+      ],
+      [
+       0.061,
+       2732.24
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.006,
+       55555.54
+      ],
+      [
+       0.005,
+       66666.66
+      ],
+      [
+       0.004,
+       124999.98
+      ],
+      [
+       0.003,
+       55555.55
+      ],
+      [
+       0.002,
+       83333.33
+      ],
+      [
+       0.001,
+       20.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.079,
+       2109.7
+      ],
+      [
+       0.08,
+       2083.33
+      ],
+      [
+       0.081,
+       2057.61
+      ]
+     ],
+     "yes_bid_contracts": 394329.24,
+     "derived_ask_contracts": 6250.64,
+     "best_yes_bid": 0.062,
+     "best_yes_ask_derived": 0.079
+    },
+    {
+     "ts": 1795179977,
+     "yes_bids": [
+      [
+       0.062,
+       2688.17
+      ],
+      [
+       0.061,
+       2732.24
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.006,
+       55555.54
+      ],
+      [
+       0.005,
+       66666.66
+      ],
+      [
+       0.004,
+       124999.98
+      ],
+      [
+       0.003,
+       55555.55
+      ],
+      [
+       0.002,
+       83333.33
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.079,
+       2109.7
+      ],
+      [
+       0.08,
+       2083.33
+      ],
+      [
+       0.081,
+       2057.61
+      ]
+     ],
+     "yes_bid_contracts": 394309.24,
+     "derived_ask_contracts": 6250.64,
+     "best_yes_bid": 0.062,
+     "best_yes_ask_derived": 0.079
+    },
+    {
+     "ts": 1795179999,
+     "yes_bids": [
+      [
+       0.062,
+       2688.17
+      ],
+      [
+       0.061,
+       2732.24
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.006,
+       55555.54
+      ],
+      [
+       0.005,
+       66666.66
+      ],
+      [
+       0.004,
+       124999.98
+      ],
+      [
+       0.003,
+       55555.55
+      ],
+      [
+       0.002,
+       83333.33
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.079,
+       2109.7
+      ],
+      [
+       0.08,
+       2083.33
+      ],
+      [
+       0.081,
+       2057.61
+      ]
+     ],
+     "yes_bid_contracts": 394309.24,
+     "derived_ask_contracts": 6250.64,
+     "best_yes_bid": 0.062,
+     "best_yes_ask_derived": 0.079
+    },
+    {
+     "ts": 1795180021,
+     "yes_bids": [
+      [
+       0.062,
+       2688.17
+      ],
+      [
+       0.061,
+       2732.24
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.006,
+       55555.54
+      ],
+      [
+       0.005,
+       66666.66
+      ],
+      [
+       0.004,
+       124999.98
+      ],
+      [
+       0.003,
+       55555.55
+      ],
+      [
+       0.002,
+       83333.33
+      ],
+      [
+       0.001,
+       20.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.079,
+       2109.7
+      ],
+      [
+       0.08,
+       2083.33
+      ],
+      [
+       0.081,
+       2057.61
+      ]
+     ],
+     "yes_bid_contracts": 394329.24,
+     "derived_ask_contracts": 6250.64,
+     "best_yes_bid": 0.062,
+     "best_yes_ask_derived": 0.079
+    },
+    {
+     "ts": 1795180043,
+     "yes_bids": [
+      [
+       0.062,
+       2688.17
+      ],
+      [
+       0.061,
+       2732.24
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.006,
+       55555.54
+      ],
+      [
+       0.005,
+       66666.66
+      ],
+      [
+       0.004,
+       124999.98
+      ],
+      [
+       0.003,
+       55555.55
+      ],
+      [
+       0.002,
+       83333.33
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.079,
+       2109.7
+      ],
+      [
+       0.08,
+       2083.33
+      ],
+      [
+       0.081,
+       2057.61
+      ]
+     ],
+     "yes_bid_contracts": 394309.24,
+     "derived_ask_contracts": 6250.64,
+     "best_yes_bid": 0.062,
+     "best_yes_ask_derived": 0.079
+    },
+    {
+     "ts": 1795180065,
+     "yes_bids": [
+      [
+       0.062,
+       2688.17
+      ],
+      [
+       0.061,
+       2732.24
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.006,
+       55555.54
+      ],
+      [
+       0.005,
+       66666.66
+      ],
+      [
+       0.004,
+       124999.98
+      ],
+      [
+       0.003,
+       55555.55
+      ],
+      [
+       0.002,
+       83333.33
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.079,
+       2109.7
+      ],
+      [
+       0.08,
+       2083.33
+      ],
+      [
+       0.081,
+       2057.61
+      ]
+     ],
+     "yes_bid_contracts": 394309.24,
+     "derived_ask_contracts": 6250.64,
+     "best_yes_bid": 0.062,
+     "best_yes_ask_derived": 0.079
+    },
+    {
+     "ts": 1795180087,
+     "yes_bids": [
+      [
+       0.062,
+       2688.17
+      ],
+      [
+       0.061,
+       2732.24
+      ],
+      [
+       0.06,
+       2777.77
+      ],
+      [
+       0.006,
+       55555.54
+      ],
+      [
+       0.005,
+       66666.66
+      ],
+      [
+       0.004,
+       124999.98
+      ],
+      [
+       0.003,
+       55555.55
+      ],
+      [
+       0.002,
+       83333.33
+      ],
+      [
+       0.001,
+       20.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.079,
+       2109.7
+      ],
+      [
+       0.08,
+       2083.33
+      ],
+      [
+       0.081,
+       2057.61
+      ]
+     ],
+     "yes_bid_contracts": 394329.24,
+     "derived_ask_contracts": 6250.64,
+     "best_yes_bid": 0.062,
+     "best_yes_ask_derived": 0.079
+    }
+   ],
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXLPGATOUR-CMEGTC26-ALIKIM/orderbook?depth=25",
+   "topic": "golf",
+   "title": "CME Group Tour Championship: A Lim Kim wins"
+  },
+  "KXBTC2026200-27JAN01-200000": {
+   "points": [
+    {
+     "ts": 1795179844,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179866,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179888,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179910,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179932,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179955,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179977,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179999,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795180021,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795180043,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795180065,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795180087,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    }
+   ],
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC2026200-27JAN01-200000/orderbook?depth=25",
+   "topic": "crypto",
+   "title": "Will Bitcoin be above $200000 by Jan 1, 2027 at 11:59PM ET?"
+  },
+  "GOVPARTYWV-28-D": {
+   "points": [
+    {
+     "ts": 1795179844,
+     "yes_bids": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 1.0,
+     "derived_ask_contracts": 1.0,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.99
+    },
+    {
+     "ts": 1795179866,
+     "yes_bids": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 1.0,
+     "derived_ask_contracts": 1.0,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.99
+    },
+    {
+     "ts": 1795179888,
+     "yes_bids": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 1.0,
+     "derived_ask_contracts": 1.0,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.99
+    },
+    {
+     "ts": 1795179910,
+     "yes_bids": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 1.0,
+     "derived_ask_contracts": 1.0,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.99
+    },
+    {
+     "ts": 1795179932,
+     "yes_bids": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 1.0,
+     "derived_ask_contracts": 1.0,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.99
+    },
+    {
+     "ts": 1795179955,
+     "yes_bids": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 1.0,
+     "derived_ask_contracts": 1.0,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.99
+    },
+    {
+     "ts": 1795179977,
+     "yes_bids": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 1.0,
+     "derived_ask_contracts": 1.0,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.99
+    },
+    {
+     "ts": 1795179999,
+     "yes_bids": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 1.0,
+     "derived_ask_contracts": 1.0,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.99
+    },
+    {
+     "ts": 1795180021,
+     "yes_bids": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 1.0,
+     "derived_ask_contracts": 1.0,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.99
+    },
+    {
+     "ts": 1795180043,
+     "yes_bids": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 1.0,
+     "derived_ask_contracts": 1.0,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.99
+    },
+    {
+     "ts": 1795180065,
+     "yes_bids": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 1.0,
+     "derived_ask_contracts": 1.0,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.99
+    },
+    {
+     "ts": 1795180087,
+     "yes_bids": [
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 1.0,
+     "derived_ask_contracts": 1.0,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.99
+    }
+   ],
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/GOVPARTYWV-28-D/orderbook?depth=25",
+   "topic": "elections",
+   "title": "Will the Democratic party win the governorship in West Virginia"
+  },
+  "GOVPARTYDE-28-R": {
+   "points": [
+    {
+     "ts": 1795179844,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179866,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179888,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179910,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179932,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179955,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179977,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795179999,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795180021,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795180043,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795180065,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795180087,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    }
+   ],
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/GOVPARTYDE-28-R/orderbook?depth=25",
+   "topic": "elections",
+   "title": "Will the Republican party win the governorship in Delaware"
+  },
+  "GOVPARTYND-26-D": {
+   "points": [
+    {
+     "ts": 1795179844,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179866,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179888,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179910,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179933,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179955,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179977,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179999,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180021,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180043,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180065,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180087,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    }
+   ],
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/GOVPARTYND-26-D/orderbook?depth=25",
+   "topic": "elections",
+   "title": "Will the Democratic party win the governorship in North Dakota"
+  },
+  "GOVPARTYND-26-R": {
+   "points": [
+    {
+     "ts": 1795179844,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179866,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179888,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179910,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179933,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179955,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179977,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179999,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180021,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180043,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180065,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180087,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    }
+   ],
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/GOVPARTYND-26-R/orderbook?depth=25",
+   "topic": "elections",
+   "title": "Will the Republican party win the governorship in North Dakota"
+  },
+  "GOVPARTYWV-28-R": {
+   "points": [
+    {
+     "ts": 1795179844,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179866,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179888,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179910,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179933,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179955,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179977,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179999,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180021,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180043,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180065,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180087,
+     "yes_bids": [
+      [
+       0.02,
+       1.0
+      ],
+      [
+       0.01,
+       1.0
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 2.0,
+     "derived_ask_contracts": 2.0,
+     "best_yes_bid": 0.02,
+     "best_yes_ask_derived": 0.98
+    }
+   ],
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/GOVPARTYWV-28-R/orderbook?depth=25",
+   "topic": "elections",
+   "title": "Will the Republican party win the governorship in West Virginia"
+  },
+  "GOVPARTYNE-26-D": {
+   "points": [
+    {
+     "ts": 1795179844,
+     "yes_bids": [
+      [
+       0.01,
+       0.99
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       0.99
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 0.99,
+     "derived_ask_contracts": 1.99,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179866,
+     "yes_bids": [
+      [
+       0.01,
+       0.99
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       0.99
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 0.99,
+     "derived_ask_contracts": 1.99,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179888,
+     "yes_bids": [
+      [
+       0.01,
+       0.99
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       0.99
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 0.99,
+     "derived_ask_contracts": 1.99,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179910,
+     "yes_bids": [
+      [
+       0.01,
+       0.99
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       0.99
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 0.99,
+     "derived_ask_contracts": 1.99,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179933,
+     "yes_bids": [
+      [
+       0.01,
+       0.99
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       0.99
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 0.99,
+     "derived_ask_contracts": 1.99,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179955,
+     "yes_bids": [
+      [
+       0.01,
+       0.99
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       0.99
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 0.99,
+     "derived_ask_contracts": 1.99,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179977,
+     "yes_bids": [
+      [
+       0.01,
+       0.99
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       0.99
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 0.99,
+     "derived_ask_contracts": 1.99,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795179999,
+     "yes_bids": [
+      [
+       0.01,
+       0.99
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       0.99
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 0.99,
+     "derived_ask_contracts": 1.99,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180021,
+     "yes_bids": [
+      [
+       0.01,
+       0.99
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       0.99
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 0.99,
+     "derived_ask_contracts": 1.99,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180043,
+     "yes_bids": [
+      [
+       0.01,
+       0.99
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       0.99
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 0.99,
+     "derived_ask_contracts": 1.99,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180065,
+     "yes_bids": [
+      [
+       0.01,
+       0.99
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       0.99
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 0.99,
+     "derived_ask_contracts": 1.99,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795180087,
+     "yes_bids": [
+      [
+       0.01,
+       0.99
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.98,
+       0.99
+      ],
+      [
+       0.99,
+       1.0
+      ]
+     ],
+     "yes_bid_contracts": 0.99,
+     "derived_ask_contracts": 1.99,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.98
+    }
+   ],
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/GOVPARTYNE-26-D/orderbook?depth=25",
+   "topic": "elections",
+   "title": "Will the Democratic party win the governorship in Nebraska"
+  }
+ }
+}
