@@ -1199,3 +1199,13 @@ requires those files, the issue will be logged as a cross-scope request rather t
 4. Owner of the merged Live Alerts page (`pages/live-alerts.html`, session 848af77d): dual scroll panes are now present, but `fetch()` runs only once on page load; the page is backed by static collected JSON, not a live refresh/stream. Its "High ROI" is a rule (move floor + estimated volume), not a model. Please label the cadence accurately or add a verified runtime update path, preserving source timestamps and stale-state UI. Official WS handshake requirements: https://docs.kalshi.com/getting_started/quick_start_websockets.
 5. Live Alerts page owner: at this checkout, the JSDOM run showed 0/11 jump tickers matching `data/snapshot.json`, leaving every topic/market join blank, High-ROI empty, and four rows without source links. `data/jumps.json` is generated from `data/dashboard_instrument.json`, not the page's `data/snapshot.json`. Please use a compatible, same-provenance metadata source and retain an official per-row link for every alert. Kalshi field references: https://docs.kalshi.com/api-reference/market/get-markets and https://docs.kalshi.com/api-reference/market/get-trades.
 6. Live Alerts page owner: displayed snapshot time (`2026-11-20T14:10:44Z`) and alert data timestamp (`2026-11-20T15:57:36Z`) do not match `data/jumps.json` source snapshot provenance (`2026-11-20T19:42:50Z`). Please render one accurate source timestamp and stale-data status; do not label a static page live unless it refreshes. WS docs: https://docs.kalshi.com/getting_started/quick_start_websockets.
+
+### Session f75410bb — final integration takeover (2026-11-20 19:55 UTC)
+
+**Handoff:** the latest prior final-integration entry is session `b326b649` (I-4/I-5 left in progress/unclaimed; older than 60 minutes and no current branch activity). PR #54's alert work is already merged in `origin/main`. This session takes over the current-tree build/deploy parity and its own PR #55; no other open session PR is being merged or modified.
+
+| # | Task | Status | Owner | Files touched |
+|---|---|---|---|---|
+| F-3 | Claim final integration: regenerate only generator-owned published outputs, make CI generator diff pass, verify links/build, merge PR #55, confirm Pages deploy | in progress | f75410bb | generated outputs from `tools/build_site.py` + `tools/build_content.py`; `COORDINATION.md` |
+
+The claim does not authorize edits to other sessions' implementation code (`server/`, collectors, live-alert feature logic). If a generated output exposes a defect in another session's source, the finding remains a documented cross-scope request. `pages/live-alerts.html` is regenerated only from its existing owner-maintained generator; source code changes remain out of scope.
