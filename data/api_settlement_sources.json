@@ -1,0 +1,829 @@
+{
+  "meta": {
+    "collected_on": "2026-11-20",
+    "collected_by": "Session f1751c8f (branch arena/f1751c8f-demo2)",
+    "method": "Names and URLs as recorded in the earlier session. Names were matched against the endpoint-derived names in data/api_reverification.json. URLs were opened and checked in session f1751c8f on 2026-11-20 only for the three entries marked confirmed. All other URLs are blanked in the snapshot and kept here as url_as_recorded for review. The earlier 'verbatim from endpoint' claim was too strong.",
+    "source_note": "Official source for each entry is the Kalshi DEMO API endpoint given as endpoint; the listed url is the settlement source named by Kalshi for that contract.",
+    "verification_rule": "A URL is kept only if it was opened and matches the named organisation. Otherwise it is blanked and flagged (F-14)."
+  },
+  "sources": {
+    "KXAAAGASCDOK": [
+      {
+        "name": "AAA",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://gasprices.aaa.com/?state=OK",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXAAAGASDTN": [
+      {
+        "name": "AAA",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://gasprices.aaa.com/?state=TN",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXUNDERHARRIS": [
+      {
+        "name": "Georgia Secretary of State",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://results.sos.ga.gov/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Maine Secretary of State",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.maine.gov/sos/cec/elec/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Florida Department of State",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://dos.fl.gov/elections/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Federal Election Commission",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.fec.gov",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "New York State Board of Elections",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://elections.ny.gov/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Oregon Secretary of State",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://sos.oregon.gov/elections/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Michigan Department of State",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.michigan.gov/sos/elections",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "New Hampshire Secretary of State",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.sos.nh.gov/elections",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Minnesota Secretary of State",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.sos.mn.gov/elections-voting/election-results/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXNCSENTURNOUTDVSR": [
+      {
+        "name": "North Carolina State Board of Elections",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.ncsbe.gov/results-data/election-results",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXHFCCHAIR": [
+      {
+        "name": "House Freedom Caucus",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://freedomcaucus.org/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "HOUSENY4": [
+      {
+        "name": "Library of Congress",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.congress.gov/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXXBANNEDMURRAYHILLGUY1": [
+      {
+        "name": "ABC",
+        "url": "https://abcnews.go.com/",
+        "url_status": "confirmed",
+        "url_as_recorded": null,
+        "note": "Fetched 2026-11-20: page resolves to abcnews.com, title 'ABC News'."
+      },
+      {
+        "name": "account holder of ",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.google.com/search?q=account+holder+of+",
+        "note": "Search-results URL, not an official source; name is a placeholder."
+      },
+      {
+        "name": "Fox News",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.foxnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "MSNBC",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.msnbc.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "The Wall Street Journal",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.wsj.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Semafor",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.semafor.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Barchart",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.barchart.com/stocks/quotes/$INX/overview",
+        "note": "Page is an S&P 500 index quote page; it is not shown to be a settlement source."
+      },
+      {
+        "name": "Ars Technica",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.google.com/search?q=Ars+Technica",
+        "note": "Search-results URL, not an official source."
+      },
+      {
+        "name": "New York Times",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.nytimes.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "CBS",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cbsnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "The Washington Post",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.washingtonpost.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Axios",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.axios.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "CNN",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cnn.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Engadget",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.google.com/search?q=Engadget",
+        "note": "Search-results URL, not an official source."
+      },
+      {
+        "name": "Reuters",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.reuters.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Mashable",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.google.com/search?q=Mashable",
+        "note": "Search-results URL, not an official source."
+      },
+      {
+        "name": "Bloomberg News",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.bloomberg.com",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Elon Musk",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://x.com/elonmusk",
+        "note": "A personal account, not an official source for the settlement value."
+      },
+      {
+        "name": "the Associated Press",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://apnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Energy Information Administration",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.eia.gov/totalenergy/data/monthly/index.php",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Politico",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.politico.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "TechCrunch",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://techcrunch.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Verge",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.google.com/search?q=Verge",
+        "note": "Search-results URL, not an official source."
+      }
+    ],
+    "KXXBANNEDGROK": [
+      {
+        "name": "ABC",
+        "url": "https://abcnews.go.com/",
+        "url_status": "confirmed",
+        "url_as_recorded": null,
+        "note": "Fetched 2026-11-20: page resolves to abcnews.com, title 'ABC News'."
+      },
+      {
+        "name": "account holder of ",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.google.com/search?q=account+holder+of+",
+        "note": "Search-results URL, not an official source; name is a placeholder."
+      },
+      {
+        "name": "Fox News",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.foxnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "MSNBC",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.msnbc.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "The Wall Street Journal",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.wsj.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Semafor",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.semafor.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Barchart",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.barchart.com/stocks/quotes/$INX/overview",
+        "note": "Page is an S&P 500 index quote page; it is not shown to be a settlement source."
+      },
+      {
+        "name": "Ars Technica",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.google.com/search?q=Ars+Technica",
+        "note": "Search-results URL, not an official source."
+      },
+      {
+        "name": "New York Times",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.nytimes.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "CBS",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cbsnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "The Washington Post",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.washingtonpost.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Axios",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.axios.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "CNN",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cnn.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Engadget",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.google.com/search?q=Engadget",
+        "note": "Search-results URL, not an official source."
+      },
+      {
+        "name": "Reuters",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.reuters.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Mashable",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.google.com/search?q=Mashable",
+        "note": "Search-results URL, not an official source."
+      },
+      {
+        "name": "Bloomberg News",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.bloomberg.com",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Elon Musk",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://x.com/elonmusk",
+        "note": "A personal account, not an official source for the settlement value."
+      },
+      {
+        "name": "the Associated Press",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://apnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Energy Information Administration",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.eia.gov/totalenergy/data/monthly/index.php",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Politico",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.politico.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "TechCrunch",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://techcrunch.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Verge",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.google.com/search?q=Verge",
+        "note": "Search-results URL, not an official source."
+      }
+    ],
+    "KXSOLMINMON": [
+      {
+        "name": "CF Benchmarks",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cfbenchmarks.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXFDVBIRB": [
+      {
+        "name": "CoinGecko",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.coingecko.com",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXBTCMAX130": [
+      {
+        "name": "CF Benchmarks",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXBOASTABLE": [
+      {
+        "name": "ABC",
+        "url": "https://abcnews.go.com/",
+        "url_status": "confirmed",
+        "url_as_recorded": null,
+        "note": "Fetched 2026-11-20: page resolves to abcnews.com, title 'ABC News'."
+      },
+      {
+        "name": "Fox News",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.foxnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "MSNBC",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.msnbc.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "The Wall Street Journal",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.wsj.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Semafor",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.semafor.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "The Information",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.theinformation.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "CBS",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cbsnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "The Washington Post",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.washingtonpost.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Axios",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.axios.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "CNN",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cnn.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Reuters",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.reuters.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "The New York Times",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.nytimes.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "the Associated Press",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://apnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Politico",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.politico.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXTONW": [
+      {
+        "name": "CF Benchmarks",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cfbenchmarks.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXZECMINMON": [
+      {
+        "name": "CF Benchmarks",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cfbenchmarks.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXBTCY": [
+      {
+        "name": "CF Benchmarks",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cfbenchmarks.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "ETHD": [
+      {
+        "name": "CF Benchmarks",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cfbenchmarks.com/data/indices/ETHUSD_RTI",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXXRPMAXATH": [
+      {
+        "name": "CF Benchmarks",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cfbenchmarks.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXLIVH2H": [
+      {
+        "name": "LIV Golf",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.livgolf.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "ESPN",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.espn.com",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Fox Sports",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.foxsports.com",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXPGARYDERTOP3": [
+      {
+        "name": "ESPN",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.espn.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXPGAGOLFERSCORE": [
+      {
+        "name": "NBC Sports",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "http://www.nbcsports.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Fox Sports",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://foxsports.com",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "the Governing League",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.pgatour.com/",
+        "note": "'the Governing League' is not a named organisation, so the PGA Tour URL is an inference."
+      },
+      {
+        "name": "the Associated Press",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://apnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Golf Channel",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://golfchannel.com",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXDPWORLDTOUR": [
+      {
+        "name": "DP World Tour",
+        "url": "https://www.europeantour.com/dpworld-tour/schedule/",
+        "url_status": "confirmed",
+        "url_as_recorded": null,
+        "note": "Fetched 2026-11-20: title 'DP World Tour Schedule'."
+      }
+    ],
+    "KXPGASOLHEIM": [
+      {
+        "name": "The Wall Street Journal",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.wsj.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "ESPN",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.espn.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Fox Sports",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.foxsports.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXNEWPOPE-70": [
+      {
+        "name": "The New York Times",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.nytimes.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "the Associated Press",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://apnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Reuters",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.reuters.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Axios",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.axios.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Politico",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.politico.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Semafor",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.semafor.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "The Information",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.theinformation.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "The Washington Post",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://abc.com/",
+        "note": "Wrong organisation: fetched page is ABC Network (TV), not The Washington Post."
+      },
+      {
+        "name": "The Wall Street Journal",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.wsj.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "ABC",
+        "url": "",
+        "url_status": "wrong_url",
+        "url_as_recorded": "https://www.abc.net.au/",
+        "note": "Wrong organisation: fetched page is the Australian Broadcasting Corporation, not the US ABC in these rows."
+      },
+      {
+        "name": "CBS",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cbsnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "CNN",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.cnn.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "Fox News",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.foxnews.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      },
+      {
+        "name": "MSNBC",
+        "url": "",
+        "url_status": "not_confirmed",
+        "url_as_recorded": "https://www.msnbc.com/",
+        "note": "URL not opened this session; blanked per the verification rule (name kept from the endpoint)."
+      }
+    ],
+    "KXNEXTNATOSECGEN-99": [
+      {
+        "name": "North Atlantic Treaty Organization",
+        "url": "https://www.nato.int/",
+        "url_status": "confirmed",
+        "url_as_recorded": null,
+        "note": "Fetched 2026-11-20: title 'North Atlantic Treaty Organization'."
+      }
+    ]
+  }
+}
