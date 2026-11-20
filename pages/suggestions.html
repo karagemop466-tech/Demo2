@@ -22,6 +22,74 @@ knowledge. No decision is transmitted anywhere.</div>
   <span class="status muted" id="decSummary"></span>
 </div>
 
+<div class="card" style="margin-bottom:12px" data-sug="S12">
+  <h3>S12 · Stream the ticker channel through a small server-side relay</h3>
+  <p><b>Problem.</b> The browser cannot open a Kalshi WebSocket: the official docs require an authenticated handshake even for the public ticker/trade channels, and a public static page must never ask a visitor for a private key. The feeds therefore poll REST every 30 seconds.</p>
+  <p style="margin-bottom:.2em"><b>Options on the table.</b></p>
+  <ul class="clean"><li>Keep REST polling from the browser (current)</li><li>Run a tiny relay on a server with the demo key in Actions secrets and a read-only /stream endpoint</li><li>Run the relay inside the existing Actions runner and publish the tick file</li></ul>
+  <p><b>Recommendation.</b> Poll for now (it needs no secret and no new infrastructure); if tick-by-tick matters, put the key in Actions secrets and relay the ticker channel, never the key itself.</p>
+  <p class="small muted">Effort Medium · Impact High · Risk: A relay becomes a service to secure and keep alive; a public endpoint that leaks an authenticated session is worse than a slower poll.</p>
+  <p class="small">Source: <a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/quick_start_websockets</a></p>
+  <div class="row">
+    <button class="sm" data-decide="choose" data-id="S12">Choose this path</button>
+    <button class="secondary sm" data-decide="defer" data-id="S12">Defer</button>
+    <button class="secondary sm" data-decide="reject" data-id="S12">Reject</button>
+    <span class="status" id="dec-S12">No decision recorded</span>
+  </div>
+  <label for="note-S12">Reviewer note (stored in this browser only)</label>
+  <input id="note-S12" data-note="S12" placeholder="why, and what would change your mind">
+</div>
+<div class="card" style="margin-bottom:12px" data-sug="S13">
+  <h3>S13 · Persist the alert history so the chats survive a reload</h3>
+  <p><b>Problem.</b> The two chat feeds are rebuilt from the committed tick history on every page load. A move that happened while the tab was closed is only visible if the collector happened to sample it.</p>
+  <p style="margin-bottom:.2em"><b>Options on the table.</b></p>
+  <ul class="clean"><li>Append every alert to a small data/alerts.json in the collector (current need)</li><li>Keep the feeds in memory only</li><li>Store alerts per topic in separate files</li></ul>
+  <p><b>Recommendation.</b> Append the detected moves to a capped, per-topic alert file in the same collector run that already writes the tick history.</p>
+  <p class="small muted">Effort Low · Impact Medium · Risk: An append-only alert log grows; it must be rotated or capped like history.json.</p>
+  <p class="small">Source: <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/market/get-markets</a></p>
+  <div class="row">
+    <button class="sm" data-decide="choose" data-id="S13">Choose this path</button>
+    <button class="secondary sm" data-decide="defer" data-id="S13">Defer</button>
+    <button class="secondary sm" data-decide="reject" data-id="S13">Reject</button>
+    <span class="status" id="dec-S13">No decision recorded</span>
+  </div>
+  <label for="note-S13">Reviewer note (stored in this browser only)</label>
+  <input id="note-S13" data-note="S13" placeholder="why, and what would change your mind">
+</div>
+<div class="card" style="margin-bottom:12px" data-sug="S14">
+  <h3>S14 · Make the alerts interrupt the trader, not just scroll past</h3>
+  <p><b>Problem.</b> A feed that scrolls silently is easy to miss. The dashboard has no sound, no desktop notification and no mention of the selected market in the page title.</p>
+  <p style="margin-bottom:.2em"><b>Options on the table.</b></p>
+  <ul class="clean"><li>Browser notification API on a move (needs permission)</li><li>A short sound on a move</li><li>Update the page title with the count of unseen moves</li><li>Nothing - the trader watches the tab</li></ul>
+  <p><b>Recommendation.</b> Title counter first (no permission needed), then notifications driven by the ROI feed only.</p>
+  <p class="small muted">Effort Low · Impact Medium · Risk: Notifications that fire on every move become noise; the ROI feed is the natural filter for notifications.</p>
+  <p class="small">Source: <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/market/get-markets</a></p>
+  <div class="row">
+    <button class="sm" data-decide="choose" data-id="S14">Choose this path</button>
+    <button class="secondary sm" data-decide="defer" data-id="S14">Defer</button>
+    <button class="secondary sm" data-decide="reject" data-id="S14">Reject</button>
+    <span class="status" id="dec-S14">No decision recorded</span>
+  </div>
+  <label for="note-S14">Reviewer note (stored in this browser only)</label>
+  <input id="note-S14" data-note="S14" placeholder="why, and what would change your mind">
+</div>
+<div class="card" style="margin-bottom:12px" data-sug="S15">
+  <h3>S15 · Per-topic alert rules instead of one global threshold</h3>
+  <p><b>Problem.</b> A $0.10 move means something different in a golf market than in a crypto market, and the brief asked for the topics to stay separate. Today one threshold applies to all five topics.</p>
+  <p style="margin-bottom:.2em"><b>Options on the table.</b></p>
+  <ul class="clean"><li>One global threshold (current)</li><li>A threshold per topic, editable in the page</li><li>A threshold per topic, set in data/ and published with the snapshot</li></ul>
+  <p><b>Recommendation.</b> Let the ROI score carry the per-topic judgement first; add per-topic thresholds only if the score proves too blunt.</p>
+  <p class="small muted">Effort Low · Impact Medium · Risk: More knobs make the feed harder to read; the ROI score is a simpler way to express the same idea.</p>
+  <p class="small">Source: <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/market_settlement</a></p>
+  <div class="row">
+    <button class="sm" data-decide="choose" data-id="S15">Choose this path</button>
+    <button class="secondary sm" data-decide="defer" data-id="S15">Defer</button>
+    <button class="secondary sm" data-decide="reject" data-id="S15">Reject</button>
+    <span class="status" id="dec-S15">No decision recorded</span>
+  </div>
+  <label for="note-S15">Reviewer note (stored in this browser only)</label>
+  <input id="note-S15" data-note="S15" placeholder="why, and what would change your mind">
+</div>
 <div class="card" style="margin-bottom:12px" data-sug="S1">
   <h3>S1 · Decide what “highest dollar amount” means</h3>
   <p><b>Problem.</b> The Trade API has no dollar-volume field. The dashboard currently ranks by volume_fp × last_price_dollars and labels it an estimate.</p>

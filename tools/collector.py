@@ -47,6 +47,21 @@ PROD_REST = "https://external-api.kalshi.com/trade-api/v2"
 # `series.category` / series ticker, not on free-text guesses — see TOPIC_RULES.
 TOPICS = ["gas", "elections", "culture", "crypto", "golf"]
 
+# How much of the in-scope universe is published to the site.
+#
+# Why this exists: GitHub refuses a push when any single file is larger than
+# 100 MB (verified: workflow run 44800417665 was rejected with
+# "File data/snapshot.json is 111.97 MB; this exceeds GitHub's file size limit").
+# The demo exchange now returns ~25,000 in-scope open markets, and every row was
+# written twice (`markets` + `by_topic`) plus once per topic file. So the collector
+# publishes the TOP EVENTS per topic by estimated dollar volume, keeping every
+# market of those events, and records exactly what was left out in
+# `published_subset` so the site can state the coverage honestly.
+PUBLISH_EVENTS_PER_TOPIC = int(os.environ.get("KALSHI_PUBLISH_EVENTS_PER_TOPIC", "120"))
+PUBLISH_TOP_MARKETS_PER_TOPIC = int(os.environ.get("KALSHI_PUBLISH_TOP_MARKETS", "250"))
+# Hard ceiling for one published file. Comfortably below GitHub's 100 MB limit.
+MAX_FILE_BYTES = 40 * 1024 * 1024
+
 # API request log: (url, http_status, ok, note). Written to data/api_log.json so the
 # site can prove which request produced which rows.
 API_LOG: list[dict[str, Any]] = []
@@ -387,6 +402,9 @@ def collect_scope(signer: Signer | None) -> dict:
 
     return {
         "series_index_size": len(series_idx),
+        # kept in memory only (never written to the snapshot) so the resolution
+        # pass can reuse it instead of sweeping /series a second time
+        "series_idx": series_idx,
         "topic_catalog": catalog,
         "events_scanned": len(events),
         "markets_in_scope": rows,
@@ -404,6 +422,96 @@ def implied_dollar_volume(m: dict) -> float | None:
     except (TypeError, ValueError):
         return None
     return round(v * p, 2)
+
+
+def select_published(rows: list[dict],
+                     events_per_topic: int = PUBLISH_EVENTS_PER_TOPIC,
+                     top_markets: int = PUBLISH_TOP_MARKETS_PER_TOPIC) -> tuple[list[dict], dict]:
+    """Choose which in-scope markets are written to the site.
+
+    Rule (documented, deterministic): inside each topic keep the highest-value
+    EVENTS by the labelled dollar-volume estimate, all markets of a kept event,
+    plus the highest-value individual markets. Events are never split, so a row
+    on the site always belongs to a whole event. Everything left out is counted
+    in the returned metadata, so the site can state its coverage honestly
+    instead of implying the exchange holds only what is published.
+    """
+    events: dict[str, dict[str, list[dict]]] = {}
+    for r in rows:
+        topic = r.get("topic") or "unmapped"
+        ev = r.get("event_ticker") or r.get("market_ticker") or ""
+        events.setdefault(topic, {}).setdefault(ev, []).append(r)
+
+    def event_value(ev_rows: list[dict]) -> float:
+        return sum((r.get("est_dollar_volume") or 0.0) for r in ev_rows)
+
+    kept: list[dict] = []
+    per_topic: dict[str, dict] = {}
+    for topic in sorted(events):
+        evs = events[topic]
+        ranked = sorted(evs.items(), key=lambda kv: (-event_value(kv[1]), kv[0]))
+        chosen = {ev for ev, _ in ranked[:events_per_topic]}
+        # The biggest single markets are kept too, even when their event is not
+        # in the top N (a one-market event with a large book would otherwise
+        # disappear from the ranking).
+        for ev, ev_rows in ranked:
+            best = max((r.get("est_dollar_volume") or 0.0) for r in ev_rows)
+            if best <= 0:
+                continue
+            chosen.add(ev)
+            if len(chosen) >= events_per_topic + top_markets:
+                break
+        for ev, ev_rows in evs.items():
+            if ev in chosen:
+                kept.extend(ev_rows)
+        per_topic[topic] = {
+            "events_seen": len(evs),
+            "events_published": len(chosen),
+            "markets_seen": sum(len(v) for v in evs.values()),
+            "markets_published": sum(len(v) for k, v in evs.items() if k in chosen),
+        }
+
+    # A market ticker is unique; keep the first occurrence, then order by the
+    # labelled estimate so the published file is stable between runs.
+    seen: set[str] = set()
+    unique: list[dict] = []
+    for r in kept:
+        t = r.get("market_ticker")
+        if t in seen:
+            continue
+        seen.add(t)
+        unique.append(r)
+    unique.sort(key=lambda r: -(r.get("est_dollar_volume") or 0.0))
+    meta = {
+        "rule": (
+            f"per topic: all markets of the top {events_per_topic} events by estimated dollar "
+            f"volume, plus the {top_markets} highest-value individual markets. Estimated dollar "
+            "volume = volume_fp x last_price_dollars (labelled estimate, not an API field)."
+        ),
+        "markets_seen": len(rows),
+        "markets_published": len(unique),
+        "per_topic": per_topic,
+    }
+    return unique, meta
+
+
+def resolve_series_ticker(event_ticker: str, known: set[str]) -> str | None:
+    """Recover the series ticker from an event ticker.
+
+    GET /markets returns `event_ticker` but no series ticker, so a settled
+    market has to be mapped back to its series. Splitting the event ticker on
+    "-" is wrong for series tickers that contain a dash (for example
+    "GOVPARTY-NH", present in the official series list), so the LONGEST prefix
+    that is a known series ticker wins.
+    """
+    if not event_ticker:
+        return None
+    parts = event_ticker.split("-")
+    for i in range(len(parts), 0, -1):
+        cand = "-".join(parts[:i])
+        if cand in known:
+            return cand
+    return None
 
 
 def collect_orderbooks(rows: list[dict], signer: Signer | None, top_n: int = 12) -> dict:
@@ -502,17 +610,32 @@ def collect_candles(rows: list[dict], signer: Signer | None, top_n: int = 8) -> 
     return out
 
 
-def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list[dict]:
-    """Settled in-scope markets with the official yes/no `result`."""
-    settled = paginate(DEMO_REST + "/markets?status=settled", "markets", signer, max_pages=10)
-    series_idx = load_series_index(signer)
+def collect_resolutions(signer: Signer | None, series_idx: dict[str, dict] | None = None,
+                        limit_markets: int = 400) -> list[dict]:
+    """Settled in-scope markets with the official yes/no `result`.
+
+    `result` is the official settlement field: "yes" or "no" once Kalshi has
+    settled the market, empty while it is still live. GET /markets does not
+    return the series ticker, so it is recovered from the event ticker with the
+    longest-prefix rule (see resolve_series_ticker).
+    """
+    if series_idx is None:
+        series_idx = load_series_index(signer)
     topic_cache = {t: series_topic(s) for t, s in series_idx.items()}
+    known = {t for t, topic in topic_cache.items() if topic in TOPICS}
+    # Recent settlements first: the documented `min_settled_ts` filter keeps the
+    # scan small. If the filtered call returns nothing, fall back to the plain
+    # settled list rather than publishing an empty resolution table.
+    since = int((dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=30)).timestamp())
+    settled = paginate(f"{DEMO_REST}/markets?status=settled&min_settled_ts={since}",
+                       "markets", signer, max_pages=20)
+    if not settled:
+        settled = paginate(DEMO_REST + "/markets?status=settled", "markets", signer, max_pages=20)
     rows: list[dict] = []
     for m in settled:
         ev = m.get("event_ticker") or ""
-        # The series ticker is the leading segment of the event ticker.
-        st = ev.split("-")[0] if ev else ""
-        topic = topic_cache.get(st)
+        st = resolve_series_ticker(ev, known)
+        topic = topic_cache.get(st) if st else None
         if topic not in TOPICS:
             continue
         rows.append(
@@ -554,7 +677,15 @@ def exchange_status(signer: Signer | None) -> dict:
 def write_json(name: str, payload: Any) -> None:
     DATA.mkdir(exist_ok=True)
     p = DATA / name
-    p.write_text(json.dumps(payload, indent=1, sort_keys=False) + "\n")
+    body = json.dumps(payload, indent=1, sort_keys=False) + "\n"
+    if len(body.encode()) > MAX_FILE_BYTES:
+        # GitHub rejects any file over 100 MB (verified in workflow run
+        # 44800417665), so writing one would break the whole publish step.
+        raise SystemExit(
+            f"refusing to write {name}: {len(body)} bytes exceeds the {MAX_FILE_BYTES} byte "
+            "collector limit. Reduce PUBLISH_EVENTS_PER_TOPIC or trim the row fields."
+        )
+    p.write_text(body)
     print(f"wrote {p.relative_to(ROOT)} ({p.stat().st_size} bytes)")
 
 
@@ -574,11 +705,25 @@ def main() -> int:
     for r in rows:
         r["est_dollar_volume"] = implied_dollar_volume(r)
 
-    books = {} if args.scope_only else collect_orderbooks(rows, signer)
-    candles = {} if args.scope_only else collect_candles(rows, signer)
-    resolutions = collect_resolutions(signer)
+    # Publish only the top events per topic (see select_published). The cap is
+    # lowered automatically if the published rows would still be too big for
+    # GitHub's 100 MB per-file limit.
+    published: list[dict] = []
+    subset: dict = {}
+    for cap in (PUBLISH_EVENTS_PER_TOPIC, 60, 30, 15, 8):
+        published, subset = select_published(rows, events_per_topic=cap)
+        approx = len(json.dumps(published)) * 2  # markets + by_topic
+        if approx <= MAX_FILE_BYTES:
+            break
+        print(f"published rows would be ~{approx} bytes; retrying with {cap} events per topic",
+              file=sys.stderr)
+    subset["events_per_topic_cap"] = cap
 
-    by_topic = {t: [r for r in rows if r["topic"] == t] for t in TOPICS}
+    books = {} if args.scope_only else collect_orderbooks(published, signer)
+    candles = {} if args.scope_only else collect_candles(published, signer)
+    resolutions = collect_resolutions(signer, scope.get("series_idx"))
+
+    by_topic = {t: [r for r in published if r["topic"] == t] for t in TOPICS}
     for t in TOPICS:
         by_topic[t].sort(key=lambda r: (r.get("est_dollar_volume") or -1), reverse=True)
 
@@ -593,16 +738,18 @@ def main() -> int:
         "series_inventory": scope["series_inventory"],
         "topic_catalog": scope["topic_catalog"],
         "unmapped_series": scope["unmapped_series"],
+        "published_subset": subset,
         "counts": {
             "series_index": scope["series_index_size"],
             "events_scanned": scope["events_scanned"],
-            "markets_in_scope": len(rows),
+            "markets_in_scope": len(published),
+            "markets_seen": len(rows),
             "per_topic": {t: len(by_topic[t]) for t in TOPICS},
             "resolved_in_scope": len(resolutions),
             "orderbooks": len(books),
             "candle_sets": len(candles),
         },
-        "markets": rows,
+        "markets": published,
         "by_topic": by_topic,
         "orderbooks": books,
         "candles": candles,
@@ -647,7 +794,7 @@ def main() -> int:
     hist_path = DATA / "history.json"
     hist = json.loads(hist_path.read_text()) if hist_path.exists() else {"points": {}}
     pts = hist.setdefault("points", {})
-    for r in rows:
+    for r in published:
         t = r["market_ticker"]
         lp = r.get("last_price_dollars")
         yb = r.get("yes_bid_dollars")
@@ -661,8 +808,8 @@ def main() -> int:
     hist["updated_at_utc"] = snapshot["generated_at_utc"]
     write_json("history.json", hist)
 
-    print(f"OK  in-scope markets={len(rows)}  resolved={len(resolutions)}  "
-          f"books={len(books)}  auth={signer is not None}")
+    print(f"OK  in-scope seen={len(rows)}  published={len(published)}  "
+          f"resolved={len(resolutions)}  books={len(books)}  auth={signer is not None}")
     if not rows:
         print("WARNING: zero in-scope markets returned — scope filter or API issue.", file=sys.stderr)
     return 0

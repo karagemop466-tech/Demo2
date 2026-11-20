@@ -44,15 +44,20 @@ price, and reports demo-account performance with trade categorisation and strate
 <p>This is a static GitHub Pages site, so it cannot hold a secret and a visitor&#8217;s browser
 cannot be the only data path. Instead:</p>
 <ol class="clean">
-<li>A GitHub Actions workflow runs <code>tools/collector.py</code> every 10 minutes against the
+<li>A GitHub Actions workflow runs <code>tools/collector.py</code> every 30 minutes against the
    official demo API (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment</a>).</li>
 <li>The collector writes <code>data/*.json</code>, including an <b>API log</b> of every request
    and its HTTP status, and commits the snapshot.</li>
 <li>The pages read those snapshots, so every number on screen traces back to a logged request.</li>
+<li>On top of that, the browser polls the same public API directly for the two live alert
+   feeds and for a live order book. The demo API allows this site's origin, so no key is needed
+   and nothing secret is in the page.</li>
 </ol>
-<p class="small muted">Consequence stated plainly: the site is refreshed every 10 minutes, not
-tick-by-tick. The 60-second chart window is therefore often empty. Real-time would need a hosted
-WebSocket relay, which is raised as a decision in <a href="suggestions.html">Suggestions</a>.</p>
+<p class="small muted">Two honest consequences. The committed snapshot is refreshed every 30
+minutes, not tick-by-tick, so the 60-second chart window is often empty. And the browser-side
+feed only works from the deployed origin, because the API's CORS allow-list names that origin
+(<a href="flagged.html">F17</a>). True tick-by-tick would need a hosted WebSocket relay, which is
+raised as a decision in <a href="suggestions.html">Suggestions</a> (S12).</p>
 </div>
 <div class="card">
 <h3>What it explicitly does not do</h3>
@@ -87,6 +92,15 @@ WebSocket relay, which is raised as a decision in <a href="suggestions.html">Sug
 depth, yes/no resolution tracking, trade categorisation, a strategy engine that refuses to guess, a review
 gate for suggestions, and a price-jump page for moves of $0.10 or more between official trade prints
 (<a href="../jumps/index.html">Price Jumps</a>, added in this review).</p>
+<p><b>Repaired in the final integration session (2026-11-20).</b> The data pipeline had been failing
+every cycle because the published snapshot grew past GitHub's 100 MB file limit, so the site's
+data had been frozen since 14:10 UTC (<a href="flagged.html">F19</a>); it now publishes a bounded,
+documented subset (<a href="flagged.html">F16</a>) and fails loudly instead of being refused.
+Resolution tracking was empty because the series ticker was derived wrongly for dashed series
+tickers; it now resolves, so yes/no outcomes actually appear. The two scrolling alert feeds the
+brief asks for - every move of $0.10 or more, and the subset the ROI model likes - are live on
+the <a href="../index.html">Dashboard</a>, with the model formula printed on the page and a live
+order-book fetch next to the liquidity panel.</p>
 <p><b>Not done, and why.</b> Demo-account portfolio tracking and order execution need a Kalshi demo API key,
 and this workspace has none (<a href="flagged.html">F19</a>). Culture has no open markets in the collected
 data (<a href="flagged.html">F20</a>). The gas topic includes solar, electricity and refinery markets

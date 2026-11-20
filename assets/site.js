@@ -271,6 +271,267 @@
     el.innerHTML = '<div class="tablewrap"><table>' + head + body + "</table></div>";
   };
 
+  /* ---------------- live alert engine ---------------- */
+  /* Two scrolling chat feeds fed by the PUBLIC Kalshi demo REST API, polled from
+     the browser. The demo API allows this site's origin (CORS was observed and
+     recorded in data/cors.json), so the feeds are real, not simulated.
+     The WebSocket feed cannot be used here: per the official docs a WebSocket
+     handshake is authenticated even for the public ticker/trade channels, and
+     this site must never ask a visitor for a private key.
+
+     Every line is an official price change. The API returns no news feed, so the
+     *cause* of a move is never asserted - each line links to the market's own
+     Kalshi endpoint and is labelled "cause unverified" (see pages/flagged.html). */
+  KR.live = {
+    threshold: 0.10,        /* dollars; a move of at least this size raises an alert */
+    roiThreshold: 0.55,     /* 0..1; the model score a move needs to reach the ROI feed */
+    intervalMs: 30000,      /* polling cadence; the demo API is public and unauthenticated */
+    batchSize: 25,          /* tickers per request (one request per batch) */
+    maxMarkets: 60,         /* how many in-scope markets are watched */
+    markets: [],            /* monitored markets: {ticker,title,topic,est,oi,close} */
+    prices: {},             /* ticker -> last price we saw */
+    alerts: [],             /* every alert raised this session, newest last */
+    seen: {},               /* ticker -> {t, dir} for de-duplication */
+    running: false,
+    timer: null,
+    lastPoll: null,
+    lastError: null,
+    polls: 0,
+    _handlers: { alert: [], status: [], point: [] },
+  };
+
+  KR.live.on = function (evt, fn) {
+    if (KR.live._handlers[evt]) KR.live._handlers[evt].push(fn);
+    return KR.live;
+  };
+  KR.live.emit = function (evt, payload) {
+    (KR.live._handlers[evt] || []).forEach(function (fn) {
+      try { fn(payload); } catch (e) { /* one bad listener must not stop the feed */ }
+    });
+  };
+
+  /* ROI model. A documented heuristic ranking, not a prediction and not a
+     profitability claim. Every input is an official field (or the clearly
+     labelled estimate built from two official fields):
+       size   0.45 * min(|move| / 0.30, 1)
+       depth  0.25 * min(est. dollar volume / 50,000, 1)
+       open   0.15 * min(open_interest_fp / 5,000, 1)
+       time   0.15 * (1 - min(hours to close / 72, 1))
+     The weights sum to 1, so the score is 0..1. */
+  KR.live.score = function (a) {
+    var parts = { size: 0, depth: 0, open: 0, time: 0 };
+    parts.size = Math.min(Math.abs(a.change || 0) / 0.30, 1);
+    parts.depth = Math.min((a.est || 0) / 50000, 1);
+    parts.open = Math.min((a.oi || 0) / 5000, 1);
+    var hours = 72;
+    if (a.closeTime) {
+      var h = (new Date(a.closeTime).getTime() - Date.now()) / 3600000;
+      if (isFinite(h)) hours = Math.max(0, h);
+    }
+    parts.time = 1 - Math.min(hours / 72, 1);
+    var total = 0.45 * parts.size + 0.25 * parts.depth + 0.15 * parts.open + 0.15 * parts.time;
+    a.score = Math.round(total * 1000) / 1000;
+    a.scoreParts = parts;
+    return a.score;
+  };
+
+  KR.live.marketUrl = function (ticker) {
+    return KR.DEMO_REST + "/markets/" + encodeURIComponent(ticker);
+  };
+
+  /* Watch the highest-dollar in-scope markets (the same ranking the dashboard
+     shows). The list comes from the committed snapshot, so every watched market
+     has a source-linked row on the page. */
+  KR.live.setMarkets = function (rows) {
+    var list = (rows || []).slice(0, KR.live.maxMarkets).map(function (m) {
+      return {
+        ticker: m.market_ticker,
+        title: m.market_title || m.market_ticker,
+        topic: m.topic || "",
+        est: m.est_dollar_volume || 0,
+        oi: parseFloat(m.open_interest_fp) || 0,
+        closeTime: m.close_time || null,
+        url: m.market_url || KR.live.marketUrl(m.market_ticker),
+        seed: parseFloat(m.last_price_dollars),
+      };
+    });
+    KR.live.markets = list;
+    return list;
+  };
+
+  KR.live.fetchBatch = function (tickers) {
+    /* The documented filter is a comma-separated list of market tickers, so the
+       separators stay literal and only the tickers themselves are encoded. */
+    var list = tickers.map(function (t) { return encodeURIComponent(t); }).join(",");
+    var url = KR.DEMO_REST + "/markets?tickers=" + list + "&status=open&limit=1000";
+    return fetch(url, { cache: "no-store" }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status + " for " + url);
+      return r.json();
+    }).then(function (j) {
+      return (j && j.markets) || [];
+    });
+  };
+
+  /* One polling pass. Two independent official signals are compared:
+     - the API's own previous_price_dollars vs last_price_dollars (two trades), and
+     - the price we saw on the previous poll vs the price now.
+     Whichever is larger is used, so a move is never missed between polls. */
+  KR.live.pollOnce = function () {
+    if (!KR.live.markets.length) return Promise.resolve();
+    var batches = [];
+    for (var i = 0; i < KR.live.markets.length; i += KR.live.batchSize) {
+      batches.push(KR.live.markets.slice(i, i + KR.live.batchSize));
+    }
+    return batches.reduce(function (chain, batch) {
+      return chain.then(function (acc) {
+        return KR.live.fetchBatch(batch.map(function (m) { return m.ticker; })).then(function (ms) {
+          return acc.concat(ms);
+        });
+      });
+    }, Promise.resolve([])).then(function (markets) {
+      var now = Date.now();
+      var byTicker = {};
+      KR.live.markets.forEach(function (m) { byTicker[m.ticker] = m; });
+      markets.forEach(function (m) {
+        var meta = byTicker[m.ticker];
+        if (!meta) return;
+        var last = parseFloat(m.last_price_dollars);
+        if (!isFinite(last)) return;
+        var prevTrade = parseFloat(m.previous_price_dollars);
+        var prevSeen = KR.live.prices[m.ticker];
+        var from = null, change = 0, basis = "";
+        /* Prices carry four decimals, so the difference is rounded before the
+           comparison. Without this, 0.60 - 0.50 evaluates to 0.09999999999999998
+           in binary floating point and a move of exactly $0.10 would be
+           silently dropped. */
+        var dTrade = isFinite(prevTrade) ? Math.round((last - prevTrade) * 10000) / 10000 : NaN;
+        var dPoll = isFinite(prevSeen) ? Math.round((last - prevSeen) * 10000) / 10000 : NaN;
+        if (isFinite(dTrade) && Math.abs(dTrade) >= KR.live.threshold) {
+          from = prevTrade; change = dTrade; basis = "previous trade";
+        }
+        if (isFinite(dPoll) && Math.abs(dPoll) >= KR.live.threshold &&
+            Math.abs(dPoll) > Math.abs(change)) {
+          from = prevSeen; change = dPoll; basis = "previous poll";
+        }
+        if (from !== null) {
+          var dir = change > 0 ? "up" : "down";
+          var seen = KR.live.seen[m.ticker];
+          if (!(seen && seen.dir === dir && (now - seen.t) < 90000)) {
+            var alert = {
+              t: now, ticker: m.ticker, title: meta.title, topic: meta.topic,
+              from: from, to: last, change: change, dir: dir, basis: basis,
+              est: meta.est, oi: meta.oi, closeTime: meta.closeTime,
+              url: meta.url || KR.live.marketUrl(m.ticker),
+              source: KR.DEMO_REST + "/markets?tickers=" + m.ticker,
+            };
+            KR.live.score(alert);
+            KR.live.seen[m.ticker] = { t: now, dir: dir };
+            KR.live.alerts.push(alert);
+            if (KR.live.alerts.length > 500) KR.live.alerts.shift();
+            KR.live.emit("alert", alert);
+          }
+        }
+        KR.live.prices[m.ticker] = last;
+        KR.live.emit("point", {
+          ticker: m.ticker, price: last, t: now, market: meta,
+          bid: parseFloat(m.yes_bid_dollars), ask: parseFloat(m.yes_ask_dollars),
+        });
+      });
+      KR.live.lastPoll = now;
+      KR.live.polls += 1;
+      KR.live.lastError = null;
+      KR.live.emit("status", { state: "live", at: now });
+    }).catch(function (e) {
+      KR.live.lastError = String(e && e.message ? e.message : e);
+      KR.live.emit("status", { state: "error", at: Date.now(), error: KR.live.lastError });
+    });
+  };
+
+  KR.live.start = function () {
+    if (KR.live.running) return;
+    KR.live.running = true;
+    KR.live.emit("status", { state: "starting", at: Date.now() });
+    var run = function () {
+      if (!KR.live.running) return;
+      KR.live.pollOnce().then(function () {
+        if (!KR.live.running) return;
+        KR.live.timer = setTimeout(run, KR.live.intervalMs);
+      });
+    };
+    run();
+  };
+
+  KR.live.stop = function () {
+    KR.live.running = false;
+    if (KR.live.timer) { clearTimeout(KR.live.timer); KR.live.timer = null; }
+    KR.live.emit("status", { state: "stopped", at: Date.now() });
+  };
+
+  /* Seed the feeds with the moves already visible in the committed tick history,
+     so the chats are not empty before the first poll lands. These are the same
+     official last/bid/ask prices the collector stored, sampled every few
+     minutes - they are labelled as history, never as live ticks. */
+  KR.live.seedFromHistory = function (history, markets) {
+    var pts = (history && history.points) || {};
+    var meta = {};
+    (markets || []).forEach(function (m) { meta[m.market_ticker] = m; });
+    var out = [];
+    Object.keys(pts).forEach(function (ticker) {
+      var series = pts[ticker] || [];
+      var built = [];
+      series.forEach(function (p) {
+        var v = parseFloat(p.last);
+        if (isFinite(v)) built.push({ t: KR.pointTime(p), v: v });
+      });
+      KR.detectJumps(built, KR.live.threshold).forEach(function (j) {
+        var m = meta[ticker] || {};
+        var a = {
+          t: j.toTime, ticker: ticker, title: m.market_title || ticker, topic: m.topic || "",
+          from: j.fromV, to: j.toV, change: j.change, dir: j.dir, basis: "committed history",
+          est: m.est_dollar_volume || 0, oi: parseFloat(m.open_interest_fp) || 0,
+          closeTime: m.close_time || null,
+          url: m.market_url || KR.live.marketUrl(ticker),
+        };
+        KR.live.score(a);
+        out.push(a);
+      });
+    });
+    out.sort(function (x, y) { return x.t - y.t; });
+    return out;
+  };
+
+  /* Live order book for one market, straight from the demo API.
+     The official response carries YES bids and NO bids only; a NO bid at price
+     p is a YES ask at (1 - p), so the ask side is derived and labelled. */
+  KR.live.fetchOrderbook = function (ticker, depth) {
+    var url = KR.DEMO_REST + "/markets/" + encodeURIComponent(ticker) +
+      "/orderbook?depth=" + (depth || 25);
+    return fetch(url, { cache: "no-store" }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status + " for " + url);
+      return r.json();
+    }).then(function (j) {
+      var book = (j && j.orderbook) || {};
+      var yes = book.yes || [];
+      var no = book.no || [];
+      var yesBids = yes.map(function (d) { return [d.price, d.quantity]; });
+      var noBids = no.map(function (d) { return [d.price, d.quantity]; });
+      var asks = noBids.map(function (d) { return [Math.round((1 - Number(d[0])) * 10000) / 10000, d[1]]; })
+        .sort(function (a, b) { return a[0] - b[0]; });
+      var bidContracts = yesBids.reduce(function (s, d) { return s + (Number(d[1]) || 0); }, 0);
+      var askContracts = asks.reduce(function (s, d) { return s + (Number(d[1]) || 0); }, 0);
+      var bestBid = yesBids.length ? Math.max.apply(null, yesBids.map(function (d) { return Number(d[0]); })) : null;
+      var bestAsk = asks.length ? Math.min.apply(null, asks.map(function (d) { return Number(d[0]); })) : null;
+      return {
+        ticker: ticker, raw_request: url,
+        yes_bids: yesBids, no_bids: noBids, derived_yes_asks: asks,
+        best_yes_bid: bestBid, best_yes_ask_derived: bestAsk,
+        yes_bid_contracts: bidContracts, derived_ask_contracts: askContracts,
+        spread_derived: (bestBid !== null && bestAsk !== null)
+          ? Math.round((bestAsk - bestBid) * 10000) / 10000 : null,
+      };
+    });
+  };
+
   /* ---------------- nav ---------------- */
   KR.mountNav = function () {
     var t = document.querySelector(".navtoggle");

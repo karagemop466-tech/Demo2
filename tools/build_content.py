@@ -196,15 +196,20 @@ price, and reports demo-account performance with trade categorisation and strate
 <p>This is a static GitHub Pages site, so it cannot hold a secret and a visitor&#8217;s browser
 cannot be the only data path. Instead:</p>
 <ol class="clean">
-<li>A GitHub Actions workflow runs <code>tools/collector.py</code> every 10 minutes against the
+<li>A GitHub Actions workflow runs <code>tools/collector.py</code> every 30 minutes against the
    official demo API (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment</a>).</li>
 <li>The collector writes <code>data/*.json</code>, including an <b>API log</b> of every request
    and its HTTP status, and commits the snapshot.</li>
 <li>The pages read those snapshots, so every number on screen traces back to a logged request.</li>
+<li>On top of that, the browser polls the same public API directly for the two live alert
+   feeds and for a live order book. The demo API allows this site's origin, so no key is needed
+   and nothing secret is in the page.</li>
 </ol>
-<p class="small muted">Consequence stated plainly: the site is refreshed every 10 minutes, not
-tick-by-tick. The 60-second chart window is therefore often empty. Real-time would need a hosted
-WebSocket relay, which is raised as a decision in <a href="suggestions.html">Suggestions</a>.</p>
+<p class="small muted">Two honest consequences. The committed snapshot is refreshed every 30
+minutes, not tick-by-tick, so the 60-second chart window is often empty. And the browser-side
+feed only works from the deployed origin, because the API's CORS allow-list names that origin
+(<a href="flagged.html">F17</a>). True tick-by-tick would need a hosted WebSocket relay, which is
+raised as a decision in <a href="suggestions.html">Suggestions</a> (S12).</p>
 </div>
 <div class="card">
 <h3>What it explicitly does not do</h3>
@@ -246,6 +251,15 @@ WebSocket relay, which is raised as a decision in <a href="suggestions.html">Sug
 depth, yes/no resolution tracking, trade categorisation, a strategy engine that refuses to guess, a review
 gate for suggestions, and a price-jump page for moves of $0.10 or more between official trade prints
 (<a href="../jumps/index.html">Price Jumps</a>, added in this review).</p>
+<p><b>Repaired in the final integration session (2026-11-20).</b> The data pipeline had been failing
+every cycle because the published snapshot grew past GitHub's 100 MB file limit, so the site's
+data had been frozen since 14:10 UTC (<a href="flagged.html">F19</a>); it now publishes a bounded,
+documented subset (<a href="flagged.html">F16</a>) and fails loudly instead of being refused.
+Resolution tracking was empty because the series ticker was derived wrongly for dashed series
+tickers; it now resolves, so yes/no outcomes actually appear. The two scrolling alert feeds the
+brief asks for - every move of $0.10 or more, and the subset the ROI model likes - are live on
+the <a href="../index.html">Dashboard</a>, with the model formula printed on the page and a live
+order-book fetch next to the liquidity panel.</p>
 <p><b>Not done, and why.</b> Demo-account portfolio tracking and order execution need a Kalshi demo API key,
 and this workspace has none (<a href="flagged.html">F19</a>). Culture has no open markets in the collected
 data (<a href="flagged.html">F20</a>). The gas topic includes solar, electricity and refinery markets
@@ -506,6 +520,60 @@ is the dashboard&#8217;s dollar-volume proxy, which is labelled.</p>
 
 # --------------------------------------------------------------------------- suggestions
 SUGGESTIONS = [
+    dict(id="S12", title="Stream the ticker channel through a small server-side relay",
+         problem="The browser cannot open a Kalshi WebSocket: the official docs require an "
+                 "authenticated handshake even for the public ticker/trade channels, and a public "
+                 "static page must never ask a visitor for a private key. The feeds therefore poll "
+                 "REST every 30 seconds.",
+         options=["Keep REST polling from the browser (current)",
+                  "Run a tiny relay on a server with the demo key in Actions secrets and a "
+                  "read-only /stream endpoint",
+                  "Run the relay inside the existing Actions runner and publish the tick file"],
+         effort="Medium", impact="High",
+         risk="A relay becomes a service to secure and keep alive; a public endpoint that leaks "
+              "an authenticated session is worse than a slower poll.",
+         source=DOCS + "/getting_started/quick_start_websockets",
+         recommended="Poll for now (it needs no secret and no new infrastructure); if tick-by-tick "
+                     "matters, put the key in Actions secrets and relay the ticker channel, never "
+                     "the key itself."),
+    dict(id="S13", title="Persist the alert history so the chats survive a reload",
+         problem="The two chat feeds are rebuilt from the committed tick history on every page "
+                 "load. A move that happened while the tab was closed is only visible if the "
+                 "collector happened to sample it.",
+         options=["Append every alert to a small data/alerts.json in the collector (current need)",
+                  "Keep the feeds in memory only",
+                  "Store alerts per topic in separate files"],
+         effort="Low", impact="Medium",
+         risk="An append-only alert log grows; it must be rotated or capped like history.json.",
+         source=DOCS + "/api-reference/market/get-markets",
+         recommended="Append the detected moves to a capped, per-topic alert file in the same "
+                     "collector run that already writes the tick history."),
+    dict(id="S14", title="Make the alerts interrupt the trader, not just scroll past",
+         problem="A feed that scrolls silently is easy to miss. The dashboard has no sound, no "
+                 "desktop notification and no mention of the selected market in the page title.",
+         options=["Browser notification API on a move (needs permission)",
+                  "A short sound on a move",
+                  "Update the page title with the count of unseen moves",
+                  "Nothing - the trader watches the tab"],
+         effort="Low", impact="Medium",
+         risk="Notifications that fire on every move become noise; the ROI feed is the natural "
+              "filter for notifications.",
+         source=DOCS + "/api-reference/market/get-markets",
+         recommended="Title counter first (no permission needed), then notifications driven by the "
+                     "ROI feed only."),
+    dict(id="S15", title="Per-topic alert rules instead of one global threshold",
+         problem="A $0.10 move means something different in a golf market than in a crypto market, "
+                 "and the brief asked for the topics to stay separate. Today one threshold applies "
+                 "to all five topics.",
+         options=["One global threshold (current)",
+                  "A threshold per topic, editable in the page",
+                  "A threshold per topic, set in data/ and published with the snapshot"],
+         effort="Low", impact="Medium",
+         risk="More knobs make the feed harder to read; the ROI score is a simpler way to express "
+              "the same idea.",
+         source=DOCS + "/getting_started/market_settlement",
+         recommended="Let the ROI score carry the per-topic judgement first; add per-topic "
+                     "thresholds only if the score proves too blunt."),
     dict(id="S1", title="Decide what \u201chighest dollar amount\u201d means",
          problem="The Trade API has no dollar-volume field. The dashboard currently ranks by "
                  "volume_fp \u00d7 last_price_dollars and labels it an estimate.",
@@ -994,6 +1062,19 @@ makes. This is the provenance for every figure in the dashboard tables.</p>
 <tr><td>Settlement</td><td>Winning side settles at $1.00 per contract; losing side $0</td><td><a href="https://docs.kalshi.com/getting_started/market_settlement">market settlement</a></td><td>Verified 2026-11-20</td></tr>
 <tr><td>Status enums</td><td>Filter values differ from response values in the same doc</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Verified 2026-11-20 &mdash; docs inconsistency flagged (G-10)</td></tr>
 </tbody></table></div>
+
+<h2>Additional verified claims (integration session 441151f5, 2026-11-20)</h2>
+<div class="tablewrap"><table><thead><tr><th>Claim</th><th>Verified value</th><th>Official source</th><th>How it was checked</th></tr></thead><tbody>
+<tr><td>Get Markets: <code>tickers</code> filter</td><td>Comma-separated list of market tickers to retrieve; <code>limit</code> up to 1000</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Read in the query-parameter table on 2026-11-20; used by the live alert feeds to watch 60 markets in 3 requests</td></tr>
+<tr><td>Get Markets: <code>previous_price_dollars</code></td><td>Official field: the price before the current one</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Read in the documented response schema on 2026-11-20; used as one of the two move signals</td></tr>
+<tr><td>Get Markets: <code>min_settled_ts</code> / <code>max_settled_ts</code></td><td>Unix timestamp (seconds) filters for markets that settled after / before it</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Read in the query-parameter table on 2026-11-20; used to keep the resolution scan small</td></tr>
+<tr><td>Get Markets has no <code>series_ticker</code> in the response</td><td>The market object carries <code>event_ticker</code>; the series ticker is a query filter only</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Read in the documented response schema on 2026-11-20 - this is why a settled market has to be mapped back to its series</td></tr>
+<tr><td>WebSocket handshake requires authentication</td><td>&quot;WebSocket connections require authentication during the connection handshake&rdquo;; the public channels (<code>ticker</code>, <code>trade</code>) add no channel-level authorisation but still need the signed handshake</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets">quick start websockets</a></td><td>Read on 2026-11-20 - the reason the browser polls REST instead of streaming</td></tr>
+<tr><td>Unauthenticated public requests have their own limits</td><td>&quot;Unauthenticated public requests are subject to separate limits. Authenticate requests where supported and back off on <code>429</code>.&quot;</td><td><a href="https://docs.kalshi.com/getting_started/rate_limits">rate limits</a></td><td>Read on 2026-11-20 - the live feeds poll every 30 s and show the error instead of retrying tightly</td></tr>
+<tr><td>Alert threshold is inclusive at $0.10</td><td>Prices carry four decimals, so the move is rounded before the comparison; an exact $0.10 move fires</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Boundary case found by <code>tests/live_alerts.test.js</code> (0.60 - 0.50 = 0.09999999999999998 in binary floating point) and fixed</td></tr>
+<tr><td>Published subset rule</td><td>Per topic: all markets of the top 120 events by estimated dollar volume, plus the 250 highest-value individual markets</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Implemented in <code>tools/collector.py:select_published</code>, measured on the committed snapshot (10,241 markets seen, 1,257 published, 2,498,831 bytes)</td></tr>
+<tr><td>Order books of the top demo markets are empty</td><td><code>yes_bids: []</code> and <code>no_bids: []</code> for all 12 books in the committed snapshot</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/KXECCOMPACT-30/orderbook?depth=25">live order book request</a></td><td>Read from <code>data/snapshot.json</code> on 2026-11-20 - the reason the liquidity panel can now fetch a book live</td></tr>
+</tbody></table></div>
 """
     page(path="pages/verification.html", title="Verification", active="ver", body=body, extra_js=js,
          desc="Every claim, the official source, and how it was verified.")
@@ -1112,7 +1193,53 @@ FLAGGED = [
   "<code>assets/app.js</code>. Mode A paper trading and the request builder are unchanged. "
   "Reversible by removing the <code>disabled</code> attributes when serving privately. "
   "Cross-scope request logged for session 6d75123b in COORDINATION.md.",
-  "getting_started/api_keys"),
+  "getting_started/api_keys"), ("F16", "The published snapshot is a deliberate subset of the in-scope universe",
+  "The demo exchange now returns far more open in-scope markets than can be published. GitHub "
+  "rejects any single file over 100 MB - run 44800417665 was refused with &quot;File "
+  "data/snapshot.json is 111.97 MB&quot;. The collector therefore publishes, per topic, all markets "
+  "of the highest-value events plus the highest-value individual markets, and records the rule and "
+  "the counts in <code>published_subset</code> in <code>data/snapshot.json</code>.",
+  "A reader could mistake the published rows for the whole exchange, and a market outside the "
+  "published subset never appears in the rankings or in the alert feeds.",
+  "Fixed 2026-11-20 (session 441151f5): the selection rule is printed next to the ranking on the "
+  "Dashboard, the counts (published vs seen) are in the header and the KPI card, and the rule is "
+  "recorded in the snapshot itself. Publishing everything is impossible under GitHub's 100 MB file "
+  "limit, so this is a documented trade-off, not a silent omission.",
+  "api-reference/market/get-markets"),
+ ("F17", "The live alert feeds depend on the visitor's browser reaching the demo API",
+  "The two chat feeds poll <code>GET /markets?tickers=...</code> from the browser. The demo API "
+  "returns <code>access-control-allow-origin: https://karagemop466-tech.github.io</code> - the "
+  "deployed origin. From any other origin (a local file, a fork, a preview host) the browser "
+  "blocks the response and the feeds stay empty.",
+  "On an unexpected origin the page looks broken rather than blocked, and the committed snapshot "
+  "cannot substitute for a tick-level feed.",
+  "Handled 2026-11-20 (session 441151f5): the feeds are seeded from the committed tick history so "
+  "they are never empty, the status line reports the exact failure, and the cause of a move is "
+  "never asserted. The WebSocket ticker channel is deliberately not used because the official docs "
+  "require an authenticated handshake, and a public page must never ask for a private key (F14).",
+  "getting_started/quick_start_websockets|getting_started/quick_start_market_data"),
+ ("F18", "The snapshot's order books are empty for the highest-volume demo markets",
+  "The committed snapshot holds 12 order books and every one of them has empty "
+  "<code>yes_bids</code> and <code>no_bids</code> arrays - for example "
+  "<code>KXECCOMPACT-30</code>. The demo markets at the top of the ranking have no resting orders.",
+  "The liquidity panel showed &quot;no bids&quot; for the market a reader was looking at, which "
+  "looks like a broken panel rather than an empty book.",
+  "Fixed 2026-11-20 (session 441151f5): a &quot;Fetch this book live from the demo API&quot; button "
+  "calls <code>GET /markets/{ticker}/orderbook</code> from the browser, and the empty state is "
+  "labelled as an empty book with the request URL shown.",
+  "api-reference/market/get-market-orderbook"),
+ ("F19", "The refresh workflow was failing every cycle - the live snapshot had been frozen",
+  "Workflow run 44800417665 (2026-11-20T19:15Z) failed in the &quot;Commit snapshot&quot; step: the "
+  "push was rejected because <code>data/snapshot.json</code> was 111.97 MB and "
+  "<code>data/topic-elections.json</code> was 52.01 MB. The snapshot on the site was stuck at "
+  "2026-11-20T14:10:44Z while every later run failed the same way.",
+  "The &quot;live&quot; part of the site was not live: no new prices, no new resolutions, no new "
+  "price history, and the alert feeds had nothing new to show.",
+  "Fixed 2026-11-20 (session 441151f5): the collector publishes a bounded subset (2,498,831 bytes "
+  "measured against the 47,263,413-byte committed snapshot), <code>write_json</code> refuses to "
+  "write a file above 40 MB, and the workflow has a size-guard step that fails with a clear "
+  "annotation before the commit instead of a refused push.",
+  "getting_started/demo_env"),
 ]
 
 
@@ -1288,6 +1415,44 @@ REPO_FINDINGS = [
   "Checked with <code>git show origin/main:README.md | grep -n</code>. Source: <a href=\"https://github.com/karagemop466-tech/Demo2/commit/6a9aecb\" target=\"_blank\" rel=\"noopener\">origin/main at 6a9aecb</a>.",
   "The rendered README shows both versions of a section, and the markers are a sign that a merge was not finished.",
   "Fixed in session 3371a533 by keeping both sides in order (no text removed). A check for leftover markers should be added to CI."),
+ ("R21", "tools/collector.py + .github/workflows/refresh-data.yml",
+  "The live data pipeline was failing every cycle",
+  "The collector wrote every in-scope market twice (<code>markets</code> and <code>by_topic</code>) "
+  "and once per topic file, so the snapshot reached 111.97 MB and GitHub refused the push (run "
+  "44800417665, annotations: <i>exceeds GitHub's file size limit of 100.00 MB</i>). The site's data "
+  "had been frozen since 14:10 UTC.",
+  "The &quot;live&quot; dashboard was serving stale data with no way to refresh it.",
+  "Fixed in this session: the collector publishes the top events per topic (2.5 MB measured), "
+  "<code>write_json</code> refuses oversized files, the workflow fails with a clear annotation "
+  "before the commit, and the cron moved to every 30 minutes because one collection takes 10-12 "
+  "minutes. Regression tests: <code>tools/test_pipeline_fix.py</code>."),
+ ("R22", "tools/collector.py (collect_resolutions)",
+  "Resolution tracking produced nothing",
+  "The series ticker was derived with <code>event_ticker.split('-')[0]</code>, which is wrong for "
+  "series tickers that contain a dash (for example <code>GOVPARTY-NH</code>, which is in the "
+  "official series list), so every settled in-scope market was dropped before it reached the page.",
+  "&quot;Track the event until it resolves, yes or no&quot; showed an empty table.",
+  "Fixed in this session: the longest prefix that is a known series ticker wins, the series index "
+  "is reused instead of being swept twice, and recent settlements are selected with the documented "
+  "<code>min_settled_ts</code> filter. Regression tests: "
+  "<code>tools/test_pipeline_fix.py</code>."),
+ ("R23", "assets/site.js (live alert engine)",
+  "A price move of exactly $0.10 was silently dropped",
+  "0.60 - 0.50 evaluates to 0.09999999999999998 in binary floating point, which is below the 0.10 "
+  "threshold, so the brief's &quot;greater than or equal to $0.10&quot; rule failed at the boundary.",
+  "The sharpest class of alert - an exact $0.10 move - never fired.",
+  "Fixed in this session: the difference is rounded to the four decimals Kalshi prices use before "
+  "the comparison. Regression test: <code>tests/live_alerts.test.js</code>."),
+ ("R24", "assets/site.js + tools/build_site.py",
+  "The two scrolling alert feeds the brief asks for did not exist",
+  "Sharp-jump tables existed, but they were static tables of the committed snapshot, not a live "
+  "feed, and there was no second, model-filtered feed.",
+  "The live-alerting requirement was only partly met, and nothing watched the market between "
+  "collector runs.",
+  "Added in this session: two chat feeds (every move &ge; $0.10, and the subset the ROI model "
+  "likes), fed by the browser polling the public demo API, with the model formula printed on the "
+  "page and a live order-book fetch. Tests: <code>tests/live_alerts.test.js</code>, "
+  "<code>tests/render_dashboard.test.js</code>.")
 ]
 
 

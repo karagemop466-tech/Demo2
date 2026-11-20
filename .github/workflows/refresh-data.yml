@@ -9,8 +9,10 @@ name: Refresh Kalshi demo data
 on:
   workflow_dispatch:
   schedule:
-    # every 10 minutes (GitHub cron is best-effort and may run late)
-    - cron: "*/10 * * * *"
+    # Every 30 minutes. The collector needs roughly 10-12 minutes (it walks
+    # /series, 50 pages of /events, settled markets, order books and candles),
+    # so a 10-minute cron only queues runs behind each other.
+    - cron: "13,43 * * * *"
   push:
     branches: [main]
     paths:
@@ -71,6 +73,31 @@ jobs:
           if n == 0:
               print("::error::Collector returned zero in-scope markets; keeping previous data.")
               sys.exit(1)
+          PY
+
+      - name: Refuse to publish a file GitHub would reject
+        # GitHub rejects any single file over 100 MB. That is exactly what
+        # happened in run 44800417665: "File data/snapshot.json is 111.97 MB;
+        # this exceeds GitHub's file size limit of 100.00 MB". Check before the
+        # commit so the failure is a clear annotation instead of a refused push.
+        run: |
+          python - <<'PY'
+          import os, sys
+          LIMIT = 50 * 1024 * 1024
+          bad = []
+          for name in sorted(os.listdir("data")):
+              p = os.path.join("data", name)
+              if not os.path.isfile(p):
+                  continue
+              size = os.path.getsize(p)
+              print(f"{size/1024/1024:8.2f} MB  {p}")
+              if size > LIMIT:
+                  bad.append((p, size))
+          if bad:
+              for p, size in bad:
+                  print(f"::error::{p} is {size/1024/1024:.2f} MB - above the {LIMIT/1024/1024:.0f} MB publish limit")
+              sys.exit(1)
+          print("all data files are within the publish limit")
           PY
 
       - name: Commit snapshot
