@@ -113,4 +113,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         if: steps.fetch.outcome == 'success'
+        continue-on-error: true
         uses: actions/deploy-pages@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
