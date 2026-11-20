@@ -1249,11 +1249,32 @@ belonged to another tree's register), and two decision rows are added.
   docs.kalshi.com and the demo API; only `bash`/python egress fails (TLS EOF). Recorded here rather than
   silently propagated.
 
+### Judgement call on two flagged rows
+
+`pages/flagged.html` rows **G-7** (dead `assets/app.js`) and **G-9** (collector CI dropping untracked
+files) link the repository file that is the subject of the finding rather than a Kalshi doc, because
+no official Kalshi document supports either claim — they are defects in this repository's own code and
+workflow. Every other row on the page, and every row on `pages/verification.html` and
+`pages/paper-trading.html`, carries an official `https` source link (checked row by row after this
+turn's edits).
+
 ### PR / deploy status (K-6)
 
-Not yet created, deliberately. Conditions not yet met: the alert desk (row 23) is not delivered, and
-the refresh pipeline has **not** been observed green in this session (the push step was failing every
-run at claim time; the fix is committed but unproven against a live runner). `gh`/`git` connectivity to
-github.com also went intermittently EOF mid-turn. The integration PR will be created, merged and
-recorded here once the pipeline is green and the alert desk exists. The four pre-existing PRs
-(#34, #36, #40, #44) remain OPEN and `CONFLICTING`/`DIRTY` — triaged, not merged.
+Not yet created. The work itself is complete and locally verified: rows 22–26 are done, every page
+regenerates from its generator, `tools/check.py` is clean, and the four offline suites pass (paper-desk
+selftest, collector pipeline tests, collector fix tests, alert-desk tests). What is still open:
+
+1. **The refresh pipeline has not been observed green in this session.** The push step was failing
+   every run at claim time (111.97 MB `data/snapshot.json` vs GitHub's 100 MB limit); the fix is
+   committed but has not yet run on a runner, and the workflow checks out `main`, so proving it means
+   getting this branch onto `main` first.
+2. **GitHub connectivity from this sandbox went down mid-session** (`SSL_ERROR_SYSCALL` / TLS EOF to
+   `github.com` and `api.github.com` from both `git` and `curl`; it worked earlier in the session).
+   Commits `b6ea777`, `a50a633`, `2cf9842`, `15a1da6` are on the branch locally; the push is being
+   retried in a background process and will be recorded here the moment it lands. Until it does, no
+   PR can be opened, so nothing has been merged and `main` is untouched.
+3. The four pre-existing PRs (#34, #36, #40, #44) remain OPEN and `CONFLICTING`/`DIRTY` — triaged,
+   not merged, because merging them would bring stale conflicting work into the integration branch.
+
+The integration PR, its merge, the Pages confirmation and the PR link will be recorded in this section
+as soon as the branch is pushed. Nothing is merged on an unverified pipeline.
