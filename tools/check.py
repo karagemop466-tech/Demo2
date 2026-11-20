@@ -67,7 +67,8 @@ def check_nav() -> None:
         elif norm != canonical:
             errors.append(f"{f.name}: nav differs from canonical ({len(norm)} vs {len(canonical)} links)")
     if canonical:
-        expected = 19
+        # 18 original entries + Dollar Rankings + Live Console (2026-11-20).
+        expected = 20
         if len(canonical) != expected:
             errors.append(f"nav has {len(canonical)} links, expected {expected}")
 

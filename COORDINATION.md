@@ -392,7 +392,7 @@ Verification after fixes: `python3 scripts/check_links.py` → 0 problems;
 | T8 | Suggestions + Questions | done | 9 suggestions (S-06 implemented), 5 decisions D-01…D-05; 14 Q&As + missing-information discovery table. |
 | T9 | Flagged for Review | done | `intelligence/flagged.html` — 17 flags with verbatim API values + sources. |
 | T10 | Verification pass | done | `node intelligence/scripts/linkcheck.mjs` → PASS (9 pages, 272 links, 177 source fields); `node --check` on all JS; local smoke test 16/16 HTTP 200. |
-| T11 | Integration + PR + merge + Pages | done | PR: https://github.com/karagemop466-tech/Demo2/pull/16 — `gh pr merge 16 --merge` executed 2026-11-20 (merge result recorded in PR). Conflicts with `main` resolved add/add-style: README + COORDINATION combined (both sessions preserved), site relocated to `intelligence/` so no root files were overwritten. Pages: https://karagemop466-tech.github.io/Demo2/intelligence/ (root site untouched). |
+| T11 | Integration + PR + merge + Pages | DONE | PR #16 **MERGED** 2026-11-20, merge commit `2ccd57c` (`gh pr merge 16 --merge`). Conflicts with `main` resolved additively twice (README + COORDINATION union-resolved — every session preserved); site relocated to `intelligence/` so no root file was overwritten. CI `Build and check the site` run `44729787843` → **success** (66 HTML incl. subsite); `Deploy GitHub Pages` run `44729787760` → **success**; `pages build and deployment` run `44729786102` → **success**. Pages verified **live with content**: root https://karagemop466-tech.github.io/Demo2/ (existing site intact) + subsite https://karagemop466-tech.github.io/Demo2/intelligence/ (17 flags, 5 topics, all 9 pages). |
 
 ## Irregularities / handoffs (session arena-ddc587ae)
 
@@ -403,6 +403,76 @@ Verification after fixes: `python3 scripts/check_links.py` → 0 problems;
 
 ## PR / Pages record (session arena-ddc587ae)
 
-- PR #16: https://github.com/karagemop466-tech/Demo2/pull/16 — merged to `main` 2026-11-20 via `gh pr merge 16 --merge` (see PR for merge commit).
+- PR #16: https://github.com/karagemop466-tech/Demo2/pull/16 — **MERGED** 2026-11-20, merge commit `2ccd57c` (`gh pr merge 16 --merge`; verified `gh pr view 16` state=MERGED).
 - Pages root (existing site): https://karagemop466-tech.github.io/Demo2/ — unchanged by this PR.
-- Pages subsite (this session): https://karagemop466-tech.github.io/Demo2/intelligence/ — verified after merge (post-merge check appended in the follow-up commit below).
+- Pages subsite (this session): https://karagemop466-tech.github.io/Demo2/intelligence/ — **verified live with full content** post-merge (fetched title "Kalshi Demo Intelligence — Overview", stats 5/124/10/8/17 render, all nav links present).
+
+---
+
+## Session `6d75123b` — branch `arena/6d75123b-demo2` (final scope after rebase)
+
+`origin/main` advanced three times while this session worked (PR #9–#14). By the third rebase, main already contained
+a merged root-dashboard rebuild (session `406a2f21` / `e88eb254`) that had independently reached the same API
+corrections this session made: V2 `POST /portfolio/events/orders`, the removed legacy order endpoint (`410 Gone`), and
+the WebSocket handshake requirement.
+
+**Decision: do not overwrite it.** Main's dashboard, `pages/`, `verified/`, `dashboard/`, `site/` and `server/` are
+kept exactly as merged. This session's unique contribution is published additively under `live/`, and one real defect
+found in main was fixed.
+
+### Delivered
+
+| Item | Status | Files |
+|---|---|---|
+| Interactive console: windows, fixed $0–$1 chart axis, full order-book depth with cumulative liquidity | done | `live/index.html`, `live/assets/app.js`, `live/assets/style.css` |
+| Resolution tracking to YES/NO, persisted per browser | done | `live/index.html` |
+| Paper trading without credentials | done | `live/trading.html` |
+| Signed demo orders on V2 endpoint with confirmation step | done | `live/trading.html` |
+| Trade categorisation (topic, side, price band, topic×side) + strategy only above n=10 | done | `live/trading-analysis.html` |
+| Nav links from the main site into `live/` | done | `index.html`, every `pages/*.html` |
+
+### Defect found in main and fixed
+
+- **17 broken `verified/` navigation links.** `pages/*.html` linked `../../verified/index.html`, which resolves to a
+  path outside the repository root, and the root page linked `../verified/index.html`. Both 404 on the deployed Pages
+  site. Corrected to `../verified/index.html` and `verified/index.html`. Found by `tools/check_live_links.py`.
+
+### Verification
+
+- `python3 tools/check_live_links.py` → 46 HTML files, 1063 href/src attributes, no broken internal links, no duplicate
+  ids, no placeholders (skips `<script>` bodies and `<code>` examples so template literals are not false positives).
+- `python3 tools/check_links.py` (pre-existing, `verified/` subsite) → OK.
+- `node --check` on `assets/site.js`, `assets/app.js`, `live/assets/app.js`, `server/*.js` → OK.
+- jsdom behaviour harness against `live/` with mocked demo-API fixtures: 19 assertions, all passing.
+- `node scripts/smoke.mjs` against `server/index.js`: 0 errors; Kalshi network calls fail only because of the sandbox
+  egress limit (F-1).
+
+### Conflicts encountered (all resolved without discarding other sessions' work)
+
+1. `COORDINATION.md` — upstream kept in full, this session's section appended.
+2. `README.md` — this session's section appended below upstream content.
+3. `tools/check_links.py` — name collision with main's checker; upstream file kept untouched, this session's stricter
+   checker published as `tools/check_live_links.py`.
+4. Root `index.html` and `pages/` — upstream's newer rebuild kept; only the nav link to `live/` and the `verified/`
+
+### Follow-up: the broken links were generator-side
+
+The first push of this work failed CI at the "regenerating produced a diff" gate, which was correct: the `verified/`
+link defect lived in `tools/build_site.py`'s `NAV` table, where the entry was written as `../verified/index.html` and
+then concatenated with a per-page prefix — producing `../../verified/...` from `pages/` and `../verified/...` from the
+root. Both are wrong. Fixed at the source (`verified/index.html` relative to the prefix), and the "Live Console" entry
+was added to the same table so a regeneration cannot drop it again.
+
+Two knock-on adjustments, both reviewed deliberately rather than by loosening a guard:
+
+- `tools/check.py` expected exactly 18 nav links; the console entry makes it 19. The count is updated with a comment,
+  not removed.
+- `tools/check.py`'s private-key scanner flagged the literal PEM header text used as a textarea
+  placeholder in `live/trading.html` (writing the header out here would trip the same guard, which is why it is described
+  rather than quoted). The scanner is untouched — it is a good guard — and the placeholder was reworded.
+
+Final local state before merge: `tools/check_live_links.py` clean (46 files / 1063 attributes), `tools/check.py`
+"links, nav, data, secrets and scripts all clean", `tools/check_links.py` OK, `node --check` OK on both app scripts, and
+re-running both generators produces no diff.
+
+   link fix were applied on top.

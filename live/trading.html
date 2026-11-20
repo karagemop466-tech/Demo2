@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portfolio & trading — Kalshi demo</title>
+<meta name="description" content="Track Kalshi demo portfolio performance, log paper trades, and place signed demo orders with the V2 order endpoint.">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="portfolio">
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html"><span class="brand-mark">K</span><span>Kalshi demo dashboard<small>public demo API · read + paper</small></span></a>
+    <span class="demo-chip"><span class="dot"></span>DEMO ENVIRONMENT</span>
+  </div>
+  <nav class="main" aria-label="Sections">
+    <a href="../index.html">Main dashboard</a>
+    <a href="index.html" aria-current="page">Live console</a>
+    <a href="trading.html">Trading &amp; portfolio</a>
+    <a href="trading-analysis.html">Trade analysis</a>
+  </nav>
+</header>
+<main class="wrap">
+
+  <div class="page-head">
+    <p class="eyebrow">Account performance · two modes</p>
+    <h1>Portfolio, trades and outcomes</h1>
+    <p class="lede">Two separate things live on this page and are never mixed together. <b>Paper trading</b> needs no
+      credentials and records simulated trades in this browser. <b>Live demo account</b> reads a real Kalshi demo
+      portfolio and sends real demo orders, which requires your own API key. Neither mode ever invents a number.</p>
+  </div>
+
+  <div class="notice info">
+    <b>Why paper trading ships first.</b> A static site cannot hold a private signing key safely — anyone who can load
+    the page can read it. So the default mode is a local simulator that behaves like the real thing for analysis, and
+    the signed mode only runs if you choose to paste a <i>demo</i> key into your own browser. That trade-off is
+    recorded as decision <b>Q-2</b> on <a href="../pages/questions.html">Questions</a>.
+  </div>
+
+  <h2 style="margin:22px 0 10px">Mode A · Paper trading (no key)</h2>
+
+  <div class="grid kpis" style="margin-bottom:14px">
+    <div class="kpi"><div class="label">Paper trades logged</div><div class="value" id="paperTotal">0</div><div class="sub">this browser</div></div>
+    <div class="kpi"><div class="label">Still open</div><div class="value" id="paperOpen">0</div><div class="sub">awaiting resolution</div></div>
+    <div class="kpi"><div class="label">Win rate, settled</div><div class="value" id="paperWinRate">—</div><div class="sub">wins ÷ settled trades</div></div>
+    <div class="kpi"><div class="label">Realised P&amp;L</div><div class="value" id="paperRealized">—</div><div class="sub">on settled trades</div></div>
+    <div class="kpi"><div class="label">Unrealised P&amp;L</div><div class="value" id="paperUnrealized">—</div><div class="sub">open trades, marked to bid</div></div>
+  </div>
+
+  <div class="grid two">
+    <section class="card">
+      <h2>Log a paper trade</h2>
+      <p class="small muted" style="margin-top:0">Pick a ticker from the <a href="index.html">live console</a> (click a row,
+        then read the ticker under the chart). Price is what you would pay per contract, $0.01–$0.99.</p>
+      <form id="paperForm">
+        <label for="tradeTicker">Market ticker</label>
+        <input id="tradeTicker" placeholder="e.g. KXHIGHNY-25NOV20-T44" required>
+        <div class="row" style="margin-top:8px">
+          <div style="flex:1 1 120px"><label for="tradeSide">Side</label>
+            <select id="tradeSide"><option value="yes">YES</option><option value="no">NO</option></select></div>
+          <div style="flex:1 1 120px"><label for="tradeCount">Contracts</label>
+            <input id="tradeCount" type="number" min="1" step="1" value="1" required></div>
+          <div style="flex:1 1 120px"><label for="tradePrice">Price ($)</label>
+            <input id="tradePrice" type="number" min="0.01" max="0.99" step="0.01" value="0.50" required></div>
+        </div>
+        <div class="row" style="margin-top:12px"><button class="primary" type="submit">Record paper trade</button></div>
+      </form>
+      <div id="tradeResult"></div>
+      <p class="xs faint" style="margin:10px 0 0">Payout rule used for settlement: a winning contract pays $1.00, a losing
+        contract pays $0.00, so P&amp;L = (result matches side ? count : 0) − price × count. That is the documented
+        binary payout (<a href="https://docs.kalshi.com/getting_started/market_settlement">market settlement</a>) without
+        fees, which are zero for simple yes/no settlement.</p>
+    </section>
+
+    <section class="card">
+      <h2>Paper trade log</h2>
+      <div class="table-wrap" style="max-height:400px">
+        <table>
+          <thead><tr><th class="num">Logged</th><th>Ticker</th><th>Topic</th><th>Side</th><th class="num">Count</th><th class="num">Entry</th><th class="num">Mark</th><th>State</th><th class="num">P&amp;L</th></tr></thead>
+          <tbody id="paperBody"><tr><td colspan="9" class="empty">No paper trades yet.</td></tr></tbody>
+        </table>
+      </div>
+      <p class="table-note">Trades settle automatically the next time the dashboard or this page sees the market’s
+        <code>result</code> in <code>GET /markets?status=settled</code>.</p>
+    </section>
+  </div>
+
+  <h2 style="margin:26px 0 10px">Mode B · Live demo account (your key)</h2>
+
+  <div class="notice warn">
+    <b>Before you paste anything.</b> Use a key created on <a href="https://demo.kalshi.co/">demo.kalshi.co</a> only —
+    never a production key. The key is sent from your browser straight to
+    <code>external-api.demo.kalshi.co</code> and is kept in <code>sessionStorage</code> for this tab only, so closing the
+    tab drops it. It is never written into the repository. If that is not acceptable, use Mode A.
+  </div>
+
+  <div class="grid two">
+    <section class="card">
+      <h2>Credentials</h2>
+      <label for="apiKeyId">Demo API Key ID</label>
+      <input id="apiKeyId" placeholder="a952bcbe-ec3b-4b5b-b8f9-11dae589608c" autocomplete="off" spellcheck="false">
+      <label for="apiPrivateKey">Demo private key (PEM)</label>
+      <textarea id="apiPrivateKey" rows="6" placeholder="Paste your demo private key here (PEM text, including the BEGIN and END lines)" autocomplete="off" spellcheck="false"></textarea>
+      <div class="row" style="margin-top:12px">
+        <button class="primary" id="loadPortBtn" onclick="KD.loadPortfolio()">Load account</button>
+        <button class="ghost" onclick="document.getElementById('apiPrivateKey').value='';sessionStorage.clear();location.reload()">Forget key</button>
+      </div>
+      <div id="portfolioResult"></div>
+      <p class="xs faint" style="margin:10px 0 0">
+        Signing follows <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">authenticated requests</a>:
+        message = <code>timestamp_ms + METHOD + path</code>, RSA-PSS/SHA-256 or Ed25519, base64.
+        Reads used: <code>/portfolio/balance</code>, <code>/portfolio/positions</code>, <code>/portfolio/fills</code>,
+        <code>/portfolio/settlements</code>.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Account snapshot</h2>
+      <div class="grid kpis" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">
+        <div class="kpi"><div class="label">Cash balance</div><div class="value" id="pfBalance" style="font-size:18px">—</div></div>
+        <div class="kpi"><div class="label">Portfolio value</div><div class="value" id="pfPortfolioValue" style="font-size:18px">—</div></div>
+        <div class="kpi"><div class="label">Positions</div><div class="value" id="pfPositions" style="font-size:18px">—</div></div>
+        <div class="kpi"><div class="label">Fills</div><div class="value" id="pfFills" style="font-size:18px">—</div></div>
+        <div class="kpi"><div class="label">Realised P&amp;L</div><div class="value" id="pfRealized" style="font-size:18px">—</div></div>
+        <div class="kpi"><div class="label">Fees paid</div><div class="value" id="pfFees" style="font-size:18px">—</div></div>
+      </div>
+      <p class="xs faint" style="margin:10px 0 0">Balance and portfolio value come back in cents; they are divided by 100
+        for display. Realised P&amp;L is the sum of <code>realized_pnl_dollars</code> across open positions, which is what the
+        API exposes — it is not a lifetime total.</p>
+      <h4>Positions</h4>
+      <div class="table-wrap" style="max-height:230px">
+        <table>
+          <thead><tr><th>Ticker</th><th>Topic</th><th class="num">Net</th><th class="num">Traded</th><th class="num">Exposure</th><th class="num">Realised</th><th class="num">Fees</th></tr></thead>
+          <tbody id="positionsBody"><tr><td colspan="7" class="empty">Not connected — values stay blank by design.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div class="grid two" style="margin-top:14px">
+    <section class="card">
+      <h2>Fills — the raw trade record</h2>
+      <div class="table-wrap" style="max-height:320px">
+        <table>
+          <thead><tr><th class="num">Time</th><th>Ticker</th><th>Topic</th><th>Side</th><th class="num">Count</th><th class="num">YES price</th><th class="num">Fee</th></tr></thead>
+          <tbody id="fillsBody"><tr><td colspan="7" class="empty">Not connected.</td></tr></tbody>
+        </table>
+      </div>
+      <p class="table-note">Side is read from <code>outcome_side</code>, the current documented field; <code>side</code> and
+        <code>action</code> are deprecated. See <a href="https://docs.kalshi.com/getting_started/order_direction">order direction</a>.</p>
+    </section>
+
+    <section class="card">
+      <h2>Settlements — how positions ended</h2>
+      <div class="table-wrap" style="max-height:320px">
+        <table>
+          <thead><tr><th>Ticker</th><th>Result</th><th class="num">Revenue</th><th class="num">Settled</th></tr></thead>
+          <tbody id="settlementsBody"><tr><td colspan="4" class="empty">Not connected.</td></tr></tbody>
+        </table>
+      </div>
+      <p class="table-note"><code>market_result</code> is <code>yes</code>, <code>no</code>, <code>scalar</code> or empty;
+        <code>revenue</code> is returned in cents.</p>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:14px;border-color:#f2e2b8">
+    <div class="card-head">
+      <h2>Place a demo order</h2>
+      <span class="src">POST /portfolio/events/orders</span>
+    </div>
+    <div class="notice bad" style="margin-top:0">
+      <b>This sends a real write to the demo exchange.</b> The legacy <code>POST /portfolio/orders</code> endpoint has
+      been removed and returns <code>410 Gone</code>; orders now go to the V2 endpoint
+      <code>/portfolio/events/orders</code> with a single-book <code>bid</code>/<code>ask</code> side and fixed-point
+      dollar prices (<a href="https://docs.kalshi.com/api-reference/orders/create-order-v2">Create Order (V2)</a>).
+      Market orders are not offered here — limit orders only, so a typo cannot sweep the book.
+    </div>
+    <div class="grid three" style="gap:10px">
+      <div><label for="liveTicker">Ticker</label><input id="liveTicker" placeholder="KXHIGHNY-25NOV20-T44"></div>
+      <div><label for="liveSide">Direction</label>
+        <select id="liveSide">
+          <option value="bid">bid — buy YES</option>
+          <option value="ask">ask — sell YES (≡ buy NO at 1−price)</option>
+        </select></div>
+      <div><label for="liveCount">Contracts</label><input id="liveCount" type="number" min="1" step="1" value="1"></div>
+      <div><label for="livePrice">Limit price ($)</label><input id="livePrice" type="number" min="0.01" max="0.99" step="0.01" value="0.10"></div>
+      <div style="align-self:end"><label style="display:flex;gap:8px;align-items:flex-start;margin:0">
+        <input type="checkbox" id="liveAck" style="width:auto;margin-top:2px"><span class="xs">I understand this places a demo
+        order that can fill.</span></label></div>
+      <div style="align-self:end"><button class="primary" id="liveOrderBtn" style="width:100%">Send demo order</button></div>
+    </div>
+    <div id="liveOrderResult"></div>
+    <p class="xs faint" style="margin:10px 0 0">A <code>201</code> means <i>accepted</i>, not resting — always read
+      <code>remaining_count</code> in the response. Every order sends a fresh <code>client_order_id</code> (UUID v4) so a
+      retried request cannot double-fill. Cancel and amend are not wired to buttons yet; see
+      <a href="../pages/api-reference.html">API Reference</a> for the documented endpoints.</p>
+  </section>
+
+  <div class="notice" style="margin-top:14px">
+    <b>Performance is only meaningful once trades settle.</b> The outcome view that joins fills to
+    <code>result</code> lives on <a href="trading-analysis.html">Trade analysis</a>; the resolution tracker is on
+    <a href="index.html">the live console</a>.
+  </div>
+
+</main>
+<footer class="site">
+  <div class="bar">
+    <span>Kalshi <b>demo</b> only — mock funds, not investment advice. Prices come live from
+      <a href="https://docs.kalshi.com/getting_started/demo_env">external-api.demo.kalshi.co</a>.</span>
+    <span>Every claim is sourced on <a href="../pages/sources.html">Sources</a>, with the wording checked on <a href="../pages/verification.html">Verification</a>.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+<script>
+/* keep credentials in sessionStorage only, for this tab */
+document.addEventListener("DOMContentLoaded", function () {
+  var idEl = document.getElementById("apiKeyId"), pemEl = document.getElementById("apiPrivateKey");
+  if (!idEl) return;
+  idEl.value = sessionStorage.getItem("kd.keyId") || "";
+  pemEl.value = sessionStorage.getItem("kd.pem") || "";
+  function persist() {
+    sessionStorage.setItem("kd.keyId", idEl.value.trim());
+    sessionStorage.setItem("kd.pem", pemEl.value.trim());
+  }
+  idEl.addEventListener("change", persist);
+  pemEl.addEventListener("change", persist);
+});
+</script>
+</body>
+</html>
