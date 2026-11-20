@@ -1,12 +1,73 @@
 {
- "generated_at_utc": "2026-11-20T13:53:50+00:00",
+ "generated_at_utc": "2026-11-20T14:00:24+00:00",
  "note": "Sampled by this collector from GET /markets/{ticker}/orderbook. Kalshi publishes no orderbook history; each point is one poll, about 22 s apart.",
  "sample_interval_s": 22,
  "markets": {
+  "KXAAAGASM-26NOV30-3.90": {
+   "points": [
+    {
+     "ts": 1795183101,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183125,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183149,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183172,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183195,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183219,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    }
+   ],
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASM-26NOV30-3.90/orderbook?depth=25",
+   "topic": "gas",
+   "title": "Will average **gas prices** be above $3.90?"
+  },
   "KXGA14S-26-SHAR": {
    "points": [
     {
-     "ts": 1795182752,
+     "ts": 1795183102,
      "yes_bids": [],
      "derived_yes_asks": [
       [
@@ -24,7 +85,7 @@
      "best_yes_ask_derived": 0.98
     },
     {
-     "ts": 1795182776,
+     "ts": 1795183125,
      "yes_bids": [],
      "derived_yes_asks": [
       [
@@ -42,7 +103,7 @@
      "best_yes_ask_derived": 0.98
     },
     {
-     "ts": 1795182800,
+     "ts": 1795183149,
      "yes_bids": [],
      "derived_yes_asks": [
       [
@@ -60,7 +121,43 @@
      "best_yes_ask_derived": 0.98
     },
     {
-     "ts": 1795182824,
+     "ts": 1795183172,
+     "yes_bids": [],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       3.0
+      ]
+     ],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 4.0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795183196,
+     "yes_bids": [],
+     "derived_yes_asks": [
+      [
+       0.98,
+       1.0
+      ],
+      [
+       0.99,
+       3.0
+      ]
+     ],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 4.0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": 0.98
+    },
+    {
+     "ts": 1795183219,
      "yes_bids": [],
      "derived_yes_asks": [
       [
@@ -85,7 +182,7 @@
   "KXETHY-27JAN0100-T4999.99": {
    "points": [
     {
-     "ts": 1795182752,
+     "ts": 1795183102,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -94,7 +191,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182776,
+     "ts": 1795183125,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -103,7 +200,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182800,
+     "ts": 1795183149,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -112,7 +209,25 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182824,
+     "ts": 1795183172,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183196,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183219,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -128,7 +243,7 @@
   "KXPGAR1LEAD-MAST27-HENG": {
    "points": [
     {
-     "ts": 1795182753,
+     "ts": 1795183102,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -137,7 +252,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182776,
+     "ts": 1795183126,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -146,7 +261,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182800,
+     "ts": 1795183149,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -155,7 +270,25 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182824,
+     "ts": 1795183173,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183196,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183219,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -171,7 +304,7 @@
   "KXETHY-27JAN0100-B3875": {
    "points": [
     {
-     "ts": 1795182753,
+     "ts": 1795183102,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -180,7 +313,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182777,
+     "ts": 1795183126,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -189,7 +322,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182800,
+     "ts": 1795183149,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -198,7 +331,25 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182824,
+     "ts": 1795183173,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183196,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183219,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -214,7 +365,7 @@
   "KXETHY-27JAN0100-B2125": {
    "points": [
     {
-     "ts": 1795182753,
+     "ts": 1795183102,
      "yes_bids": [
       [
        0.01,
@@ -241,7 +392,7 @@
      "best_yes_ask_derived": 0.24
     },
     {
-     "ts": 1795182777,
+     "ts": 1795183126,
      "yes_bids": [
       [
        0.01,
@@ -268,7 +419,7 @@
      "best_yes_ask_derived": 0.24
     },
     {
-     "ts": 1795182801,
+     "ts": 1795183149,
      "yes_bids": [
       [
        0.01,
@@ -295,7 +446,61 @@
      "best_yes_ask_derived": 0.24
     },
     {
-     "ts": 1795182824,
+     "ts": 1795183173,
+     "yes_bids": [
+      [
+       0.01,
+       26.05
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.24,
+       4611.65
+      ],
+      [
+       0.27,
+       104.0
+      ],
+      [
+       0.6,
+       39.54
+      ]
+     ],
+     "yes_bid_contracts": 26.05,
+     "derived_ask_contracts": 4755.19,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.24
+    },
+    {
+     "ts": 1795183196,
+     "yes_bids": [
+      [
+       0.01,
+       26.05
+      ]
+     ],
+     "derived_yes_asks": [
+      [
+       0.24,
+       4611.65
+      ],
+      [
+       0.27,
+       104.0
+      ],
+      [
+       0.6,
+       39.54
+      ]
+     ],
+     "yes_bid_contracts": 26.05,
+     "derived_ask_contracts": 4755.19,
+     "best_yes_bid": 0.01,
+     "best_yes_ask_derived": 0.24
+    },
+    {
+     "ts": 1795183220,
      "yes_bids": [
       [
        0.01,
@@ -329,7 +534,7 @@
   "KXETHY-27JAN0100-B2625": {
    "points": [
     {
-     "ts": 1795182753,
+     "ts": 1795183102,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -338,7 +543,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182777,
+     "ts": 1795183126,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -347,7 +552,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182801,
+     "ts": 1795183150,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -356,7 +561,25 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182825,
+     "ts": 1795183173,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183196,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183220,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -372,7 +595,7 @@
   "KXETHY-27JAN0100-B3125": {
    "points": [
     {
-     "ts": 1795182753,
+     "ts": 1795183103,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -381,7 +604,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182777,
+     "ts": 1795183126,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -390,7 +613,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182801,
+     "ts": 1795183150,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -399,7 +622,25 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182825,
+     "ts": 1795183173,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183197,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183220,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -415,7 +656,7 @@
   "KXETHY-27JAN0100-B2875": {
    "points": [
     {
-     "ts": 1795182753,
+     "ts": 1795183103,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -424,7 +665,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182777,
+     "ts": 1795183126,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -433,7 +674,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182801,
+     "ts": 1795183150,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -442,7 +683,25 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182825,
+     "ts": 1795183173,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183197,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183220,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -458,7 +717,7 @@
   "KXETHY-27JAN0100-B1125": {
    "points": [
     {
-     "ts": 1795182754,
+     "ts": 1795183103,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -467,7 +726,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182778,
+     "ts": 1795183127,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -476,7 +735,7 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182801,
+     "ts": 1795183150,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -485,7 +744,25 @@
      "best_yes_ask_derived": null
     },
     {
-     "ts": 1795182825,
+     "ts": 1795183173,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183197,
+     "yes_bids": [],
+     "derived_yes_asks": [],
+     "yes_bid_contracts": 0,
+     "derived_ask_contracts": 0,
+     "best_yes_bid": null,
+     "best_yes_ask_derived": null
+    },
+    {
+     "ts": 1795183220,
      "yes_bids": [],
      "derived_yes_asks": [],
      "yes_bid_contracts": 0,
@@ -495,49 +772,6 @@
     }
    ],
    "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHY-27JAN0100-B1125/orderbook?depth=25",
-   "topic": "crypto",
-   "title": "ETH price  on Jan 1, 2027?"
-  },
-  "KXETHY-27JAN0100-B4125": {
-   "points": [
-    {
-     "ts": 1795182754,
-     "yes_bids": [],
-     "derived_yes_asks": [],
-     "yes_bid_contracts": 0,
-     "derived_ask_contracts": 0,
-     "best_yes_bid": null,
-     "best_yes_ask_derived": null
-    },
-    {
-     "ts": 1795182778,
-     "yes_bids": [],
-     "derived_yes_asks": [],
-     "yes_bid_contracts": 0,
-     "derived_ask_contracts": 0,
-     "best_yes_bid": null,
-     "best_yes_ask_derived": null
-    },
-    {
-     "ts": 1795182802,
-     "yes_bids": [],
-     "derived_yes_asks": [],
-     "yes_bid_contracts": 0,
-     "derived_ask_contracts": 0,
-     "best_yes_bid": null,
-     "best_yes_ask_derived": null
-    },
-    {
-     "ts": 1795182825,
-     "yes_bids": [],
-     "derived_yes_asks": [],
-     "yes_bid_contracts": 0,
-     "derived_ask_contracts": 0,
-     "best_yes_bid": null,
-     "best_yes_ask_derived": null
-    }
-   ],
-   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHY-27JAN0100-B4125/orderbook?depth=25",
    "topic": "crypto",
    "title": "ETH price  on Jan 1, 2027?"
   }

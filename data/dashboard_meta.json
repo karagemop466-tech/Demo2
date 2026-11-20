@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-20T13:53:50+00:00",
+ "generated_at_utc": "2026-11-20T14:00:24+00:00",
  "environment": "demo",
  "rest_base": "https://external-api.demo.kalshi.co/trade-api/v2",
  "authenticated": false,
@@ -43,69 +43,106 @@
  },
  "counts": {
   "series_index": 16643,
-  "events_scanned": 33,
-  "markets_in_scope": 378,
+  "events_scanned": 115,
+  "markets_in_scope": 7550,
   "per_topic": {
-   "gas": 0,
-   "elections": 45,
+   "gas": 322,
+   "elections": 265,
    "culture": 0,
-   "crypto": 147,
-   "golf": 186
+   "crypto": 6155,
+   "golf": 808
   },
-  "resolved_in_scope": 1545,
-  "resolved_this_run": 1545,
-  "failed_series_requests": 0,
+  "resolved_in_scope": 6822,
+  "resolved_this_run": 6822,
+  "resolved_in_this_run_scope": 6822,
+  "failed_series_requests": 2,
   "orderbooks": 12,
   "candle_sets": 8,
-  "trade_volume_markets": 11,
+  "trade_volume_markets": 20,
   "book_history_markets": 10,
   "truncated_topics": []
  },
  "topic_catalog": {
   "gas": {
-   "series_in_catalog": 151,
-   "series_read": 25,
+   "series_in_catalog": 152,
+   "series_read": 40,
    "series_failed": 0,
-   "series_with_live_markets": [],
-   "cap_this_run": 25
+   "series_with_live_markets": [
+    "KXAAAGASEOYNJ",
+    "KXAAAGASM",
+    "KXAAAGASMAX",
+    "KXAAAGASMAXCA",
+    "KXAAAGASMAXFL",
+    "KXAAAGASMAXM",
+    "KXAAAGASMAXTX",
+    "KXAAAGASMIN",
+    "KXAAAGASMINCA",
+    "KXAAAGASMINFL",
+    "KXAAAGASMINM",
+    "KXAAAGASMINTX",
+    "KXAAAGASMTX",
+    "KXAAAGASW",
+    "KXAAAGASWNJ",
+    "KXDIESELD",
+    "KXDIESELMAXY",
+    "KXDIESELMINY",
+    "KXDIESELMON",
+    "KXDIESELMONAK",
+    "KXDIESELW",
+    "KXDIESELYE",
+    "KXEIAGASINVM",
+    "KXMARCELLUSGAS",
+    "KXNGASMAX"
+   ],
+   "cap_this_run": 40
   },
   "elections": {
    "series_in_catalog": 2709,
-   "series_read": 25,
+   "series_read": 40,
    "series_failed": 0,
    "series_with_live_markets": [
     "KXGA14S",
     "KXGABOTTOMSOSSOFF",
     "KXGAGAUZIAGOV",
     "KXGAMBIAPARLI",
-    "KXGANGNEUNGBY"
+    "KXGANGNEUNGBY",
+    "KXGASTATELEG",
+    "KXGDPPARTYCOMBO",
+    "KXGENERALCOUNTY",
+    "KXGENERALMOV",
+    "KXGEORGIAPARLI",
+    "KXGERELECTION"
    ],
-   "cap_this_run": 25
+   "cap_this_run": 40
   },
   "culture": {
    "series_in_catalog": 2,
    "series_read": 2,
    "series_failed": 0,
    "series_with_live_markets": [],
-   "cap_this_run": 25
+   "cap_this_run": 40
   },
   "crypto": {
    "series_in_catalog": 336,
-   "series_read": 25,
-   "series_failed": 0,
+   "series_read": 40,
+   "series_failed": 2,
    "series_with_live_markets": [
     "KXETHEVENT",
     "KXETHMAXMON",
     "KXETHMINMON",
     "KXETHMINY",
     "KXETHY",
-    "KXFDVOPENSEA"
+    "KXFDVOPENSEA",
+    "KXFDVRAINBOW",
+    "KXHYPE",
+    "KXHYPE15M",
+    "KXHYPED"
    ],
-   "cap_this_run": 25
+   "cap_this_run": 40
   },
   "golf": {
    "series_in_catalog": 134,
-   "series_read": 25,
+   "series_read": 40,
    "series_failed": 0,
    "series_with_live_markets": [
     "KXPGACURRY",
@@ -115,16 +152,23 @@
     "KXPGAMAJOR",
     "KXPGAMAKECUT",
     "KXPGAPLAYOFF",
-    "KXPGAR1LEAD"
+    "KXPGAR1LEAD",
+    "KXPGAR2LEAD",
+    "KXPGAR2TOP10",
+    "KXPGAR3LEAD",
+    "KXPGAR3TOP10",
+    "KXPGARETURN",
+    "KXPGAROUNDSCORE",
+    "KXPGARYDER"
    ],
-   "cap_this_run": 25
+   "cap_this_run": 40
   }
  },
  "scope_limits": {},
  "series_inventory": {
   "series_count": 16643,
   "in_scope_series": {
-   "gas": 151,
+   "gas": 152,
    "elections": 2709,
    "culture": 2,
    "crypto": 336,
@@ -140,13 +184,15 @@
   "result": "Official market field. 'yes' or 'no' once settled; empty while live.",
   "derived_mid": "Derived, not raw: (yes_bid_close + yes_ask_close) / 2 per candlestick. The candlestick `price` object is the TRADED price and is empty in any period with no trade, so this keeps the chart continuous without inventing a traded price."
  },
+ "series_with_live_markets_total": 61,
+ "series_read_total": 162,
  "resolutions_by_topic": {
-  "gas": 0,
-  "elections": 0,
+  "gas": 2028,
+  "elections": 45,
   "culture": 0,
-  "crypto": 207,
-  "golf": 1338
+  "crypto": 1407,
+  "golf": 3342
  },
- "api_request_count": 215,
- "api_request_failures": 1
+ "api_request_count": 367,
+ "api_request_failures": 5
 }
