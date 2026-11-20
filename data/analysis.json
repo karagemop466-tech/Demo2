@@ -1,0 +1,38 @@
+{
+ "generated_at_utc": "2026-11-20T11:36:04+00:00",
+ "source": "data/portfolio.json (authenticated demo account) + data/resolutions.json",
+ "authenticated": false,
+ "balance": {
+  "balance_dollars": null,
+  "portfolio_value_cents": null,
+  "updated_ts": null
+ },
+ "totals": {
+  "fills": 0,
+  "resolved_fills": 0,
+  "open_fills": 0,
+  "cost_dollars": 0,
+  "fees_dollars": 0,
+  "realized_pnl_dollars": 0,
+  "wins": 0,
+  "losses": 0,
+  "hit_rate": null
+ },
+ "categories": {
+  "by_topic": {},
+  "by_side": {},
+  "by_role": {},
+  "by_price_band": {},
+  "by_outcome": {}
+ },
+ "trades": [],
+ "positions": [],
+ "strategies": [],
+ "verdict": "insufficient_data",
+ "verdict_explanation": "Fewer than 5 resolved fills. No strategy is asserted.",
+ "method_notes": {
+  "cost": "count_fp x price paid on the held side (yes_price_dollars or no_price_dollars)",
+  "realized": "payout - cost - fee, payout = count_fp x $1 when held side == official result",
+  "no_estimation": "Open trades are never booked as realized; only official result settles a fill"
+ }
+}
