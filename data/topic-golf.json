@@ -1,0 +1,3136 @@
+{
+ "generated_at_utc": "2026-11-20T14:10:44+00:00",
+ "topic": "golf",
+ "count": 68,
+ "markets": [
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-WMOU",
+   "market_title": "Will William Mouw win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "William Mouw",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.9000",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.17",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.03",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If William Mouw wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-WMOU",
+   "est_dollar_volume": 2.85
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXPGAFUTURE-36MRUS",
+   "series_ticker": "KXPGAFUTURE",
+   "event_title": "Miles Russell: Golf Majors by 2036",
+   "market_ticker": "KXPGAFUTURE-36MRUS-4",
+   "market_title": "How many golf major championships will Miles Russell win before 2036?",
+   "yes_sub_title": "4+ golf major championship wins",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.9000",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "1.17",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.01",
+   "close_time": "2036-01-01T04:59:00Z",
+   "open_time": "2026-06-09T18:38:53Z",
+   "updated_time": "2026-07-09T13:34:45.917423Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Miles Russell wins 4+ golf major championships before 2036, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFFUTUREMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFFUTUREMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAFUTURE-36MRUS",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAFUTURE-36MRUS-4",
+   "est_dollar_volume": 1.05
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXPGAFUTURE-36JKOI",
+   "series_ticker": "KXPGAFUTURE",
+   "event_title": "Jackson Koivun: Golf Majors before 2036",
+   "market_ticker": "KXPGAFUTURE-36JKOI-4",
+   "market_title": "How many golf major championships will Jackson Koivun win before 2036?",
+   "yes_sub_title": "4+ golf major championship wins",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.9000",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "1.17",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.01",
+   "close_time": "2036-01-01T04:59:00Z",
+   "open_time": "2026-06-12T16:43:40Z",
+   "updated_time": "2026-07-09T13:34:45.973113Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Jackson Koivun wins 4+ golf major championships before 2036, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFFUTUREMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFFUTUREMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAFUTURE-36JKOI",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAFUTURE-36JKOI-4",
+   "est_dollar_volume": 1.05
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-LABE",
+   "market_title": "Will Ludvig Aberg win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Ludvig Aberg",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Ludvig Aberg wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-LABE",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-DBER",
+   "market_title": "Will Daniel Berger win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Daniel Berger",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Daniel Berger wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-DBER",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-ABHA",
+   "market_title": "Will Akshay Bhatia win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Akshay Bhatia",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Akshay Bhatia wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-ABHA",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-MBRE",
+   "market_title": "Will Michael Brennan win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Michael Brennan",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Michael Brennan wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-MBRE",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-JBRI",
+   "market_title": "Will Jacob Bridgeman win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Jacob Bridgeman",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Jacob Bridgeman wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-JBRI",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-SBUR",
+   "market_title": "Will Sam Burns win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Sam Burns",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Sam Burns wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-SBUR",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-PCAN",
+   "market_title": "Will Patrick Cantlay win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Patrick Cantlay",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Patrick Cantlay wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-PCAN",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-BCAU",
+   "market_title": "Will Bud Cauley win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Bud Cauley",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Bud Cauley wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-BCAU",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-ECOL",
+   "market_title": "Will Eric Cole win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Eric Cole",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Eric Cole wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-ECOL",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-CCON",
+   "market_title": "Will Corey Conners win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Corey Conners",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Corey Conners wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-CCON",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-PCOO",
+   "market_title": "Will Pierceson Coody win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Pierceson Coody",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Pierceson Coody wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-PCOO",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-NECH",
+   "market_title": "Will Nicolas Echavarria win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Nicolas Echavarria",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Nicolas Echavarria wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-NECH",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-HENG",
+   "market_title": "Will Harris English win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Harris English",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Harris English wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-HENG",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-TFIN",
+   "market_title": "Will Tony Finau win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Tony Finau",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Tony Finau wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-TFIN",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-TFLE",
+   "market_title": "Will Tommy Fleetwood win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Tommy Fleetwood",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Tommy Fleetwood wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-TFLE",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-RFOW",
+   "market_title": "Will Rickie Fowler win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Rickie Fowler",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Rickie Fowler wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-RFOW",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-RGER",
+   "market_title": "Will Ryan Gerard win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Ryan Gerard",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Ryan Gerard wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-RGER",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-CGOT",
+   "market_title": "Will Chris Gotterup win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Chris Gotterup",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Chris Gotterup wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-CGOT",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-MGRE",
+   "market_title": "Will Max Greyserman win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Max Greyserman",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Max Greyserman wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-MGRE",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-BGRI",
+   "market_title": "Will Ben Griffin win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Ben Griffin",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Ben Griffin wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-BGRI",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-HHAL",
+   "market_title": "Will Harry Hall win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Harry Hall",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Harry Hall wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-HHAL",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-RHEN",
+   "market_title": "Will Russell Henley win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Russell Henley",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Russell Henley wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-RHEN",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-RHIS",
+   "market_title": "Will Ryo Hisatsune win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Ryo Hisatsune",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Ryo Hisatsune wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-RHIS",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-RHOJ",
+   "market_title": "Will Rasmus Hojgaard win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Rasmus Hojgaard",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Rasmus Hojgaard wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-RHOJ",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-NHOJ",
+   "market_title": "Will Nicolai Hojgaard win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Nicolai Hojgaard",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Nicolai Hojgaard wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-NHOJ",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-MHOM",
+   "market_title": "Will Max Homa win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Max Homa",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Max Homa wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-MHOM",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-VHOV",
+   "market_title": "Will Viktor Hovland win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Viktor Hovland",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Viktor Hovland wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-VHOV",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-SIM",
+   "market_title": "Will Sungjae Im win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Sungjae Im",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Sungjae Im wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-SIM",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-JKEE",
+   "market_title": "Will John Keefer win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "John Keefer",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If John Keefer wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-JKEE",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-WKIM",
+   "market_title": "Will Si Woo Kim win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Si Woo Kim",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Si Woo Kim wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-WKIM",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-MKIM",
+   "market_title": "Will Michael Kim win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Michael Kim",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Michael Kim wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-MKIM",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-KKIT",
+   "market_title": "Will Kurt Kitayama win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Kurt Kitayama",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Kurt Kitayama wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-KKIT",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-JKNA",
+   "market_title": "Will Jake Knapp win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Jake Knapp",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Jake Knapp wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-JKNA",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-MLEE",
+   "market_title": "Will Min Woo Lee win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Min Woo Lee",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Min Woo Lee wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-MLEE",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-HLI",
+   "market_title": "Will Hao-Tong Li win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Hao-Tong Li",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Hao-Tong Li wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-HLI",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-RMAC",
+   "market_title": "Will Robert MacIntyre win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Robert MacIntyre",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Robert MacIntyre wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-RMAC",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-DMCC",
+   "market_title": "Will Denny McCarthy win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Denny McCarthy",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Denny McCarthy wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-DMCC",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-MMCN",
+   "market_title": "Will Maverick McNealy win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Maverick McNealy",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Maverick McNealy wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-MMCN",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-KMIT",
+   "market_title": "Will Keith Mitchell win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Keith Mitchell",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Keith Mitchell wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-KMIT",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-ANOV",
+   "market_title": "Will Andrew Novak win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Andrew Novak",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Andrew Novak wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-ANOV",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-MPEN",
+   "market_title": "Will Marco Penge win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Marco Penge",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Marco Penge wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-MPEN",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-JPOS",
+   "market_title": "Will J.T. Poston win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "J.T. Poston",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If J.T. Poston wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-JPOS",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-APOT",
+   "market_title": "Will Aldrich Potgieter win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Aldrich Potgieter",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Aldrich Potgieter wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-APOT",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-KREI",
+   "market_title": "Will Kristoffer Reitan win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Kristoffer Reitan",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Kristoffer Reitan wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-KREI",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-ASMA",
+   "market_title": "Will Alex Smalley win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Alex Smalley",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Alex Smalley wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-ASMA",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-SSTE",
+   "market_title": "Will Sam Stevens win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Sam Stevens",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Sam Stevens wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-SSTE",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-SSTR",
+   "market_title": "Will Sepp Straka win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Sepp Straka",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Sepp Straka wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-SSTR",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-NTAY",
+   "market_title": "Will Nick Taylor win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Nick Taylor",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Nick Taylor wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-NTAY",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-STHE",
+   "market_title": "Will Sahith Theegala win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Sahith Theegala",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Sahith Theegala wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-STHE",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-MTHO",
+   "market_title": "Will Michael Thorbjornsen win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Michael Thorbjornsen",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Michael Thorbjornsen wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-MTHO",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-KVIL",
+   "market_title": "Will Karl Vilips win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Karl Vilips",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Karl Vilips wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-KVIL",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-SYEL",
+   "market_title": "Will Sudarshan Yellamaraju win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Sudarshan Yellamaraju",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Sudarshan Yellamaraju wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-SYEL",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-CAME",
+   "market_title": "Will Cameron Young win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Cameron Young",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Cameron Young wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-CAME",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-KYU",
+   "market_title": "Will Kevin Yu win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Kevin Yu",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Kevin Yu wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-KYU",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-TKIM",
+   "market_title": "Will Tom Kim win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Tom Kim",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Tom Kim wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-TKIM",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-BBRO",
+   "market_title": "Will Blades Brown win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Blades Brown",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Blades Brown wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-BBRO",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-MRUS",
+   "market_title": "Will Miles Russell win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Miles Russell",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Miles Russell wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-MRUS",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-JKOI",
+   "market_title": "Will Jackson Koivun win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Jackson Koivun",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0100",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "3.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.02",
+   "close_time": "2030-07-07T14:00:00Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-06-24T04:48:52.561187Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Jackson Koivun wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-JKOI",
+   "est_dollar_volume": 0.03
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXPGAFUTURE-36MRUS",
+   "series_ticker": "KXPGAFUTURE",
+   "event_title": "Miles Russell: Golf Majors by 2036",
+   "market_ticker": "KXPGAFUTURE-36MRUS-1",
+   "market_title": "How many golf major championships will Miles Russell win before 2036?",
+   "yes_sub_title": "1+ golf major championship wins",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0200",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "1.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.00",
+   "close_time": "2036-01-01T04:59:00Z",
+   "open_time": "2026-06-09T18:38:53Z",
+   "updated_time": "2026-07-09T13:34:45.627025Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Miles Russell wins 1+ golf major championships before 2036, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFFUTUREMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFFUTUREMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAFUTURE-36MRUS",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAFUTURE-36MRUS-1",
+   "est_dollar_volume": 0.02
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXPGAFUTURE-36MRUS",
+   "series_ticker": "KXPGAFUTURE",
+   "event_title": "Miles Russell: Golf Majors by 2036",
+   "market_ticker": "KXPGAFUTURE-36MRUS-2",
+   "market_title": "How many golf major championships will Miles Russell win before 2036?",
+   "yes_sub_title": "2+ golf major championship wins",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0200",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "1.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.00",
+   "close_time": "2036-01-01T04:59:00Z",
+   "open_time": "2026-06-09T18:38:53Z",
+   "updated_time": "2026-07-09T13:34:45.680784Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Miles Russell wins 2+ golf major championships before 2036, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFFUTUREMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFFUTUREMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAFUTURE-36MRUS",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAFUTURE-36MRUS-2",
+   "est_dollar_volume": 0.02
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXPGAFUTURE-36MRUS",
+   "series_ticker": "KXPGAFUTURE",
+   "event_title": "Miles Russell: Golf Majors by 2036",
+   "market_ticker": "KXPGAFUTURE-36MRUS-3",
+   "market_title": "How many golf major championships will Miles Russell win before 2036?",
+   "yes_sub_title": "3+ golf major championship wins",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0200",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "1.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.00",
+   "close_time": "2036-01-01T04:59:00Z",
+   "open_time": "2026-06-09T18:38:53Z",
+   "updated_time": "2026-07-09T13:34:45.746154Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Miles Russell wins 3+ golf major championships before 2036, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFFUTUREMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFFUTUREMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAFUTURE-36MRUS",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAFUTURE-36MRUS-3",
+   "est_dollar_volume": 0.02
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXPGAFUTURE-36JKOI",
+   "series_ticker": "KXPGAFUTURE",
+   "event_title": "Jackson Koivun: Golf Majors before 2036",
+   "market_ticker": "KXPGAFUTURE-36JKOI-1",
+   "market_title": "How many golf major championships will Jackson Koivun win before 2036?",
+   "yes_sub_title": "1+ golf major championship wins",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0200",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "1.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.00",
+   "close_time": "2036-01-01T04:59:00Z",
+   "open_time": "2026-06-12T16:43:40Z",
+   "updated_time": "2026-07-09T13:34:45.587567Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Jackson Koivun wins 1+ golf major championships before 2036, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFFUTUREMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFFUTUREMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAFUTURE-36JKOI",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAFUTURE-36JKOI-1",
+   "est_dollar_volume": 0.02
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXPGAFUTURE-36JKOI",
+   "series_ticker": "KXPGAFUTURE",
+   "event_title": "Jackson Koivun: Golf Majors before 2036",
+   "market_ticker": "KXPGAFUTURE-36JKOI-2",
+   "market_title": "How many golf major championships will Jackson Koivun win before 2036?",
+   "yes_sub_title": "2+ golf major championship wins",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0200",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "1.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.00",
+   "close_time": "2036-01-01T04:59:00Z",
+   "open_time": "2026-06-12T16:43:40Z",
+   "updated_time": "2026-07-09T13:34:45.751969Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Jackson Koivun wins 2+ golf major championships before 2036, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFFUTUREMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFFUTUREMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAFUTURE-36JKOI",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAFUTURE-36JKOI-2",
+   "est_dollar_volume": 0.02
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXPGAFUTURE-36JKOI",
+   "series_ticker": "KXPGAFUTURE",
+   "event_title": "Jackson Koivun: Golf Majors before 2036",
+   "market_ticker": "KXPGAFUTURE-36JKOI-3",
+   "market_title": "How many golf major championships will Jackson Koivun win before 2036?",
+   "yes_sub_title": "3+ golf major championship wins",
+   "status": "active",
+   "result": "",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "1.0000",
+   "no_bid_dollars": "0.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0200",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "1.16",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.00",
+   "close_time": "2036-01-01T04:59:00Z",
+   "open_time": "2026-06-12T16:43:40Z",
+   "updated_time": "2026-07-09T13:34:45.912253Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Jackson Koivun wins 3+ golf major championships before 2036, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    },
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFFUTUREMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFFUTUREMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAFUTURE-36JKOI",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAFUTURE-36JKOI-3",
+   "est_dollar_volume": 0.02
+  },
+  {
+   "topic": "golf",
+   "event_ticker": "KXGOLFMAJOR-30",
+   "series_ticker": "KXGOLFMAJOR",
+   "event_title": "Golfers to win a PGA Tour Major before 2030 ",
+   "market_ticker": "KXGOLFMAJOR-30-RFOX",
+   "market_title": "Will Ryan Fox win a golf major championship after June 22, 2026 and before 2030?",
+   "yes_sub_title": "Ryan Fox",
+   "status": "finalized",
+   "result": "yes",
+   "yes_bid_dollars": "0.0000",
+   "yes_ask_dollars": "0.0000",
+   "no_bid_dollars": "1.0000",
+   "no_ask_dollars": "1.0000",
+   "last_price_dollars": "0.0000",
+   "yes_bid_size_fp": "0.00",
+   "yes_ask_size_fp": "0.00",
+   "volume_fp": "0.00",
+   "volume_24h_fp": "0.00",
+   "open_interest_fp": "0.00",
+   "close_time": "2026-07-19T18:41:33Z",
+   "open_time": "2026-06-24T04:48:52Z",
+   "updated_time": "2026-07-19T18:49:28.419982Z",
+   "price_level_structure": "linear_cent",
+   "rules_primary": "If Ryan Fox wins a golf major championship (including The Masters, PGA Championship, U.S. Open, and The Open Championship) before 2030, then the market resolves to Yes.",
+   "exchange_index": 0,
+   "settlement_sources": [
+    {
+     "name": "ESPN",
+     "url": "https://www.espn.com/"
+    },
+    {
+     "name": "the Governing League",
+     "url": "https://www.pgatour.com/"
+    }
+   ],
+   "series_category": "Sports",
+   "series_categories": [
+    "Sports"
+   ],
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/GOLFERMAJOR.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/GOLFERMAJOR.pdf",
+   "event_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOLFMAJOR-30",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXGOLFMAJOR-30-RFOX",
+   "est_dollar_volume": 0.0
+  }
+ ],
+ "resolutions": []
+}
