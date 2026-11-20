@@ -848,12 +848,38 @@ current official Kalshi documentation and checked-in implementation. This task e
 
 | ID | Task | Status | Owner | Files touched |
 |---|---|---|---|---|
-| A-1 | Claim & source-backed documentation audit | in progress | arena-21eed9ff | `COORDINATION.md`, `docs/EXECUTIVE_SUMMARY.md`, `docs/VERIFICATION.md` |
-| A-2 | Reconcile claims with current implementation; leave inaccessible or unverified values blank/flagged | in progress | arena-21eed9ff | `docs/EXECUTIVE_SUMMARY.md`, `docs/VERIFICATION.md` |
-| A-3 | Run existing site/data/link verification and report findings | in progress | arena-21eed9ff | `COORDINATION.md` |
+| A-1 | Claim & source-backed documentation audit | done | arena-21eed9ff | `COORDINATION.md`, `docs/EXECUTIVE_SUMMARY.md`, `docs/VERIFICATION.md` |
+| A-2 | Reconcile claims with current implementation; leave inaccessible or unverified values blank/flagged | done | arena-21eed9ff | `docs/EXECUTIVE_SUMMARY.md`, `docs/VERIFICATION.md` |
+| A-3 | Run existing site/data/link verification and report findings | done | arena-21eed9ff | `COORDINATION.md` |
 
 The preceding board entries are historical records of merged sessions, not active file locks.
 This audit intentionally does not change generated pages, dashboards, collectors, trade code,
 workflow files, or shared site navigation. No Kalshi credentials are available in this session.
 The coordination request to use a separate `session-<id>/<task>` branch conflicts with the
 Arena branch constraint; this work stays on the assigned branch.
+
+### Session `arena-21eed9ff` — completion record
+
+**Files changed:** `docs/EXECUTIVE_SUMMARY.md`, `docs/VERIFICATION.md`, `COORDINATION.md` only.
+
+**Official sources fetched and checked 2026-11-20:**
+- https://docs.kalshi.com/getting_started/demo_env
+- https://docs.kalshi.com/getting_started/api_keys
+- https://docs.kalshi.com/getting_started/market_settlement
+- https://docs.kalshi.com/getting_started/rate_limits
+- https://docs.kalshi.com/api-reference/events/get-events
+- https://docs.kalshi.com/api-reference/market/get-markets
+- https://docs.kalshi.com/api-reference/market/get-series-list
+- https://docs.kalshi.com/api-reference/market/get-market-orderbook
+- https://docs.kalshi.com/api-reference/market/get-market-candlesticks
+- https://docs.kalshi.com/api-reference/portfolio/get-balance
+- https://docs.kalshi.com/api-reference/portfolio/get-positions
+- https://docs.kalshi.com/api-reference/portfolio/get-fills
+- https://docs.kalshi.com/api-reference/orders/create-order-v2
+- https://docs.kalshi.com/websockets/websocket-connection
+
+**Verification performed:** `git diff --check`; `python3 tools/check.py` (pass with warning that `data/snapshot.json` is absent); `python3 scripts/check_links.py` (8,015 internal references across 85 HTML files, pass; external URLs not probed in this invocation); `python3 instrument-panel/tests_smoke.py` (pass); `python3 instrument-panel/tools/validate_data.py` (3,331 rows, 445 requests, 0 recorded errors, warnings for missing settlement source on KXLINKPERP/KXSUIPERP/KXSOLPERP and no open culture matches); `python3 instrument-panel/tools/check_site.py` (owned instrument-panel pages pass, 13 runtime-anchor findings reported in separate `site/` pages); `node intelligence/scripts/linkcheck.mjs` (9 pages, 272 links, 177 source fields, pass).
+
+**Irregularities recorded rather than obscured:** account-specific values and actual orders remain unverified (no key; `data/portfolio.json` unauthenticated; `data/executions.json` dry-run with no results); no verified news feed/causal attribution for price jumps; seconds-level chart is browser polling rather than official candle resolution or WebSocket; multiple distinct dashboards and ranking definitions remain; a single repo-wide table-row-source assertion does not exist; checked-in top-level `data/snapshot.json` is absent. The data snapshot reviewed was timestamped `2026-11-20T12:43:59Z`; not represented as a current quote after that time. The docs now distinguish official API documentation claims from repository artifacts and live observations.
+
+**Branch constraint:** claim was committed as `ac27e3c` and pushed to the Arena-assigned branch `arena/21eed9ff-demo2`. The required initial `git pull --rebase origin arena/21eed9ff-demo2` could not resolve because the remote branch did not yet exist; rebased against `origin/main` (up to date) and then pushed this same current branch. No other branch was created or modified.

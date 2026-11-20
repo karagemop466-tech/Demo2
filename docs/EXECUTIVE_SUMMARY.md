@@ -1,154 +1,56 @@
 # Kalshi Demo — Executive Summary
 
-> Prepared for the Kalshi Demo project. Every technical statement below is traceable
-> to the official Kalshi API documentation (docs.kalshi.com) or to the project
-> requirements. Links to the verified sources are provided. Items that could not be
-> confirmed from an official source are flagged as unverified in
-> [docs/VERIFICATION.md](./VERIFICATION.md).
+**Review date:** 2026-11-20 (UTC). This summary distinguishes official API capabilities, checked-in implementation, and items not verified. It does not treat demo data as real-market evidence or claim that any price move was caused by a news story.
 
-## 1. Objective
+## Goal and scope
 
-Build a **live, interactive Kalshi prediction-market dashboard** for a **Kalshi demo
-account** that:
+The repository contains a GitHub Pages site and supporting collectors for Kalshi **demo** market research, limited to five requested topic groupings: gas prices, elections, culture, crypto, and golf. It includes market/resolution snapshots, interactive price and orderbook views, portfolio/trade reporting scaffolding, dry-run execution, source records, and a Flagged for Review register.
 
-1. Collects, organizes, and analyzes market data against a full list of requirements.
-2. Tracks **live events until they resolve**, recording how each event resolved
-   (`yes` / `no`).
-3. Focuses on five topics only: **gas prices, elections, culture, crypto, and golf**.
-4. Tracks **portfolio performance** on the Kalshi demo account, analyzes trade
-   results, categorizes trades, and builds **strategies** by trade type.
-5. Executes trades on events and tracks performance.
-6. Shows **live price-movement charts** (X = time with selectable seconds / minutes /
-   hours window; Y = current contract price) and **current liquidity** (contracts
-   available at each price).
-7. Provides a **Suggestions** section to review and choose improvement paths before
-   implementing changes.
-8. Ships a clean **GitHub Pages** site with a landing page and category subpages,
-   tables of all entries/findings, and analysis.
+The repository currently contains several independently built dashboard sections rather than one consolidated application. The root landing page links into these sections; their ranking metrics and degree of interactivity are not fully uniform. Treat the instrument-panel pages as the most recent data-driven research dashboard, not as proof that every separate subsite has identical behavior.
 
-## 2. The Kalshi API surface (verified)
+## Official Kalshi demo API
 
-Source: https://docs.kalshi.com/getting_started/demo_env and
-https://docs.kalshi.com/getting_started/api_environments
+Kalshi documents these demo endpoints in [Test in the Demo Environment](https://docs.kalshi.com/getting_started/demo_env):
 
-| Surface | Recommended demo endpoint | Also supported |
+| Surface | Recommended demo endpoint | Also supported | Official source |
+| --- | --- | --- | --- |
+| REST Trade API | `https://external-api.demo.kalshi.co/trade-api/v2` | `https://demo-api.kalshi.co/trade-api/v2` | [Demo environment](https://docs.kalshi.com/getting_started/demo_env) |
+| WebSocket API | `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` | `wss://demo-api.kalshi.co/trade-api/ws/v2` | [Demo environment](https://docs.kalshi.com/getting_started/demo_env) |
+
+The demo uses mock funds, separate credentials from production, and Kalshi cautions that demo prices and behavior may not reflect real markets ([official demo guide](https://docs.kalshi.com/getting_started/demo_env)). The dashboard is research/testing software, not investment advice.
+
+## What the code and site do
+
+| Requirement | Current implementation / limit | Source or verification |
 | --- | --- | --- |
-| REST Trade API | `https://external-api.demo.kalshi.co/trade-api/v2` | `https://demo-api.kalshi.co/trade-api/v2` |
-| WebSocket API | `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` | `wss://demo-api.kalshi.co/trade-api/ws/v2` |
+| Five requested topics | The instrument-panel collector discovers series by official Kalshi category/tag queries; the category-to-topic mapping is not a guaranteed complete taxonomy. | [Series list](https://docs.kalshi.com/api-reference/market/get-series-list); `instrument-panel/tools/kalshi_collect.py`; [Flagged for Review](../instrument-panel/site/flagged.html) |
+| Current market data | GitHub Actions collects demo API data and commits snapshots; the instrument panel workflow is scheduled every 15 minutes (GitHub schedules may be delayed). Its live chart also polls public REST from the visitor's browser. Neither is a guarantee of exchange-tick real time. | [.github/workflows/pages.yml](../.github/workflows/pages.yml); [Get Markets](https://docs.kalshi.com/api-reference/market/get-markets) |
+| Price chart | The instrument-panel chart displays timestamp on X, contract price on Y, client-polled market points, optional official candlesticks (1-minute or 1-hour intervals), and collector snapshots. Browser polling is not a WebSocket stream. | [Candlesticks](https://docs.kalshi.com/api-reference/market/get-market-candlesticks); `instrument-panel/site/assets/live.js` |
+| Orderbook liquidity | Public orderbook snapshots show bid price levels and contract quantities; this is resting-book depth, not a guarantee of executable liquidity. The API may return no levels. | [Orderbook](https://docs.kalshi.com/api-reference/market/get-market-orderbook) |
+| Outcomes | Collected settled markets retain the API's `result` field, whose documented schema allows `yes` / `no`. Settlement timing can vary. | [Get Markets](https://docs.kalshi.com/api-reference/market/get-markets); [Market settlement](https://docs.kalshi.com/getting_started/market_settlement) |
+| Portfolio | The checked-in portfolio snapshot says unauthenticated because this repository has no configured demo API key. No balance, positions, fills, or account performance are claimed here. | [Get Balance](https://docs.kalshi.com/api-reference/portfolio/get-balance); [Get Positions](https://docs.kalshi.com/api-reference/portfolio/get-positions); [Get Fills](https://docs.kalshi.com/api-reference/portfolio/get-fills); `data/portfolio.json` |
+| Simulated trades / strategy testing | The repository has dry-run order validation and a separate paper-trading UI. The latest recorded execution artifact is dry-run with zero results; this is not an executed Kalshi trade or a validated profitable strategy. | `tools/execute_strategy.py`; `live/trading.html`; `data/executions.json`; [Create Order V2](https://docs.kalshi.com/api-reference/orders/create-order-v2) |
+| Actual demo order execution | Guarded by private repository secrets, a separate explicit enable variable, dry-run setting, in-scope ticker checks, and order/notional caps. It was not exercised in this review because credentials are absent. Never paste private keys into a public page or chat. | [API keys](https://docs.kalshi.com/getting_started/api_keys); `.github/workflows/trade.yml`; `tools/execute_strategy.py` |
+| Price jumps and related links | No verified news-feed integration or causal attribution is present in the audited dashboard. A contract-price move of at least $0.10 can be detected from timestamped observations, but a nearby link must be labeled a candidate for review—not the cause—unless independently established. | [Markets API](https://docs.kalshi.com/api-reference/market/get-markets); [Trades API](https://docs.kalshi.com/api-reference/market/get-trades); no causal news source is configured |
 
-The demo environment uses **mock funds**; credentials are **not** shared with
-production, and demo market prices/behavior may not reflect real markets
-(https://docs.kalshi.com/getting_started/demo_env).
+## Ranking and price interpretation
 
-### 2.1 Authentication (verified)
+“Highest dollar amount” is ambiguous. Kalshi exposes contract volume and open interest; the current instrument-panel landing page ranks its displayed examples by **open interest × last price** (a computed dollar estimate), while other repository sections use different measures. Do not label such a calculation “dollar volume” or an official exchange field. The underlying fields and fixed-point units are documented by [Get Markets](https://docs.kalshi.com/api-reference/market/get-markets) and [fixed-point migration](https://docs.kalshi.com/getting_started/fixed_point_migration).
 
-Source: https://docs.kalshi.com/getting_started/api_keys
+An empty orderbook is materially different from a quoted market. Open interest is not a measure of immediately available depth. A chart of current API snapshots also cannot recover price movement that occurred between polls.
 
-- Kalshi API keys are **asymmetric key pairs**. You sign each request with the
-  private key; Kalshi verifies with the registered public key.
-- Two key types: **Ed25519** (recommended) and **RSA** (2048-bit, RSA-PSS + SHA-256).
-- Every request carries three headers:
-  - `KALSHI-ACCESS-KEY` — the Key ID
-  - `KALSHI-ACCESS-TIMESTAMP` — request timestamp in ms
-  - `KALSHI-ACCESS-SIGNATURE` — base64 signature over
-    `timestamp + HTTP method + path` (path **without** query string)
-- Timestamp must be within **30 seconds** of Kalshi's clock, else `401`
-  `header_timestamp_expired`.
-- **Public market-data endpoints require no authentication** (reads of series,
-  events, markets, orderbook) —
-  https://docs.kalshi.com/getting_started/quick_start_market_data.
-- The **WebSocket connection requires authentication** even for public-data
-  channels — https://docs.kalshi.com/websockets/websocket-connection.
+## Security and environment
 
-### 2.2 Key endpoints used by the dashboard (verified)
+Kalshi API requests use signed authentication headers. The official signing guide supports Ed25519 and RSA-PSS and requires the timestamp, method, and path (without query parameters) in the pre-sign text; the timestamp must be within 30 seconds ([API keys](https://docs.kalshi.com/getting_started/api_keys)). Kalshi's WebSocket connections require API-key authentication during the handshake ([WebSocket connection](https://docs.kalshi.com/websockets/websocket-connection)).
 
-| Capability | Endpoint | Source |
-| --- | --- | --- |
-| List events (filter by status) | `GET /events?status=open&with_nested_markets=true&limit=200` | [Get Events](https://docs.kalshi.com/api-reference/events/get-events) |
-| List markets (filter by series/status) | `GET /markets?series_ticker=...&status=open` | [Get Markets](https://docs.kalshi.com/api-reference/market/get-markets) |
-| Current orderbook / liquidity | `GET /markets/{ticker}/orderbook?depth=N` | [Get Market Orderbook](https://docs.kalshi.com/api-reference/market/get-market-orderbook) |
-| Price-history candlesticks | `GET /series/{series}/markets/{ticker}/candlesticks?start_ts=&end_ts=&period_interval=1|60|1440` | [Get Market Candlesticks](https://docs.kalshi.com/api-reference/market/get-market-candlesticks) |
-| Portfolio balance | `GET /portfolio/balance` | [portfolio](https://docs.kalshi.com/llms.txt) |
-| Recent trades | `GET /markets/{ticker}/trades` | [Get Trades](https://docs.kalshi.com/api-reference/market/get-trades) |
-| Place order (V2) | `POST /orders` (V2 shape) | [Create Order V2](https://docs.kalshi.com/api-reference/orders/create-order-v2) |
-| Exchange status | `GET /exchange/status` | [Get Exchange Status](https://docs.kalshi.com/api-reference/exchange/get-exchange-status) |
+GitHub Pages is static hosting. It can display public market data but does not itself run the repository's Node backend or safely hold a private key. This repo's static pages do not ask visitors for credentials. Authenticated account features require a separately hosted trusted process and configured demo credentials; until then their values must stay blank/unavailable.
 
-**Orderbook / liquidity mechanics** (verified): the orderbook returns
-`yes_dollars` and `no_dollars` arrays of `[price_dollars, count_fp]` pairs sorted
-ascending, best (highest) bid last. In binary markets a yes bid at price X equals a
-no ask at (100 − X). This is the source of the dashboard's "contracts available at a
-given price" liquidity view.
-Source: https://docs.kalshi.com/api-reference/market/get-market-orderbook
+## Open items and irregularities
 
-**Candlesticks** (verified): `period_interval` is in **minutes** — `1` (1 minute),
-`60` (1 hour), `1440` (1 day). Each candle has OHLC for yes bid/ask and trade price,
-plus `volume_fp` and `open_interest_fp`. Max 5,000 periods per request.
-Source: https://docs.kalshi.com/api-reference/market/get-market-candlesticks
+1. **Account-specific performance and actual orders are unverified.** No demo credentials are present; the current portfolio artifact is explicitly unauthenticated and the execution artifact has no orders.
+2. **No news cause attribution.** There is no implemented verified news feed or source-to-price causal analysis. Any link shown near a jump must remain a lead for human review.
+3. **Multiple dashboard implementations.** Root, `pages/`, `site/`, `live/`, `intelligence/`, `dashboard/`, `verified/`, and `instrument-panel/` coexist. Their data and metrics are not a single consistent product; integration/consolidation remains a product task.
+4. **Coverage limits.** Topic inclusion depends on API categories/tags, collector limits, and available demo series. For example, the current instrument-panel snapshot has no open Culture markets; that is not evidence that no culture events exist outside that query/snapshot.
+5. **Snapshot time matters.** The checked-in instrument-panel snapshot reviewed here was generated at `2026-11-20T12:43:59Z`. It is a historical capture and not a claim about current prices after that timestamp.
 
-**WebSocket channels** (verified): `orderbook_delta`, `ticker`, `trade`, `fill`,
-`market_positions`, `market_lifecycle_v2`, `user_orders`, etc.
-Source: https://docs.kalshi.com/websockets/websocket-connection
-
-## 3. Data freshness (verified caveat)
-
-REST responses such as `GET /markets` and `GET /markets/{ticker}` are **cached for a
-short time**; prices, sizes, and status can lag the exchange by several seconds, and
-filtered listings can lag longer. Use the **WebSocket API** for current state.
-Source: https://docs.kalshi.com/api-reference/market/get-markets
-
-## 4. Dashboard design (what was built)
-
-A two-part system:
-
-1. **Backend** (`server/`) — a Node.js service that:
-   - Signs and calls the Kalshi demo REST API (Ed25519/RSA).
-   - Maintains a live tracking store for events until resolution (`yes`/`no`).
-   - Executes trades (V2 orders) and records them.
-   - Computes portfolio performance, categorizes trades, and proposes strategies.
-   - Exposes a JSON API the frontend consumes.
-2. **Frontend / GitHub Pages site** (`site/`) — a clean dashboard:
-   - **Live Events** board filtered to the five topics, ranked by dollar volume.
-   - **Price Chart**: X = time (seconds / minutes / hours window selector),
-     Y = contract price.
-   - **Liquidity** view: contracts available at each price level.
-   - **Portfolio**, **Trades**, **Strategies**, **Suggestions**, and
-     **Flagged for Review** pages, all in simple tables with source links.
-
-The static GitHub Pages site also works standalone for public market data by calling
-Kalshi's public demo endpoints directly from the browser. Authenticated portfolio
-and trade execution require the backend with a demo API key (never committed).
-
-## 5. Constraints and flags (do not block merge)
-
-These are documented in detail in [docs/VERIFICATION.md](./VERIFICATION.md) and on
-the site's "Flagged for Review" page:
-
-- **FLAG-01 — Sandbox network allowlist**: this build environment can reach
-  `github.com`/`npmjs`/`pypi` but **cannot** reach `*.kalshi.co` (TLS reset). Live
-  Kalshi calls are implemented but could not be executed/verified from this sandbox.
-- **FLAG-02 — No API key**: no Kalshi demo key pair is present. Trade execution is
-  implemented and documented but cannot be exercised without a demo account key.
-- **FLAG-03 — Static Pages host**: GitHub Pages cannot run a persistent authenticated
-  backend or store secrets. The static site uses public market-data calls; the
-  backend provides authenticated portfolio/trade features.
-
-## 6. Verification policy
-
-- Every table row on the site carries a **source link** to an official Kalshi page.
-- A value that cannot be confirmed from an official source is **left blank** and
-  flagged **unverified** — never inferred or filled in.
-- All findings, irregularities, and unverified items are recorded in
-  [COORDINATION.md](../COORDINATION.md) and the "Flagged for Review" page.
-
-## 7. Sources (official)
-
-- API documentation index: https://docs.kalshi.com/llms.txt
-- Demo environment: https://docs.kalshi.com/getting_started/demo_env
-- API keys & signing: https://docs.kalshi.com/getting_started/api_keys
-- Get Events: https://docs.kalshi.com/api-reference/events/get-events
-- Get Markets: https://docs.kalshi.com/api-reference/market/get-markets
-- Get Market Orderbook: https://docs.kalshi.com/api-reference/market/get-market-orderbook
-- Get Market Candlesticks: https://docs.kalshi.com/api-reference/market/get-market-candlesticks
-- Quick Start: Market Data: https://docs.kalshi.com/getting_started/quick_start_market_data
-- WebSocket Connection: https://docs.kalshi.com/websockets/websocket-connection
-- REST OpenAPI spec: https://docs.kalshi.com/openapi.yaml
+See [Verification Log](./VERIFICATION.md), the instrument-panel [Verification](../instrument-panel/site/verification.html) page, and [Flagged for Review](../instrument-panel/site/flagged.html) for evidence and detailed caveats.
