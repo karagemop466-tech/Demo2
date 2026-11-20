@@ -51,9 +51,9 @@
           <td><a href="https://docs.kalshi.com/api-reference/events/get-events">Get Events</a></td>
         </tr>
         <tr>
-          <td>R3<br><span class="status">Needs review · requested feature</span></td>
-          <td>The <code>site/</code> dashboard has no two-pane scrolling alert/chat feed or model-selected high-ROI feed. Its own Suggestions page proposes threshold alerts (S9); the server's current poll broadcasts sampled prices, not a confirmed threshold-event record or selective ROI stream. A separate root chart marks jumps from its collected series, which is not equivalent to the requested real-time chat. This is a product gap, not a Kalshi API fact.</td>
-          <td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets">WebSocket quick start</a></td>
+          <td>R3<br><span class="status">Partial · needs review</span></td>
+          <td>The newer root site now has <code>pages/live-alerts.html</code> with two scrolling feeds and ≥$0.10 moves. The two feeds load collected <code>data/jumps.json</code> and <code>data/snapshot.json</code> once at page load; there is no timer, streaming connection, or runtime refresh. "High ROI" is an explicitly rule-based move-size + estimated-volume filter, not a predictive model. It is a useful snapshot alert page, but it does not yet meet the real-time or model-selected feed wording of the request.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-trades">Get Trades</a> · <a href="https://docs.kalshi.com/getting_started/quick_start_websockets">WebSocket quick start</a></td>
         </tr>
         <tr>
           <td>R4<br><span class="status">Needs review · coverage</span></td>
@@ -63,10 +63,20 @@
         <tr>
           <td>R5<br><span class="status">Needs review · deployment boundary</span></td>
           <td>The project contains several independently built dashboard trees and workflows (documented in the repository coordination log). GitHub Pages serves static files only; it does not run <code>server/index.js</code>. Authenticated portfolio and trade features require separately deployed backend infrastructure and demo-only credentials. No credentials were added or used here; account balances and live order execution remain unverified.</td>
-          <td><a href="https://docs.kalshi.com/getting_started/demo_env">Demo environment</a> · <a href="https://docs.kalshi.com/getting_started/api_keys">API keys</a></td>
+          <td><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages">GitHub Pages</a> · <a href="https://docs.kalshi.com/getting_started/demo_env">Demo environment</a> · <a href="https://docs.kalshi.com/getting_started/api_keys">API keys</a></td>
         </tr>
         <tr>
-          <td>R6<br><span class="status">Verified caveat</span></td>
+          <td>R6<br><span class="status">Needs review · data join</span></td>
+          <td>DOM smoke test with the committed files rendered 11 alert rows, but <strong>0/11 tickers</strong> matched between <code>data/jumps.json</code> and <code>data/snapshot.json</code>. As a result, topic/title/volume metadata are absent, the default High-ROI feed shows 0 rows, and four snapshot-move rows have no source link (rendered as “—”). The jump data is sourced from <code>data/dashboard_instrument.json</code>, while the page joins against the separate canonical <code>data/snapshot.json</code>. Use a coherent dataset/provenance and ensure every alert row retains its official source.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> · <a href="https://docs.kalshi.com/api-reference/market/get-trades">Get Trades</a></td>
+        </tr>
+        <tr>
+          <td>R7<br><span class="status">Needs review · freshness</span></td>
+          <td>At this checkout, <code>data/snapshot.json</code> says <code>2026-11-20T14:10:44Z</code>, while <code>data/jumps.json</code> says its source snapshot was <code>2026-11-20T19:42:50Z</code>. The page's visible “Snapshot” status uses the older file, while its alert generation line is <code>2026-11-20T15:57:36Z</code>. Show a single generation timestamp matching the actual joined data and mark stale/mismatched feeds.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> · <a href="https://docs.kalshi.com/api-reference/market/get-trades">Get Trades</a></td>
+        </tr>
+        <tr>
+          <td>R8<br><span class="status">Verified caveat</span></td>
           <td>Orderbook outputs are bid ladders for YES and NO. The dashboard derives implied asks using binary-price parity; derived asks are not observed ask-side depth. UI labels and tests explicitly distinguish those derived values. Keep this distinction visible to avoid presenting an inferred ask as resting liquidity.</td>
           <td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook">Get Market Orderbook</a></td>
         </tr>
@@ -80,9 +90,10 @@
       <li><code>npm test</code>: 8/8 tests passed (topic filters, active/resolved market selection, orderbook arithmetic and derived asks, resolution labels, HTML escaping, chart timestamps/missing points).</li>
       <li><code>npm run check</code>: 15 HTML pages; local references resolved; source-linked rows, unique IDs, and no inline handlers.</li>
       <li><code>npm run build</code>: generated 15 static pages.</li>
-      <li><code>python3 tools/check.py</code>: links/nav/data/secrets/scripts passed; it reported 11 non-2xx snapshot API requests (the existing Verification page is the indicated evidence location; this audit did not re-fetch or reclassify each one).</li>
-      <li><code>python3 scripts/check_links.py</code>: 8,399 internal references across 107 HTML files, all resolved.</li>
-      <li>Kalshi demo, event-list, orderbook, candlestick, order V2, and WebSocket documentation pages were read directly. A mocked request confirmed what the backend currently emits; no private key, live account, or order call was used.</li>
+      <li><code>python3 tools/check.py</code>: links/nav/data/secrets/scripts passed across 18 pages; it reported 11 non-2xx snapshot API requests (the existing Verification page is the indicated evidence location; this audit did not re-fetch or reclassify each one).</li>
+      <li><code>python3 scripts/check_links.py</code>: 8,926 references across 124 HTML files, all resolved.</li>
+      <li>JSDOM smoke test ran the merged live-alerts page against the committed snapshot files: 11 rows rendered, 0/11 with a matched market/topic, 0 high-ROI rows, and 4 rows without a per-row source link. It also exposed mismatched snapshot timestamps. These are published here as verification findings, not silently corrected.</li>
+      <li>Kalshi demo, event-list, orderbook, candlestick, order V2, WebSocket, and GitHub Pages documentation pages were read directly. A mocked request confirmed what the backend currently emits; no private key, live account, or order call was used.</li>
     </ul>
   </section>
 
