@@ -934,6 +934,18 @@ def main() -> int:
     })
 
     # ---- compact files: the browser must not download the full snapshot ----
+    # The request log is the site's provenance trail, so it must be versioned. It is
+    # written separately (a few hundred KB) instead of shipping the 12 MB snapshot.
+    write_json("snapshot_api_log.json", {
+        "generated_at_utc": snapshot["generated_at_utc"],
+        "rest_base": DEMO_REST,
+        "count": len(API_LOG),
+        "failed": len([r for r in API_LOG if not r["ok"]]),
+        "note": ("Every request this run made, with its HTTP status. The dashboard tables are "
+                 "populated only from these responses."),
+        "api_log": API_LOG,
+    })
+
     write_json("series_index.json", {
         "fetched_at": snapshot["generated_at_utc"],
         "source": f"{DEMO_REST}/series",

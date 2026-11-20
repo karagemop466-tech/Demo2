@@ -10,3 +10,8 @@ _site/
 .env
 .env.*
 *.log
+
+# The full snapshot is 12 MB of raw provenance; the site reads dashboard_meta.json,
+# top.json, resolutions.json, liquidity.json and snapshot_api_log.json instead.
+# The workflow keeps it as a run artifact.
+data/snapshot.json

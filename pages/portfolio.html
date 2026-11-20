@@ -77,7 +77,11 @@ book side <code>bid</code> &equiv; yes, <code>ask</code> &equiv; no &mdash; <a h
       repository secrets. Balances, positions and fills are deliberately blank rather than zero,
       because "no key" and "empty account" are different facts.
       <br><span class="small muted">Requirement: <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API Keys</a></span></div>`;
-    $('kpis').innerHTML = '';
+    $('kpis').innerHTML = `
+      <div class="kpi-card"><div class="k">Balance</div><div class="v">—</div><div class="s">no demo key</div></div>
+      <div class="kpi-card"><div class="k">Positions</div><div class="v">—</div><div class="s">not read</div></div>
+      <div class="kpi-card"><div class="k">Fills</div><div class="v">—</div><div class="s">not read</div></div>
+      <div class="kpi-card"><div class="k">Why blank</div><div class="s" style="font-size:.8rem">“no key” ≠ “zero balance”</div></div>`;
     $('posTable').innerHTML = '<div class="empty">Blank - not connected.</div>';
     $('fillTable').innerHTML = '<div class="empty">Blank - not connected.</div>';
   } else {

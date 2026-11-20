@@ -118,11 +118,29 @@ jobs:
               sys.exit(1)
           PY
 
+      - name: Keep the raw snapshot as an artifact (not committed)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kalshi-demo-snapshot
+          path: |
+            data/snapshot.json
+            data/snapshot_api_log.json
+            data/dashboard_meta.json
+            data/top.json
+            data/resolutions.json
+            data/liquidity.json
+          retention-days: 7
+          if-no-files-found: warn
+
       - name: Commit snapshot
         run: |
           git config user.name  "kalshi-demo-bot"
           git config user.email "kalshi-demo-bot@users.noreply.github.com"
+          # data/snapshot.json is deliberately NOT committed (12 MB of raw provenance,
+          # no page reads it); it is kept as a run artifact instead.
           git add data/
+          git reset -q data/snapshot.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "no data changes"
             exit 0

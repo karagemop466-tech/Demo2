@@ -17,6 +17,8 @@
   /* ---------------- fetch helpers ---------------- */
   KR.getJSON = function (path) {
     if (KR.cache[path]) return KR.cache[path];
+    path = path.charAt(0) === "/" ? path.slice(1) : path;
+    path = KR.dataURL ? KR.dataURL(path) : path;
     var url = path + (path.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
     var p = fetch(url, { cache: "no-store" }).then(function (r) {
       if (!r.ok) throw new Error(path + " → HTTP " + r.status);
@@ -78,8 +80,21 @@
     return Math.round(h / 24) + " d ago";
   };
 
+  /* ---------------- data paths ----------------
+   * The static pages under pages/ are one directory below the repo root, but data/
+   * lives at the root. Resolving from document.baseURI makes one loader correct for
+   * every page depth, so a page can never 404 on its own data because of its folder.
+   */
+  KR.DATA_ROOT = (function () {
+    var p = location.pathname;
+    var i = p.indexOf("/pages/");
+    if (i >= 0) return p.slice(0, i) + "/";       // …/pages/x.html  -> site root
+    return p.replace(/[^/]*$/, "");               // …/x.html        -> site root
+  })();
+  KR.dataURL = function (path) { return KR.DATA_ROOT + path; };
+
   /* ---------------- data loaders ---------------- */
-  KR.snapshot = function () { return KR.getJSON("data/snapshot.json"); };
+  KR.snapshot = function () { return KR.getJSON("data/dashboard_meta.json"); };
   KR.topic = function (t) { return KR.getJSON("data/topic-" + t + ".json"); };
   KR.resolutions = function () { return KR.getJSON("data/resolutions.json"); };
   KR.portfolio = function () { return KR.getJSON("data/portfolio.json"); };

@@ -317,7 +317,11 @@ request shape are on <a href="api-reference.html">API reference</a>.</p>
       repository secrets. Balances, positions and fills are deliberately blank rather than zero,
       because "no key" and "empty account" are different facts.
       <br><span class="small muted">Requirement: <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API Keys</a></span></div>`;
-    $('kpis').innerHTML = '';
+    $('kpis').innerHTML = `
+      <div class="kpi-card"><div class="k">Balance</div><div class="v">—</div><div class="s">no demo key</div></div>
+      <div class="kpi-card"><div class="k">Positions</div><div class="v">—</div><div class="s">not read</div></div>
+      <div class="kpi-card"><div class="k">Fills</div><div class="v">—</div><div class="s">not read</div></div>
+      <div class="kpi-card"><div class="k">Why blank</div><div class="s" style="font-size:.8rem">“no key” ≠ “zero balance”</div></div>`;
     $('posTable').innerHTML = '<div class="empty">Blank - not connected.</div>';
     $('fillTable').innerHTML = '<div class="empty">Blank - not connected.</div>';
   } else {
@@ -947,7 +951,7 @@ makes. This is the provenance for every figure in the dashboard tables.</p>
 (async function(){
   const $=id=>document.getElementById(id);
   try{
-    const s = await KR.snapshot();
+    const s = await KR.getJSON("data/snapshot_api_log.json");
     const log = s.api_log||[];
     const ok = log.filter(r=>r.ok).length, bad = log.length-ok;
     $('logKpis').innerHTML = `

@@ -96,6 +96,13 @@ jobs:
       - name: Link, nav, data, secret and script checks
         run: python tools/check.py
 
+      - name: Render every page against the committed data (offline, jsdom)
+        # Every text-based check passed while pages/*.html 404'd on their own data,
+        # because the JS resolves data/ from the page's folder. This executes the page.
+        run: |
+          npm install --no-audit --no-fund --silent
+          node scripts/render_check.mjs
+
       - name: Upload the built site
         uses: actions/upload-artifact@v4
         with:
