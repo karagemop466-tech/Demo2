@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Dashboard — Kalshi Demo Intelligence</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="shell">
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="k">◈</span> Kalshi Demo Intelligence</a>
+    <span class="tagline">Verified demo-exchange analytics · session arena-ddc587ae</span>
+    <div class="nav-section">Start</div>
+    <a class="item" href="index.html">🏠 Overview</a>
+    <a class="item" href="executive-summary.html">📄 Executive Summary</a>
+    <div class="nav-section">Monitor</div>
+    <a class="item active" href="dashboard.html">📊 Live Dashboard</a>
+    <a class="item" href="events.html">🎯 Events &amp; Resolutions</a>
+    <div class="nav-section">Account</div>
+    <a class="item" href="portfolio.html">💼 Portfolio &amp; Analysis</a>
+    <a class="item" href="trading.html">🧪 Trading</a>
+    <div class="nav-section">Review</div>
+    <a class="item" href="suggestions.html">💡 Suggestions</a>
+    <a class="item" href="questions.html">❓ Questions &amp; Answers</a>
+    <a class="item" href="flagged.html">🚩 Flagged for Review</a>
+  </nav>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <h1>Live Dashboard</h1>
+        <div class="sub">Highest-dollar live events across <b>gas prices · elections · culture · crypto · golf</b>, with an interactive price chart (seconds / minutes / hours / days) and the liquidity resting at each price. Data mode is always shown explicitly.</div>
+      </div>
+      <div class="badges">
+        <span class="badge" id="modeBadge"><span class="spin"></span> <b>Checking</b>…</span>
+        <button id="refreshBtn">↻ Refresh</button>
+        <span class="badge" id="updatedAt">—</span>
+      </div>
+    </div>
+
+    <div class="controls" id="modeNote"><span class="badge">loading…</span></div>
+
+    <!-- Topic cards -->
+    <div class="cards" id="topicCards" style="margin-top:8px"></div>
+
+    <!-- Ranked events -->
+    <div class="panel">
+      <h2>Highest-dollar live events <span class="pill" id="rankCount">–</span></h2>
+      <p class="hint">Ranked by <b>derived estimate</b> = Σ over markets of <code>volume_24h_fp × last_price_dollars</code> (contracts × $) — the API has <b>no official dollar-volume field</b> (verified in the Market schema; see <a href="flagged.html">F-01</a>). Blanks are last, never treated as values. Click a row to load it into the chart and depth ladder below.</p>
+      <div class="controls">
+        <div class="seg" id="topicSeg">
+          <button class="active" data-topic="all">All topics</button>
+          <button data-topic="gas prices">Gas</button>
+          <button data-topic="elections">Elections</button>
+          <button data-topic="culture">Culture</button>
+          <button data-topic="crypto">Crypto</button>
+          <button data-topic="golf">Golf</button>
+        </div>
+        <label>Sort
+          <select id="sortSel">
+            <option value="est">Est. $ volume 24h (derived)</option>
+            <option value="v24">Contract volume 24h</option>
+            <option value="vall">Contract volume (all time)</option>
+            <option value="oi">Open interest</option>
+            <option value="close">Closing soonest</option>
+          </select>
+        </label>
+      </div>
+      <div class="table-wrap"><table class="data">
+        <thead><tr>
+          <th>#</th><th>Topic</th><th>Event</th><th>Best mkt price</th><th>Bid / Ask</th>
+          <th title="official field volume_24h_fp">Vol 24h (contracts)</th>
+          <th title="derived = volume_24h_fp × last_price_dollars — flagged F-01">Est. $ 24h (derived)</th>
+          <th>Open interest</th><th>Closes (UTC)</th><th>Source</th>
+        </tr></thead>
+        <tbody id="rankBody"><tr><td colspan="10" class="note"><span class="spin"></span> loading…</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- Chart -->
+    <div class="panel" id="chart">
+      <h2>Price chart — <span id="selTitle" class="mono">…</span></h2>
+      <div class="hint" id="selMeta">Select an event row above, or pick a market:</div>
+      <div class="controls">
+        <select id="marketSelect" style="max-width:520px"></select>
+        <div class="seg" id="tfSeg">
+          <button data-tf="sec">Seconds</button>
+          <button data-tf="min">Minutes</button>
+          <button class="active" data-tf="hr">Hours</button>
+          <button data-tf="day">Days</button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="chartCanvas"></canvas></div>
+      <div class="chart-legend">
+        <span><span class="sw" style="background:#4ea1ff"></span>trade price / close</span>
+        <span><span class="sw" style="background:#2dd4a7"></span>best YES bid (1m+ views)</span>
+        <span><span class="sw" style="background:#ff6b6b"></span>best YES ask (1m+ views)</span>
+        <span id="chartMeta" class="note"></span>
+      </div>
+      <div class="warnbox" id="chartErr" style="display:none"></div>
+      <p class="note">X-axis is time (UTC); switchable granularity: <b>Seconds</b> plots each individual trade tick (ms timestamps — candlestick API minimum period is 1 minute, so sub-minute data comes from <code>GET /markets/trades</code>); <b>Minutes</b> = period 1; <b>Hours</b> = period 60; <b>Days</b> = period 1440. Y-axis is the YES contract price in dollars. Sources: <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks.md" target="_blank" rel="noopener">candlesticks spec</a> · <a href="https://docs.kalshi.com/api-reference/market/get-trades.md" target="_blank" rel="noopener">trades spec</a>.</p>
+    </div>
+
+    <!-- Depth -->
+    <div class="panel" id="depth">
+      <h2>Liquidity at each price — <span id="depthTicker" class="mono">…</span></h2>
+      <div class="hint" id="depthMeta">contracts resting on the book per price level.</div>
+      <div class="note" id="depthNote"></div>
+      <div class="table-wrap">
+        <table class="data depth-table" style="width:49%; display:inline-table; vertical-align:top">
+          <thead><tr><th colspan="3">YES book — bids to buy YES (bid $)</th></tr>
+          <tr><th>Price</th><th>Contracts</th><th>Share</th></tr></thead>
+          <tbody id="depthYes"></tbody>
+        </table>
+        <table class="data depth-table" style="width:49%; display:inline-table; vertical-align:top; margin-left:1%">
+          <thead><tr><th colspan="3">NO book — bids to buy NO (bid $)</th></tr>
+          <tr><th>Price</th><th>Contracts</th><th>Share</th></tr></thead>
+          <tbody id="depthNo"></tbody>
+        </table>
+      </div>
+      <p class="note">Official note (cited): the orderbook endpoint returns <b>bids only</b> — “a bid for Yes at <i>price P</i> is equivalent to a bid for No at price 1−P”. So YES <i>ask</i> liquidity appears in the NO column at price 1−P (e.g. NO bid 0.95 × N contracts = YES ask 0.05 × N). Source: <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook.md" target="_blank" rel="noopener">docs · Get Market Orderbook</a>. Sizes are fixed-point contract counts exactly as returned.</p>
+    </div>
+
+    <!-- how-it-works -->
+    <div class="panel">
+      <h2>How ranking works (honest version)</h2>
+      <div class="reqbox">
+        <b>Live mode:</b> for each watchlist series (verified top-volume series per topic plus series proven active during collection), the browser pulls <code>GET /markets?series_ticker=…&amp;status=open&amp;limit=1000</code>, groups markets into events, fetches official event titles via one <code>GET /events?tickers=…</code> CSV call, then ranks client-side by the derived estimate above.
+        <b>Snapshot mode:</b> the same table renders from the verified 2026-11-20 capture; it is a subset (documented on each row's source link) and does not claim completeness.
+        Both modes display blanks as blanks. Auto-refresh: 60 s (keeps request volume modest — see rate-limit discussion in <a href="questions.html">Q&amp;A</a>).
+      </div>
+      <div class="warnbox"><b>Currency caveat:</b> the demo environment explicitly states market prices and behaviour “may not be reflective of those in real markets” — <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">official demo docs</a>. Dollar figures here are demo dollars.</div>
+    </div>
+
+    <div class="foot">Base: <a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">external-api.demo.kalshi.co/trade-api/v2</a> · Data: live API or <a href="data/snapshot.json">data/snapshot.json</a> (2026-11-20T11:20:09Z)</div>
+  </main>
+</div>
+<script src="assets/app.js"></script>
+<script src="assets/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,3608 @@
+{
+ "fetched_at": "2026-11-20T12:12:39Z",
+ "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&min_settled_ts=1794571952&mve_filter=exclude",
+ "window_days": 7,
+ "note": "Official settled markets filtered to focus topics. result is the official determination: yes / no / scalar.",
+ "markets": [
+  {
+   "ticker": "KXXRP-26NOV2006-T1.6399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-T1.6399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-T0.18000",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-T0.18000",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.6299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.6299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.6099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.6099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.5899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.5899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.5699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.5699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.5499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.5499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.5299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.5299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.5099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.5099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.4899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.4899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.4699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.4699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.4499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.4499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.4299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.4299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.4099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.4099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.3899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.3899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.3699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.3699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.3499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.3499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.3299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.3299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.3099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.3099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.2899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.2899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.2699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.2699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.2499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.2499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.2299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.2299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.2099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.2099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.1899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.1899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.1699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.1699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.1499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.1499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.1299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.1299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.1099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.1099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.0899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.0899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.0699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.0699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.0499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.0499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.0299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.0299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B1.0099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B1.0099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.9899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.9899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.9699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.9699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.9499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.9499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.9299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.9299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.9099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.9099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.8899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.8899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.8699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.8699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.8499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.8499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.8299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.8299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.8099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.8099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.7899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.7899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.7699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.7699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.7499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.7499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.7299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.7299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.7099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.7099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.6899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.6899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.6699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.6699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.6499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.6499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.6299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.6299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.6099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.6099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.5899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.5899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.5699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.5699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.5499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.5499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.5299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.5299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.5099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.5099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.4899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.4899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.4699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.4699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.4499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.4499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.4299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.4299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.4099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.4099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.3899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.3899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.3699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.3699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.3499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.3499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.3299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.3299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.3099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.3099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.2899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.2899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.2699500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.2699500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.2499500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.2499500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.2299500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.2299500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.2099500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.2099500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXXRP-26NOV2006-B0.1899500",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRP-26NOV2006",
+   "event_title": " XRP price range at Nov 20, 2026 at 6am EST? ",
+   "series_ticker": "KXXRP",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.610192Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRP-26NOV2006-B0.1899500",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-T0.2349999",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-T0.2349999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-T0.0100000",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-T0.0100000",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.232",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.232",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.227",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.227",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.222",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.222",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.217",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.217",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.212",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.212",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.207",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.207",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.202",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.202",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.197",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.197",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.192",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.192",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.187",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.187",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.182",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.182",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.177",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.177",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.172",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.172",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.167",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.167",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.162",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.162",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.157",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.157",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.152",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.152",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.147",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.147",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.142",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.142",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.137",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.137",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.132",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.132",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.127",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.127",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.122",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.122",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.117",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.117",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.112",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.112",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.107",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.107",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.102",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.102",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.097",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.097",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.092",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.092",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.087",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.087",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.082",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.082",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.077",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.077",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.072",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.072",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.067",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.067",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.062",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.062",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.057",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.057",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.052",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.052",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.047",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.047",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.042",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.042",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.037",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.037",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.032",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.032",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.027",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.027",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.022",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.022",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.017",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.017",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGE-26NOV2006-B0.012",
+   "market_title": "Dogecoin price range on Nov 20, 2026?",
+   "event_ticker": "KXDOGE-26NOV2006",
+   "event_title": "Dogecoin price range on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGE",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609962Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGE-26NOV2006-B0.012",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.6399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0100",
+   "volume_fp": "4.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.6399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.6199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.6199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.5999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.5999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.5799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.5799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.5599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.5599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.5399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.5399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.5199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.5199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.4999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.4999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.4799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.4799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.4599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.4599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.4399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.4399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.4199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.4199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.3999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.3999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.3799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.3799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.3599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.3599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.3399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.3399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.3199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.3199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.2999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.2999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.2799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.2799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.2599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.2599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.2399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.2399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.2199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.2199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.1999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.1999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.1799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.1799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.1599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.1599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.1399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.1399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.1199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.1199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.0999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.0999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.0799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.0799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.0599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.0599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.0399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.0399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T1.0199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T1.0199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.9999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.9999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.9799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.9799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.9599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.9599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.9399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.9399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.9199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.9199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.8999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.8999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.8799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.8799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.8599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.8599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.8399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.8399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.8199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.8199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.7999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.7999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.7799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.7799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.7599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.7599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.7399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.7399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.7199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.7199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.6999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.6999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.6799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.6799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.6599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.6599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.6399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.6399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.6199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.6199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.5999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.5999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.5799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.5799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.5599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.5599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.5399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.5399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.5199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.5199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.4999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.4999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.4799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.4799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.4599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.4599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.4399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.4399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.4199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.4199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.3999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.3999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.3799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.3799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.3599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.3599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.3399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.3399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.3199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.3199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.2999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.2999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.2799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.2799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.2599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.2599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.2399",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.2399",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.2199",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.2199",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.1999",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.1999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.1799",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.1799",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXXRPD-26NOV2006-T0.1599",
+   "market_title": "Ripple price at Nov 20, 2026 at 6am EST?",
+   "event_ticker": "KXXRPD-26NOV2006",
+   "event_title": " XRP price at Nov 20, 2026 at 6am EST?\n",
+   "series_ticker": "KXXRPD",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609858Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXRPD-26NOV2006-T0.1599",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGED-26NOV2006-T0.0449999",
+   "market_title": "Dogecoin price on Nov 20, 2026?",
+   "event_ticker": "KXDOGED-26NOV2006",
+   "event_title": "Dogecoin price  on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGED",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609463Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGED-26NOV2006-T0.0449999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGED-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGED-26NOV2006-T0.0499999",
+   "market_title": "Dogecoin price on Nov 20, 2026?",
+   "event_ticker": "KXDOGED-26NOV2006",
+   "event_title": "Dogecoin price  on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGED",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609333Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGED-26NOV2006-T0.0499999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGED-26NOV2006"
+  },
+  {
+   "ticker": "KXDOGED-26NOV2006-T0.2299999",
+   "market_title": "Dogecoin price on Nov 20, 2026?",
+   "event_ticker": "KXDOGED-26NOV2006",
+   "event_title": "Dogecoin price  on Nov 20, 2026 at 6am EST?",
+   "series_ticker": "KXDOGED",
+   "topics": [
+    "crypto"
+   ],
+   "status": "finalized",
+   "result": "no",
+   "close_time": "2026-11-20T11:00:00Z",
+   "settled_ts": "2026-11-20T12:10:34.609307Z",
+   "last_price_dollars": "0.0000",
+   "volume_fp": "0.00",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDOGED-26NOV2006-T0.2299999",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGED-26NOV2006"
+  }
+ ]
+}

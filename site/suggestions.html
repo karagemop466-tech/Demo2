@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suggestions · Kalshi Demo Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="suggestions">
+  <header class="topbar">
+    <div class="brand"><span class="logo">K</span> Kalshi Demo Dashboard</div>
+    <nav class="nav">
+      <a href="index.html">Dashboard</a>
+      <a href="events.html">Live Events</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="trades.html">Trades</a>
+      <a href="strategies.html">Strategies</a>
+      <a href="suggestions.html" class="active">Suggestions</a>
+      <a href="flagged.html">Flagged</a>
+    </nav>
+    <span id="conn-status" class="status-pill"><span class="dot"></span><span>Connecting…</span></span>
+  </header>
+
+  <main>
+    <h1>Suggestions</h1>
+    <p class="subtitle">
+      Proposed improvements to improve decision-making, plus suggestions to discover missing information.
+      Review and choose the best path before implementing any change. Set a decision per suggestion;
+      decisions persist in the backend.
+    </p>
+    <div class="panel">
+      <div id="suggestions"></div>
+    </div>
+    <div class="note">
+      <b>Discovery suggestions.</b> Items that gather missing information (Kalshi egress, demo API key,
+      tier/rate limits, category mapping, settlement fields, sub-minute data, strategy taxonomy,
+      persistence) are documented in <a href="../docs/SUGGESTIONS.md" target="_blank" rel="noopener">docs/SUGGESTIONS.md</a>
+      and <a href="../docs/QUESTIONS_AND_ANSWERS.md" target="_blank" rel="noopener">docs/QUESTIONS_AND_ANSWERS.md</a>.
+    </div>
+  </main>
+
+  <footer>
+    Kalshi Demo Dashboard · data verified from <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a>
+  </footer>
+  <script src="js/app.js"></script>
+</body>
+</html>

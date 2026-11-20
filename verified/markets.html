@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Market Samples · Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<header class="top">
+  <div class="brand"><a href="index.html">Kalshi Demo Dashboard</a><span class="tag">DEMO DATA · read-only</span></div>
+  <nav><a href="index.html">Home</a><a href="gas-prices.html">Gas Prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live-dashboard.html">Live Dashboard</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="markets.html" class="active">Market Samples</a><a href="resolutions.html">Resolutions</a><a href="flagged-for-review.html">Flagged for Review</a><a href="repo-review.html">Repo Review</a><a href="../index.html">Main dashboard ↗</a><a href="../dashboard/index.html">Static dashboard ↗</a></nav>
+</header>
+<main>
+
+<section class="hero small">
+  <h1>Market Samples (open demo markets)</h1>
+  <p>Open markets returned by the Kalshi <strong>demo</strong> API. Prices are in dollars per contract (a YES contract pays $1.00 if it resolves YES). Volume and open interest are <strong>contract counts</strong>, not dollars (flag F-02).</p>
+  <p class="meta">Rows: <strong>14</strong> · Sorted by volume (contracts) <em>within this sample only</em>. This is not a ranking of the exchange and not a dollar ranking.</p>
+  <div class="banner warn">Sample, not a list. Each query returned only the first 3 to 5 markets. Golf returned no open markets in this sample (F-19). Liquidity at each price (contracts available) is on the Live Dashboard, which reads the order book.</div>
+</section>
+<section>
+<div class="tablewrap">
+<table>
+<thead><tr>
+<th>Ticker</th><th>Market</th><th>Topic</th><th>Status</th>
+<th>Last price ($)</th><th>Yes bid ($)</th><th>Yes ask ($)</th>
+<th>Volume (contracts)</th><th>24h volume (contracts)</th><th>Open interest (contracts)</th>
+<th>Close time (API)</th><th>Source</th><th>Status</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>KXBTCY-27JAN0100-B97500</code></td>
+<td>BTC price  on Jan 1, 2027?<br><small>95,000 to 99,999.99</small></td>
+<td>crypto</td>
+<td>active</td>
+<td>0.0300</td>
+<td>0.0000</td>
+<td>0.9700</td>
+<td>72254307.58</td>
+<td>1092.45</td>
+<td>7322453.32</td>
+<td>2027-01-01T05:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&amp;status=open&amp;limit=3" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a></td>
+</tr>
+<tr>
+<td><code>KXBTCY-27JAN0100-T149999.99</code></td>
+<td>BTC price  on Jan 1, 2027?<br><small>150,000 or above</small></td>
+<td>crypto</td>
+<td>active</td>
+<td>0.0300</td>
+<td>0.0000</td>
+<td>0.0100</td>
+<td>56105512.48</td>
+<td>61574.58</td>
+<td>11453252.92</td>
+<td>2027-01-01T05:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&amp;status=open&amp;limit=3" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a></td>
+</tr>
+<tr>
+<td><code>KXBTCY-27JAN0100-T20000.00</code></td>
+<td>BTC price  on Jan 1, 2027?<br><small>19,999.99 or below</small></td>
+<td>crypto</td>
+<td>active</td>
+<td>0.0100</td>
+<td>0.0100</td>
+<td>0.0200</td>
+<td>51971407.00</td>
+<td>28152.66</td>
+<td>9351666.83</td>
+<td>2027-01-01T05:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCY&amp;status=open&amp;limit=3" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a></td>
+</tr>
+<tr>
+<td><code>KXNEWPOPE-70-LANT</code></td>
+<td>Who will the next Pope be?<br><small>Luis Antonio Tagle</small></td>
+<td>elections</td>
+<td>active</td>
+<td>0.1800</td>
+<td>0.1800</td>
+<td>0.9800</td>
+<td>12240.16</td>
+<td>84.00</td>
+<td>3618.00</td>
+<td>2070-01-01T15:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEWPOPE-70" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a> <a class="flagchip" href="flagged-for-review.html#F-01">F-01</a></td>
+</tr>
+<tr>
+<td><code>KXNEWPOPE-70-PPIZ</code></td>
+<td>Who will the next Pope be?<br><small>Pierbattista Pizzaballa</small></td>
+<td>elections</td>
+<td>active</td>
+<td>0.1000</td>
+<td>0.0000</td>
+<td>1.0000</td>
+<td>11434.49</td>
+<td>0.00</td>
+<td>11065.33</td>
+<td>2070-01-01T15:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEWPOPE-70" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a> <a class="flagchip" href="flagged-for-review.html#F-01">F-01</a></td>
+</tr>
+<tr>
+<td><code>KXNEWPOPE-70-PPAR</code></td>
+<td>Who will the next Pope be?<br><small>Pietro Parolin</small></td>
+<td>elections</td>
+<td>active</td>
+<td>0.5400</td>
+<td>0.5400</td>
+<td>1.0000</td>
+<td>9445.16</td>
+<td>0.00</td>
+<td>5094.00</td>
+<td>2070-01-01T15:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEWPOPE-70" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a> <a class="flagchip" href="flagged-for-review.html#F-01">F-01</a></td>
+</tr>
+<tr>
+<td><code>KXNEWPOPE-70-MZUP</code></td>
+<td>Who will the next Pope be?<br><small>Matteo Zuppi</small></td>
+<td>elections</td>
+<td>active</td>
+<td>0.1000</td>
+<td>0.0000</td>
+<td>1.0000</td>
+<td>7990.16</td>
+<td>0.00</td>
+<td>5484.00</td>
+<td>2070-01-01T15:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEWPOPE-70" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a> <a class="flagchip" href="flagged-for-review.html#F-01">F-01</a></td>
+</tr>
+<tr>
+<td><code>KXNEWPOPE-70-FAMB</code></td>
+<td>Who will the next Pope be?<br><small>Fridolin Ambongo</small></td>
+<td>elections</td>
+<td>active</td>
+<td>0.1100</td>
+<td>0.1100</td>
+<td>1.0000</td>
+<td>7083.16</td>
+<td>0.00</td>
+<td>1812.00</td>
+<td>2070-01-01T15:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/events/KXNEWPOPE-70" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a> <a class="flagchip" href="flagged-for-review.html#F-01">F-01</a></td>
+</tr>
+<tr>
+<td><code>KXAAAGASCDOK-26NOV21-SI</code></td>
+<td>Will gas prices show a small increase?<br><small>Small increase</small></td>
+<td>gas-prices</td>
+<td>active</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>2026-11-28T15:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASCDOK&amp;status=open&amp;limit=3" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a> <a class="flagchip" href="flagged-for-review.html#F-06">F-06</a> <a class="flagchip" href="flagged-for-review.html#F-18">F-18</a></td>
+</tr>
+<tr>
+<td><code>KXAAAGASCDOK-26NOV21-SD</code></td>
+<td>Will gas prices show a small decrease?<br><small>Small decrease</small></td>
+<td>gas-prices</td>
+<td>active</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>2026-11-28T15:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASCDOK&amp;status=open&amp;limit=3" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a> <a class="flagchip" href="flagged-for-review.html#F-06">F-06</a> <a class="flagchip" href="flagged-for-review.html#F-18">F-18</a></td>
+</tr>
+<tr>
+<td><code>KXAAAGASCDOK-26NOV21-MC</code></td>
+<td>Will gas prices show a minimal change?<br><small>Minimal change</small></td>
+<td>gas-prices</td>
+<td>active</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>2026-11-28T15:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASCDOK&amp;status=open&amp;limit=3" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a> <a class="flagchip" href="flagged-for-review.html#F-06">F-06</a> <a class="flagchip" href="flagged-for-review.html#F-18">F-18</a></td>
+</tr>
+<tr>
+<td><code>KXHFCCHAIR-26DEC01-KSEL</code></td>
+<td>Will Keith Self win the House Freedom Caucus Chair election for the 120th Congress?<br><small>Keith Self</small></td>
+<td>elections</td>
+<td>active</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>2027-12-01T15:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXHFCCHAIR&amp;status=open&amp;limit=3" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a> <a class="flagchip" href="flagged-for-review.html#F-01">F-01</a></td>
+</tr>
+<tr>
+<td><code>KXHFCCHAIR-26DEC01-EBUR</code></td>
+<td>Will Eric Burlison win the House Freedom Caucus Chair election for the 120th Congress?<br><small>Eric Burlison</small></td>
+<td>elections</td>
+<td>active</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>2027-12-01T15:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXHFCCHAIR&amp;status=open&amp;limit=3" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a> <a class="flagchip" href="flagged-for-review.html#F-01">F-01</a></td>
+</tr>
+<tr>
+<td><code>KXHFCCHAIR-26DEC01-CHIG</code></td>
+<td>Will Clay Higgins win the House Freedom Caucus Chair election for the 120th Congress?<br><small>Clay Higgins</small></td>
+<td>elections</td>
+<td>active</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>2027-12-01T15:00:00Z</td>
+<td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXHFCCHAIR&amp;status=open&amp;limit=3" target="_blank" rel="noopener">API response</a></td>
+<td><span class="ok">Verified: API</span><br><a class="flagchip" href="flagged-for-review.html#F-02">F-02</a> <a class="flagchip" href="flagged-for-review.html#F-01">F-01</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+<footer>
+  <p>Data source: Kalshi <strong>demo</strong> Trade API, <a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a>.
+  Kalshi says demo prices and behavior may not reflect real markets. Not financial advice.
+  Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a>.</p>
+  <p>Site built 2026-11-20 11:28 UTC from data/kalshi_snapshot.json (collected 2026-11-20).</p>
+</footer>
+
+</body>
+</html>

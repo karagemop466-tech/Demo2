@@ -1,0 +1,20 @@
+name: Link check (all pages, internal + external)
+
+# Whole-site link verification: every internal href/src must resolve (project-
+# page-safe relative links + anchors), and every external URL must answer
+# 2xx/3xx. Separate from pages.yml (which gates deploy on internal links only)
+# so an external host hiccup is visible without blocking a deploy.
+on:
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check all links
+        run: python3 scripts/check_links.py --external

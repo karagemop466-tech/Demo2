@@ -1,0 +1,102 @@
+name: Build and check the site
+
+# Runs on every push and pull request. Fails the build on a broken internal link,
+# inconsistent navigation, malformed data snapshot, leaked private key or a JavaScript
+# syntax error, so a broken site can never reach Pages.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Rebuild every page from source
+        run: |
+          cd tools
+          python build_site.py
+          python build_content.py
+          cd ..
+
+      - name: Fail if regenerating produced a diff (pages must match the generator)
+        run: |
+          if ! git diff --quiet; then
+            echo "::error::Generated pages are out of date. Run tools/build_site.py and tools/build_content.py and commit the result."
+            git diff --stat
+            exit 1
+          fi
+
+      - name: Python modules compile
+        run: python -m py_compile tools/collector.py tools/portfolio.py tools/analyze.py tools/execute_strategy.py
+
+      - name: Analysis maths on a known fixture
+        # Runs in a temp DATA_DIR so the fixture can never be mistaken for a real snapshot
+        # by the checks in the next step.
+        run: |
+          python - <<'PY'
+          import json, os, subprocess, sys, tempfile, pathlib
+          data = pathlib.Path(tempfile.mkdtemp(prefix="kalshi-fixture-"))
+          snap = {
+            "markets": [
+              {"market_ticker": "T-YES", "topic": "golf", "result": "yes", "status": "settled"},
+              {"market_ticker": "T-NO", "topic": "gas", "result": "no", "status": "settled"},
+            ],
+            "resolutions": [
+              {"market_ticker": "T-YES", "topic": "golf", "result": "yes", "settlement_ts": "2026-01-01T00:00:00Z"},
+              {"market_ticker": "T-NO", "topic": "gas", "result": "no", "settlement_ts": "2026-01-02T00:00:00Z"},
+            ],
+            "series_inventory": {"in_scope_series": {"golf": [], "gas": []}},
+          }
+          port = {
+            "authenticated": True,
+            "balance": {"balance_dollars": "100.00", "portfolio_value": 0},
+            "positions": [],
+            "fills": [
+              {"fill_id": "1", "ticker": "T-YES", "outcome_side": "yes", "count_fp": "10.00",
+               "yes_price_dollars": "0.4000", "no_price_dollars": "0.6000", "fee_cost": "0.05", "is_taker": True},
+              {"fill_id": "2", "ticker": "T-NO", "outcome_side": "no", "count_fp": "10.00",
+               "yes_price_dollars": "0.7000", "no_price_dollars": "0.3000", "fee_cost": "0.05", "is_taker": False},
+            ],
+          }
+          (data / "snapshot.json").write_text(json.dumps(snap))
+          (data / "portfolio.json").write_text(json.dumps(port))
+          env = dict(os.environ, DATA_DIR=str(data))
+          subprocess.run([sys.executable, "tools/analyze.py"], check=True, env=env)
+          a = json.loads((data / "analysis.json").read_text())
+          # expected: fill 1 costs 4.00, pays 10.00, fee .05 -> +5.95
+          #           fill 2 costs 3.00, pays 10.00, fee .05 -> +6.95
+          got = {t["fill_id"]: t["realized_pnl_dollars"] for t in a["trades"]}
+          assert abs(got["1"] - 5.95) < 1e-9, got
+          assert abs(got["2"] - 6.95) < 1e-9, got
+          assert a["totals"]["wins"] == 2 and a["totals"]["losses"] == 0, a["totals"]
+          print("analysis fixture OK:", got)
+          PY
+
+      - name: Link, nav, data, secret and script checks
+        run: python tools/check.py
+
+      - name: Upload the built site
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: |
+            index.html
+            pages/
+            assets/
+            data/

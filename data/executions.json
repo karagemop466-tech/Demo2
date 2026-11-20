@@ -1,0 +1,10 @@
+{
+ "at_utc": "2026-11-20T11:36:04+00:00",
+ "mode": "dry_run",
+ "endpoint": "https://external-api.demo.kalshi.co/trade-api/v2/portfolio/events/orders",
+ "endpoint_doc": "https://docs.kalshi.com/api-reference/orders/create-order-v2.md",
+ "run_notional_cap_usd": 25.0,
+ "max_orders_per_run": 3,
+ "planned_notional_usd": 0.0,
+ "results": []
+}

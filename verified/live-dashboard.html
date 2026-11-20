@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <div class="brand"><a href="index.html">Kalshi Demo Dashboard</a><span class="tag">DEMO DATA · read-only</span></div>
-  <nav><a href="index.html">Home</a><a href="gas-prices.html">Gas Prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live-dashboard.html" class="active">Live Dashboard</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="flagged-for-review.html">Flagged for Review</a><a href="repo-review.html">Repo Review</a><a href="../index.html">Main dashboard ↗</a><a href="../dashboard/index.html">Static dashboard ↗</a></nav>
+  <nav><a href="index.html">Home</a><a href="gas-prices.html">Gas Prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live-dashboard.html" class="active">Live Dashboard</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="markets.html">Market Samples</a><a href="resolutions.html">Resolutions</a><a href="flagged-for-review.html">Flagged for Review</a><a href="repo-review.html">Repo Review</a><a href="../index.html">Main dashboard ↗</a><a href="../dashboard/index.html">Static dashboard ↗</a></nav>
 </header>
 <main>
 
@@ -24,13 +24,16 @@
 <section class="controls">
   <label>Market ticker
     <select id="tickerSel">
-      <option value="KXNEXTNATOSECGEN-99-KIOH">KXNEXTNATOSECGEN-99-KIOH (Klaus Iohannis, NATO SG)</option>
-      <option value="KXNEXTNATOSECGEN-99-KKAL">KXNEXTNATOSECGEN-99-KKAL (Kaja Kallas, NATO SG)</option>
-      <option value="KXELONMARS-99">KXELONMARS-99 (Elon Musk visits Mars)</option>
+      <option value="KXBTCY-27JAN0100-B97500">KXBTCY-27JAN0100-B97500 (BTC on Jan 1 2027: 95,000 to 99,999.99)</option>
+      <option value="KXBTCY-27JAN0100-T20000.00">KXBTCY-27JAN0100-T20000.00 (BTC on Jan 1 2027: 19,999.99 or below)</option>
+      <option value="KXBTCY-27JAN0100-T149999.99">KXBTCY-27JAN0100-T149999.99 (BTC on Jan 1 2027: 150,000 or above)</option>
+      <option value="KXNEWPOPE-70-LANT">KXNEWPOPE-70-LANT (Next Pope: Luis Antonio Tagle)</option>
+      <option value="KXNEWPOPE-70-PPIZ">KXNEWPOPE-70-PPIZ (Next Pope: Pierbattista Pizzaballa)</option>
+      <option value="KXHFCCHAIR-26DEC01-KSEL">KXHFCCHAIR-26DEC01-KSEL (HFC Chair: Keith Self)</option>
     </select>
   </label>
   <label>Or type any ticker
-    <input id="tickerTxt" placeholder="e.g. KXNEXTNATOSECGEN-99-KIOH">
+    <input id="tickerTxt" placeholder="e.g. KXBTCY-27JAN0100-T20000.00">
   </label>
   <label>Chart length
     <select id="windowSel">
@@ -88,7 +91,7 @@ orderbook from <a href="https://docs.kalshi.com/api-reference/market/get-market-
   <p>Data source: Kalshi <strong>demo</strong> Trade API, <a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a>.
   Kalshi says demo prices and behavior may not reflect real markets. Not financial advice.
   Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a>.</p>
-  <p>Site built 2026-11-20 11:17 UTC from data/kalshi_snapshot.json (collected 2026-11-20).</p>
+  <p>Site built 2026-11-20 11:28 UTC from data/kalshi_snapshot.json (collected 2026-11-20).</p>
 </footer>
 <script src="assets/live.js"></script>
 </body>
