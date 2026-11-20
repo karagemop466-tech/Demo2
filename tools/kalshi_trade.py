@@ -26,7 +26,7 @@ Usage:
   python3 tools/kalshi_trade.py positions
   python3 tools/kalshi_trade.py fills --limit 100
   python3 tools/kalshi_trade.py order --ticker KX... --side yes --count 1 --price 0.50
-  python3 tools/kalshi_trade.py cancel --order-id <id>
+  python3 tools/kalshi_trade.py cancel --order-id <id> --ticker KX...
   python3 tools/kalshi_trade.py report                # categorise fills + P&L + strategy view
 
 The `report` command categorises every fill by topic (gas prices, elections,
@@ -221,26 +221,37 @@ def cmd_fills(_args):
 
 
 def cmd_order(_args):
+    """Place a limit order via the V2 endpoint (verified 2026-11-20):
+    POST /portfolio/events/orders. The legacy /portfolio/orders write
+    endpoints return 410 Gone (docs: create-order-v2). Direction vocabulary
+    (order_direction.md): book_side "bid" == long YES, "ask" == long NO, and
+    the price scale is the same for both sides. A 201 means accepted, not
+    resting — check remaining_count in the response."""
     key_id, pk = get_env()
-    price_cents = int(round(_args.price * 100))
     side = _args.side.lower()
+    tif = {"gtc": "good_till_canceled", "ioc": "immediate_or_cancel",
+           "fok": "fill_or_kill"}[_args.tif]
     body = {
         "ticker": _args.ticker,
-        "action": "buy",
-        "side": side,
-        "count": _args.count,
-        "type": "limit",
-        "yes_price" if side == "yes" else "no_price": price_cents,
-        "time_in_force": _args.tif,
+        "side": "bid" if side == "yes" else "ask",
+        "count": "%.2f" % _args.count,
+        "price": "%.4f" % _args.price,
+        "time_in_force": tif,
+        "self_trade_prevention_type": "taker_at_cross",
     }
-    print(json.dumps(request("POST", API_PREFIX + "/portfolio/orders",
+    print(json.dumps(request("POST", API_PREFIX + "/portfolio/events/orders",
                              body=body, key_id=key_id, private_key=pk), indent=2))
     return 0
 
 
 def cmd_cancel(_args):
+    """Cancel via the V2 endpoint (verified 2026-11-20):
+    DELETE /portfolio/events/orders/{order_id}?market_ticker=… — the
+    market_ticker is required for auto-routing to the right exchange shard
+    (docs: cancel-order-v2). The legacy /portfolio/orders path returns 410."""
     key_id, pk = get_env()
-    path = API_PREFIX + "/portfolio/orders/" + urllib.parse.quote(_args.order_id)
+    path = (API_PREFIX + "/portfolio/events/orders/" + urllib.parse.quote(_args.order_id)
+            + "?market_ticker=" + urllib.parse.quote(_args.ticker))
     print(json.dumps(request("DELETE", path, key_id=key_id, private_key=pk), indent=2))
     return 0
 
@@ -353,6 +364,8 @@ def main():
                    help="limit price in dollars (0..1)")
     p.add_argument("--tif", default="gtc", choices=["gtc", "ioc", "fok"])
     p = sub.add_parser("cancel"); p.add_argument("--order-id", required=True)
+    p.add_argument("--ticker", required=True,
+                   help="market ticker of the resting order (required for auto-routing)")
     sub.add_parser("report")
     args = ap.parse_args()
     if args.base_url != DEMO_BASE:
