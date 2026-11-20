@@ -67,12 +67,12 @@
         </tr>
         <tr>
           <td>R6<br><span class="status">Needs review · data join</span></td>
-          <td>DOM smoke test with the committed files rendered 11 alert rows, but <strong>0/11 tickers</strong> matched between <code>data/jumps.json</code> and <code>data/snapshot.json</code>. As a result, topic/title/volume metadata are absent, the default High-ROI feed shows 0 rows, and four snapshot-move rows have no source link (rendered as “—”). The jump data is sourced from <code>data/dashboard_instrument.json</code>, while the page joins against the separate canonical <code>data/snapshot.json</code>. Use a coherent dataset/provenance and ensure every alert row retains its official source.</td>
+          <td>DOM smoke test with the committed files rendered 14 alert rows, but <strong>0/14 tickers</strong> matched between <code>data/jumps.json</code> and <code>data/snapshot.json</code>. As a result, topic/title/volume metadata are absent in the UI, the default High-ROI feed shows 0 rows, and six snapshot-move rows have no source link (rendered as “—”). The jump data is sourced from <code>data/dashboard_instrument.json</code>, while the page joins against the separate canonical <code>data/snapshot.json</code>. Use a coherent dataset/provenance and ensure every alert row retains its official source. The jump records themselves include topic/title fields for most rows, but the page does not use those fields as a fallback.</td>
           <td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> · <a href="https://docs.kalshi.com/api-reference/market/get-trades">Get Trades</a></td>
         </tr>
         <tr>
           <td>R7<br><span class="status">Needs review · freshness</span></td>
-          <td>At this checkout, <code>data/snapshot.json</code> says <code>2026-11-20T14:10:44Z</code>, while <code>data/jumps.json</code> says its source snapshot was <code>2026-11-20T19:42:50Z</code>. The page's visible “Snapshot” status uses the older file, while its alert generation line is <code>2026-11-20T15:57:36Z</code>. Show a single generation timestamp matching the actual joined data and mark stale/mismatched feeds.</td>
+          <td>At this checkout, <code>data/snapshot.json</code> says <code>2026-11-20T14:10:44Z</code>, while <code>data/jumps.json</code> says its source snapshot was <code>2026-11-20T19:49:16Z</code>. The page's visible “Snapshot” status uses the older file, while its alert generation line is <code>2026-11-20T19:49:16Z</code>. Show a single generation timestamp matching the actual joined data and mark stale/mismatched feeds.</td>
           <td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> · <a href="https://docs.kalshi.com/api-reference/market/get-trades">Get Trades</a></td>
         </tr>
         <tr>
@@ -91,8 +91,8 @@
       <li><code>npm run check</code>: 15 HTML pages; local references resolved; source-linked rows, unique IDs, and no inline handlers.</li>
       <li><code>npm run build</code>: generated 15 static pages.</li>
       <li><code>python3 tools/check.py</code>: links/nav/data/secrets/scripts passed across 18 pages; it reported 11 non-2xx snapshot API requests (the existing Verification page is the indicated evidence location; this audit did not re-fetch or reclassify each one).</li>
-      <li><code>python3 scripts/check_links.py</code>: 8,926 references across 124 HTML files, all resolved.</li>
-      <li>JSDOM smoke test ran the merged live-alerts page against the committed snapshot files: 11 rows rendered, 0/11 with a matched market/topic, 0 high-ROI rows, and 4 rows without a per-row source link. It also exposed mismatched snapshot timestamps. These are published here as verification findings, not silently corrected.</li>
+      <li><code>python3 scripts/check_links.py</code>: 8,455 references across 124 HTML files, all resolved on the current integrated tree.</li>
+      <li>JSDOM smoke test ran the merged live-alerts page against the committed snapshot files: 14 rows rendered, 0/14 with a matched market/topic, 0 high-ROI rows, and 6 rows without a per-row source link. It also exposed mismatched snapshot timestamps. These are published here as verification findings, not silently corrected.</li>
       <li>Kalshi demo, event-list, orderbook, candlestick, order V2, WebSocket, and GitHub Pages documentation pages were read directly. A mocked request confirmed what the backend currently emits; no private key, live account, or order call was used.</li>
     </ul>
   </section>
