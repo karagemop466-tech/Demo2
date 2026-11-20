@@ -59,8 +59,13 @@ their official contract-terms and product-certification links.</p>
     const withLive = (cat.series_with_live_markets || []).length;
     const catBox = $('catNote');
     if(catBox){
+      const read = cat.series_read, failed = cat.series_failed || 0;
       if(inCat === undefined){
         catBox.innerHTML = '<span class="muted">Series-catalogue counts are not in this snapshot yet.</span>';
+      } else if(failed){
+        catBox.innerHTML = '<span class="pill flag">partial</span> <b>' + KR.num(read,0) + '</b> of <b>' + KR.num(inCat,0) +
+          '</b> series were read; <b>' + KR.num(failed,0) + '</b> request(s) failed (rate limit or timeout). ' +
+          'A smaller number below can mean a failed request, not an empty topic — see <a href="verification.html">Verification</a>.';
       } else if(inCat === 0){
         catBox.innerHTML = '<span class="pill flag">no series</span> The API returned no series tagged or categorised for this topic.';
       } else if(withLive === 0){

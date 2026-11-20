@@ -924,6 +924,11 @@ official Kalshi source, it is left blank and flagged rather than inferred. That 
 market tables contain no hard-coded numbers \u2014 they are populated only from the collector
 snapshot, which logs the HTTP status of every request it made.</div>
 """ + table(["Claim", "Value / statement", "Official source", "How it was checked", "Status"], rows) + """
+<h2>Pipeline health \u2014 what the last run actually did</h2>
+<p class="lead">Read from <code>data/dashboard_meta.json</code>. These numbers are how the site
+tells "there are no markets" apart from "the request failed": both can produce an empty table,
+and only one of them is a fact about the exchange.</p>
+<div id="health"></div>
 <h2>Live API log from the most recent snapshot</h2>
 <p class="lead">The collector writes the URL, HTTP status and any error body for every request it
 makes. This is the provenance for every figure in the dashboard tables.</p>
@@ -953,6 +958,29 @@ makes. This is the provenance for every figure in the dashboard tables.</p>
     document.getElementById('apiLog').innerHTML = '';
     const wrap=document.createElement('div'); wrap.id='apiLogInner';
     document.getElementById('apiLog').appendChild(wrap);
+    // pipeline health: scope read/failed per topic, request totals, scope limits
+    try{
+      const m = await KR.getJSON("data/dashboard_meta.json");
+      const cat = m.topic_catalog || {}, c = m.counts || {};
+      const health = Object.entries(cat).map(([t,v])=>({topic:t, ...v}));
+      KR.renderTable($('health'), [
+        {label:'Topic', get:r=>KR.topicPill(r.topic)},
+        {label:'Series in catalogue', num:true, get:r=>KR.num(r.series_in_catalog,0)},
+        {label:'Series read this run', num:true, get:r=>KR.num(r.series_read,0)},
+        {label:'Series requests failed', num:true, get:r=>r.series_failed?`<span class="pill err">${KR.num(r.series_failed,0)}</span>`:KR.num(0,0)},
+        {label:'Series with live markets', num:true, get:r=>KR.num((r.series_with_live_markets||[]).length,0)},
+        {label:'Live markets', num:true, get:r=>KR.num((c.per_topic||{})[r.topic],0)},
+        {label:'Settled markets in log', num:true, get:r=>KR.num((m.resolutions_by_topic||{})[r.topic],0)},
+        {label:'Source', get:r=>`<a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=${encodeURIComponent(r.topic)}" target="_blank" rel="noopener">series list</a>`}
+      ], health, 'No dashboard_meta.json yet.');
+      $('logKpis').insertAdjacentHTML('afterbegin', `
+        <div class="kpi-card"><div class="k">Requests this run</div><div class="v">${KR.num(m.api_request_count,0)}</div>
+          <div class="s">${KR.num(m.api_request_failures,0)} non-2xx</div></div>`);
+    }catch(e){
+      const box=document.createElement('div'); box.className='notice bad';
+      box.textContent='data/dashboard_meta.json could not be loaded: '+e.message;
+      $('health').appendChild(box);
+    }
     const rows = log.filter(r=>!r.ok).length ? log : log.slice(0,40);
     KR.renderTable(wrap, [
       {label:'HTTP', get:r=>`<span class="pill ${r.ok?'ok':'err'}">${KR.esc(r.http_status)}</span>`},

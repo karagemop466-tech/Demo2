@@ -260,6 +260,59 @@ def main() -> int:
     check(len(res) == 1 and res[0]["result"] == "yes",
           "the settled in-scope market keeps its official yes/no result")
 
+    print("\npersistence and honesty")
+    log = json.loads((tmp / "resolutions_log.json").read_text())
+    check(log["count"] == 1 and log["resolutions"][0]["market_ticker"] == "ELEC-24-OLD",
+          "settled markets are written to a rolling log, not a per-run slice")
+    check(log["complete"]["elections"]["ok"] is True,
+          "a completed series read is reported as complete")
+    meta2 = json.loads((tmp / "dashboard_meta.json").read_text())
+    check(meta2["topic_catalog"]["elections"]["series_read"] == 1,
+          "the catalogue reports how many series were actually read")
+    check(meta2["topic_catalog"]["elections"]["series_failed"] == 0,
+          "failed series requests are counted separately from empty topics")
+
+    # a second run must not lose rows it did not re-read
+    (tmp / "resolutions_log.json").write_text(json.dumps({
+        "resolutions": [{"market_ticker": "GONE-1", "topic": "golf", "result": "no",
+                         "settlement_ts": "2026-01-01T00:00:00Z", "first_seen_utc": "2026-01-02T00:00:00Z"}]}))
+    sys.argv = ["collector", "--max-runtime", "600", "--volume-markets", "0",
+                "--book-markets", "0", "--book-samples", "0"]
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            collector.main()
+    finally:
+        sys.argv = argv
+    log2 = json.loads((tmp / "resolutions_log.json").read_text())
+    tickers = {r["market_ticker"] for r in log2["resolutions"]}
+    check({"GONE-1", "ELEC-24-OLD"} <= tickers,
+          "a later run keeps rows it did not re-read this time")
+
+    # a 429 must be reported, not silently treated as "no markets"
+    def flaky(url, signer=None, retries=3):
+        CALLS.append(url)
+        if "/markets" in url and "series_ticker=GOLF" in url:
+            collector.log_req(url, 429, "too many requests")
+            return None, 429
+        return fake_get_json(url, signer, retries)
+
+    collector.get_json = flaky            # type: ignore[assignment]
+    collector.API_LOG.clear()
+    collector.DATA = tmp / "flaky"
+    sys.argv = ["collector", "--max-runtime", "600", "--volume-markets", "0",
+                "--book-markets", "0", "--book-samples", "0"]
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            collector.main()
+    finally:
+        sys.argv = argv
+    snapf = json.loads((collector.DATA / "snapshot.json").read_text())
+    check(snapf["failed_series"].get("golf"),
+          "a rate-limited series appears in failed_series instead of vanishing")
+    check(snapf["counts"]["per_topic"]["golf"] == 0 and
+          snapf["topic_catalog"]["golf"]["series_failed"] == 1,
+          "the topic reports 0 markets AND 1 failed series, so the zero is explainable")
+
     print(f"\n{len(CALLS)} stubbed requests, all offline. ALL CHECKS PASSED")
     return 0
 

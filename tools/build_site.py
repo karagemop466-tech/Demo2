@@ -223,7 +223,8 @@ tables on the category, resolution and verification pages still work without it.
   </div>
 </div>
 
-<h2>Markets ranked by estimated dollar volume</h2>
+<h2>Markets ranked by dollar amount</h2>
+<p class="muted" id="rankNote"></p>
 <div class="notice info"><b>What "highest dollar amount" means here.</b> The Trade API has no
   single dollar-volume field. Every row therefore shows the raw official fields
   (<code>volume_fp</code>, <code>open_interest_fp</code>, <code>last_price_dollars</code>) and
@@ -319,7 +320,7 @@ DASH_JS = r"""
       return `<a class="kpi-card" href="{PREFIX}pages/${t}.html" style="text-decoration:none">
         <div class="k">${KR.esc(t[0].toUpperCase()+t.slice(1))}</div>
         <div class="v">${KR.num(n,0)}</div>
-        <div class="s">${KR.esc(String(share))}% of live · ${KR.num(cat1.series_in_catalog,0)} series in catalogue${
+        <div class="s">${KR.esc(String(share))}% of live · ${KR.num(cat1.series_read,0)}/${KR.num(cat1.series_in_catalog,0)} series read${
           usd[t]!==undefined ? ` · ${KR.usd(usd[t],2)} traded in 24 h` : ''}</div></a>`;
     }).join('');
   }
@@ -490,8 +491,13 @@ CATEGORY_JS = r"""
     const withLive = (cat.series_with_live_markets || []).length;
     const catBox = $('catNote');
     if(catBox){
+      const read = cat.series_read, failed = cat.series_failed || 0;
       if(inCat === undefined){
         catBox.innerHTML = '<span class="muted">Series-catalogue counts are not in this snapshot yet.</span>';
+      } else if(failed){
+        catBox.innerHTML = '<span class="pill flag">partial</span> <b>' + KR.num(read,0) + '</b> of <b>' + KR.num(inCat,0) +
+          '</b> series were read; <b>' + KR.num(failed,0) + '</b> request(s) failed (rate limit or timeout). ' +
+          'A smaller number below can mean a failed request, not an empty topic — see <a href="verification.html">Verification</a>.';
       } else if(inCat === 0){
         catBox.innerHTML = '<span class="pill flag">no series</span> The API returned no series tagged or categorised for this topic.';
       } else if(withLive === 0){

@@ -146,6 +146,7 @@ def get_json(url: str, signer: Signer | None = None, retries: int = 3) -> tuple[
     """GET a URL, return (parsed_json_or_None, http_status). Logs every attempt."""
     last_status: int | str = "no-attempt"
     for attempt in range(retries):
+        _throttle()
         req = urllib.request.Request(url, method="GET")
         req.add_header("Accept", "application/json")
         if signer is not None:
@@ -156,6 +157,7 @@ def get_json(url: str, signer: Signer | None = None, retries: int = 3) -> tuple[
             with urllib.request.urlopen(req, timeout=30) as r:
                 body = r.read().decode("utf-8", "replace")
                 last_status = r.status
+                _MIN_INTERVAL["v"] = max(0.15, _MIN_INTERVAL["v"] * 0.99)
                 log_req(url, r.status)
                 try:
                     return json.loads(body), r.status
@@ -168,6 +170,8 @@ def get_json(url: str, signer: Signer | None = None, retries: int = 3) -> tuple[
             log_req(url, e.code, body)
             if e.code in (401, 403, 404, 400, 410):
                 return None, e.code  # not retryable
+            if e.code == 429:
+                _MIN_INTERVAL["v"] = min(3.0, _MIN_INTERVAL["v"] * 1.6)
             time.sleep(1.5 * (attempt + 1))
         except Exception as e:  # network/TLS/timeout
             last_status = type(e).__name__
@@ -176,12 +180,36 @@ def get_json(url: str, signer: Signer | None = None, retries: int = 3) -> tuple[
     return None, int(last_status) if isinstance(last_status, int) else 0
 
 
-def paginate(url: str, key: str, signer: Signer | None = None, max_pages: int = 30) -> list[dict]:
+# ---------------------------------------------------------------- global throttle
+# Kalshi documents that public endpoints charge the IP budget first and that a 429
+# carries no penalty (docs: getting_started/rate_limits), so the only remedy is to
+# slow down. The interval widens on a 429 and narrows slowly on success.
+_MIN_INTERVAL = {"v": 0.30}
+_LAST_CALL = {"t": 0.0}
+STOP = {"requested": False}
+
+
+def _throttle() -> None:
+    wait = _MIN_INTERVAL["v"] - (time.time() - _LAST_CALL["t"])
+    if wait > 0:
+        time.sleep(wait)
+    _LAST_CALL["t"] = time.time()
+
+
+def paginate(url: str, key: str, signer: Signer | None = None, max_pages: int = 30,
+             complete: dict | None = None) -> list[dict]:
     """Cursor pagination exactly as documented in getting_started/pagination.md.
 
     A caller may pass its own `limit`; it is kept (the API caps the page size, so a
     smaller value is always honoured and a larger one simply yields full pages).
+
+    If `complete` is passed, `complete["ok"]` is set False when the walk stopped early
+    (a failed request or the page cap), so a caller can say "this list is partial"
+    instead of presenting a truncated set as the whole.
     """
+    if complete is not None:
+        complete["ok"] = True
+        complete["reason"] = ""
     out: list[dict] = []
     cursor = ""
     for _ in range(max_pages):
@@ -192,11 +220,18 @@ def paginate(url: str, key: str, signer: Signer | None = None, max_pages: int = 
             u += "&cursor=" + urllib.parse.quote(cursor, safe="")
         j, status = get_json(u, signer)
         if not j:
+            if complete is not None:
+                complete["ok"] = False
+                complete["reason"] = f"request failed with HTTP {status}"
             break
         out.extend(j.get(key) or [])
         cursor = j.get("cursor") or ""
         if not cursor:
             break
+    else:
+        if complete is not None and cursor:
+            complete["ok"] = False
+            complete["reason"] = f"stopped at the {max_pages}-page cap"
     return out
 
 
@@ -205,6 +240,7 @@ def paginate(url: str, key: str, signer: Signer | None = None, max_pages: int = 
 # Verified live 2026-11-20: tags=Gas -> DIESEL/DIESELM; tags=Golf -> KXPGATOUR etc.;
 # categories contain "Elections" and "Crypto". Both fields are matched case-insensitively.
 TAG_TOPIC = {
+    "oil and energy": "gas-energy",   # refined below: only fuel-price titles count
     "gas": "gas",
     "gasoline": "gas",
     "diesel": "gas",          # only when the series is a fuel-price series (see below)
@@ -241,6 +277,15 @@ def series_topic(series: dict) -> str | None:
         mapped = TAG_TOPIC.get(tag)
         if mapped == "gas" and tag == "diesel":
             continue  # require the "Gas" tag itself
+        if mapped == "gas-energy":
+            # The Oil and energy tag covers crude, natgas, electricity and gasoline. The
+            # dashboard is about GAS PRICES (retail/wholesale fuel price); the ticker or
+            # title has to say gas or diesel, and this fallback only applies when no
+            # narrower tag matched.
+            hay = f"{series.get('ticker','')} {series.get('title','')}".lower()
+            if "gas" in hay or "diesel" in hay:
+                return "gas"
+            continue
         if mapped:
             return mapped
     # 2) discovery/primary category matches
@@ -308,25 +353,28 @@ def collect_scope(signer: Signer | None) -> dict:
         if tp in TOPICS:
             in_scope[tp].append(ticker)
 
-    # Per-topic series caps keep the run inside the documented rate limits
-    # (docs: getting_started/rate_limits). Truncation is reported, never hidden.
-    limits = {"gas": 120, "elections": 60, "culture": 40, "crypto": 60, "golf": 60}
+    # Every in-scope series is queried. Nothing is capped silently: a series whose
+    # request failed is listed in `failed_series` with the HTTP status, and the site
+    # says "N of M series read" instead of pretending the list is complete.
     rows: list[dict] = []
-    truncated: dict[str, dict] = {}
-    queried: dict[str, list[str]] = {}
+    failed: dict[str, list[dict]] = {t: [] for t in TOPICS}
+    read: dict[str, int] = {t: 0 for t in TOPICS}
     for topic in TOPICS:
-        tickers = sorted(in_scope[topic])
-        cap = limits[topic]
-        used = tickers[:cap]
-        queried[topic] = used
-        if len(tickers) > cap:
-            truncated[topic] = {"in_catalog": len(tickers), "queried": cap}
-        for st in used:
+        for st in sorted(in_scope[topic]):
+            if STOP["requested"]:
+                failed[topic].append({"series": st, "http": "skipped: time budget reached"})
+                continue
             url = (
                 f"{DEMO_REST}/markets?series_ticker={urllib.parse.quote(st)}"
                 "&status=open&limit=1000"
             )
-            for m in paginate(url, "markets", signer, max_pages=2):
+            done: dict = {}
+            markets = paginate(url, "markets", signer, max_pages=3, complete=done)
+            read[topic] += 1
+            if not done["ok"]:
+                failed[topic].append({"series": st, "http": done["reason"],
+                                      "url": url})
+            for m in markets:
                 rows.append(_market_row(topic, st, m))
 
     unmapped = {s_: 1 for s_, t in topic_cache.items() if t is None}
@@ -337,12 +385,14 @@ def collect_scope(signer: Signer | None) -> dict:
         "topic_catalog": {
             t: {
                 "series_in_catalog": len(in_scope[t]),
-                "series_queried": len(queried[t]),
+                "series_read": read[t],
+                "series_failed": len(failed[t]),
                 "series_with_live_markets": sorted({r["series_ticker"] for r in rows if r["topic"] == t}),
             }
             for t in TOPICS
         },
-        "truncated": truncated,
+        "failed_series": {t: v[:200] for t, v in failed.items() if v},
+        "truncated": {},
         "unmapped_series": unmapped,
         "events_scanned": len({r["event_ticker"] for r in rows}),
     }
@@ -601,47 +651,83 @@ def collect_candles(rows: list[dict], signer: Signer | None, top_n: int = 8) -> 
     return out
 
 
-def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list[dict]:
-    """Settled in-scope markets with the official yes/no `result`."""
-    settled = paginate(DEMO_REST + "/markets?status=settled", "markets", signer, max_pages=10)
-    series_idx = load_series_index(signer)
-    topic_cache = {t: series_topic(s) for t, s in series_idx.items()}
-    rows: list[dict] = []
-    for m in settled:
-        ev = m.get("event_ticker") or ""
-        # The series ticker is the leading segment of the event ticker.
-        st = ev.split("-")[0] if ev else ""
-        topic = topic_cache.get(st)
-        if topic not in TOPICS:
-            continue
-        rows.append(
-            {
-                "topic": topic,
-                "series_ticker": st,
-                "event_ticker": ev,
-                "market_ticker": m.get("ticker"),
-                "status": m.get("status"),
-                "title": m.get("title"),
-                "result": m.get("result") or "",          # "yes" / "no" / ""
-                "settlement_value_dollars": m.get("settlement_value_dollars"),
-                "settlement_ts": m.get("settlement_ts"),
-                "close_time": m.get("close_time"),
-                "expiration_value": m.get("expiration_value"),
-                "volume_fp": m.get("volume_fp"),
-                "open_interest_fp": m.get("open_interest_fp"),
-                "rules_primary": m.get("rules_primary"),
-                "market_url": f"https://kalshi.com/markets/{st.lower()}" if st else None,
-            }
-        )
-        if len(rows) >= limit_markets:
-            break
-    dedup: dict[str, dict] = {}
-    for r in rows:
-        if r["market_ticker"]:
-            dedup[r["market_ticker"]] = r
-    out = list(dedup.values())
+def collect_resolutions(signer: Signer | None, series_by_topic: dict[str, list[str]]) -> dict:
+    """Settled in-scope markets, with the official yes/no `result`, accumulated over time.
+
+    Two things the previous version got wrong, both observed on a real run:
+
+    1. It derived the series from the event ticker's leading segment. MVE combo event
+       tickers have no series prefix, and many real event tickers carry suffixes, so
+       most settled markets were unmappable and the page came out empty (0 rows).
+       Now the settled list is fetched per in-scope series, exactly like open markets.
+
+    2. It treated one snapshot as the whole history. The settled list is paginated and
+       rate-limited, so each run sees only a slice. Resolutions are therefore appended
+       to a rolling log (`data/resolutions.json`) keyed by ticker: a run can add rows,
+       never silently drop the ones it did not reach this time.
+    """
+    per_series_cap = 2      # one request per series keeps the run inside the rate limit
+    discovered: dict[str, dict] = {}
+    complete: dict[str, dict] = {}
+    for topic in TOPICS:
+        for st in series_by_topic.get(topic, []):
+            if STOP["requested"]:
+                break
+            url = f"{DEMO_REST}/markets?series_ticker={urllib.parse.quote(st)}&status=settled&limit=200"
+            done: dict = {}
+            markets = paginate(url, "markets", signer, max_pages=per_series_cap, complete=done)
+            complete.setdefault(topic, {"ok": True, "series_incomplete": []})
+            if not done["ok"]:
+                complete[topic]["ok"] = False
+                complete[topic]["series_incomplete"].append(st)
+            for m in markets:
+                t = m.get("ticker")
+                if not t:
+                    continue
+                discovered[t] = {
+                    "topic": topic,
+                    "series_ticker": st,
+                    "event_ticker": m.get("event_ticker"),
+                    "market_ticker": t,
+                    "status": m.get("status"),
+                    "title": m.get("title"),
+                    "result": m.get("result") or "",          # yes / no / ""
+                    "settlement_value_dollars": m.get("settlement_value_dollars"),
+                    "settlement_ts": m.get("settlement_ts"),
+                    "close_time": m.get("close_time"),
+                    "expiration_value": m.get("expiration_value"),
+                    "volume_fp": m.get("volume_fp"),
+                    "open_interest_fp": m.get("open_interest_fp"),
+                    "rules_primary": m.get("rules_primary"),
+                    "live_url": f"https://external-api.demo.kalshi.co/trade-api/v2/markets/{urllib.parse.quote(t)}",
+                    "source_url": url,
+                    "first_seen_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+                }
+
+    # merge with what earlier runs already captured
+    prev: dict[str, dict] = {}
+    path = DATA / "resolutions_log.json"
+    if path.exists():
+        try:
+            prev = {r["market_ticker"]: r for r in json.loads(path.read_text()).get("resolutions", [])}
+        except (json.JSONDecodeError, KeyError, TypeError):
+            prev = {}
+    merged = dict(prev)
+    for ticker, row in discovered.items():
+        old = merged.get(ticker) or {}
+        merged[ticker] = {**old, **row,
+                          "first_seen_utc": old.get("first_seen_utc") or row["first_seen_utc"]}
+    out = list(merged.values())
     out.sort(key=lambda r: (r.get("settlement_ts") or ""), reverse=True)
-    return out
+    write_json("resolutions_log.json", {
+        "updated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+        "note": ("Rolling log: each run adds the settled markets it managed to read; rows from "
+                 "earlier runs are kept. `complete` says whether every in-scope series was read."),
+        "count": len(out),
+        "complete": complete,
+        "resolutions": out,
+    })
+    return {"rows": out, "discovered_this_run": len(discovered), "complete": complete}
 
 
 def exchange_status(signer: Signer | None) -> dict:
@@ -680,7 +766,10 @@ def main() -> int:
     deadline = started + dt.timedelta(seconds=args.max_runtime)
 
     def left() -> float:
-        return (deadline - dt.datetime.now(dt.timezone.utc)).total_seconds()
+        remaining = (deadline - dt.datetime.now(dt.timezone.utc)).total_seconds()
+        if remaining < 30:
+            STOP["requested"] = True
+        return remaining
 
     status = exchange_status(signer)
 
@@ -693,7 +782,13 @@ def main() -> int:
 
     # Order of work: core market list -> resolutions -> real 24h turnaround -> books
     # -> candlesticks. The optional blocks are time-boxed so the essentials always land.
-    resolutions = [] if left() < 120 else collect_resolutions(signer)
+    series_by_topic: dict[str, list[str]] = {t: [] for t in TOPICS}
+    for r in rows:
+        if r["series_ticker"] not in series_by_topic[r["topic"]]:
+            series_by_topic[r["topic"]].append(r["series_ticker"])
+    res = ({"rows": [], "discovered_this_run": 0, "complete": {}}
+           if left() < 120 else collect_resolutions(signer, series_by_topic))
+    resolutions = res["rows"]
 
     trade_volume: dict[str, dict] = {}
     if not args.scope_only and left() > 240 and args.volume_markets > 0:
@@ -737,6 +832,8 @@ def main() -> int:
             "markets_in_scope": len(rows),
             "per_topic": {t: len(by_topic[t]) for t in TOPICS},
             "resolved_in_scope": len(resolutions),
+            "resolved_this_run": res["discovered_this_run"],
+            "failed_series_requests": sum(len(v) for v in scope["failed_series"].values()),
             "orderbooks": len(books),
             "candle_sets": len(candles),
             "trade_volume_markets": len(trade_volume),
@@ -750,6 +847,9 @@ def main() -> int:
         "trade_volume": trade_volume,
         "candles": candles,
         "resolutions": resolutions,
+        "resolutions_this_run": res["discovered_this_run"],
+        "resolutions_complete": res["complete"],
+        "failed_series": scope["failed_series"],
         "scope_limits": scope["truncated"],
         "definitions": {
             "est_dollar_volume": (
@@ -802,10 +902,32 @@ def main() -> int:
             },
         )
 
-    write_json("resolutions.json", {"generated_at_utc": snapshot["generated_at_utc"],
-                                    "count": len(resolutions), "resolutions": resolutions})
+    write_json("resolutions.json", {
+        "generated_at_utc": snapshot["generated_at_utc"],
+        "count": len(resolutions),
+        "this_run": res["discovered_this_run"],
+        "complete": res["complete"],
+        "note": ("Rolling log of settled in-scope markets. `result` is Kalshi's own field, "
+                 "copied verbatim. A market that never traded is included and marked by "
+                 "volume_fp = 0."),
+        "resolutions": resolutions,
+    })
 
     # ---- compact files: the browser must not download the full snapshot ----
+    write_json("series_index.json", {
+        "fetched_at": snapshot["generated_at_utc"],
+        "source": f"{DEMO_REST}/series",
+        "note": ("Official GET /series response, every series the demo exchange lists, with "
+                 "the topic this collector mapped it to from its category/tags. "
+                 "settlement_sources are the publications Kalshi names for that series."),
+        "series": [
+            dict(series,
+                 topic=series_topic(series),
+                 source=f"{DEMO_REST}/series/{urllib.parse.quote(series.get('ticker') or '')}")
+            for series in (load_series_index(signer) or {}).values()
+        ],
+    })
+
     write_json("dashboard_meta.json", {
         "generated_at_utc": snapshot["generated_at_utc"],
         "environment": "demo",
@@ -820,6 +942,9 @@ def main() -> int:
             "in_scope_series": {t: len(v) for t, v in scope["series_inventory"]["in_scope_series"].items()},
         },
         "definitions": snapshot["definitions"],
+        "resolutions_by_topic": {
+            t: len([r for r in resolutions if r.get("topic") == t]) for t in TOPICS
+        },
         "api_request_count": len(API_LOG),
         "api_request_failures": len([r for r in API_LOG if not r["ok"]]),
     })

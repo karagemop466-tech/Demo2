@@ -43,7 +43,7 @@ jobs:
         run: pip install --quiet cryptography
 
       - name: Collect demo snapshot
-        timeout-minutes: 25
+        timeout-minutes: 45
         env:
           # Optional. Without keys the collector still works: every market-data
           # endpoint used here is public. Keys only add portfolio/trading coverage.
@@ -51,7 +51,7 @@ jobs:
           KALSHI_DEMO_PRIVATE_KEY: ${{ secrets.KALSHI_DEMO_PRIVATE_KEY }}
         run: |
           python tools/collector.py \
-            --max-runtime 900 \
+            --max-runtime 2100 \
             --volume-markets 30 \
             --book-markets 10 \
             --book-samples 12
@@ -65,7 +65,9 @@ jobs:
           print("authenticated:", s["authenticated"])
           print("counts:", json.dumps(s["counts"], indent=2))
           print("per-topic:", json.dumps(s["counts"]["per_topic"]))
-          print("truncated topics:", s.get("scope_limits") or "none")
+          print("failed series:", {k: len(v) for k, v in (s.get("failed_series") or {}).items()})
+          print("resolutions this run:", s["counts"].get("resolved_this_run"),
+                "total in rolling log:", s["counts"].get("resolved_in_scope"))
           bad = [r for r in s["api_log"] if not r["ok"]]
           print(f"api calls logged: {len(s['api_log'])}, failed: {len(bad)}")
           for r in bad[:10]:
