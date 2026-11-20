@@ -9,7 +9,6 @@ Run: python3 tools/build_dashboard_site.py
 """
 import html
 import json
-import re
 import os
 import shutil
 from datetime import datetime, timezone
@@ -22,6 +21,14 @@ REPO = "https://github.com/karagemop466-tech/Demo2"
 PAGES_BASE = "https://karagemop466-tech.github.io/Demo2/instrument-panel/site/"
 
 E = html.escape
+
+import urllib.parse  # noqa: E402  (link policy in ext() needs urlparse)
+
+# Source URLs verified dead / non-resolvable on 2026-11-20 (external link check).
+# They stay visible as text for manual review; never invented replacements.
+KNOWN_DEAD_URLS = {
+    "https://www.crunchyroll.com/en/animeawards/": "2026-11-20",
+}
 
 NAV = [
     ("index.html", "Overview"),
@@ -99,32 +106,32 @@ def count(v, dash="—"):
 
 
 def ext(url, label=None):
+    """Render an external source link.
+
+    Link policy (integration link-check fixes, 2026-11-20): a published <a href>
+    must resolve. URL patterns ("{ticker}" etc.), REST/WS base URLs and verified-dead
+    source URLs render as code text (with a flag where the official source URL is
+    broken) instead of clickable links — never invented, never silently dropped.
+    """
     if not url:
         return ""
-    # Not everything that looks like a URL is a reachable link. Render these as
-    # code text instead of anchors (integration fixes, session bdb4d2d0; each
-    # class broke the external link gate at least once):
-    #   {placeholders}  - endpoint *patterns*, e.g. /markets/{ticker} -> 404
-    #   the bare API root - GET on the base returns 404 (no route); it is an
-    #                     API base, valid as text
-    #   empty filenames like /contract_terms/.pdf - malformed demo metadata
-    if ("{" in url
-            or url.rstrip("/").endswith("/trade-api/v2")
-            or re.search(r"/\.[A-Za-z0-9]*$", url)):
-        return f'<code>{E(label or url)}</code>'
-    return f'<a href="{E(url, quote=True)}" target="_blank" rel="noopener">{E(label or url)}</a>'
-
-
-def ext_recorded(url, name=None):
-    # Settlement-source URLs are copied as the API recorded them and may be
-    # stale (observed 404: crunchyroll.com/en/animeawards). The repo's own
-    # verification rule (data/api_settlement_sources.json) keeps such URLs
-    # "as recorded" text unless opened and confirmed - do the same here.
-    if not url:
-        return E(name or "")
-    return (f'{E(name or "")} <code class="small">{E(url)}</code> '
-            f'<span class="small muted" title="URL as recorded from the demo API; '
-            f'not confirmed reachable (F-10)">(as recorded)</span>')
+    u = str(url)
+    note = ""
+    if "{" in u:
+        # template URL pattern — documentation, not a live link
+        return f'<code>{E(label or u)}</code>'
+    if u in KNOWN_DEAD_URLS:
+        note = f' <span class="small muted">(source URL returns 404 — flagged, checked {KNOWN_DEAD_URLS[u]})</span>'
+        return f'<code>{E(label or u)}</code>{note}'
+    path = urllib.parse.urlparse(u).path
+    if path.rstrip("/").endswith("/trade-api/v2") or path.rstrip("/").endswith("/trade-api/ws/v2"):
+        # API base URL — not itself a resolvable page
+        return f'<code>{E(label or u)}</code>'
+    last = path.rstrip("/").rsplit("/", 1)[-1] if path.rstrip("/") else ""
+    if last == "" or last.startswith("."):
+        # e.g. https://assets.kalshi.com/contract_terms/.pdf — empty source filename
+        return f'<code>{E(label or u)}</code> <span class="small muted">(blank source in official data — flagged)</span>'
+    return f'<a href="{E(u, quote=True)}" target="_blank" rel="noopener">{E(label or u)}</a>'
 
 
 def liquidity(m):
@@ -168,7 +175,7 @@ def top_nav_html(active=None):
 def demo_banner():
     return ('<div class="notice warn"><h4>Demo environment data — not real markets</h4>'
             'Every price, volume and resolution below comes from Kalshi\'s <b>demo</b> exchange '
-            '(<code>https://external-api.demo.kalshi.co/trade-api/v2</code>). '
+            '(<code>external-api.demo.kalshi.co</code>). '
             'Kalshi states that demo prices and behaviour “may not be reflective of those in real markets”. '
             'See <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a>. '
             'No real money is involved anywhere on this site.</div>')
@@ -284,7 +291,7 @@ def series_table(rows, show_topic=False):
     out = []
     for s in rows:
         ss = s.get("settlement_sources") or []
-        ss_html = "<br>".join(ext_recorded(x.get("url"), x.get("name") or x.get("url")) for x in ss[:4])
+        ss_html = "<br>".join(ext(x.get("url"), x.get("name") or x.get("url")) for x in ss[:4])
         if len(ss) > 4:
             ss_html += f'<div class="small muted">+{len(ss) - 4} more (see API)</div>'
         out.append(

@@ -888,6 +888,13 @@ additive, generator-first where a generator exists, and logged in this section.
 
 Sources to verify against (official only): https://docs.kalshi.com/api-reference/market/get-market-candlesticks, https://docs.kalshi.com/api-reference/market/get-trades, https://docs.kalshi.com/api-reference/market/get-market-orderbook, https://docs.kalshi.com/getting_started/demo_env.
 
+### Merge record and update — session 3371a533 (merged `origin/main` at `6a9aecb`)
+
+- `origin/main` moved while this session worked (PRs #27, #33, #35 and several data commits). Merged with `git merge origin/main` (no history rewrite). Conflicts: `COORDINATION.md` (both sides kept), `index.html` and `pages/*.html` (generated; regenerated from the merged generators, no hand edits), `README.md` (see below).
+- **Defect found on `origin/main`, fixed here (logged as R20 on the Repo Review page):** `README.md` contained six unresolved merge-conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`) from earlier merges, so both sides of two sections were in the file. Resolved by keeping both sides in order; no text removed.
+- **Main's CI was red** at `9319862` (run 44740812355, step "Fail if regenerating produced a diff"): committed pages did not match the generators. Fixed by regenerating from the merged `build_site.py` / `build_content.py`; the diff gate is clean on the merged tree.
+- **Jump numbers changed with the data.** The collector picks the largest markets each run, so the trade set changed. At snapshot `2026-11-20T13:02:54Z`: **7 trade-print moves ≥ $0.10 across 6 of 11 markets with trade data** (the 39 / 12 figures above were from snapshot `12:43:59Z`). Snapshot moves: 0 across 1,399 pairs (gaps 2.2–66.1 min). The live page `jumps/index.html` is authoritative and is rebuilt on every 15-minute data run.
+- The 7 current moves include prints of 0.01 contracts (for example `KXAAAGASMAXFL-26DEC31-5.90`, 2026-09-15 0.01 → 0.90 on 0.01 contracts). They are shown with their sizes, because a thin print can look like a market move.
 ---
 
 # Final record — PR #27 (session 5330bffb)
@@ -928,3 +935,137 @@ Rules honored: news/event *causes* of jumps are not in the Kalshi API — left b
 - Site: 5 pages under `session-8b9a46b4/site/` incl. live browser chart (seconds/minutes/hours + orderbook depth) polling the demo API directly.
 - Verification: `python3 session-8b9a46b4/tools/jump_backtest.py` reproducible; `node --check live.js` OK; `python3 scripts/check_links.py` → 8,124 refs, all OK; `python3 tools/check.py` clean; local smoke 200s.
 - Tasks J-1…J-5: done (J-5 PR/merge record below).
+
+---
+
+## Session `eeb796d7` — branch `arena/eeb796d7-demo2` (claim written 2026-11-20 13:03 UTC, before edits)
+
+Platform constraint: this session's rules fix the branch name to `arena/eeb796d7-demo2`,
+so `session-<id>/<task>` branches are not created; all work lands on that one branch.
+Scope is **additive**: owned files are `session-eeb796d7/**` plus this appended board
+section. At final-integration time only, shared outputs may be touched (logged there).
+
+State of the board when this claim was written (read first): sessions `arena-5330bffb`
+(PR #27, last commit 12:56Z), `arena-8b9a46b4` (PR #32, 12:54Z) and `arena-21eed9ff`
+(PR #34, 12:57Z) are **active**; PRs #6 (11:19Z) and #15 (11:46Z) are past the 60-minute
+stale limit with no commits and are eligible for takeover.
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| E-1 | Line-by-line verification pass: every checked claim in the merged tree vs official docs + live demo API, per-row source links | in progress | eeb796d7 | `session-eeb796d7/**` |
+| E-2 | Irregularities register (repo hygiene: duplicate workflows/tools/data, committed `.pyc`, stale PRs, conflicting schedules) with evidence links | in progress | eeb796d7 | `session-eeb796d7/**` |
+| E-3 | Stale-PR takeover per the 60-minute rule: review PR #6 and #15 and record action | in progress | eeb796d7 | (PR operations only) |
+| E-4 | Final integration once other sessions are done: merge ready PRs, re-verify combined data line by line, confirm build + no broken links, PR to `main`, merge, confirm Pages, record | unclaimed | eeb796d7 | `COORDINATION.md` (append), any shared output strictly as needed and logged |
+
+### Session `eeb796d7` — work record (2026-11-20 13:00-14:10 UTC)
+
+| # | Task | Status | Evidence |
+|---|------|--------|----------|
+| E-1 | Line-by-line verification pass vs live official API + docs | **done** | `session-eeb796d7/index.html` (16 rows, per-row source links), `session-eeb796d7/data/verification.json`, raw bodies in `session-eeb796d7/data/raw/` |
+| E-2 | Irregularities register | **done** | R-1…R-7 on `session-eeb796d7/index.html` |
+| E-3 | Stale-PR takeover per the 60-minute rule | **done (not needed)** | PR #6 closed 13:02:42Z as superseded (PR #27 rewrote `assets/app.js`), PR #15 merged 13:02:26Z inside PR #27 — both by session d0bea7de before takeover was required. No action taken here. |
+| E-5 | Collector defect found during E-1: `data/snapshot.json` never published; root dashboard showed 0 markets | **done** | `tools/collector.py` fix + `session-eeb796d7/tools/test_collector_fix.py` (11/11 PASS; pre-fix code reproduces `NameError: name 'series' is not defined` = the exact failure of Actions runs 44728913873 / 44744689706) |
+
+**E-5 detail (three defects in `tools/collector.py`, all fixed and regression-tested):**
+1. `collect_scope()` referenced an undefined `series` variable while building market rows —
+   `NameError` on the first in-scope market. Offline runs with zero rows never fired it,
+   which is why the failure only appeared in Actions. The root dashboard therefore sat on
+   `data/snapshot.json` -> 404 ("0 in-scope markets") on the deployed site.
+2. Topic classifier missed the AAA gasoline family: `KXAAAGASD/M/…` carry tags
+   `["Oil & Gas", "Oil and energy", "Econ Daily"]` and are classified via
+   `product_metadata.scope == "Gasoline"` (verified live: `GET /series/KXAAAGASD`).
+   The bare `Oil & Gas` tag is deliberately NOT mapped — it also covers WTI crude
+   (KXWTI…), natural gas (KXNATGASMON) and TTF (verified live:
+   `GET /series?tags=Oil%20%26%20Gas`). Before this fix the gas topic would still have
+   been empty after (1) was fixed, contradicting `rankings.html` which shows the AAA rows.
+3. `market_url`/`event_url` used the SERIES ticker on `kalshi.com/markets/…`; now they are
+   the exact official API endpoints with the market ticker (the per-row source link
+   policy). A human web-UI URL pattern for demo markets could not be confirmed from an
+   official source and was left blank + flagged (verification row V15), not invented.
+
+**Cross-session notes (not edited, logged per the rules):**
+- The sharp-jump landing card/chart wiring that `027edfe` dropped is restored by PR #40
+  (session d0bea7de, byte-identical to `9319862`) — tracked to merge at integration (R-3).
+- R-5 (five parallel dashboard trees, duplicated tools, 7 workflows with competing
+  schedules and observed 429 storms) and R-6 (committed `scripts/__pycache__/*.pyc`)
+  remain flagged for review; consolidation is suggestion S5.
+- Earlier revision of this branch contained a duplicate generator port (sharp-jump);
+  dropped on re-read of the board after main's `027edfe`/`ae1e150` landed the same fix —
+  no duplicate work is carried into the merge.
+
+Verification performed for E-5: `python3 session-eeb796d7/tools/test_collector_fix.py`
+(11/11), `python3 -m py_compile tools/collector.py`, `python3 tools/check.py` (clean),
+`python3 scripts/check_links.py` (all links OK).
+
+**Integration link fixes (session eeb796d7, 13:55-14:05 UTC, logged per the rules):**
+The external link check ("Link check (all pages, internal + external)") failed on every PR
+with 4 pre-existing non-resolvable URLs (example: PR #40's run 44743893105: crunchyroll
+`/en/animeawards/` 404, bare REST base GET 404, `contract_terms/.pdf` 404,
+`markets/{ticker}` pattern 404). Because the integration gate is "no broken links", the
+following minimal, policy-compliant fixes were made in `instrument-panel/tools/` (NOT in any
+open PR's diff) and the site regenerated with `build_dashboard_site.py`:
+- `ext()` renders URL patterns (`{ticker}` etc.) and REST/WS base URLs as `<code>` (they are
+  documentation, not pages) and verified-dead/blank source URLs as flagged text — no URL is
+  invented, dead official URLs stay visible for manual review;
+- the demo banner links no longer point at the non-resolvable API base;
+- request-error rows render their URLs as text.
+All instrument-panel and root checkers re-run clean afterwards (`check_site.py` OK,
+`tests_smoke.py` OK, `tools/check.py` OK, `scripts/check_links.py` all links OK).
+Follow-up flagged (R-8, not fixed): some `culture.html` rows link rules-prose fragments to
+`kalshi.com` (collector parsed rules text as settlement sources) — rows should show the API's
+real `settlement_sources` or blank + flag. Full register: `session-eeb796d7/index.html`.
+This also answers all three cross-scope link requests from session 3371a533 below
+(their items 1–3: pattern href, `contract_terms/.pdf`, API-root href) — fixed at the
+generator level and re-verified.
+
+
+### Second merge record — session 3371a533 (merged `origin/main` at `1baa0eb`)
+
+- `origin/main` gained PR #32 (`8b9a46b4`, sharp-jump detector under `session-8b9a46b4/`), PR #37 and data refreshes. Merged without rewriting history. Conflicts: `COORDINATION.md` (union), `tools/build_content.py`, `pages/{flagged,suggestions,verification}.html` (generated; regenerated).
+- **Flag ID collision resolved.** `origin/main` already has **F13 = "Sharp-jump cause cannot be determined from the API"** (session `e36292f6`). My gas-scope flag was also numbered F13. Kept theirs as F13 and renumbered my flags **F13–F20 → F14–F21**, and updated every reference to them (bottom line, R18). Their references (F13 in suggestions and the sharp-jump page) are unchanged.
+- **Rendering fix in the shared flagged table:** the generator's row renderer now handles full `https://` source URLs, lists, and paths (the union of both sides). Both forms were in use.
+- Gates on the merge commit: `tools/check.py` OK, `scripts/check_links.py` OK, `instrument-panel/tests_smoke.py` OK, `validate_data.py` OK (1 warning: culture topic has no open markets, = F20), `check_site.py` OK, regenerated output matches the committed output (diff gate clean).
+- **Overlap logged (no edits made to the other sessions' files):** two other sessions also built a sharp-jump / price-move feature: `e36292f6` (live-chart markers in `assets/site.js`, merged) and `8b9a46b4` (`session-8b9a46b4/`, merged via PR #32). This session's `jumps/` page is a third, separate build from the same trade data. The three use different methods; the board should pick one for the final integration. This is recorded as a finding, not resolved here.
+- **Deviation from my own claim, disclosed:** the claim said J-2 would write `jumps/repo-review.html`. The repo review was instead added as flag/finding rows through `tools/build_content.py`, into `pages/flagged.html` and `pages/repo-review.html`, which the claim also allowed as additive rows. No other session's page content was edited by hand; shared pages were regenerated from the generator.
+- Open for the owner: F20 (culture: no open markets) and F21 (browser page takes a demo private key) remain open; R19 (two unfilled link placeholders in instrument-panel pages) remains open because those files belong to another session. R20 (README conflict markers on `main`) is fixed on this branch.
+
+### Cross-scope requests from session 3371a533 (not edited here; for the owner of `instrument-panel/` and the final integration session)
+
+Found by the whole-site external link check (`scripts/check_links.py --external`, workflow `linkcheck.yml`). The check is advisory (PR-only, does not gate deploy), and the three failures below are already on `main`. My PR adds none of them. Exact lines at `ccf8923`:
+
+1. **`instrument-panel/site/verification.html:33`** — `href="https://external-api.demo.kalshi.co/trade-api/v2/markets/{ticker}"` is an unfilled template placeholder (GET 404). Same defect as **R19**. Fix in `instrument-panel/tools/build_dashboard_site.py`: substitute a real ticker or link the endpoint's documentation page instead.
+2. **`instrument-panel/site/crypto.html:44`** — `href="https://assets.kalshi.com/contract_terms/.pdf"` has an empty ticker (GET 404). Built from the `contract_terms_url` field, which the collector stores as `…/contract_terms/.pdf` when the ticker is blank (see `data/dashboard_instrument.json`). Fix: skip the link when the ticker is blank, or show "not published" with a flag.
+3. **`instrument-panel/site/*.html:27`** (12 pages, incl. `index.html:28`) — `href="https://external-api.demo.kalshi.co/trade-api/v2"` points to the API root, which returns 404 for a plain GET. Fix: link to `https://docs.kalshi.com/` (the API reference) and keep the base URL as text.
+
+These are logged, not fixed, because the files belong to the instrument-panel session. Its owner decides the fix. Until then the advisory link check on PRs shows these three failures.
+
+### Final record — session 3371a533 (claim J-1, J-2, J-3)
+
+| # | Status | Result |
+|---|--------|--------|
+| J-1 | **done, merged** | Price-jump page `jumps/index.html` (nav entry "Price Jumps"); generator `tools/build_jumps.py`; `pages.yml` runs it on each data run. At the snapshot it was built from (`2026-11-20T13:26:12Z`): 53 trade-print moves ≥ $0.10 across 11 markets; 0 snapshot moves across 1,719 pairs. Cause column blank, marked unverified on every row. Verified on the live site. |
+| J-2 | **done, merged** | Repo review: R12–R20 on `pages/repo-review.html`; flags F14–F21 on `pages/flagged.html` (F13 is the sharp-jump flag from `e36292f6`; my gas-scope flag was renumbered). Every row carries a source link. R20: README on `main` had six unresolved conflict markers; fixed. |
+| J-3 | **done, merged** | PR #38 merged as `8dc7996`. Nav row added; executive-summary "Bottom line" corrected to list what is still open (F18–F21). Gates on the merge: `tools/check.py`, `scripts/check_links.py` (internal), `build_site`/`build_content` diff gate, `instrument-panel` smoke test, `validate_data.py` (1 warning, F20), `check_site.py`. Deploy: "Deploy GitHub Pages" success on `8dc7996`; live page confirmed. |
+
+**Open at close (not blocking, recorded):**
+- The external link check (`linkcheck.yml`, PR-only, advisory) did not complete on the runner for the final heads. Several link-check runs across sessions were still in progress after 25+ minutes; they were not failing. Its last complete result (on `d01f42b`) listed three defects, all pre-existing in `instrument-panel/site/` and none introduced by PR #38. Logged above as cross-scope requests.
+- Built-in GitHub Pages build (`pages build and deployment`) fails on automated **data-only** commits (`0dc7749`, `436a1a7`) and passes on code commits. Our `Deploy GitHub Pages` job is green. The cause is not in the logs (the log receiver returned EOF); the annotation shows no error. Recommend the owner of `pages.yml` / `collect.yml` check whether data-only pushes need the Pages build retried.
+- Two sharp-jump features exist beside this one (`e36292f6`, `8b9a46b4`). The final integration session should pick one.
+
+**Process note:** one `git pull --rebase` on this branch was attempted after a merge of `origin/main`. Rebasing would have replayed merged `main` history and stopped on another session's commit. It was aborted, nothing was lost, and the branch was pushed as a fast-forward. For this branch, use `git merge origin/main` rather than `pull --rebase`.
+
+**E-5 follow-up (session eeb796d7, 14:15-14:25 UTC):** the first real `refresh-data` run on
+`main` (44750844593, 49 s, SUCCESS — first ever) published `data/snapshot.json` with 10,241
+market rows (elections 9,797 · crypto 376 · golf 68). Gas showed 0 rows: the bare `/series`
+list response does NOT carry `product_metadata` (the field that classifies the AAA gasoline
+family via `product_metadata.scope == "Gasoline"`; filtered queries like
+`/series?tags=Oil%20%26%20Gas` and `GET /series/{ticker}` do carry it — all verified live
+2026-11-20), so the scope rule never fired in production even though it passes the offline
+fixture tests (which use the full record). Fixed in `tools/collector.py`: for series that
+appear in in-scope events but map to no topic, `GET /series/{ticker}` (official full record)
+is fetched once per series and re-mapped; event pagination widened 25→50 pages. Test updated
+to simulate the slim list + enrichment path (12/12 PASS). Also observed: Pages
+`pages-build-deployment` fails on data-only commits (3371a533 documented this too) while
+`pages.yml` does not run for them — so the deployed site lags the newest snapshot until the
+next code commit deploys; this follow-up commit is a code push and re-deploys the site with
+the current tree.

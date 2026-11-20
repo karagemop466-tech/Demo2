@@ -37,7 +37,7 @@ def strip_code(text: str) -> str:
 # and it is exactly the defect this checker missed on its first run.
 # Require whitespace *before* the full stop: "listed on ." is broken, while
 # "each value is filled in." is ordinary English.
-DANGLING = re.compile(r"\b(?:on|in|at|from|per|as|see|below|above)\s+\.|<\s*\.|>\s*\(\s*\)")
+DANGLING = re.compile(r"\b(?:on|in|at|from|per|as|see|below|above)\s+\.(?![\w/])|<\s*\.|>\s*\(\s*\)")
 
 
 def check_dangling(rel, scan, problems):

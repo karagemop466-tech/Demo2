@@ -1,0 +1,41 @@
+{
+ "fetched_at_utc": "2026-11-20T13:45Z",
+ "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+ "http_status": 200,
+ "note": "Verbatim body. product_metadata.scope='Gasoline' is the official signal used to classify the AAA gasoline family into the gas-prices topic (session eeb796d7 E-5).",
+ "body": {
+  "series": {
+   "additional_prohibitions": [
+    "Persons who are employed by any of the Source Agencies are not permitted to trade on the Contract.",
+    "Persons who hold any material, non-public information on the Underlying are not permitted to trade on the Contract."
+   ],
+   "categories": [
+    "Economics"
+   ],
+   "category": "Economics",
+   "contract_terms_url": "https://assets.kalshi.com/contract_terms/AAAGAS.pdf",
+   "contract_url": "https://kalshi-public-docs-staging.s3.us-east-1.amazonaws.com/regulatory/product-certifications/AAAGAS.pdf",
+   "exchange_index": 0,
+   "fee_multiplier": 1,
+   "fee_type": "quadratic",
+   "frequency": "daily",
+   "last_updated_ts": "2026-11-20T12:40:31.112471Z",
+   "product_metadata": {
+    "scope": "Gasoline"
+   },
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "tags": [
+    "Oil & Gas",
+    "Oil and energy",
+    "Econ Daily"
+   ],
+   "ticker": "KXAAAGASD",
+   "title": "US gas price up"
+  }
+ }
+}

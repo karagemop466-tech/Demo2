@@ -242,13 +242,20 @@ WebSocket relay, which is raised as a decision in <a href="suggestions.html">Sug
  ["Should demo-derived strategies be treated as transferable to production?", '<span class="pill flag">Open</span>', '<a href="questions.html">Q7</a>'],
 ]) + """
 <h2>Bottom line</h2>
-<p>Everything requested is built and sourced: the five-topic scope, the ranked live view, the
-time-versus-price chart, order-book depth, yes/no resolution tracking, demo portfolio reporting,
-trade categorisation, a strategy engine that refuses to guess, and a review gate for suggestions.
-What remains open is not engineering - it is definition and access: what &#8220;highest dollar
-amount&#8221; means, how fresh the data must be, whether a demo key will be supplied, and how much
-evidence is enough before a strategy is trusted. Those are listed, with the exact information
-needed to close them, on <a href="questions.html">Questions</a>.</p>
+<p>Built and sourced: the five-topic scope, the ranked live view, the time-versus-price chart, order-book
+depth, yes/no resolution tracking, trade categorisation, a strategy engine that refuses to guess, a review
+gate for suggestions, and a price-jump page for moves of $0.10 or more between official trade prints
+(<a href="../jumps/index.html">Price Jumps</a>, added in this review).</p>
+<p><b>Not done, and why.</b> Demo-account portfolio tracking and order execution need a Kalshi demo API key,
+and this workspace has none (<a href="flagged.html">F19</a>). Culture has no open markets in the collected
+data (<a href="flagged.html">F20</a>). The gas topic includes solar, electricity and refinery markets
+(<a href="flagged.html">F14</a>). The jump page cannot name a cause, because no official source links a price
+move to news (<a href="flagged.html">F18</a>), and snapshots are too coarse for intraday moves
+(<a href="flagged.html">F17</a>). A public page takes a demo private key as input
+(<a href="flagged.html">F21</a>).</p>
+<p>What remains open is definition and access: what &#8220;highest dollar amount&#8221; means, how fresh the data
+must be, whether a demo key will be supplied, and how much evidence is enough before a strategy is trusted.
+Those are listed, with the exact information needed to close them, on <a href="questions.html">Questions</a>.</p>
 """
     page(path="pages/executive-summary.html", title="Executive Summary", active="exec", body=body)
 
@@ -1110,7 +1117,15 @@ FLAGGED = [
 
 
 def build_flagged() -> None:
-    rows = [[f[0], f"<b>{f[1]}</b><br>{f[2]}", f[3], f[4], src_multi(f[5]),
+    def fsrc(p):
+        if isinstance(p, (list, tuple)):
+            return ", ".join(fsrc(x) for x in p)
+        if "|" in p:  # multi-source path list (session bdb4d2d0 rows)
+            return ", ".join(fsrc(x) for x in p.split("|"))
+        if p.startswith("http"):
+            return f'<a href="{p}" target="_blank" rel="noopener">{p.split("//", 1)[1].split("/", 1)[0]}</a>'
+        return src(p, p.rsplit("/", 1)[-1])
+    rows = [[f[0], f"<b>{f[1]}</b><br>{f[2]}", f[3], f[4], fsrc(f[5]),
              '<span class="pill flag">open for review</span>'] for f in FLAGGED]
     body = """
 <h1>Flagged for review</h1>
@@ -1220,6 +1235,59 @@ REPO_FINDINGS = [
   "Rows said \u201cdone\u201d but recorded no per-task sources or verification, and task 11 was left "
   "\u201cin progress\u201d.", "The board could not be audited.", "Rebuilt with per-task scope, a "
   "verification section, a source list and a log; this session recorded its claim before starting."),
+ ("R12", "repository (workflows)", "Five workflows write to main, each with its own concurrency group",
+  "Concurrency keys are <code>kalshi-refresh</code> (every 10 min), <code>pages-and-data</code> (7,22,37,52 past the hour), <code>collect-kalshi</code> and <code>data-refresh</code> (both at 23 past every second hour), and <code>kalshi-portfolio</code> (hourly at :20). "
+  "GitHub serializes only runs that share a key, so these runs can overlap and push to <code>main</code> at the same time. "
+  "Source: <a href=\"https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency\" target=\"_blank\" rel=\"noopener\">GitHub docs: control workflow concurrency</a>; the workflow files in <a href=\"https://github.com/karagemop466-tech/Demo2/tree/main/.github/workflows\" target=\"_blank\" rel=\"noopener\">.github/workflows/</a>.",
+  "Push races on the same data files; the result depends on which run pushes last.",
+  "Flagged. Serializing all data writers under one key is the recommended fix. Not changed here (cross-session files)."),
+ ("R13", "repository (workflows)", "Bots push generated data straight to main, and one rebase failure is swallowed",
+  "Four workflows push to <code>main</code> without a pull request: <code>pages.yml</code> (line 59), <code>refresh-data.yml</code> (line 88), <code>trade.yml</code> (line 100) and <code>collect.yml</code> (line 46, using <code>GITHUB_REF_NAME</code>). "
+  "<code>collect.yml</code> runs <code>git pull --rebase ... || true</code>, so a failed rebase is ignored and the push that follows can fail without any error being raised. "
+  "Source: the workflow files in <a href=\"https://github.com/karagemop466-tech/Demo2/tree/main/.github/workflows\" target=\"_blank\" rel=\"noopener\">.github/workflows/</a>.",
+  "Generated data bypasses review, which is acceptable only if the data cannot change code. A silent rebase failure can drop a snapshot without notice.",
+  "Flagged. The fix is to remove <code>|| true</code> and to fail the job when the rebase fails. Not changed here."),
+ ("R14", "scripts/__pycache__", "Compiled bytecode is tracked in git",
+  "<code>scripts/__pycache__/check_links.cpython-311.pyc</code> and <code>scripts/__pycache__/fetch_data.cpython-311.pyc</code> are tracked, even though <code>.gitignore</code> lists <code>__pycache__/</code>. "
+  "Checked with <code>git ls-files | grep __pycache__</code> on this branch. Source: <a href=\"https://git-scm.com/docs/gitignore\" target=\"_blank\" rel=\"noopener\">git docs: gitignore</a>, NOTES: \u201cTo stop tracking a file that is currently tracked, use <i>git rm --cached</i>\u201d.",
+  "Binary noise in diffs; a stale .pyc can differ from the source it claims to compile.",
+  "Flagged. Fix: <code>git rm --cached</code> both files. Not changed here (the file belongs to another session\u2019s scope)."),
+ ("R15", "tools/, scripts/, instrument-panel/", "Four collectors and three link checkers do overlapping jobs",
+  "Collectors: <code>tools/collector.py</code> (refresh-data.yml), <code>tools/collect_kalshi.py</code> (collect.yml), <code>scripts/fetch_data.py</code> (data-refresh.yml), <code>instrument-panel/tools/kalshi_collect.py</code> (pages.yml). "
+  "Link checkers: <code>tools/check_links.py</code>, <code>tools/check_live_links.py</code> and <code>scripts/check_links.py</code> (run by pages.yml and linkcheck.yml). "
+  "Each collector writes its own files under <code>data/</code>, and all four call the same demo API. Source: the <a href=\"https://github.com/karagemop466-tech/Demo2/tree/main/.github/workflows\" target=\"_blank\" rel=\"noopener\">workflow files</a> and the scripts named.",
+  "Four writers hit the same API on different schedules, which uses up the shared rate limit. Two checkers can disagree about the same site.",
+  "Flagged. Consolidating on one collector and one checker is the recommended fix. Not changed here."),
+ ("R16", "repository (site)", "Eight parallel sites with overlapping pages",
+  "The repository publishes the root site, <code>pages/</code>, <code>verified/</code>, <code>dashboard/</code>, <code>site/</code>, <code>instrument-panel/site/</code>, <code>intelligence/</code>, <code>live/</code> and now <code>jumps/</code>. "
+  "Each has its own verification, flags and repo-review pages. Source: the <a href=\"https://github.com/karagemop466-tech/Demo2/tree/main\" target=\"_blank\" rel=\"noopener\">repository tree</a> (<code>git ls-files</code> on this branch).",
+  "A reader cannot tell which page is current, and a fix in one site does not reach the others.",
+  "Flagged. Merging them into one generated site is the top suggestion for the owner. Not changed here."),
+ ("R17", "tools/collector.py, tools/execute_strategy.py", "Checked, no defect: trade execution is locked to the demo host",
+  "<code>DEMO_REST</code> is the demo base URL (<code>https://external-api.demo.kalshi.co/trade-api/v2</code>). <code>execute_strategy.py</code> posts only to <code>DEMO_REST</code>, and <code>KALSHI_DRY_RUN</code> defaults to 1. "
+  "<code>PROD_REST</code> is defined but never used by any script. Source: <a href=\"https://docs.kalshi.com/getting_started/demo_env\" target=\"_blank\" rel=\"noopener\">Kalshi docs: demo environment</a>.",
+  "No defect found. The production host cannot be reached by the execution path.",
+  "Checked. No change needed."),
+ ("R18", "live/trading.html, live/assets/app.js", "A public page asks the user to paste a demo private key",
+  "<code>live/trading.html</code> has a form with a Demo API Key ID field and a PEM private-key textarea (<code>#apiPrivateKey</code>). "
+  "<code>live/assets/app.js</code> imports that key with <code>crypto.subtle.importKey</code> and signs requests in the browser. "
+  "The key is kept in <code>sessionStorage</code> for the tab. The page is published on GitHub Pages, which is public. "
+  "The same repo has no matching form on any other page (checked by searching every HTML file for key inputs). "
+  "Source: the file contents (<code>live/trading.html</code> lines 101-107; <code>live/assets/app.js</code> lines 663-690); <a href=\"https://docs.kalshi.com/getting_started/api_keys\" target=\"_blank\" rel=\"noopener\">Kalshi docs: API keys</a>.",
+  "Anyone who can run script in that page, through an injected script or a browser extension, can read the key from sessionStorage and place demo orders with it. The README discloses this.",
+  "Flagged (F21). Recommended: remove the form and keep signed calls on the server side. Not changed here (the page belongs to another session\u2019s scope)."),
+
+ ("R19", "instrument-panel/site/analysis.html, instrument-panel/site/verification.html", "Two source links still contain unfilled template text",
+  "<code>analysis.html</code> has an API link with a literal <code>{ticker}</code> and <code>{status}</code> in it. <code>verification.html</code> has one with a literal <code>{category}</code>. "
+  "Neither link can open a real market or series. Found by <code>tools/check_live_links.py</code> and confirmed by reading the two files. "
+  "Source: <a href=\"https://github.com/karagemop466-tech/Demo2/blob/main/instrument-panel/site/analysis.html\" target=\"_blank\" rel=\"noopener\">analysis.html</a>, <a href=\"https://github.com/karagemop466-tech/Demo2/blob/main/instrument-panel/site/verification.html\" target=\"_blank\" rel=\"noopener\">verification.html</a>, and <a href=\"https://docs.kalshi.com/getting_started/demo_env\" target=\"_blank\" rel=\"noopener\">Kalshi docs: demo environment</a> for the base URL those links should use.",
+  "A reader who follows the source link for that row lands on an invalid request, so the row is not verifiable from the page.",
+  "Flagged. Fix: replace each placeholder with the real value from the row, or remove the link. Not changed here (cross-session files)."),
+ ("R20", "README.md", "Unresolved merge-conflict markers were committed to main",
+  "On <code>origin/main</code>, <code>README.md</code> held six conflict markers (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/main</code>), so both sides of two sections were in the file. "
+  "Checked with <code>git show origin/main:README.md | grep -n</code>. Source: <a href=\"https://github.com/karagemop466-tech/Demo2/commit/6a9aecb\" target=\"_blank\" rel=\"noopener\">origin/main at 6a9aecb</a>.",
+  "The rendered README shows both versions of a section, and the markers are a sign that a merge was not finished.",
+  "Fixed in session 3371a533 by keeping both sides in order (no text removed). A check for leftover markers should be added to CI."),
 ]
 
 
