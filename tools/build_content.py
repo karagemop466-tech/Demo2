@@ -1271,7 +1271,7 @@ REPO_FINDINGS = [
   "Flagged. Fix: replace each placeholder with the real value from the row, or remove the link. Not changed here (cross-session files)."),
  ("R20", "README.md", "Unresolved merge-conflict markers were committed to main",
   "On <code>origin/main</code>, <code>README.md</code> held six conflict markers (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/main</code>), so both sides of two sections were in the file. "
-  "Checked with <code>git show origin/main:README.md | grep -n</code>. Source: <a href=\"https://github.com/karagemop466-tech/Demo2/blob/main/README.md\" target=\"_blank\" rel=\"noopener\">README.md on main</a>.",
+  "Checked with <code>git show origin/main:README.md | grep -n</code>. Source: <a href=\"https://github.com/karagemop466-tech/Demo2/commit/6a9aecb\" target=\"_blank\" rel=\"noopener\">origin/main at 6a9aecb</a>.",
   "The rendered README shows both versions of a section, and the markers are a sign that a merge was not finished.",
   "Fixed in session 3371a533 by keeping both sides in order (no text removed). A check for leftover markers should be added to CI."),
 ]
