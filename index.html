@@ -26,6 +26,7 @@ filled in from memory or guessed. Each table row links to the request it came fr
 <h2>The five topics</h2>
 <p class="muted">Kept separate, with the events inside each topic kept together. Counts come from
 the latest snapshot; a topic with no live markets says so instead of showing an empty table.</p>
+<div class="notice" id="coverageNote"></div>
 <div id="topicTable"></div>
 
 <h2>Track record of the pipeline</h2>
@@ -95,6 +96,20 @@ $0.10+ move up against the news.</td>
         <div class="s">${KR.num(c.resolved_this_run,0)} added by the last run</div></div>
       <div class="kpi-card"><div class="k">API requests</div><div class="v">${KR.num(m.api_request_count,0)}</div>
         <div class="s">${KR.num(m.api_request_failures,0)} failed (rate limit) · <a href="pages/verification.html">log</a></div></div>`;
+
+    // Coverage first: a bounded sweep is not the whole catalogue, and saying so is the
+    // difference between an honest zero and a misleading one.
+    const cap = Object.values(cat).map(v=>v.cap_this_run).find(x=>x);
+    const read = m.series_read_total, catN = Object.values(cat).reduce((a,v)=>a+(v.series_in_catalog||0),0);
+    if($('coverageNote')){
+      $('coverageNote').innerHTML = cap
+        ? `<b>Coverage this run.</b> The sweep queries at most <b>${KR.num(cap,0)}</b> series per
+           topic and rotates the slice on every run, because a full walk of
+           ${KR.num(catN,0)} series exceeds the rate limit inside one job. This run read
+           <b>${KR.num(read,0)}</b> of <b>${KR.num(catN,0)}</b> catalogued series. A topic showing
+           few markets may simply not have been reached yet — that is stated, not hidden.`
+        : `<b>Coverage this run.</b> All <b>${KR.num(read,0)}</b> catalogued in-scope series were read.`;
+    }
 
     const rows = Object.entries(cat).map(([t,v])=>({topic:t, ...v,
       live:(c.per_topic||{})[t], settled:(m.resolutions_by_topic||{})[t]}));

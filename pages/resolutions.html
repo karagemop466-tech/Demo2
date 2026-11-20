@@ -71,6 +71,16 @@ traded is not evidence about anything.</p>
       <div class="kpi-card"><div class="k">Resolved NO</div><div class="v bad">${no}</div><div class="s">result = no</div></div>
       <div class="kpi-card"><div class="k">Topics with data</div><div class="v">${Object.keys(per).length}</div>
         <div class="s">${Object.entries(per).map(([k,v])=>k+': '+v.total).join(' · ')||'none'}</div></div>`;
+    try{
+      const m = await KR.getJSON("data/dashboard_meta.json");
+      const cap = Object.values(m.topic_catalog||{}).map(v=>v.cap_this_run).find(x=>x);
+      $('scopeNote').innerHTML = `<b>What this log covers.</b> Settled markets are read from the same
+        rotating series sweep as the live ones${cap ? ` (at most <b>${KR.num(cap,0)}</b> series per topic per run)` : ''},
+        so this is what the runs so far have reached — not a complete settlement history.
+        ${d.this_run !== undefined ? `The latest run added <b>${KR.num(d.this_run,0)}</b> settled markets.` : ''}
+        A market that never traded is included and marked <span class="pill flag">no volume</span>.`;
+    }catch(e){}
+
     // per-topic YES/NO breakdown, so "how did events resolve" is answerable at a glance
     const ORDER = ['gas','elections','culture','crypto','golf'];
     const bt = ORDER.map(tp=>{

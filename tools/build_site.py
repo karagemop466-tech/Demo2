@@ -501,6 +501,10 @@ CATEGORY_JS = r"""
           'A smaller number below can mean a failed request, not an empty topic — see <a href="verification.html">Verification</a>.';
       } else if(inCat === 0){
         catBox.innerHTML = '<span class="pill flag">no series</span> The API returned no series tagged or categorised for this topic.';
+      } else if(cat.cap_this_run && cat.series_read < inCat){
+        catBox.innerHTML = '<span class="pill flag">rotating sweep</span> <b>' + KR.num(cat.series_read,0) + '</b> of <b>' +
+          KR.num(inCat,0) + '</b> catalogued series were read this run (cap ' + KR.num(cat.cap_this_run,0) +
+          ' per topic, rotating). ' + (withLive ? '<b>' + withLive + '</b> have live markets.' : 'None of the series read has a live market right now.');
       } else if(withLive === 0){
         catBox.innerHTML = '<span class="pill flag">catalogue only</span> <b>' + inCat + '</b> series exist for this topic in Kalshi&#8217;s catalogue (' +
           (cat.series_tickers||[]).slice(0,6).map(t=>'<code>'+KR.esc(t)+'</code>').join(' ') +
@@ -667,6 +671,16 @@ RES_JS = r"""
       <div class="kpi-card"><div class="k">Resolved NO</div><div class="v bad">${no}</div><div class="s">result = no</div></div>
       <div class="kpi-card"><div class="k">Topics with data</div><div class="v">${Object.keys(per).length}</div>
         <div class="s">${Object.entries(per).map(([k,v])=>k+': '+v.total).join(' · ')||'none'}</div></div>`;
+    try{
+      const m = await KR.getJSON("data/dashboard_meta.json");
+      const cap = Object.values(m.topic_catalog||{}).map(v=>v.cap_this_run).find(x=>x);
+      $('scopeNote').innerHTML = `<b>What this log covers.</b> Settled markets are read from the same
+        rotating series sweep as the live ones${cap ? ` (at most <b>${KR.num(cap,0)}</b> series per topic per run)` : ''},
+        so this is what the runs so far have reached — not a complete settlement history.
+        ${d.this_run !== undefined ? `The latest run added <b>${KR.num(d.this_run,0)}</b> settled markets.` : ''}
+        A market that never traded is included and marked <span class="pill flag">no volume</span>.`;
+    }catch(e){}
+
     // per-topic YES/NO breakdown, so "how did events resolve" is answerable at a glance
     const ORDER = ['gas','elections','culture','crypto','golf'];
     const bt = ORDER.map(tp=>{
@@ -732,6 +746,7 @@ filled in from memory or guessed. Each table row links to the request it came fr
 <h2>The five topics</h2>
 <p class="muted">Kept separate, with the events inside each topic kept together. Counts come from
 the latest snapshot; a topic with no live markets says so instead of showing an empty table.</p>
+<div class="notice" id="coverageNote"></div>
 <div id="topicTable"></div>
 
 <h2>Track record of the pipeline</h2>
@@ -799,6 +814,20 @@ LANDING_JS = r"""
         <div class="s">${KR.num(c.resolved_this_run,0)} added by the last run</div></div>
       <div class="kpi-card"><div class="k">API requests</div><div class="v">${KR.num(m.api_request_count,0)}</div>
         <div class="s">${KR.num(m.api_request_failures,0)} failed (rate limit) · <a href="pages/verification.html">log</a></div></div>`;
+
+    // Coverage first: a bounded sweep is not the whole catalogue, and saying so is the
+    // difference between an honest zero and a misleading one.
+    const cap = Object.values(cat).map(v=>v.cap_this_run).find(x=>x);
+    const read = m.series_read_total, catN = Object.values(cat).reduce((a,v)=>a+(v.series_in_catalog||0),0);
+    if($('coverageNote')){
+      $('coverageNote').innerHTML = cap
+        ? `<b>Coverage this run.</b> The sweep queries at most <b>${KR.num(cap,0)}</b> series per
+           topic and rotates the slice on every run, because a full walk of
+           ${KR.num(catN,0)} series exceeds the rate limit inside one job. This run read
+           <b>${KR.num(read,0)}</b> of <b>${KR.num(catN,0)}</b> catalogued series. A topic showing
+           few markets may simply not have been reached yet — that is stated, not hidden.`
+        : `<b>Coverage this run.</b> All <b>${KR.num(read,0)}</b> catalogued in-scope series were read.`;
+    }
 
     const rows = Object.entries(cat).map(([t,v])=>({topic:t, ...v,
       live:(c.per_topic||{})[t], settled:(m.resolutions_by_topic||{})[t]}));

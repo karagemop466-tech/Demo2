@@ -68,6 +68,10 @@ their official contract-terms and product-certification links.</p>
           'A smaller number below can mean a failed request, not an empty topic — see <a href="verification.html">Verification</a>.';
       } else if(inCat === 0){
         catBox.innerHTML = '<span class="pill flag">no series</span> The API returned no series tagged or categorised for this topic.';
+      } else if(cat.cap_this_run && cat.series_read < inCat){
+        catBox.innerHTML = '<span class="pill flag">rotating sweep</span> <b>' + KR.num(cat.series_read,0) + '</b> of <b>' +
+          KR.num(inCat,0) + '</b> catalogued series were read this run (cap ' + KR.num(cat.cap_this_run,0) +
+          ' per topic, rotating). ' + (withLive ? '<b>' + withLive + '</b> have live markets.' : 'None of the series read has a live market right now.');
       } else if(withLive === 0){
         catBox.innerHTML = '<span class="pill flag">catalogue only</span> <b>' + inCat + '</b> series exist for this topic in Kalshi&#8217;s catalogue (' +
           (cat.series_tickers||[]).slice(0,6).map(t=>'<code>'+KR.esc(t)+'</code>').join(' ') +
