@@ -46,11 +46,21 @@ jobs:
         run: python instrument-panel/tools/validate_data.py
       - name: Rebuild the dashboard pages from the new snapshot
         run: python instrument-panel/tools/build_dashboard_site.py
+      - name: Emit the canonical root snapshot from the instrument artifact
+        # The root dashboard (index.html + assets/site.js) loads data/snapshot.json.
+        # The instrument-panel collector above already does the bounded collection that
+        # works in the demo environment; this deterministic adapter reshapes its output
+        # into the canonical root schema instead of re-running the stalling global
+        # /markets pagination in tools/collector.py.
+        run: python tools/snapshot_from_instrument.py
       - name: Commit the snapshot and pages
         run: |
           git config user.name "kalshi-dashboard-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/dashboard_instrument.json data/history_instrument instrument-panel/site
+          git add data/dashboard_instrument.json data/history_instrument instrument-panel/site \
+                 data/snapshot.json data/topic-gas.json data/topic-elections.json \
+                 data/topic-culture.json data/topic-crypto.json data/topic-golf.json \
+                 data/resolutions.json data/history.json
           if git diff --cached --quiet; then
             echo "No data changes to commit."
           else

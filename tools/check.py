@@ -90,7 +90,11 @@ def nav_source() -> list:
 def check_data() -> None:
     snap_path = ROOT / "data" / "snapshot.json"
     if not snap_path.exists():
-        warnings.append("data/snapshot.json not present yet (first workflow run pending)")
+        # The canonical root dashboard (assets/site.js) fetches data/snapshot.json
+        # unconditionally; without it every table on the published site is empty and the
+        # snapshot URL 404s. A missing snapshot is a broken build, not a first-run
+        # condition, so fail the check rather than warn.
+        errors.append("data/snapshot.json is missing - the root dashboard cannot render without it")
         return
     try:
         s = json.loads(snap_path.read_text())

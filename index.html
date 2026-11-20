@@ -5,9 +5,9 @@
 <meta name="description" content="Live Kalshi demo markets for gas prices, elections, culture, crypto and golf with price charts, liquidity and resolution tracking.">
 <link rel="stylesheet" href="assets/style.css">
 </head><body>
-<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="index.html" aria-current="page">Dashboard</a><a href="pages/executive-summary.html">Executive Summary</a><a href="pages/gas.html">Gas</a><a href="pages/elections.html">Elections</a><a href="pages/culture.html">Culture</a><a href="pages/crypto.html">Crypto</a><a href="pages/golf.html">Golf</a><a href="verified/index.html">Verified Data</a><a href="dashboard/index.html">Static Dashboard</a><a href="review.html">Decision Register</a><a href="rankings.html">Dollar Rankings</a><a href="instrument-panel/site/index.html">Instrument Panel</a><a href="live/index.html">Live Console</a><a href="pages/resolutions.html">Resolutions</a><a href="pages/portfolio.html">Portfolio</a><a href="pages/analysis.html">Analysis</a><a href="pages/suggestions.html">Suggestions</a><a href="pages/questions.html">Questions</a><a href="pages/api-reference.html">API Reference</a><a href="pages/verification.html">Verification</a><a href="pages/flagged.html">Flagged</a><a href="pages/repo-review.html">Repo Review</a><a href="pages/sources.html">Sources</a></nav></div></header>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="index.html" aria-current="page">Dashboard</a><a href="pages/executive-summary.html">Executive Summary</a><a href="pages/gas.html">Gas</a><a href="pages/elections.html">Elections</a><a href="pages/culture.html">Culture</a><a href="pages/crypto.html">Crypto</a><a href="pages/golf.html">Golf</a><a href="verified/index.html">Verified Data</a><a href="dashboard/index.html">Static Dashboard</a><a href="review.html">Decision Register</a><a href="rankings.html">Dollar Rankings</a><a href="instrument-panel/site/index.html">Instrument Panel</a><a href="live/index.html">Live Console</a><a href="pages/resolutions.html">Resolutions</a><a href="pages/backtest.html">Sharp-Jump Backtest</a><a href="pages/portfolio.html">Portfolio</a><a href="pages/analysis.html">Analysis</a><a href="pages/suggestions.html">Suggestions</a><a href="pages/questions.html">Questions</a><a href="pages/api-reference.html">API Reference</a><a href="pages/verification.html">Verification</a><a href="pages/flagged.html">Flagged</a><a href="pages/repo-review.html">Repo Review</a><a href="pages/sources.html">Sources</a></nav></div></header>
 <div class="wrap">
-<div class="card tight"><div class="row" style="justify-content:space-between"><div class="status" id="staleness">Snapshot <span class="muted">none yet</span></div><div class="status muted">0 in-scope markets · API key configured: no · source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a></div></div></div>
+<div class="card tight"><div class="row" style="justify-content:space-between"><div class="status" id="staleness">Snapshot <span class="muted">2026-11-20T13:02:54Z</span></div><div class="status muted">1337 in-scope markets · API key configured: no · source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a></div></div></div>
 <h1>Highest-dollar live markets in scope</h1>
 <p class="lead">Live Kalshi <b>demo</b> markets for five topics only — <b>gas prices,
 elections, culture, crypto, golf</b>. Ranked by <i>estimated</i> dollar volume, charted by
@@ -61,6 +61,15 @@ tables on the category, resolution and verification pages still work without it.
       period 1 min / 1 h / 1 day, max 5,000 periods per request). Short windows use the
       collector's own tick history, which is sampled every 10 minutes — a 60-second window
       will legitimately be empty. Nothing is interpolated.</p>
+  </div>
+
+  <div class="card">
+    <h3>Sharp price moves <span class="muted">— jumps ≥ $0.10 between consecutive price points</span></h3>
+    <p class="muted" style="margin-top:0">Each red marker on the chart is a move of $0.10 or more
+      between two consecutive points. The API returns price and volume but not the news or event
+      behind a move, so the cause is not inferred — each row links to the market's own page on
+      Kalshi and is flagged <span class="pill flag">cause unverified</span>.</p>
+    <div id="jumpTable"></div>
   </div>
 
   <div class="card">
@@ -205,8 +214,10 @@ official <code>result</code> field (<code>yes</code>/<code>no</code>) moves the 
                                   yes_ask_close:c.yes_ask_close, derived_mid:c.derived_mid}));
     const series = KR.buildSeries(candles, hist, fieldMap[state.field])
       .filter(p=>p.t >= Date.now()-state.window*1000 && p.t <= Date.now()+60000);
+    const jumps = KR.detectJumps(series, 0.10);
     KR.drawChart(document.getElementById('chart'), series, {
       spanSeconds: state.window,
+      jumps: jumps,
       emptyMessage: state.window<=300
         ? 'No ticks inside this window yet. The collector samples every 10 minutes, so a 60-second or 5-minute window only fills when a run has just completed.'
         : 'No price points in this window. Candlestick price objects are empty in periods with no trade - try the quoted-mid series or a longer window.'
@@ -216,7 +227,18 @@ official <code>result</code> field (<code>yes</code>/<code>no</code>) moves the 
       : state.field==='close' ? 'last traded price - empty in periods with no trade'
       : state.field==='yes_bid_close' ? 'yes bid close' : 'yes ask close';
     $('chartNote').innerHTML = `${series.length} points · ${tickCount} collector ticks + ${srcCount} candlesticks `
-      + `(period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`;
+      + `(period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`
+      + (jumps.length ? ` · ${jumps.length} sharp move${jumps.length!==1?'s':''} ≥ $0.10` : '');
+
+    const m = (state.snap.markets||[]).find(x=>x.market_ticker===state.ticker) || {};
+    KR.renderTable($('jumpTable'), [
+      {label:'When (UTC)', get:j=>`<span class="small">${KR.when(new Date(j.toTime).toISOString())}</span>`},
+      {label:'From → To', num:true, get:j=>`${KR.usd(j.fromV,4)} → ${KR.usd(j.toV,4)}`},
+      {label:'Change', num:true, get:j=>(j.change>0?'▲ ':'▼ ')+KR.usd(Math.abs(j.change),4)},
+      {label:'Direction', get:j=>`<span class="pill ${j.dir==='up'?'up':'down'}">${j.dir}</span>`},
+      {label:'Market', get:j=>`<b>${KR.esc(m.market_title||m.market_ticker||'—')}</b><br><span class="muted small">${KR.esc(m.market_ticker||'—')}</span>`},
+      {label:'Source', get:j=>KR.link(m.market_url||'','Kalshi market')+' <span class="pill flag">cause unverified</span>'}
+    ], jumps, 'No sharp moves (≥ $0.10 between consecutive points) in this window. A blank table means the price moved in smaller steps — nothing is inferred.');
   }
 
   async function renderLiquidity(){

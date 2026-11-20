@@ -297,6 +297,9 @@ def collect_scope(signer: Signer | None) -> dict:
             continue
         if topic not in TOPICS:
             continue
+        # The official series record for this event's series. It carries the
+        # category/categories, the contract terms URL and the product scope.
+        series = series_idx.get(st) or {}
         for m in ev.get("markets") or []:
             rows.append(
                 {

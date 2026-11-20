@@ -571,6 +571,15 @@ SUGGESTIONS = [
          effort="Low", impact="Medium", risk="None.",
          source=DOCS + "/getting_started/pagination",
          recommended="Implemented \u2014 see the API log section on Verification."),
+    dict(id="S9", title="Mark sharp price jumps (\u2265 $0.10) on the live chart",
+         problem="A sharp price move has no visible marker on the chart, so a trader can miss a significant move.",
+         options=["Mark jumps \u2265 $0.10 with red vertical markers + a table below the chart (implemented)",
+                  "No markers, keep chart clean (rejected)",
+                  "Add news/event links for each jump (not possible from the API \u2014 cause unverified)"],
+         effort="Low", impact="Medium", risk="None \u2014 the cause is never inferred.",
+         source=DOCS + "/api-reference/market/get-market-candlesticks",
+         recommended="Implemented \u2014 jumps are detected in assets/site.js (KR.detectJumps) and "
+                     "each row links to the market on Kalshi, tagged cause unverified."),
 ]
 
 
@@ -598,7 +607,7 @@ def build_suggestions() -> None:
 </div>""")
     body = f"""
 <h1>Suggestions \u2014 review before anything changes</h1>
-<p class="lead">Eight improvement proposals, each with the problem, the options, the trade-off and
+<p class="lead">Nine improvement proposals, each with the problem, the options, the trade-off and
 the official source that motivates it. Nothing here is implemented on your behalf. Record a
 decision per item; decisions and notes stay in this browser so you can review the set as a whole
 before choosing a path.</p>
@@ -618,7 +627,7 @@ knowledge. No decision is transmitted anywhere.</div>
   const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
   function paint(){{
     const d=load(); let n=0;
-    ['S1','S2','S3','S4','S5','S6','S7','S8'].forEach(id=>{{
+    ['S1','S2','S3','S4','S5','S6','S7','S8','S9'].forEach(id=>{{
       const el=document.getElementById('dec-'+id); if(!el) return;
       const rec=d[id];
       if(rec){{ n++; el.innerHTML='<span class="pill '+(rec.decision==='choose'?'ok':rec.decision==='reject'?'err':'flag')+'">'+rec.decision+'</span> <span class="small muted">'+new Date(rec.at).toLocaleString()+'</span>'; }}
@@ -626,7 +635,7 @@ knowledge. No decision is transmitted anywhere.</div>
       const note=document.getElementById('note-'+id);
       if(note && rec && rec.note && !note.value) note.value=rec.note;
     }});
-    document.getElementById('decSummary').textContent=n+' of 8 decided';
+    document.getElementById('decSummary').textContent=n+' of 9 decided';
   }}
   document.querySelectorAll('button[data-decide]').forEach(b=>b.addEventListener('click',()=>{{
     const d=load(), id=b.dataset.id;
@@ -889,6 +898,12 @@ VERIFIED = [
  ("Portfolio / order endpoints require signed keys",
   "GET /portfolio/balance and GET /portfolio/positions return 401 without signed headers; no demo credentials exist in this workspace, so all portfolio/trade rows stay blank and flagged",
   "api-reference/portfolio/get-balance", "read on page (security scheme kalshiAccessKey) + unauthenticated request fails", "Verified"),
+ ("Sharp-jump price-move detection (\u2265 $0.10)",
+  "Chart detects moves of $0.10 or more between consecutive price points and marks them with red "
+  "vertical markers; the table below the chart lists each jump with a link to the market on Kalshi. "
+  "The cause of each jump is not derivable from the Kalshi API (no news/event field in price "
+  "responses) and is flagged cause unverified.",
+  "api-reference/market/get-market-candlesticks", "implemented in assets/site.js (KR.detectJumps) + chart markers in KR.drawChart; table renders on index.html", "By design"),
 ]
 
 
@@ -1053,6 +1068,14 @@ FLAGGED = [
   "topic, and the Gas page states &#8220;catalogue only &#8212; 2 series exist, none has a live market&#8221;. "
   "Gas stays in scope and populates automatically when the demo exchange lists those markets.",
   "api-reference/market/get-series-list"),
+ ("F13", "The cause of a sharp price move is not in the Kalshi API",
+  "The chart detects moves of $0.10 or more between consecutive price points and marks each with a "
+  "red vertical line. The Trade API returns price, volume and open interest for a market, but no "
+  "news or event field explaining <em>why</em> the price moved, so the cause column is left blank.",
+  "A reader could mistake a detected jump for a verified news event and act on the wrong reason.",
+  "Every jump row links to the market's own page on Kalshi and is tagged <b>cause unverified</b>. "
+  "The threshold and the detection rule are stated on the Verification page; no cause is inferred.",
+  "api-reference/market/get-market-candlesticks"),
 ]
 
 
@@ -1073,6 +1096,7 @@ wrong.</p>
 <li><b>F6</b>: the portfolio page says \u201cnot configured\u201d; it is not a zero balance.</li>
 <li><b>F11</b>: the chart notes whether it is plotting a derived quoted mid or a traded price.</li>
 <li><b>F12</b>: the Gas page says \u201ccatalogue only\u201d instead of showing an unexplained empty table.</li>
+<li><b>F13</b>: the sharp-move table has no cause column \u2014 every row is tagged <i>cause unverified</i>.</li>
 <li><b>F8</b>: the dashboard header shows the snapshot time and age, so stale data is visible.</li>
 <li><b>F9</b>: compare the in-scope series list per topic against the unclassified list in
   <code>data/snapshot.json</code>.</li>
@@ -1253,6 +1277,133 @@ LIVE = [
 ]
 
 
+def build_backtest() -> None:
+    """Surface the sharp-jump detector + simulated strategy backtest (PR #32).
+
+    Reads the session's generated data so the numbers on the page come from the
+    same artifact the tooling produced, never from a hand-typed figure.
+    """
+    import json as _json
+    from pathlib import Path as _Path
+    _ROOT = _Path(__file__).resolve().parent.parent
+    _bt = _ROOT / "session-8b9a46b4" / "data" / "backtest.json"
+    _jm = _ROOT / "session-8b9a46b4" / "data" / "jumps.json"
+    bt = _json.loads(_bt.read_text()) if _bt.exists() else {}
+    jm = _json.loads(_jm.read_text()) if _jm.exists() else {}
+
+    def _money(v):
+        try:
+            return f"${float(v):,.2f}"
+        except (TypeError, ValueError):
+            return "—"
+
+    strat_rows = []
+    order = ["always_yes", "always_no", "favorite", "underdog"]
+    labels = {
+        "always_yes": "Always YES", "always_no": "Always NO",
+        "favorite": "Favorite (higher priced side)", "underdog": "Underdog (lower priced side)",
+    }
+    for k in order:
+        s = (bt.get("overall") or {}).get(k) or {}
+        strat_rows.append([
+            labels.get(k, k),
+            str(s.get("n", "—")),
+            _money(s.get("total_pnl_per_contract")),
+            _money(s.get("mean_pnl_per_contract")),
+            f"{float(s.get('win_rate', 0)) * 100:.1f}%" if s.get("win_rate") is not None else "—",
+        ])
+
+    topic_rows = []
+    for t, s in (bt.get("by_topic") or {}).items():
+        for k in order:
+            v = (s or {}).get(k) or {}
+            topic_rows.append([
+                t, labels.get(k, k), str(v.get("n", "—")),
+                _money(v.get("mean_pnl_per_contract")),
+                f"{float(v.get('win_rate', 0)) * 100:.1f}%" if v.get("win_rate") is not None else "—",
+            ])
+
+    jumps = jm.get("jumps") if isinstance(jm, dict) else jm
+    if not jumps and isinstance(jm, dict):
+        jumps = jm.get("jumps") or []
+    jump_rows = []
+    for j in (jumps or [])[:40]:
+        jump_rows.append([
+            f"<code>{j.get('ticker', '')}</code>",
+            j.get("from_time", ""),
+            f"{float(j.get('from_yes_price', 0)):.4f} → {float(j.get('to_yes_price', 0)):.4f}",
+            ("▲ up" if j.get("direction") == "up" else "▼ down"),
+            f"{float(j.get('delta', 0)):+.4f}",
+            '<span class="pill flag">cause unverified</span>',
+        ])
+
+    pop = bt.get("population") or {}
+    body = f"""
+<h1>Sharp-jump backtest</h1>
+<p class="lead">A transparent, simulated study of sharp price moves and entry-side calibration on the Kalshi
+demo environment. It reads only already-collected official demo data; every output row carries its source URL, and
+fields the API does not provide (the news or event <em>cause</em> of a jump) are left blank and flagged. This is
+historical demo analysis, not a tradable strategy and not investment advice.</p>
+
+<div class="notice warn">
+<b>Read the caveat first.</b> The backtest enters at the <b>final traded print</b> of a resolved market. That price is
+not knowable at a decision time, so the numbers measure <em>calibration-style edge</em> on how the market resolved
+relative to its last print — they do <b>not</b> describe a strategy you could execute. Historical demo data only;
+demo prices may not reflect real markets.
+</div>
+
+<h2>Method</h2>
+<h3>1 · Sharp-jump detector</h3>
+<p>Consecutive trade prints on the same ticker whose YES price moves by <b>&ge; $0.10</b> in either direction are
+flagged as a sharp move. The detector runs over the trade history collected from
+<code>GET /markets/trades</code>. The Kalshi Trade API returns price and volume but no news/event field, so the
+<em>cause</em> of each jump is not inferred — every jump row is tagged <span class="pill flag">cause unverified</span>
+and links to the market's own page on Kalshi.</p>
+
+<h3>2 · Simulated strategy backtest</h3>
+<p>On resolved markets that actually traded (<code>volume_fp &gt; 0</code> and <code>last_price_dollars &gt; 0</code>),
+buy 1 contract at the final print price and settle at $1.00 / $0.00 per the official <code>result</code> field. Four
+fixed entry sides are compared:</p>
+<ul class="clean">
+<li><b>Always YES</b> — buy the YES side of every traded resolved market.</li>
+<li><b>Always NO</b> — buy the NO side of every traded resolved market.</li>
+<li><b>Favorite</b> — buy whichever side was priced higher (closer to $1.00) at the final print.</li>
+<li><b>Underdog</b> — buy whichever side was priced lower (closer to $0.00) at the final print.</li>
+</ul>
+<p class="muted">P&amp;L is per contract: a winning contract pays $1.00, a losing contract pays $0.00, so
+per-contract P&amp;L = (result matches side ? 1.00 : 0.00) − entry price. Fees are not modelled; the demo API does
+not expose a per-fill fee field used here.</p>
+
+<h2>Population</h2>
+{table(["Measure", "Count"], [
+    ["Resolved markets collected", str(pop.get("resolved_collected", "—"))],
+    ["Traded and priced (backtested)", str(pop.get("traded_and_priced", "—"))],
+])}
+
+<h2>Overall results (per contract)</h2>
+{table(["Strategy", "Markets (n)", "Total P&amp;L", "Mean P&amp;L / contract", "Win rate"], strat_rows)}
+
+<h2>By topic</h2>
+{table(["Topic", "Strategy", "n", "Mean P&amp;L / contract", "Win rate"], topic_rows)}
+
+<h2>Detected sharp moves</h2>
+<p class="lead">Moves of &ge; $0.10 between consecutive trade prints. The cause column is intentionally blank —
+the API does not publish it.</p>
+{table(["Ticker", "From (UTC)", "YES price", "Direction", "Change", "Cause"], jump_rows)}
+
+<h2>Sources &amp; tooling</h2>
+<p class="muted">The detector and backtest are implemented in
+<code>session-8b9a46b4/tools/jump_backtest.py</code> and run offline over
+<code>data/dashboard_instrument.json</code>. The generated data lives in
+<code>session-8b9a46b4/data/backtest.json</code> and
+<code>session-8b9a46b4/data/jumps.json</code>. Source endpoint:
+<a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled" target="_blank" rel="noopener">GET /markets?status=settled</a>
+and <a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/trades" target="_blank" rel="noopener">GET /markets/trades</a>.
+The same $0.10 jump threshold drives the live chart markers on the <a href="../index.html">dashboard</a>.</p>
+"""
+    page(path="pages/backtest.html", title="Sharp-Jump Backtest", active="bt", body=body)
+
+
 def build_sources() -> None:
     body = """
 <h1>Sources</h1>
@@ -1313,5 +1464,6 @@ if __name__ == "__main__":
     build_verification()
     build_flagged()
     build_repo_review()
+    build_backtest()
     build_sources()
     print("content pages built")

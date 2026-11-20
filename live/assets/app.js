@@ -10,7 +10,6 @@
   "use strict";
 
   var API = "https://external-api.demo.kalshi.co/trade-api/v2";
-  var SIGN_PREFIX = "/trade-api/v2";
   var DEMO_SITE = "https://demo.kalshi.co/";
 
   /* ------------------------------------------------------------------ topic
@@ -644,88 +643,22 @@
   }
 
   /* ============================================================ LIVE (signed)
-     Signing per /getting_started/quick_start_authenticated_requests:
-     message = timestamp_ms + METHOD + path (path from API root, no query),
-     RSA-PSS/SHA-256 (salt = digest length) or Ed25519, base64 signature.    */
-  function b64ToBytes(b64) {
-    var bin = atob(b64.replace(/-----BEGIN [^-]+-----|-----END [^-]+-----|\s/g, ""));
-    var out = new Uint8Array(bin.length);
-    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
-    return out;
-  }
-  function bufToB64(buf) {
-    var bytes = new Uint8Array(buf), s = "";
-    for (var i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
-    return btoa(s);
-  }
-
-  var keyCache = { pem: null, key: null, alg: null };
-  async function importKey(pem) {
-    if (keyCache.pem === pem) return keyCache;
-    var der = b64ToBytes(pem);
-    var alg = null, key = null;
-    try { key = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, false, ["sign"]); alg = "Ed25519"; }
-    catch (e) {
-      key = await crypto.subtle.importKey("pkcs8", der, { name: "RSA-PSS", hash: "SHA-256" }, false, ["sign"]);
-      alg = "RSA-PSS";
-    }
-    keyCache = { pem: pem, key: key, alg: alg };
-    return keyCache;
-  }
-
-  function creds() {
-    var id = ($("#apiKeyId") && $("#apiKeyId").value.trim()) || sessionStorage.getItem("kd.keyId") || "";
-    var pem = ($("#apiPrivateKey") && $("#apiPrivateKey").value.trim()) || sessionStorage.getItem("kd.pem") || "";
-    return { id: id, pem: pem };
-  }
-
-  async function signedFetch(path, method, body) {
-    var c = creds();
-    if (!c.id || !c.pem) throw new Error("Add your demo API Key ID and private key first (Account & security → API Keys at demo.kalshi.co).");
-    var k = await importKey(c.pem);
-    var ts = String(Date.now());
-    var msg = new TextEncoder().encode(ts + method + SIGN_PREFIX + path.split("?")[0]);
-    var sig = k.alg === "Ed25519"
-      ? await crypto.subtle.sign("Ed25519", k.key, msg)
-      : await crypto.subtle.sign({ name: "RSA-PSS", saltLength: 32 }, k.key, msg);
-    var res = await fetch(API + path, {
-      method: method,
-      headers: {
-        "KALSHI-ACCESS-KEY": c.id,
-        "KALSHI-ACCESS-SIGNATURE": bufToB64(sig),
-        "KALSHI-ACCESS-TIMESTAMP": ts,
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: body ? JSON.stringify(body) : undefined
-    });
-    var j = await res.json().catch(function () { return {}; });
-    if (!res.ok) throw apiError(res.status, j);
-    return j;
-  }
-
+     Authenticated account access and order submission are intentionally disabled
+     in this public static client. A static GitHub Pages app has no trusted server
+     to protect a private signing key, so browser-side key entry would expose the
+     key to any script on the hosting origin. Portfolio reads and live order
+     submission require a separately secured backend with server-side secret
+     handling — see pages/suggestions.html and pages/flagged.html. No account
+     value is fabricated: the portfolio stays blank by design. */
   var PORT = { balance: null, positions: [], fills: [], settlements: [] };
 
-  async function loadPortfolio() {
+  function loadPortfolio() {
     var box = $("#portfolioResult");
-    if (box) box.innerHTML = '<p class="muted small">Requesting balance, positions, fills and settlements…</p>';
-    try {
-      var bal = await signedFetch("/portfolio/balance", "GET");
-      var pos = await signedFetch("/portfolio/positions?limit=200&settlement_status=all&count_filter=position", "GET");
-      var fills = await signedFetch("/portfolio/fills?limit=200", "GET");
-      var sets = null;
-      try { sets = await signedFetch("/portfolio/settlements?limit=200", "GET"); }
-      catch (e) { sets = { settlements: [], _err: e.message }; }
-      PORT.balance = bal;
-      PORT.positions = pos.market_positions || [];
-      PORT.fills = fills.fills || [];
-      PORT.settlements = (sets && sets.settlements) || [];
-      renderPortfolio(sets && sets._err);
-      if (box) box.innerHTML = '<div class="notice ok"><b>Connected to the demo account.</b> Values below come straight from the API at ' + new Date().toLocaleTimeString() + ".</div>";
-    } catch (e) {
-      if (box) box.innerHTML = '<div class="notice bad"><b>Could not load the portfolio.</b> ' + esc(e.message) + "<br>Check the key pair, that the key is a <i>demo</i> key, and that its scopes allow portfolio reads. Nothing is shown rather than showing guessed numbers.</div>";
-      clearPortfolio();
-    }
+    if (box) box.innerHTML = '<div class="notice bad"><b>Authenticated account access is disabled on this static site.</b> ' +
+      "Portfolio balance, positions, fills and settlements are not loaded, and no value is estimated. A browser-side " +
+      "signing key would be exposed to site scripts; enabling this requires a separately secured backend. See " +
+      '<a href="../pages/suggestions.html">Suggestions</a> and <a href="../pages/flagged.html">Flagged for Review</a>.</div>';
+    clearPortfolio();
   }
 
   function clearPortfolio() {
@@ -734,63 +667,7 @@
     var fb = $("#fillsBody"); if (fb) fb.innerHTML = '<tr><td colspan="7" class="empty">Not connected.</td></tr>';
   }
 
-  function renderPortfolio(settlementsErr) {
-    var b = PORT.balance || {};
-    setText("#pfBalance", isFinite(num(b.balance_dollars)) ? money(b.balance_dollars, 2) : (isFinite(num(b.balance)) ? money(num(b.balance) / 100, 2) : "—"));
-    setText("#pfPortfolioValue", isFinite(num(b.portfolio_value)) ? money(num(b.portfolio_value) / 100, 2) : "—");
-    setText("#pfPositions", int(PORT.positions.length));
-    setText("#pfFills", int(PORT.fills.length));
-    var realized = PORT.positions.reduce(function (a, p) { return a + (num(p.realized_pnl_dollars) || 0); }, 0);
-    setText("#pfRealized", money(realized, 2));
-    var fees = PORT.positions.reduce(function (a, p) { return a + (num(p.fees_paid_dollars) || 0); }, 0);
-    setText("#pfFees", money(fees, 2));
-
-    var tb = $("#positionsBody");
-    if (tb) {
-      if (!PORT.positions.length) tb.innerHTML = '<tr><td colspan="7" class="empty">No open positions returned for this account.</td></tr>';
-      else tb.innerHTML = PORT.positions.map(function (p) {
-        var t = classifyText(p.ticker);
-        var pos = num(p.position_fp);
-        return '<tr><td><b>' + esc(p.ticker) + '</b></td>' +
-          '<td><span class="pill ' + (t || "") + '">' + (TOPIC_LABEL[t] || "other") + '</span></td>' +
-          '<td class="num">' + (isFinite(pos) ? qty(Math.abs(pos)) + (pos < 0 ? " NO" : " YES") : "—") + '</td>' +
-          '<td class="num">' + money(p.total_traded_dollars, 2) + '</td>' +
-          '<td class="num">' + money(p.market_exposure_dollars, 2) + '</td>' +
-          '<td class="num ' + (num(p.realized_pnl_dollars) >= 0 ? "yes" : "no") + '">' + money(p.realized_pnl_dollars, 2) + '</td>' +
-          '<td class="num">' + money(p.fees_paid_dollars, 2) + '</td></tr>';
-      }).join("");
-    }
-
-    var fb = $("#fillsBody");
-    if (fb) {
-      if (!PORT.fills.length) fb.innerHTML = '<tr><td colspan="7" class="empty">No fills returned.</td></tr>';
-      else fb.innerHTML = PORT.fills.slice(0, 80).map(function (f) {
-        var t = classifyText(f.ticker || f.market_ticker);
-        var side = String(f.outcome_side || f.side || "").toLowerCase();
-        return '<tr><td class="num nowrap">' + dt(f.created_time || (f.ts ? f.ts * 1000 : null)) + '</td>' +
-          '<td><b>' + esc(f.ticker || f.market_ticker) + '</b></td>' +
-          '<td><span class="pill ' + (t || "") + '">' + (TOPIC_LABEL[t] || "other") + '</span></td>' +
-          '<td><span class="pill ' + (side === "yes" ? "yes" : "no") + '">' + esc(side.toUpperCase() || "—") + '</span></td>' +
-          '<td class="num">' + qty(f.count_fp) + '</td>' +
-          '<td class="num">' + cents(f.yes_price_dollars) + '</td>' +
-          '<td class="num">' + money(f.fee_cost, 4) + '</td></tr>';
-      }).join("");
-    }
-
-    var sb = $("#settlementsBody");
-    if (sb) {
-      if (settlementsErr) sb.innerHTML = '<tr><td colspan="4" class="empty">Settlements unavailable: ' + esc(settlementsErr) + '</td></tr>';
-      else if (!PORT.settlements.length) sb.innerHTML = '<tr><td colspan="4" class="empty">No settlements returned for this account.</td></tr>';
-      else sb.innerHTML = PORT.settlements.map(function (s) {
-        var r = String(s.market_result || "").toLowerCase();
-        return '<tr><td><b>' + esc(s.ticker) + '</b></td>' +
-          '<td><span class="pill ' + (r === "yes" ? "yes" : r === "no" ? "no" : "warn") + '">' + esc(r.toUpperCase() || "—") + '</span></td>' +
-          '<td class="num">' + money(num(s.revenue) / 100, 2) + '</td>' +
-          '<td class="num nowrap">' + dt(s.settled_time) + '</td></tr>';
-      }).join("");
-    }
-    renderAnalysis();
-  }
+  function renderPortfolio() { /* intentionally disabled — see LIVE (signed) note above */ }
 
   /* ------------------------------------------------------- trade categories */
   function priceBand(p) {
@@ -942,43 +819,15 @@
   }
 
   /* -------------------------------------------------------- live order form */
+  /* Order submission is intentionally disabled on this static site. See the
+     LIVE (signed) note above. */
   function wireLiveOrder() {
     var btn = $("#liveOrderBtn"); if (!btn) return;
-    btn.addEventListener("click", async function () {
+    btn.addEventListener("click", function () {
       var out = $("#liveOrderResult");
-      var ticker = ($("#liveTicker") && $("#liveTicker").value.trim().toUpperCase()) || "";
-      var side = $("#liveSide") ? $("#liveSide").value : "bid";
-      var count = num($("#liveCount") && $("#liveCount").value);
-      var price = num($("#livePrice") && $("#livePrice").value);
-      var ack = $("#liveAck") && $("#liveAck").checked;
-      if (!ticker) { out.innerHTML = '<div class="notice bad">Enter a market ticker.</div>'; return; }
-      if (!isFinite(count) || count <= 0) { out.innerHTML = '<div class="notice bad">Count must be a positive number of contracts.</div>'; return; }
-      if (!isFinite(price) || price <= 0 || price >= 1) { out.innerHTML = '<div class="notice bad">Price must be between $0.01 and $0.99.</div>'; return; }
-      if (!ack) { out.innerHTML = '<div class="notice warn">Tick the confirmation box first. Orders are real demo-environment writes.</div>'; return; }
-      btn.disabled = true;
-      out.innerHTML = '<p class="muted small">Signing and sending order…</p>';
-      try {
-        /* POST /portfolio/events/orders (V2). The legacy POST /portfolio/orders
-           is removed and returns 410 Gone — see verification page V-9. */
-        var j = await signedFetch("/portfolio/events/orders", "POST", {
-          ticker: ticker,
-          client_order_id: uid(),
-          side: side,                    /* bid = buy YES, ask = sell YES */
-          count: String(count),
-          price: price.toFixed(4),
-          time_in_force: "good_till_canceled",
-          self_trade_prevention_type: "taker_at_cross"
-        });
-        out.innerHTML = '<div class="notice ok"><b>Order accepted by the demo exchange.</b> ' +
-          "order_id <code>" + esc(j.order_id || "—") + "</code> · filled " + esc(j.fill_count || "0") +
-          " · remaining " + esc(j.remaining_count || "—") + ". A 201 means accepted, not necessarily resting — check remaining_count.</div>";
-        loadPortfolio();
-      } catch (e) {
-        out.innerHTML = '<div class="notice bad"><b>Order rejected.</b> ' + esc(e.message) +
-          "<br>Common causes: wrong key type, insufficient demo balance, price off the market's price grid, or market not open.</div>";
-      } finally {
-        btn.disabled = false;
-      }
+      out.innerHTML = '<div class="notice bad"><b>Order submission is disabled on this static site.</b> ' +
+        "A signed request needs a private key, which a public GitHub Pages app cannot hold safely. Demo order " +
+        "execution requires a separately secured backend. See <a href=\"../pages/suggestions.html\">Suggestions</a>.</div>";
     });
   }
 

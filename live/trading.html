@@ -24,18 +24,20 @@
 <main class="wrap">
 
   <div class="page-head">
-    <p class="eyebrow">Account performance · two modes</p>
+    <p class="eyebrow">Account performance · paper trading</p>
     <h1>Portfolio, trades and outcomes</h1>
-    <p class="lede">Two separate things live on this page and are never mixed together. <b>Paper trading</b> needs no
-      credentials and records simulated trades in this browser. <b>Live demo account</b> reads a real Kalshi demo
-      portfolio and sends real demo orders, which requires your own API key. Neither mode ever invents a number.</p>
+    <p class="lede">This page offers a local <b>paper-trading simulator</b> that needs no credentials and records
+      simulated trades in this browser. Authenticated account access and live order submission are intentionally
+      disabled on this static site — a public GitHub Pages app has no trusted server to protect a private signing key,
+      so enabling them requires a separately secured backend. No account value is ever fabricated.</p>
   </div>
 
   <div class="notice info">
-    <b>Why paper trading ships first.</b> A static site cannot hold a private signing key safely — anyone who can load
-    the page can read it. So the default mode is a local simulator that behaves like the real thing for analysis, and
-    the signed mode only runs if you choose to paste a <i>demo</i> key into your own browser. That trade-off is
-    recorded as decision <b>Q-2</b> on <a href="../pages/questions.html">Questions</a>.
+    <b>Why authenticated access is disabled.</b> A static site cannot hold a private signing key safely — anyone who can
+    load the page can read it. Browser-side key entry would expose the key to site scripts. Portfolio reads and demo
+    order execution are therefore turned off; this trade-off is recorded as decision <b>Q-2</b> on
+    <a href="../pages/questions.html">Questions</a>. See <a href="../pages/suggestions.html">Suggestions</a> for the
+    backend-based path.
   </div>
 
   <h2 style="margin:22px 0 10px">Mode A · Paper trading (no key)</h2>
@@ -86,116 +88,38 @@
     </section>
   </div>
 
-  <h2 style="margin:26px 0 10px">Mode B · Live demo account (your key)</h2>
+  <h2 style="margin:26px 0 10px">Authenticated account access · disabled</h2>
 
-  <div class="notice warn">
-    <b>Before you paste anything.</b> Use a key created on <a href="https://demo.kalshi.co/">demo.kalshi.co</a> only —
-    never a production key. The key is sent from your browser straight to
-    <code>external-api.demo.kalshi.co</code> and is kept in <code>sessionStorage</code> for this tab only, so closing the
-    tab drops it. It is never written into the repository. If that is not acceptable, use Mode A.
-  </div>
-
-  <div class="grid two">
-    <section class="card">
-      <h2>Credentials</h2>
-      <label for="apiKeyId">Demo API Key ID</label>
-      <input id="apiKeyId" placeholder="a952bcbe-ec3b-4b5b-b8f9-11dae589608c" autocomplete="off" spellcheck="false">
-      <label for="apiPrivateKey">Demo private key (PEM)</label>
-      <textarea id="apiPrivateKey" rows="6" placeholder="Paste your demo private key here (PEM text, including the BEGIN and END lines)" autocomplete="off" spellcheck="false"></textarea>
-      <div class="row" style="margin-top:12px">
-        <button class="primary" id="loadPortBtn" onclick="KD.loadPortfolio()">Load account</button>
-        <button class="ghost" onclick="document.getElementById('apiPrivateKey').value='';sessionStorage.clear();location.reload()">Forget key</button>
-      </div>
-      <div id="portfolioResult"></div>
-      <p class="xs faint" style="margin:10px 0 0">
-        Signing follows <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">authenticated requests</a>:
-        message = <code>timestamp_ms + METHOD + path</code>, RSA-PSS/SHA-256 or Ed25519, base64.
-        Reads used: <code>/portfolio/balance</code>, <code>/portfolio/positions</code>, <code>/portfolio/fills</code>,
-        <code>/portfolio/settlements</code>.
-      </p>
-    </section>
-
-    <section class="card">
-      <h2>Account snapshot</h2>
-      <div class="grid kpis" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">
-        <div class="kpi"><div class="label">Cash balance</div><div class="value" id="pfBalance" style="font-size:18px">—</div></div>
-        <div class="kpi"><div class="label">Portfolio value</div><div class="value" id="pfPortfolioValue" style="font-size:18px">—</div></div>
-        <div class="kpi"><div class="label">Positions</div><div class="value" id="pfPositions" style="font-size:18px">—</div></div>
-        <div class="kpi"><div class="label">Fills</div><div class="value" id="pfFills" style="font-size:18px">—</div></div>
-        <div class="kpi"><div class="label">Realised P&amp;L</div><div class="value" id="pfRealized" style="font-size:18px">—</div></div>
-        <div class="kpi"><div class="label">Fees paid</div><div class="value" id="pfFees" style="font-size:18px">—</div></div>
-      </div>
-      <p class="xs faint" style="margin:10px 0 0">Balance and portfolio value come back in cents; they are divided by 100
-        for display. Realised P&amp;L is the sum of <code>realized_pnl_dollars</code> across open positions, which is what the
-        API exposes — it is not a lifetime total.</p>
-      <h4>Positions</h4>
-      <div class="table-wrap" style="max-height:230px">
-        <table>
-          <thead><tr><th>Ticker</th><th>Topic</th><th class="num">Net</th><th class="num">Traded</th><th class="num">Exposure</th><th class="num">Realised</th><th class="num">Fees</th></tr></thead>
-          <tbody id="positionsBody"><tr><td colspan="7" class="empty">Not connected — values stay blank by design.</td></tr></tbody>
-        </table>
-      </div>
-    </section>
-  </div>
-
-  <div class="grid two" style="margin-top:14px">
-    <section class="card">
-      <h2>Fills — the raw trade record</h2>
-      <div class="table-wrap" style="max-height:320px">
-        <table>
-          <thead><tr><th class="num">Time</th><th>Ticker</th><th>Topic</th><th>Side</th><th class="num">Count</th><th class="num">YES price</th><th class="num">Fee</th></tr></thead>
-          <tbody id="fillsBody"><tr><td colspan="7" class="empty">Not connected.</td></tr></tbody>
-        </table>
-      </div>
-      <p class="table-note">Side is read from <code>outcome_side</code>, the current documented field; <code>side</code> and
-        <code>action</code> are deprecated. See <a href="https://docs.kalshi.com/getting_started/order_direction">order direction</a>.</p>
-    </section>
-
-    <section class="card">
-      <h2>Settlements — how positions ended</h2>
-      <div class="table-wrap" style="max-height:320px">
-        <table>
-          <thead><tr><th>Ticker</th><th>Result</th><th class="num">Revenue</th><th class="num">Settled</th></tr></thead>
-          <tbody id="settlementsBody"><tr><td colspan="4" class="empty">Not connected.</td></tr></tbody>
-        </table>
-      </div>
-      <p class="table-note"><code>market_result</code> is <code>yes</code>, <code>no</code>, <code>scalar</code> or empty;
-        <code>revenue</code> is returned in cents.</p>
-    </section>
-  </div>
-
-  <section class="card" style="margin-top:14px;border-color:#f2e2b8">
+  <div class="card" style="border-color:#f2e2b8">
     <div class="card-head">
-      <h2>Place a demo order</h2>
-      <span class="src">POST /portfolio/events/orders</span>
+      <h2>Account connection is intentionally disabled</h2>
+      <span class="src">requires a secured backend</span>
     </div>
-    <div class="notice bad" style="margin-top:0">
-      <b>This sends a real write to the demo exchange.</b> The legacy <code>POST /portfolio/orders</code> endpoint has
-      been removed and returns <code>410 Gone</code>; orders now go to the V2 endpoint
-      <code>/portfolio/events/orders</code> with a single-book <code>bid</code>/<code>ask</code> side and fixed-point
-      dollar prices (<a href="https://docs.kalshi.com/api-reference/orders/create-order-v2">Create Order (V2)</a>).
-      Market orders are not offered here — limit orders only, so a typo cannot sweep the book.
-    </div>
-    <div class="grid three" style="gap:10px">
-      <div><label for="liveTicker">Ticker</label><input id="liveTicker" placeholder="KXHIGHNY-25NOV20-T44"></div>
-      <div><label for="liveSide">Direction</label>
-        <select id="liveSide">
-          <option value="bid">bid — buy YES</option>
-          <option value="ask">ask — sell YES (≡ buy NO at 1−price)</option>
-        </select></div>
-      <div><label for="liveCount">Contracts</label><input id="liveCount" type="number" min="1" step="1" value="1"></div>
-      <div><label for="livePrice">Limit price ($)</label><input id="livePrice" type="number" min="0.01" max="0.99" step="0.01" value="0.10"></div>
-      <div style="align-self:end"><label style="display:flex;gap:8px;align-items:flex-start;margin:0">
-        <input type="checkbox" id="liveAck" style="width:auto;margin-top:2px"><span class="xs">I understand this places a demo
-        order that can fill.</span></label></div>
-      <div style="align-self:end"><button class="primary" id="liveOrderBtn" style="width:100%">Send demo order</button></div>
-    </div>
-    <div id="liveOrderResult"></div>
-    <p class="xs faint" style="margin:10px 0 0">A <code>201</code> means <i>accepted</i>, not resting — always read
-      <code>remaining_count</code> in the response. Every order sends a fresh <code>client_order_id</code> (UUID v4) so a
-      retried request cannot double-fill. Cancel and amend are not wired to buttons yet; see
-      <a href="../pages/api-reference.html">API Reference</a> for the documented endpoints.</p>
-  </section>
+    <p>This site is a static GitHub Pages application. It has no trusted server to protect signing credentials. Do not
+      paste an API key or private key into this site. A browser-side key-entry and trading flow would expose a powerful
+      secret to site scripts and any compromise of the hosting origin.</p>
+    <p>Portfolio values, positions, fills, settlements and trade performance are therefore blank—not estimated—and
+      order submission is not available. No account data is fabricated.</p>
+    <p>To enable this safely, review the proposal on <a href="../pages/suggestions.html">Suggestions</a>: build a
+      separately hosted backend that stores credentials in a secret manager, authenticates the account owner, limits
+      demo access, validates orders, and logs activity. Until then, use Kalshi's official demo interface directly.</p>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h2>What is needed for meaningful performance analysis?</h2>
+    <table>
+      <thead><tr><th>Measure</th><th>Status</th><th>Official reference</th></tr></thead>
+      <tbody>
+        <tr><td>Account balance / portfolio history</td><td>Unavailable here; requires authenticated account access and a secure backend.</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance">Balance endpoint</a></td></tr>
+        <tr><td>Positions and realized / unrealized P&amp;L</td><td>Unavailable here; no account credentials or fills supplied.</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-positions">Positions endpoint</a></td></tr>
+        <tr><td>Trade categorization and strategy outcomes</td><td>Not calculated; requires verified fills, timestamps, fees, resolution outcomes, and a documented classification policy.</td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills">Fills endpoint</a></td></tr>
+        <tr><td>Order execution</td><td>Disabled on this static site. Demo orders require authenticated API requests.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_create_order">Create order guide</a></td></tr>
+      </tbody>
+    </table>
+    <p class="xs faint" style="margin:10px 0 0">Demo API documentation:
+      <a href="https://docs.kalshi.com/getting_started/demo_env">Demo environment</a> ·
+      <a href="https://docs.kalshi.com/getting_started/api_keys">API keys</a>.</p>
+  </div>
 
   <div class="notice" style="margin-top:14px">
     <b>Performance is only meaningful once trades settle.</b> The outcome view that joins fills to
@@ -212,20 +136,5 @@
   </div>
 </footer>
 <script src="assets/app.js"></script>
-<script>
-/* keep credentials in sessionStorage only, for this tab */
-document.addEventListener("DOMContentLoaded", function () {
-  var idEl = document.getElementById("apiKeyId"), pemEl = document.getElementById("apiPrivateKey");
-  if (!idEl) return;
-  idEl.value = sessionStorage.getItem("kd.keyId") || "";
-  pemEl.value = sessionStorage.getItem("kd.pem") || "";
-  function persist() {
-    sessionStorage.setItem("kd.keyId", idEl.value.trim());
-    sessionStorage.setItem("kd.pem", pemEl.value.trim());
-  }
-  idEl.addEventListener("change", persist);
-  pemEl.addEventListener("change", persist);
-});
-</script>
 </body>
 </html>

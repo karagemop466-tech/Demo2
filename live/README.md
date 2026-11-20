@@ -8,7 +8,7 @@ research set, `verified/`, `dashboard/` or `site/` — it links to them.
 | Page | Purpose |
 |---|---|
 | [`live/index.html`](index.html) | Interactive console: five-topic market table ranked by notional, price chart with 60 s / 5 m / 15 m / 1 h / 6 h windows, live order book with contracts at each price and cumulative depth, resolved feed, markets tracked until YES/NO |
-| [`live/trading.html`](trading.html) | Paper-trade simulator (no key), plus real demo-account reads and signed V2 demo orders (your key) |
+| [`live/trading.html`](trading.html) | Paper-trade simulator (no key); authenticated account access and order submission intentionally disabled |
 | [`live/trading-analysis.html`](trading-analysis.html) | Trades bucketed by topic, side, entry-price band and topic × side; a bucket must reach 10 trades before a pattern is described |
 
 ## What is different here
@@ -21,8 +21,8 @@ what a static table cannot do:
 2. **Full order-book depth** — price, contracts resting at that level, cumulative contracts, and dollar value per level
    for both YES and NO, with best bid, the implied ask (1 − best NO bid) and the spread.
 3. **A resolution tracker** that remembers markets you have viewed and flips them to the YES/NO the exchange reports.
-4. **Trade execution and analysis**, in two explicitly separate modes: a local paper simulator that needs no
-   credentials, and signed demo orders for people who choose to supply their own key.
+4. **Trade analysis** from a local paper simulator that needs no credentials. Authenticated account access and
+   live order submission are intentionally disabled (see Security below).
 
 ## Two things to know before trusting a number
 
@@ -52,10 +52,13 @@ wording and [`pages/sources.html`](../pages/sources.html) for the reference list
 
 ## Security
 
-Do **not** paste a Kalshi API key into a public page unless you accept that a script injected into that page could read
-it. This build never stores a key in the repository, keeps one in `sessionStorage` for a single tab only if you choose
-to enter it, and defaults to a paper simulator that needs no credentials. The trade-off is recorded as question **Q-2**
-on [`pages/questions.html`](../pages/questions.html) and suggestion **S-9**.
+Authenticated account access and order submission are **intentionally disabled** in this static client. A public
+GitHub Pages application has no trusted server to protect a private signing key, so browser-side key entry would
+expose the key to site scripts and any compromise of the hosting origin. The credential-entry UI and browser-side
+signing have been removed. Portfolio reads and demo order execution require a separately secured backend that stores
+credentials in a secret manager, authenticates the account owner, and logs activity. The trade-off is recorded as
+question **Q-2** on [`pages/questions.html`](../pages/questions.html) and proposal **S-9** on
+[`pages/suggestions.html`](../pages/suggestions.html).
 
 Demo money only. Demo prices are not real market prices
 ([demo environment docs](https://docs.kalshi.com/getting_started/demo_env)).

@@ -1,0 +1,24 @@
+{
+ "generated_at_utc": "2026-11-20T13:02:54Z",
+ "topic": "culture",
+ "count": 0,
+ "markets": [],
+ "resolutions": [
+  {
+   "topic": "culture",
+   "series_ticker": "KXXBANNEDGROK",
+   "event_ticker": "KXXBANNEDGROK-26",
+   "market_ticker": "KXXBANNEDGROK-26",
+   "title": "In 2025",
+   "status": "finalized",
+   "result": "no",
+   "settlement_value_dollars": null,
+   "settlement_ts": null,
+   "close_time": "2026-01-01T04:59:00Z",
+   "volume_fp": "0.00",
+   "open_interest_fp": "0.00",
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXBANNEDGROK-26",
+   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXXBANNEDGROK&status=settled&limit=1000&mve_filter=exclude"
+  }
+ ]
+}
