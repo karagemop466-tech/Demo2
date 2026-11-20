@@ -45,6 +45,17 @@ jobs:
       - name: Python modules compile
         run: python -m py_compile tools/collector.py tools/portfolio.py tools/analyze.py tools/execute_strategy.py
 
+      - name: Pipeline regression tests (published subset, series mapping, size guard)
+        run: python tools/test_pipeline_fix.py
+
+      - name: Live alert engine tests (no dependencies)
+        run: node --test tests/live_alerts.test.js
+
+      - name: Dashboard render test (jsdom; skipped when jsdom is unavailable)
+        run: |
+          npm install --no-save --no-audit --no-fund jsdom || echo "::warning::jsdom not installed - the render test will be skipped"
+          node --test tests/render_dashboard.test.js
+
       - name: Analysis maths on a known fixture
         # Runs in a temp DATA_DIR so the fixture can never be mistaken for a real snapshot
         # by the checks in the next step.

@@ -4,6 +4,10 @@ against time with selectable windows, shows how many contracts are available at 
 every event until it resolves **yes** or **no**, reports demo-account performance, categorises
 trades and proposes strategies only when the evidence supports them.
 
+**Two live alert feeds** run in the browser against the public demo Trade API: one chat lists
+*every* move of $0.10 or more in either direction, the other lists the subset the ROI model likes.
+Both are fed by official prices only; the API returns no news, so no cause is ever asserted.
+
 
 ---
 
@@ -44,7 +48,7 @@ Demo environment only. Mock funds. Not investment advice.
 
 | Page | What it answers |
 |------|-----------------|
-| `index.html` — Dashboard | Ranked in-scope markets, price-vs-time chart (60 s → 7 d), order-book depth, recent resolutions |
+| `index.html` — Dashboard | Ranked in-scope markets, price-vs-time chart (60 s → 7 d), order-book depth (with a live fetch), **two live alert chats**, recent resolutions |
 | `intelligence/` | session `arena-ddc587ae` | Source-linked subsite (dashboard, resolutions, portfolio analysis, trading request-builder, review queue, 17 flags) with per-row source data |
 | `pages/executive-summary.html` | The whole build in one screen, plus what is still open |
 | `pages/gas.html` … `golf.html` | One page per topic: live markets, resolved outcomes, series in scope |
@@ -63,10 +67,14 @@ Portfolio access and order submission are deliberately disabled in the static si
 ## How the data flows
 
 ```
-GitHub Actions (every 10 min)            static site (GitHub Pages)
+GitHub Actions (every 30 min)            static site (GitHub Pages)
 tools/collector.py  ──► data/*.json ──►  pages read the snapshot
    │  official demo Trade API            no secrets in the browser
    └─ writes an HTTP log per request      missing values render as "—"
+
+browser (visitor's tab)
+   └─► GET /markets?tickers=…&status=open ──► live alert chats + live order book
+       (public endpoint, no key; the API allows this site's origin)
 ```
 
 The authoring sandbox cannot reach `external-api.demo.kalshi.co` (TLS handshake fails), so
@@ -106,7 +114,9 @@ GitHub Pages serves `main` from the repository root (build type: legacy). Every 
 repository commits to `main` and rebases before pushing, so a data refresh and a page change cannot
 clobber each other:
 
-- `Refresh Kalshi demo data` — every 10 minutes, commits `data/`
+- `Refresh Kalshi demo data` — every 30 minutes, commits `data/` (a collection takes 10-12
+  minutes; the publisher refuses to write a file over GitHub's 100 MB limit and the workflow
+  fails with a clear annotation rather than a rejected push)
 - `Demo portfolio, analysis and (optional) execution` — hourly, commits reporting artefacts
 - `Build and check the site` — on every push and PR; fails on a broken link, an out-of-date page,
   a bad snapshot, a leaked key or a JS syntax error
@@ -119,9 +129,16 @@ A `.nojekyll` file is present so no asset is filtered out by Jekyll processing.
 
 ```bash
 cd tools && python3 build_site.py && python3 build_content.py && cd ..
-python3 tools/check.py          # links, nav, data, secrets, inline JS
-python3 -m http.server 8000     # then open http://localhost:8000/
+python3 tools/check.py            # links, nav, data, secrets, inline JS
+python3 tools/test_pipeline_fix.py  # published-subset, series mapping, size guard
+node --test tests/live_alerts.test.js     # alert threshold, de-duplication, ROI score
+npm install --no-save jsdom && node --test tests/render_dashboard.test.js  # full page render
+python3 -m http.server 8000       # then open http://localhost:8000/
 ```
+
+The live feeds need the page to be served from an origin the demo API allows
+(`https://karagemop466-tech.github.io`). From `localhost` the browser blocks the request; the
+page then says so and falls back to the committed snapshot.
 
 Regenerate the pages after editing anything in `tools/`; CI fails if the generated HTML and the
 generator disagree.

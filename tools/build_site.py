@@ -115,14 +115,20 @@ def snapshot_meta() -> dict:
 
 
 def meta_bar(s: dict) -> str:
-    gen = s.get("generated_at_utc") or ""
-    n = (s.get("counts") or {}).get("markets_in_scope", 0)
-    auth = "yes" if s.get("authenticated") else "no"
+    """The freshness strip above a page.
+
+    It deliberately carries NO build-time data value. The numbers and the
+    timestamp are filled in by the page script from the snapshot the browser
+    actually loaded, so a data refresh cannot make the generated HTML differ
+    from the committed file (which would fail the CI diff gate on the next
+    data-only commit). The placeholders below are what a reader sees before
+    the script runs.
+    """
     return (
         '<div class="card tight"><div class="row" style="justify-content:space-between">'
-        f'<div class="status" id="staleness">Snapshot <span class="muted">{gen or "none yet"}</span></div>'
-        f'<div class="status muted">{n} in-scope markets · API key configured: {auth} · '
-        f'source <a href="{DOCS}/getting_started/demo_env">demo environment</a></div>'
+        '<div class="status" id="staleness">Loading the latest snapshot…</div>'
+        '<div class="status muted" id="metaFacts">source '
+        f'<a href="{DOCS}/getting_started/demo_env">demo environment</a></div>'
         "</div></div>"
     )
 
@@ -208,6 +214,67 @@ tables on the category, resolution and verification pages still work without it.
       <div><h3 class="small">YES asks <span class="muted">(derived)</span></h3><div id="liqAsk"></div></div>
     </div>
     <p class="small muted" id="liqNote"></p>
+    <div class="row" style="margin-top:8px">
+      <button id="liqLive">Fetch this book live from the demo API</button>
+      <span id="liqLiveNote" class="small muted">The committed snapshot is sampled every 30 minutes;
+        this button calls <code>GET /markets/&lt;ticker&gt;/orderbook</code> from your browser now.</span>
+    </div>
+  </div>
+</div>
+
+<h2>Live alerts <span class="muted">— every move of $0.10 or more, in two scrolling feeds</span></h2>
+<div class="notice info"><b>How these feeds work.</b> The browser polls the public Kalshi
+  <b>demo</b> Trade API directly
+  (<code>GET /markets?tickers=…&amp;status=open</code> —
+  <a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a>) and
+  raises a line when a contract price moves <b>$0.10 or more in either direction</b>. Two
+  official signals are compared: the API's own <code>previous_price_dollars</code> against
+  <code>last_price_dollars</code>, and the price seen on the previous poll against the price
+  now — so a move cannot slip through between two polls.
+  <b>Left feed:</b> every such move. <b>Right feed:</b> the moves the ranking model likes.
+  The WebSocket ticker channel is deliberately not used: the official docs require an
+  authenticated WebSocket handshake even for the public channels, and this site never asks a
+  visitor for a private key.
+  The API returns prices and volumes but <b>no news feed</b>, so the cause of a move is never
+  asserted — every line links to that market's own Kalshi endpoint and carries the
+  <span class="pill flag">cause unverified</span> label.</div>
+<div class="row" style="margin:12px 0 4px">
+  <div><label for="liveThr">Move threshold</label>
+    <select id="liveThr">
+      <option value="0.05">$0.05</option>
+      <option value="0.10" selected>$0.10</option>
+      <option value="0.20">$0.20</option>
+    </select></div>
+  <div><label for="roiThr">ROI model: minimum score</label>
+    <input id="roiThr" type="number" min="0" max="1" step="0.05" value="0.55" style="width:110px"></div>
+  <div><label for="liveEvery">Poll every</label>
+    <select id="liveEvery">
+      <option value="15000">15 s</option>
+      <option value="30000" selected>30 s</option>
+      <option value="60000">60 s</option>
+    </select></div>
+  <div><button id="liveGo">Start live feed</button>
+    <button id="liveClear">Clear chats</button></div>
+</div>
+<div class="livebar"><span class="dot stop" id="liveDot"></span>
+  <span id="liveStatus" class="muted">Live feed stopped — press <b>Start live feed</b> to poll the demo API from this browser.</span></div>
+<div class="grid two">
+  <div class="card">
+    <h3>All alerts <span class="muted">— every move ≥ $0.10</span></h3>
+    <div id="chatAll" class="chat"><div class="empty">No alerts yet.</div></div>
+  </div>
+  <div class="card">
+    <h3>High-ROI model picks <span class="muted">— score ≥ <span id="roiThrLabel">0.55</span></span></h3>
+    <div id="chatRoi" class="chat"><div class="empty">No model picks yet.</div></div>
+    <div class="modelbox" style="margin-top:10px">
+      <b>Model — documented heuristic, not a prediction:</b><br>
+      <code>score = 0.45·min(|Δ|/0.30,1) + 0.25·min(est. $vol/50,000,1) + 0.15·min(OI/5,000,1) + 0.15·(1 − min(hours to close/72,1))</code><br>
+      <b>Inputs (all official or clearly labelled):</b> |Δ| = the move in contract dollars ·
+      est. $vol = the labelled estimate <code>volume_fp × last_price_dollars</code> ·
+      OI = official <code>open_interest_fp</code> · hours to close = official
+      <code>close_time</code>. The score only ranks alerts against each other; it is not a
+      probability, and no profit is claimed.
+    </div>
   </div>
 </div>
 
@@ -215,12 +282,19 @@ tables on the category, resolution and verification pages still work without it.
 <div class="notice info"><b>What "highest dollar amount" means here.</b> The Trade API has no
   single dollar-volume field. Every row therefore shows the raw official fields
   (<code>volume_fp</code>, <code>open_interest_fp</code>, <code>last_price_dollars</code>) and
-  one clearly-labelled <b>estimate</b>: <code>volume_fp × last_price_dollars</code>.
+  one clearly-labelled <b>estimate</b>: <code>volume_fp × last_price_dollars</code>. A second
+  estimate uses the official 24-hour volume instead of the lifetime one
+  (<code>volume_24h_fp × last_price_dollars</code>), which is the closer match to
+  &ldquo;currently active&rdquo; markets.
   Rows missing lifetime <code>volume_fp</code> (top-event lead markets) show a blank there and a
-  labelled 24h estimate beside it. Coverage note: the snapshot unions every source-linked market
-  set and is <b>not a complete enumeration</b> of the exchange (see the <code>adapter.coverage</code>
-  field in <code>data/snapshot.json</code>). See
-  <a href="pages/flagged.html">Flagged F2</a> and <a href="pages/questions.html">Q1</a>.</div>
+  labelled 24h estimate beside it. <b>Coverage:</b> the demo exchange returns far more open
+  in-scope markets than GitHub accepts in one published file (hard limit 100 MB — a 111.97 MB
+  snapshot was rejected on 2026-11-20), so the collector publishes, per topic, all markets of
+  the highest-value events by the estimate above plus the highest-value individual markets, and
+  records exactly what was left out in the <code>published_subset</code> block of
+  <code>data/snapshot.json</code>. The table below is that published subset, not the whole
+  exchange. See <a href="pages/flagged.html">Flagged F2</a> and
+  <a href="pages/questions.html">Q1</a>.</div>
 <div class="row" style="margin:10px 0">
   <div><label for="topicFilter">Topic</label>
     <select id="topicFilter"><option value="">All in-scope</option>
@@ -229,7 +303,8 @@ tables on the category, resolution and verification pages still work without it.
       <option value="golf">Golf</option></select></div>
   <div><label for="sortSel">Sort</label>
     <select id="sortSel">
-      <option value="est">est. dollar volume (desc)</option>
+      <option value="est24">est. 24h dollar volume (desc)</option>
+      <option value="est">est. lifetime dollar volume (desc)</option>
       <option value="volume">volume_fp (desc)</option>
       <option value="oi">open_interest_fp (desc)</option>
       <option value="close">close time (soonest)</option>
@@ -249,7 +324,10 @@ DASH_JS = r"""
 <script>
 (async function(){
   const $ = id => document.getElementById(id);
-  let state = { window: 3600, field: 'mid', ticker: null, snap:null, filtered:[] };
+  /* One number parser for the whole page: a missing or non-numeric field counts
+     as 0 for sorting and renders as an em dash in the cell. */
+  const num = v => { const n = parseFloat(v); return isFinite(n) ? n : 0; };
+  let state = { window: 3600, field: 'mid', ticker: null, snap:null, filtered:[], livePoints:[] };
 
   try{
     const snap = await KR.snapshot();
@@ -257,11 +335,21 @@ DASH_JS = r"""
     KR.staleness($('staleness'), snap.generated_at_utc);
     $('metaBar').innerHTML = '';
     const c = snap.counts || {};
+    const facts = $('metaFacts');
+    if(facts){
+      const seen = c.markets_seen;
+      const scopeTxt = seen ? (KR.num(c.markets_in_scope,0)+' published of '+KR.num(seen,0)+' in-scope markets')
+                            : (KR.num(c.markets_in_scope,0)+' in-scope markets');
+      facts.innerHTML = scopeTxt + ' · API key configured: ' + (snap.authenticated?'yes':'no')
+        + ' · source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a>';
+    }
     const pt = c.per_topic || {};
+    const sub = snap.published_subset || null;
     $('kpis').innerHTML = `
-      <div class="kpi-card"><div class="k">In-scope live markets</div>
+      <div class="kpi-card"><div class="k">Published in-scope markets</div>
         <div class="v">${KR.num(c.markets_in_scope,0)}</div>
-        <div class="s">gas ${pt.gas||0} · elections ${pt.elections||0} · culture ${pt.culture||0} · crypto ${pt.crypto||0} · golf ${pt.golf||0}</div></div>
+        <div class="s">gas ${pt.gas||0} · elections ${pt.elections||0} · culture ${pt.culture||0} · crypto ${pt.crypto||0} · golf ${pt.golf||0}</div>
+        <div class="s">${sub ? 'of '+KR.num(sub.markets_seen,0)+' seen — top events per topic' : 'every in-scope market in the snapshot'}</div></div>
       <div class="kpi-card"><div class="k">Resolved (tracked) </div>
         <div class="v">${KR.num(c.resolved_in_scope,0)}</div>
         <div class="s">official yes/no outcomes</div></div>
@@ -275,8 +363,14 @@ DASH_JS = r"""
         <div class="v ${(snap.exchange_status||{}).response && snap.exchange_status.response.exchange_active ? 'ok':'warn'}">${(snap.exchange_status||{}).response && snap.exchange_status.response.exchange_active ? 'active':'see log'}</div>
         <div class="s">demo /exchange/status</div></div>`;
 
-    // market select: ranked list
-    const rows = (snap.markets||[]).slice().sort((a,b)=>(b.est_dollar_volume||0)-(a.est_dollar_volume||0));
+    // market select: ranked list. Prefer the 24-hour dollar estimate when the
+    // snapshot carries it (it matches "currently active" markets better than a
+    // lifetime figure); fall back to the lifetime estimate otherwise.
+    const rows = (snap.markets||[]).slice().sort((a,b)=>
+      (num(b.est_dollar_volume_24h)||num(b.est_dollar_volume)) -
+      (num(a.est_dollar_volume_24h)||num(a.est_dollar_volume)));
+    const has24 = rows.some(m=>m.est_dollar_volume_24h);
+    if(has24) $('sortSel').value = 'est24';
     state.filtered = rows;
     $('mktSel').innerHTML = rows.slice(0,80).map(m=>{
       const t = m.market_title || m.market_ticker;
@@ -290,10 +384,128 @@ DASH_JS = r"""
     await drawChart();
     await renderLiquidity();
     renderResolved(snap.resolutions||[]);
+    await initLive(rows);
   }catch(e){
     $('kpis').innerHTML = `<div class="notice bad">Data snapshot could not be loaded: ${KR.esc(e.message)}.
       The snapshot is produced by <code>.github/workflows/refresh-data.yml</code>; if this is the first
       run, wait for the workflow (Actions → “Refresh Kalshi demo data”). No values are invented.</div>`;
+  }
+
+  /* ---------------- live alert feeds ---------------- */
+  function utcHM(t){
+    const d = new Date(t);
+    return String(d.getUTCHours()).padStart(2,'0')+':'+String(d.getUTCMinutes()).padStart(2,'0')
+      + ':'+String(d.getUTCSeconds()).padStart(2,'0');
+  }
+  function liveValue(p){
+    if(state.field==='mid'){
+      if(isFinite(p.bid) && isFinite(p.ask)) return (p.bid+p.ask)/2;
+      return NaN;
+    }
+    if(state.field==='close') return p.last;
+    if(state.field==='yes_bid_close') return p.bid;
+    if(state.field==='yes_ask_close') return p.ask;
+    return NaN;
+  }
+  function chatLine(a){
+    const up = a.dir==='up';
+    const parts = a.scoreParts||{};
+    const tip = `score ${(a.score||0).toFixed(2)} = size ${(parts.size||0).toFixed(2)} `
+      + `(0.45) + depth ${(parts.depth||0).toFixed(2)} (0.25) + open interest ${(parts.open||0).toFixed(2)} (0.15) `
+      + `+ time to close ${(parts.time||0).toFixed(2)} (0.15)`;
+    return `<div class="ln"><div class="ts">${utcHM(a.t)}</div><div class="msg">`
+      + `<span class="tick">${KR.esc(a.ticker)}</span> `
+      + `<span class="from">${KR.usd(a.from,4)} → ${KR.usd(a.to,4)}</span> `
+      + `<span class="${up?'up':'down'}">${up?'▲':'▼'} ${KR.usd(Math.abs(a.change),4)}</span> `
+      + `${KR.topicPill(a.topic)} <span class="score" title="${KR.esc(tip)}">score ${(a.score||0).toFixed(2)}</span><br>`
+      + `<span class="meta">${KR.esc(a.basis||'poll')} · ${KR.link(a.url,'market endpoint')} `
+      + `<span class="pill flag">cause unverified</span></span></div></div>`;
+  }
+  function pushChat(el, a){
+    const empty = el.querySelector('.empty');
+    if(empty) empty.remove();
+    el.insertAdjacentHTML('beforeend', chatLine(a));
+    while(el.children.length > 300) el.removeChild(el.firstChild);
+    el.scrollTop = el.scrollHeight;
+  }
+  function setLiveStatus(stateName, detail){
+    const dot = $('liveDot');
+    dot.className = 'dot ' + (stateName==='live'?'live':(stateName==='error'?'err':'stop'));
+    const map = {
+      starting:'Starting the live feed…',
+      live:'Live — polling the Kalshi demo API from this browser.',
+      stopped:'Live feed stopped.',
+      error:'Live feed could not reach the Kalshi demo API.'
+    };
+    $('liveStatus').innerHTML = `<b>${map[stateName]||stateName}</b>`
+      + (detail?` ${KR.esc(detail)}`:'')
+      + (stateName==='live'?` · last poll ${utcHM(Date.now())} UTC · ${KR.live.polls} poll${KR.live.polls===1?'':'s'} so far`:'');
+  }
+  async function initLive(rows){
+    KR.live.setMarkets(rows);
+    // Seed both feeds with the moves already recorded in the committed tick
+    // history, so the chats are useful before the first poll lands.
+    try{
+      const h = await KR.history();
+      const seeded = KR.live.seedFromHistory(h, rows);
+      const all = $('chatAll'), roi = $('chatRoi');
+      all.innerHTML=''; roi.innerHTML='';
+      seeded.slice(-120).forEach(a=>{
+        pushChat(all, a);
+        if(a.score >= KR.live.roiThreshold) pushChat(roi, a);
+      });
+      if(!seeded.length){
+        all.innerHTML = '<div class="empty">No moves ≥ $0.10 in the committed tick history yet.</div>';
+        roi.innerHTML = '<div class="empty">No model picks yet.</div>';
+      }
+    }catch(e){}
+
+    KR.live.on('alert', a=>{
+      pushChat($('chatAll'), a);
+      if(a.score >= KR.live.roiThreshold) pushChat($('chatRoi'), a);
+    });
+    KR.live.on('status', s=>{
+      if(s.state==='error') setLiveStatus('error', s.error);
+      else if(s.state==='live') setLiveStatus('live');
+      else setLiveStatus(s.state);
+    });
+    KR.live.on('point', p=>{
+      if(p.ticker !== state.ticker) return;
+      state.livePoints.push({t:p.t, last:p.price, bid:p.bid, ask:p.ask});
+      if(state.livePoints.length > 600) state.livePoints.shift();
+      drawChart();
+    });
+
+    $('liveThr').addEventListener('change', e=>{ KR.live.threshold = parseFloat(e.target.value); });
+    $('roiThr').addEventListener('input', e=>{
+      const v = Math.max(0, Math.min(1, parseFloat(e.target.value)));
+      KR.live.roiThreshold = isFinite(v)?v:0.55;
+      $('roiThrLabel').textContent = KR.live.roiThreshold.toFixed(2);
+    });
+    $('liveEvery').addEventListener('change', e=>{ KR.live.intervalMs = parseInt(e.target.value,10); });
+    $('liveGo').addEventListener('click', ()=>{
+      if(KR.live.running){ KR.live.stop(); $('liveGo').textContent='Start live feed'; return; }
+      $('liveGo').textContent='Stop live feed';
+      KR.live.start();
+    });
+    setLiveStatus('stopped');
+    $('liveClear').addEventListener('click', ()=>{
+      $('chatAll').innerHTML='<div class="empty">Cleared.</div>';
+      $('chatRoi').innerHTML='<div class="empty">Cleared.</div>';
+    });
+    const liqBtn = $('liqLive');
+    if(liqBtn) liqBtn.addEventListener('click', async ()=>{
+      if(!state.ticker) return;
+      $('liqLiveNote').textContent = 'Fetching…';
+      try{
+        const ob = await KR.live.fetchOrderbook(state.ticker, 25);
+        paintLiquidity(ob, 'live fetch '+new Date().toISOString().slice(11,19)+' UTC');
+        $('liqLiveNote').textContent = 'Live book loaded from the demo API ('+state.ticker+').';
+      }catch(e){
+        $('liqLiveNote').textContent = 'Live fetch failed: '+e.message+
+          ' — the browser may be blocked from the API by CORS on this origin.';
+      }
+    });
   }
 
   function renderTable(rows){
@@ -302,10 +514,11 @@ DASH_JS = r"""
       (!q || (m.market_ticker+' '+(m.market_title||'')).toLowerCase().includes(q)));
     const s = $('sortSel').value;
     r.sort((a,b)=>{
-      if(s==='volume') return (parseFloat(b.volume_fp)||0)-(parseFloat(a.volume_fp)||0);
-      if(s==='oi') return (parseFloat(b.open_interest_fp)||0)-(parseFloat(a.open_interest_fp)||0);
+      if(s==='est24') return num(b.est_dollar_volume_24h)-num(a.est_dollar_volume_24h);
+      if(s==='volume') return num(b.volume_fp)-num(a.volume_fp);
+      if(s==='oi') return num(b.open_interest_fp)-num(a.open_interest_fp);
       if(s==='close') return String(a.close_time||'').localeCompare(String(b.close_time||''));
-      return (b.est_dollar_volume||0)-(a.est_dollar_volume||0);
+      return num(b.est_dollar_volume)-num(a.est_dollar_volume);
     });
     KR.renderTable($('mktTable'), [
       {label:'#', get:(m)=>rows.indexOf(m)+1, num:true},
@@ -316,6 +529,7 @@ DASH_JS = r"""
       {label:'Yes ask', num:true, get:(m)=>KR.usd(m.yes_ask_dollars,2)},
       {label:'Volume', num:true, get:(m)=>KR.num(m.volume_fp,0)},
       {label:'Open int.', num:true, get:(m)=>KR.num(m.open_interest_fp,0)},
+      {label:'Est. $ vol (24h)', num:true, get:(m)=>`${KR.usd(m.est_dollar_volume_24h,0)} <span class="pill flag">est.</span>`},
       {label:'Est. $ volume', num:true, get:(m)=>`${KR.usd(m.est_dollar_volume,0)} <span class="pill flag">est.</span>`},
       {label:'Closes', get:(m)=>`<span class="small">${KR.when(m.close_time)}</span>`},
       {label:'Source', get:(m)=>KR.link(m.market_url,'Kalshi')+' · <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">API</a>'}
@@ -337,7 +551,10 @@ DASH_JS = r"""
     const fieldMap = {mid:'derived_mid', close:'close_dollars', yes_bid_close:'yes_bid_close', yes_ask_close:'yes_ask_close'};
     const candles = cset.map(c=>({ts:c.ts, close_dollars:c.close, yes_bid_close:c.yes_bid_close,
                                   yes_ask_close:c.yes_ask_close, derived_mid:c.derived_mid}));
-    const series = KR.buildSeries(candles, hist, fieldMap[state.field])
+    const live = state.livePoints.map(p=>({t:p.t, v:liveValue(p), src:'live'}))
+      .filter(p=>isFinite(p.v));
+    const series = KR.buildSeries(candles, hist, fieldMap[state.field]).concat(live)
+      .sort((a,b)=>a.t-b.t)
       .filter(p=>p.t >= Date.now()-state.window*1000 && p.t <= Date.now()+60000);
     const jumps = KR.detectJumps(series, 0.10);
     KR.drawChart(document.getElementById('chart'), series, {
@@ -347,12 +564,15 @@ DASH_JS = r"""
         ? 'No ticks inside this window yet. The collector samples every 10 minutes, so a 60-second or 5-minute window only fills when a run has just completed.'
         : 'No price points in this window. Candlestick price objects are empty in periods with no trade - try the quoted-mid series or a longer window.'
     });
-    const srcCount = series.filter(p=>p.src==='candle').length, tickCount = series.length-srcCount;
+    const srcCount = series.filter(p=>p.src==='candle').length;
+    const tickCount = series.filter(p=>p.src==='tick').length;
+    const liveCount = series.filter(p=>p.src==='live').length;
     const label = state.field==='mid' ? 'quoted mid (derived from official bid/ask closes)'
       : state.field==='close' ? 'last traded price - empty in periods with no trade'
       : state.field==='yes_bid_close' ? 'yes bid close' : 'yes ask close';
-    $('chartNote').innerHTML = `${series.length} points · ${tickCount} collector ticks + ${srcCount} candlesticks `
-      + `(period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`
+    $('chartNote').innerHTML = `${series.length} points · ${tickCount} collector ticks + ${srcCount} candlesticks`
+      + (liveCount ? ` + ${liveCount} live samples` : '')
+      + ` (period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`
       + (jumps.length ? ` · ${jumps.length} sharp move${jumps.length!==1?'s':''} ≥ $0.10` : '');
 
     const m = (state.snap.markets||[]).find(x=>x.market_ticker===state.ticker) || {};
@@ -371,19 +591,17 @@ DASH_JS = r"""
   async function renderLiquidity(){
     const snap = state.snap, ob = (snap.orderbooks||{})[state.ticker];
     if(!ob || ob.error){ $('liqSummary').innerHTML=''; $('liqBid').innerHTML='<div class="empty">No order book in this snapshot.</div>'; $('liqAsk').innerHTML=''; $('liqNote').textContent = ob&&ob.error?('Order book request failed: '+ob.error):''; return; }
+    paintLiquidity(ob, 'committed snapshot');
+  }
+  function paintLiquidity(ob, sourceLabel){
     $('liqSummary').innerHTML = `
       <div class="kpi-card"><div class="k">Best yes bid</div><div class="v">${KR.usd(ob.best_yes_bid,2)}</div><div class="s">raw field</div></div>
       <div class="kpi-card"><div class="k">Best yes ask</div><div class="v">${KR.usd(ob.best_yes_ask_derived,2)}</div><div class="s">derived from no bids</div></div>
       <div class="kpi-card"><div class="k">Spread</div><div class="v">${KR.usd(ob.spread_derived,3)}</div><div class="s">ask − bid</div></div>`;
-    const fmt = a => KR.renderTable(null, [], []) || '';
-    KR.renderTable($('liqBid'), [
-      {label:'Price', num:true, get:r=>KR.usd(r[0],2)},
-      {label:'Contracts', num:true, get:r=>KR.num(r[1],2)}
-    ], (ob.yes_bids||[]).slice(0,12).map(r=>({0:r[0],1:r[1],_r:r})).map(x=>({...x, 0:x[0],1:x[1]})), 'No bids.');
-    // simple manual render to keep array access obvious
     $('liqBid').innerHTML = tableOf('Yes bid', ob.yes_bids||[], 'No bids resting.');
     $('liqAsk').innerHTML = tableOf('Yes ask (derived)', ob.derived_yes_asks||[], 'No asks (no NO bids resting).');
-    $('liqNote').innerHTML = `Total resting: <b>${KR.num(ob.yes_bid_contracts,2)}</b> contracts bid · <b>${KR.num(ob.derived_ask_contracts,2)}</b> offered. Request: <code>${KR.esc(ob.raw_request||'')}</code>`;
+    $('liqNote').innerHTML = `Total resting: <b>${KR.num(ob.yes_bid_contracts,2)}</b> contracts bid · <b>${KR.num(ob.derived_ask_contracts,2)}</b> offered. `
+      + `Source: <b>${KR.esc(sourceLabel)}</b>. Request: <code>${KR.esc(ob.raw_request||'')}</code>`;
   }
   function tableOf(label, arr, empty){
     if(!arr.length) return `<div class="empty">${empty}</div>`;
@@ -405,7 +623,7 @@ DASH_JS = r"""
   }
 
   // events
-  $('mktSel').addEventListener('change', async e=>{ state.ticker=e.target.value; await drawChart(); await renderLiquidity(); });
+  $('mktSel').addEventListener('change', async e=>{ state.ticker=e.target.value; state.livePoints=[]; await drawChart(); await renderLiquidity(); });
   document.querySelectorAll('#winSeg button').forEach(b=>b.addEventListener('click', async ()=>{
     document.querySelectorAll('#winSeg button').forEach(x=>x.setAttribute('aria-pressed','false'));
     b.setAttribute('aria-pressed','true'); state.window=parseInt(b.dataset.w,10); await drawChart();
@@ -905,8 +1123,11 @@ def build_alerts_page(snap: dict) -> None:
   }
 
   Promise.all([
-    fetch('data/snapshot.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);}),
-    fetch('data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
+    /* The page lives in pages/, so the committed data files are one level up.
+       (Fetching 'data/...' from here asked for /pages/data/..., which is where
+       the deployed page reported a data-load failure - see the repo review.) */
+    fetch('../data/snapshot.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);}),
+    fetch('../data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
   ]).then(function(res){
     var snap=res[0], jdata=res[1];
     var markets=(snap.markets||[]);
@@ -928,6 +1149,22 @@ def build_alerts_page(snap: dict) -> None:
         volume:m.volume_fp||'', est_vol:m.est_dollar_volume||'',
       };
     }).sort(function(a,b){return (b.time||'').localeCompare(a.time||'');});
+    /* The stamp is filled in at runtime from the data this page loaded. Baking
+       it into the generated HTML would make the file change on every data
+       refresh, and the CI gate that compares generated pages with their
+       generator would fail on the next data-only commit. */
+    var stamp=(jdata.generated_from||{}).snapshot_generated_at || (snap.generated_at_utc||'');
+    var asOf=$('alertsAsOf');
+    if(asOf) asOf.textContent = stamp ? stamp+' UTC' : 'the snapshot this page loaded';
+    var facts=$('metaFacts');
+    if(facts){
+      var c=(snap.counts||{});
+      var seen=c.markets_seen;
+      var scopeTxt=seen?(KR.num(c.markets_in_scope,0)+' published of '+KR.num(seen,0)+' in-scope markets')
+                        :(KR.num(c.markets_in_scope,0)+' in-scope markets');
+      facts.innerHTML=scopeTxt+' · API key configured: '+(snap.authenticated?'yes':'no')
+        +' · source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a>';
+    }
     apply();
   }).catch(function(e){
     chatAll.innerHTML='<div class="notice bad">Could not load alert data: '+esc(String(e))+'. The snapshot is produced by .github/workflows/refresh-data.yml.</div>';
@@ -946,7 +1183,7 @@ more in either direction appears in "All alerts"; "High ROI" shows the subset a 
 rule-based filter flags as higher-conviction (a larger move in a more liquid market). Thresholds
 are tunable on the page — this is a rule, not a predictive model, and nothing is inferred about
 why a move happened.</p>
-<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Snapshot {gen or "none yet"}</div></div></div>
+<div id="metaBar"><div class="card tight"><div class="row" style="justify-content:space-between"><div class="status" id="staleness">Loading the latest snapshot&hellip;</div><div class="status muted" id="metaFacts">source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a></div></div></div>
 <div class="card tight" style="margin-top:8px">
   <div class="row" style="margin:0;gap:10px;align-items:flex-end;flex-wrap:wrap">
     <div><label for="roiThreshold">High-ROI move floor ($)</label>
@@ -973,8 +1210,14 @@ why a move happened.</p>
 <a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>). Market links point to the
 Kalshi series page pattern (checked against the live site); cause is never inferred — each row links to the
 market's own trade/market API responses and is flagged <span class="pill flag">cause unverified</span>.
-Data as of {jumps_gen or "not collected yet"}; the collector runs every 10 minutes via
-<a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>.</p>
+Data as of <span id="alertsAsOf">the snapshot this page loaded</span>; the collector runs every
+30 minutes via <a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>.</p>
+<p class="small muted"><b>Two alert surfaces, two different sources.</b> This page is the
+<b>committed history</b> of moves, rebuilt from the collector's trade prints and market snapshots.
+The <a href="../index.html">Dashboard</a> carries the <b>live</b> feeds: the browser polls the demo
+API directly and raises a line as soon as a contract moves by $0.10 or more, in the same
+all-events / high-ROI pair. Neither feed claims a cause - the API returns no news, so every row
+is flagged <span class="pill flag">cause unverified</span>.</p>
 """
     page(path="pages/live-alerts.html", title="Live Alerts", active="alerts", body=body, extra_js=js,
          desc="Live alerting feed: scrolling chats for Kalshi demo price swings of $0.10 or more, all-events and a high-ROI filter.")

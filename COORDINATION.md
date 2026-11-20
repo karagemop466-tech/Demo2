@@ -24,6 +24,9 @@ Last updated: 2026-11-20 (session e88eb254, after the merge with `fed802ba`'s wo
 | 19 | Line-by-line verification, sources, flagged, repo review | **done** | e88eb254 | `pages/{verification,sources,flagged,repo-review}.html` |
 | 20 | Integration: CI gate, link check, render test, PR, merge, deploy | **done** | e88eb254 | `.github/workflows/ci.yml`, `tools/check.py`, `tools/build_site.py`, `tools/build_content.py`, `README.md`, all pages |
 | 21 | Add demo API key secrets to enable portfolio + execution | **needs review (owner action)** | unclaimed | repository secrets only — see `pages/questions.html` Q4 |
+| 22 | Repair the live data pipeline (collector output size, resolution tracking, workflow push guard) | **in progress** | 441151f5 | `tools/collector.py`, `.github/workflows/refresh-data.yml`, `data/` |
+| 23 | Live alert chats (all events + high-ROI model), live polling, chart append | **done** | 441151f5 | `tools/build_site.py`, `assets/site.js`, `assets/style.css`, `index.html` |
+| 24 | Final integration: verification pass, PR, merge, Pages deploy, records | **in progress** | 441151f5 | `pages/*`, `tools/build_content.py`, `README.md`, `COORDINATION.md` |
 
 Scope note: rows 12–20 re-own the filenames produced by `e3f65782` because a correctness defect was
 found in that output (order placement targeted an endpoint the official docs now return `410 Gone`
@@ -1078,6 +1081,103 @@ Actions (44753235358, exit 1) — reproduced offline: `GET /series/{ticker}` can
 dict records with a ticker and never lets one series kill the run (logged as an api_log note
 instead), `inventory` tolerates records without a ticker. Adversarial-shape regression case
 added to `session-eeb796d7/tools/test_collector_fix.py` (13/13 PASS).
+
+---
+
+## Session 441151f5 — final integration (claim)
+
+Session ID: `441151f5` (branch `arena/441151f5-demo2`, base `e7fabd4` on `main`).
+Claimed 2026-11-20. All earlier sessions' work is merged or preserved on its branch; this
+session is the integration session, so shared outputs (`index.html`, `assets/`, `pages/`,
+`data/`, navigation) are edited here.
+
+| # | Task | Status | Owner | Files (exclusive scope) |
+|---|------|--------|-------|--------------------------|
+| 22 | Live data pipeline repair | in progress | 441151f5 | `tools/collector.py`, `.github/workflows/refresh-data.yml`, `data/` |
+| 23 | Live alert chats + live polling + chart append | in progress | 441151f5 | `tools/build_site.py`, `assets/site.js`, `assets/style.css`, `index.html` |
+| 24 | Final verification, PR, merge, Pages deploy, records | in progress | 441151f5 | `pages/*`, `tools/build_content.py`, `README.md`, `COORDINATION.md` |
+
+### Findings at claim time (evidence, not memory)
+
+1. **The live data pipeline is broken.** Workflow "Refresh Kalshi demo data" run
+   `44800417665` (2026-11-20T19:15Z, head `e7fabd4`) failed in the *Commit snapshot*
+   step. Its annotations name the cause exactly:
+   `remote: error: File data/snapshot.json is 111.97 MB; this exceeds GitHub's file size
+   limit of 100.00 MB` and `data/topic-elections.json is 52.01 MB`. The push is refused
+   (`pre-receive hook declined`), so the snapshot on the site has been frozen at
+   `2026-11-20T14:10:44Z` while every later run failed. Root cause: the collector now
+   scans 50 pages of `/events?status=open&with_nested_markets=true` and writes every
+   in-scope market twice (`markets` + `by_topic`) plus one file per topic.
+2. **Resolution tracking is empty.** `data/snapshot.json` has `resolutions: []` and
+   `counts.resolved_in_scope: 0`, so "tracked until resolved (yes/no)" shows nothing.
+   `tools/collector.py:collect_resolutions()` derives the series ticker with
+   `event_ticker.split("-")[0]`, which breaks for series tickers that contain a dash
+   (e.g. `GOVPARTY-NH`, verified present in `topic_catalog.series_tickers`).
+3. **CORS is open to the deployed origin** (`data/cors.json`, observed
+   `access-control-allow-origin: https://karagemop466-tech.github.io`, HTTP 200), so the
+   browser can poll the demo API directly — the live alert chats can be real, not
+   simulated.
+
+### Final record — session 441151f5 (final integration)
+
+**What this session found, with evidence (no recollection, no inference):**
+
+| # | Finding | Evidence | Action |
+|---|---------|----------|--------|
+| 1 | The live data pipeline was failing every cycle | Workflow run 44800417665 (2026-11-20T19:15Z) failed in "Commit snapshot"; its annotations: `remote: error: File data/snapshot.json is 111.97 MB; this exceeds GitHub's file size limit of 100.00 MB` and `File data/topic-elections.json is 52.01 MB` → `pre-receive hook declined` | Collector now publishes a bounded subset (measured on the committed snapshot: 1,257 of 10,241 markets published, 329 whole events, projected 5.0 MB against the committed 47,263,413-byte file); `write_json` refuses > 40 MB; the workflow has a size-guard step before the commit; cron moved to every 30 min (one collection takes 10-12 min) |
+| 2 | Resolution tracking was empty (`resolutions: []`, `resolved_in_scope: 0`) | `data/snapshot.json` at `e7fabd4`; cause in `tools/collector.py:collect_resolutions` — `event_ticker.split("-")[0]` breaks for dashed series tickers such as `GOVPARTY-NH` (present in `topic_catalog.series_tickers`) | Longest known series prefix wins; series index reused instead of swept twice; recent settlements selected with the documented `min_settled_ts` filter |
+| 3 | A move of exactly $0.10 never fired | `0.60 - 0.50 === 0.09999999999999998` in binary floating point; the comparison was `>= 0.10` | Difference rounded to the four decimals Kalshi prices use before the comparison; regression test `tests/live_alerts.test.js` |
+| 4 | The two scrolling alert feeds the brief asks for did not exist on the canonical dashboard | `index.html` (generator `tools/build_site.py`) had a static sharp-jump table only | Two chat feeds added: every move ≥ $0.10, and the subset the ROI model likes; browser-side polling of the public demo API; model formula printed on the page |
+| 5 | The snapshot's order books are empty for the top demo markets | `data/snapshot.json` → `orderbooks.KXECCOMPACT-30.yes_bids == []` (all 12 books) | Added "fetch this book live from the demo API" next to the liquidity panel |
+| 6 | A scope bug would have broken the dashboard | The render test failed with "timed out waiting for the markets table" after the 24-hour-dollar-volume change: `const num` had been declared inside the `try` block, so the table renderer could not see it | `num` moved to page scope; `tests/render_dashboard.test.js` now guards the whole dashboard |
+
+**Sources used (official only, read on 2026-11-20):**
+`https://docs.kalshi.com/getting_started/demo_env`, `/getting_started/api_environments`,
+`/getting_started/quick_start_websockets`, `/getting_started/rate_limits`,
+`/getting_started/quick_start_market_data`, `/api-reference/market/get-markets`
+(`tickers`, `previous_price_dollars`, `min_settled_ts`, `limit` ≤ 1000, response schema),
+`/api-reference/market/get-market-orderbook`, plus the live demo API request already recorded in
+`data/cors.json` and `data/snapshot.json`.
+
+**Verification performed:**
+1. `python3 tools/test_pipeline_fix.py` — published-subset rule, series-ticker resolution, size
+   guard (18 checks, all pass). Measured the published subset on the committed snapshot.
+2. `node --test tests/live_alerts.test.js` — 6 checks: $0.10 fires, $0.09 does not, a move between
+   polls is caught, duplicate direction is suppressed, the score is bounded and equals the
+   documented formula, a failed request is reported (not swallowed).
+3. `node --test tests/render_dashboard.test.js` — 2 checks in a real DOM with the real
+   `assets/site.js`: no JavaScript error, KPI cards/table/liquidity populated, the live feed
+   starts, a poll lands and a chat line appears, the chart canvas is sized.
+4. `python3 tools/check.py` — links, nav consistency across 17 pages, snapshot schema, secret
+   scan, `node --check` on every inline script and asset: clean.
+5. `python3 scripts/check_links.py` — 9,313 references across 107 HTML files, all resolve.
+   `--external` run: all links OK (only hosts that refuse automated probes are reported as
+   warnings for manual review).
+6. The generated pages were rebuilt from the generators and committed, so the CI diff gate
+   stays green.
+
+**Decisions on the stale pull requests** (all four pre-date this session, all report
+`mergeable: CONFLICTING`, and all belong to sessions that have ended):
+
+| PR | Branch | Decision | Reason |
+|----|--------|----------|--------|
+| #34 | `arena/21eed9ff-demo2` | closed, branch kept on origin | 115 files / 500k additions: another full site tree plus its own data. Merging it would add a fourth parallel dashboard to a site the brief asks to be simple. Its findings are already on the site as flags R1-R24 and F1-F19. |
+| #36 | `arena/220913cb-demo2` | closed, branch kept on origin | 45 files: yet another consolidated "desk" tree with its own pages and tests. Same reason as #34. |
+| #40 | `arena/d0bea7de-demo2` | closed, branch kept on origin | Its two changes are already on `main`: the sharp-move card and table are in the dashboard generator, and the four external-link fixes were applied at the generator level by session eeb796d7 (verified: the pattern URLs are now `<code>`, the API root is no longer a link, and `scripts/check_links.py --external` reports "All links OK"). |
+| #44 | `arena/6332d7d3-demo2` | closed, branch kept on origin | 42 files / 842k additions, including a new `site/` tree. Its one idea worth keeping — ranking by a *measured* 24-hour dollar figure instead of a lifetime estimate — was implemented in this session as a second labelled estimate (`volume_24h_fp × last_price_dollars`, both official fields), which becomes the default sort when the snapshot carries it. |
+
+Closing a pull request does not delete the branch or the commits; every one of them can still be
+inspected or re-opened. Nothing was rewritten in `main` history.
+
+**Open for the owner (not blocking):**
+- A Kalshi demo API key pair is still needed for demo-account portfolio tracking and order
+  execution (`pages/questions.html` Q4, board row 21). The pages show an explicit
+  "not configured" state, never zeros.
+- The live alert feeds work only from an origin the demo API allows
+  (`https://karagemop466-tech.github.io`); elsewhere the browser blocks the request and the page
+  says so (F17).
+- The published snapshot is a documented subset of the in-scope universe (F16); a complete
+  enumeration cannot be published under GitHub's 100 MB per-file limit.
 
 ---
 
