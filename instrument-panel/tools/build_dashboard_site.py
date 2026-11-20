@@ -566,7 +566,8 @@ def page_verification():
 
 <h2>Collection errors</h2>
 {('<div class="tablewrap"><table><thead><tr><th>Request</th><th>Status</th><th>Detail</th></tr></thead><tbody>' + err_html + '</tbody></table></div>') if errs else '<p class="small">No request errors in this run.</p>'}
-<p class="small muted">{META.get("https_requests", 0)} requests issued.</p>
+<p class="small muted">{META.get("https_requests", 0)} requests issued · throttle events (HTTP 429) observed: <b>{META.get("throttle_events_429", 0)}</b> · final spacing between request starts: {META.get("final_request_interval_s", "—")} s.</p>
+<p class="small muted">Kalshi does not publish the size of the unauthenticated budget. It documents that public endpoints “charge your IP address’s budget first”, that a 429 carries <b>no</b> X-RateLimit headers when the response is publicly cacheable (which market data is), and that a 429 has no penalty or cooldown. The collector therefore spaces requests adaptively: it widens the gap on every 429 and narrows it slowly as calls succeed. The number above is the observed consequence, not a setting.</p>
 
 <h2>Series breadth actually collected</h2>
 <p class="small muted">Each topic is capped at {META.get("limits", {}).get("max_series_per_topic", 40)} series per run so the job finishes inside a scheduled slot. Where a topic has more series than that, the number skipped is listed here — it is never silently dropped.</p>

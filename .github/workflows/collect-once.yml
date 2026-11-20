@@ -21,7 +21,8 @@ jobs:
       - name: Collect demo market data
         env:
           KALSHI_MAX_SERIES: '300'
-          KALSHI_WORKERS: '12'
+          KALSHI_WORKERS: '4'
+          KALSHI_MIN_INTERVAL: '0.12'
         run: python instrument-panel/tools/kalshi_collect.py
       - name: Validate
         run: python instrument-panel/tools/validate_data.py

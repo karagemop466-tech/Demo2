@@ -13,6 +13,7 @@ repeated in the JSON meta block so the site can show a source for each row.
 import json
 import os
 import sys
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import urllib.error
@@ -109,9 +110,9 @@ MAX_MARKETS_PER_TOPIC = 400          # metadata copies, per topic
 MAX_ORDERBOOKS_PER_TOPIC = 30        # live depth snapshots, per topic
 MAX_TRADE_MARKETS_PER_TOPIC = 5      # trade-history pulls, per topic (largest markets)
 MAX_RESOLVED_PER_SERIES = 8          # settled markets copied per series
-REQUEST_PAUSE = 0.05                 # be polite: unauthenticated limits are unpublished
+REQUEST_PAUSE = 0.0                  # spacing is handled by the adaptive limiter below
 MAX_SERIES_PER_TOPIC = int(os.environ.get('KALSHI_MAX_SERIES', '120'))  # series breadth per topic
-SERIES_WORKERS = int(os.environ.get('KALSHI_WORKERS', '10'))  # concurrent per-series fetches
+SERIES_WORKERS = int(os.environ.get('KALSHI_WORKERS', '4'))  # concurrent per-series fetches (throttled globally)
 
 MARKET_FIELDS = [
     "ticker", "event_ticker", "market_type", "title", "yes_sub_title", "status",
@@ -126,12 +127,60 @@ MARKET_FIELDS = [
 
 _requests = 0
 _errors = []
+_rl_count = 0
+_next_start = 0.0
+_lock = threading.Lock()
+# Documented behaviour: public endpoints "charge your IP address's budget first" and a
+# rejected request returns 429 too_many_requests with no penalty or cooldown, so the
+# documented remedy is exponential backoff. The unauthenticated budget has no published
+# size and its responses are publicly cacheable, so they carry no X-RateLimit headers -
+# the only way to stay inside it is to adapt to the 429s we actually observe.
+_interval = float(os.environ.get("KALSHI_MIN_INTERVAL", "0.12"))   # seconds between request starts
+_interval_min = _interval
+_interval_max = 2.0
+_cooldown_until = 0.0
 
 
-def _req(url, expect=200, tries=3):
-    """GET with small backoff. Returns (json_or_None, status, headers)."""
+def _throttle():
+    """Global spacing between request starts, widened automatically after a 429."""
+    global _cooldown_until
+    while True:
+        with _lock:
+            wait = max(0.0, _cooldown_until - time.monotonic())
+            if wait <= 0:
+                break
+        time.sleep(min(wait, 1.0))
+    with _lock:
+        global _next_start
+        now = time.monotonic()
+        start = max(now, _next_start)
+        _next_start = start + _interval
+    delay = start - time.monotonic()
+    if delay > 0:
+        time.sleep(delay)
+
+
+def _on_429():
+    """AIMD: back off hard on a throttle signal, recover slowly on success."""
+    global _interval, _cooldown_until, _rl_count
+    with _lock:
+        _rl_count += 1
+        _interval = min(_interval_max, max(_interval * 1.5, 0.25))
+        _cooldown_until = time.monotonic() + min(_interval * 3, 5.0)
+
+
+def _on_ok():
+    global _interval
+    with _lock:
+        if _interval > _interval_min:
+            _interval = max(_interval_min, _interval * 0.995)
+
+
+def _req(url, expect=200, tries=5):
+    """GET with adaptive throttling and exponential backoff on 429/5xx."""
     global _requests
     for attempt in range(tries):
+        _throttle()
         try:
             req = urllib.request.Request(
                 url,
@@ -143,11 +192,16 @@ def _req(url, expect=200, tries=3):
             with urllib.request.urlopen(req, timeout=30) as r:
                 body = r.read().decode("utf-8")
                 _requests += 1
-                time.sleep(REQUEST_PAUSE)
+                _on_ok()
                 return (json.loads(body) if body.strip() else None), r.status, dict(r.headers)
         except urllib.error.HTTPError as e:
             _requests += 1
-            if e.code in (429, 500, 502, 503, 504) and attempt < tries - 1:
+            if e.code == 429:
+                _on_429()
+                if attempt < tries - 1:
+                    time.sleep(min(2 ** attempt, 8))
+                    continue
+            if e.code in (500, 502, 503, 504) and attempt < tries - 1:
                 time.sleep(1.5 * (attempt + 1))
                 continue
             _errors.append({"url": url, "status": e.code, "detail": e.read()[:300].decode("utf-8", "replace")})
@@ -559,6 +613,8 @@ def main():
             "collector": "tools/kalshi_collect.py",
             "https_requests": _requests,
             "request_errors": _errors,
+            "throttle_events_429": _rl_count,
+            "final_request_interval_s": round(_interval, 3),
             "endpoints": ENDPOINTS,
             "docs": DOCS,
             "limits": {"max_series_per_topic": MAX_SERIES_PER_TOPIC, "max_markets_per_topic": MAX_MARKETS_PER_TOPIC,
