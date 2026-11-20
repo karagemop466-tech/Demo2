@@ -63,6 +63,8 @@ var ws = null;
 var dataMode = 'live';      /* 'live' | 'snapshot' */
 
 function $(id) { return document.getElementById(id); }
+function setText(id, text) { var el = $(id); if (el) el.textContent = text; }
+function setHTML(id, html) { var el = $(id); if (el) el.innerHTML = html; }
 function esc(s) {
   return String(s === undefined || s === null ? '' : s)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -184,8 +186,9 @@ function renderMarketsTable() {
     return tb - ta;
   });
   var tbody = $('marketsBody');
+  if (!tbody) return;
   if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="9" class="muted">No in-scope markets in the current listing.</td></tr>';
+    tbody.innerHTML = '<tr class="placeholder"><td colspan="9" class="muted">No in-scope markets in the current listing.</td></tr>';
   } else {
     tbody.innerHTML = rows.slice(0, 300).map(function (m) {
       var t = turnover(m);
@@ -202,15 +205,16 @@ function renderMarketsTable() {
         '</tr>';
     }).join('');
   }
-  $('marketCount').textContent = rows.length + ' in-scope market' + (rows.length === 1 ? '' : 's');
-  $('rowNote').textContent = 'Showing up to 300 of ' + rows.length + ' rows. "Est. $ turnover" = volume_fp × last_price_dollars; the API has no dollar-turnover field (flagged).';
+  setText('marketCount', rows.length + ' in-scope market' + (rows.length === 1 ? '' : 's'));
+  setText('rowNote', 'Showing up to 300 of ' + rows.length + ' rows. "Est. $ turnover" = volume_fp × last_price_dollars; the API has no dollar-turnover field (flagged).');
 }
 
 function renderSettledTable() {
   var tbody = $('settledBody');
+  if (!tbody) return;
   var rows = settled.slice(0, 200);
   if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="muted">No settled in-scope markets returned by the API.</td></tr>';
+    tbody.innerHTML = '<tr class="placeholder"><td colspan="6" class="muted">No settled in-scope markets returned by the API.</td></tr>';
     return;
   }
   tbody.innerHTML = rows.map(function (m) {
@@ -230,6 +234,7 @@ function renderSettledTable() {
 
 function renderTickerSelect() {
   var sel = $('tickerSelect');
+  if (!sel) return;
   var opts = markets.slice(0, 300).map(function (m) {
     return '<option value="' + esc(m.ticker) + '">' + esc(m.ticker) + ' — ' + esc((m.title || '').slice(0, 70)) + '</option>';
   }).join('');

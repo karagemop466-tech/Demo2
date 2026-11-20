@@ -44,6 +44,11 @@ jobs:
           for f in assets/*.js; do node --check "$f"; done
           echo "all scripts parse"
 
+      - name: Frontend smoke test (jsdom)
+        run: |
+          npm install --no-fund --no-audit jsdom
+          node tools/test_frontend.js
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
