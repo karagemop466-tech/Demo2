@@ -15,7 +15,7 @@
     <span class="tagline">gas · elections · culture · crypto · golf — live demo market data</span>
     <span class="pill-demo">DEMO DATA</span>
     <span class="spacer"></span>
-    <span class="tagline">snapshot 2026-11-20T12:23:50Z</span>
+    <span class="tagline">snapshot 2026-11-20T12:26:29Z</span>
   </div>
   <nav class="nav"><a href="index.html">Overview</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live.html">Live &amp; Liquidity</a><a href="resolved.html">Resolutions</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="analysis.html">Analysis</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="verification.html" class="active">Verification</a><a href="repo-review.html">Repo Review</a><a href="flagged.html">Flagged for Review</a></nav>
 </header>
@@ -24,7 +24,7 @@
 
 <h1>Verification</h1>
 <p class="lede">How each claim on this site is checked, what the collector actually calls, and what the checks do not cover. If you only read one section, read <b>What is not verified</b> at the bottom.</p>
-<p class="small muted">Snapshot <b>2026-11-20T12:23:50Z</b> · API base <a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a> · 278 HTTP requests, 0 errors · collector <code>tools/kalshi_collect.py</code></p>
+<p class="small muted">Snapshot <b>2026-11-20T12:26:29Z</b> · API base <a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a> · 448 HTTP requests, 0 errors · collector <code>tools/kalshi_collect.py</code></p>
 
 <h2>Automated checks run on every build</h2>
 <div class="tablewrap"><table><thead><tr><th>Check</th><th>What it does</th></tr></thead><tbody><tr><td>Every table row links to the Kalshi API response it came from</td><td class="small">Enforced by tools/validate_data.py on every deploy; a row without a source_url fails the build.</td></tr><tr><td>No number is inferred</td><td class="small">Prices, volumes and results are copied as strings from the JSON. Dollar figures are contracts × last price and are labelled.</td></tr><tr><td>Blank means the API returned nothing</td><td class="small">Missing fields stay null and render as an em dash. Nothing is imputed or carried over from another field.</td></tr><tr><td>Demo data is labelled as demo</td><td class="small">The demo banner appears on every page; Kalshi&#x27;s caveat is quoted verbatim.</td></tr><tr><td>Snapshot freshness</td><td class="small">The validator refuses to publish a snapshot older than 6 hours; the collection time is printed in the header of every page.</td></tr><tr><td>Price range sanity</td><td class="small">Every price field must be within $0.00–$1.00 or the build fails.</td></tr><tr><td>Internal links and anchors</td><td class="small">tools/check_site.py resolves every internal link and #anchor before deploy.</td></tr></tbody></table></div>
@@ -86,7 +86,7 @@
 
 <h2>Collection errors</h2>
 <p class="small">No request errors in this run.</p>
-<p class="small muted">278 requests issued · throttle events (HTTP 429) observed: <b>0</b> · final spacing between request starts: 0.12 s.</p>
+<p class="small muted">448 requests issued · throttle events (HTTP 429) observed: <b>5</b> · final spacing between request starts: 0.158 s.</p>
 <p class="small muted">Kalshi does not publish the size of the unauthenticated budget. It documents that public endpoints “charge your IP address’s budget first”, that a 429 carries <b>no</b> X-RateLimit headers when the response is publicly cacheable (which market data is), and that a 429 has no penalty or cooldown. The collector therefore spaces requests adaptively: it widens the gap on every 429 and narrows it slowly as calls succeed. The number above is the observed consequence, not a setting.</p>
 
 <h2>How a settled market is attributed to a topic</h2>
