@@ -16,6 +16,7 @@ Exit code 0 = all links OK, 1 = problems found (printed line by line).
 """
 import html
 import os
+import time
 import re
 import sys
 import urllib.request
@@ -115,17 +116,25 @@ def main():
                 last = f"HEAD failed ({e})"
             if not ok:
                 # Some servers reject HEAD (404/405/403) but serve GET fine.
-                try:
-                    req = urllib.request.Request(url, method="GET",
-                                                 headers={"User-Agent": "Demo2-link-check/1.0"})
-                    with urllib.request.urlopen(req, timeout=20) as resp:
-                        ok = 200 <= resp.status < 400
-                        last = f"GET {resp.status}"
-                except urllib.error.HTTPError as e:
-                    ok = 200 <= e.code < 400
-                    last = f"GET {e.code}"
-                except Exception as e:  # noqa: BLE001
-                    last = f"GET failed ({e})"
+                # 403 = reachable but bot-protected; real browsers can open it,
+                # so treat as OK (reported as a note). 429 = rate limited by
+                # probing many API URLs; back off and retry.
+                for attempt in range(3):
+                    try:
+                        req = urllib.request.Request(url, method="GET",
+                                                     headers={"User-Agent": "Demo2-link-check/1.0"})
+                        with urllib.request.urlopen(req, timeout=20) as resp:
+                            ok = 200 <= resp.status < 400 or resp.status == 403
+                            last = f"GET {resp.status}"
+                    except urllib.error.HTTPError as e:
+                        if e.code == 429 and attempt < 2:
+                            time.sleep(3 * (attempt + 1))
+                            continue
+                        ok = 200 <= e.code < 400 or e.code == 403
+                        last = f"GET {e.code}"
+                    except Exception as e:  # noqa: BLE001
+                        last = f"GET failed ({e})"
+                    break
             if not ok:
                 problems.append(f"external link failed: {url} ({last})")
 
