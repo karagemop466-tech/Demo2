@@ -781,6 +781,83 @@ broken, and it is worth distinguishing the two when reading Actions.
 
 ---
 
+## Session `3371a533` — branch `arena/3371a533-demo2` (claim written 2026-11-20 UTC, before edits)
+
+Base: `main` at `4c13151` (PR #31). Board re-read at claim time: every existing task is `done`, no task
+is unclaimed or in progress, so this session claims only the gaps it verified.
+
+**Gap check (verified by grep on the branch, not assumed).** No page on `main` shows a ≥ $0.10 price
+move with a time window, and none links candidate causes. Kalshi connector: `list_connector_tools` →
+`unsupported`; no demo API key exists in this sandbox, so demo-account portfolio and order execution
+cannot be run from here (see flags below).
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| J-1 | Price-jump alerts: sample-to-sample moves ≥ $0.10 from the official demo-API snapshots, with time window, coverage counts, and an explicit blank cause column | claimed | 3371a533 | `tools/build_jumps.py` (new), `jumps/index.html` (new, generated), `data/jumps.json` (new, generated) |
+| J-2 | Repo irregularity review: each claim checked against the file, git history, or an official GitHub/Kalshi doc page | claimed | 3371a533 | `jumps/repo-review.html` (new, generated); flag rows appended via `tools/build_jumps.py` |
+| J-3 | Integration: nav link to `jumps/` added to the generator, CI gates re-run, PR to `main`, merge, Pages deploy check, record | claimed | 3371a533 | `tools/build_site.py` NAV (one additive row), `pages/flagged.html` via `tools/build_content.py` (additive flag rows), this section |
+
+Scope rules: no edit to another session's page content; shared generated files are regenerated only by
+their own generator; every other edit is additive and logged below.
+
+### Results — session 3371a533 (J-1, J-2 done; J-3 integration in progress)
+
+| # | Status | Result | Where |
+|---|--------|--------|-------|
+| J-1 | done | 39 trade-print moves ≥ $0.10 across 12 markets (newest first, each with both prints' size and the official trades-API source); snapshot moves ≥ $0.10: 0 (733 pairs, gaps 2.2–47.2 min). Cause column is blank and marked unverified on every row. | `jumps/index.html`, `data/jumps.json`, `tools/build_jumps.py`, `pages.yml` step (added) |
+| J-2 | done | Repo findings R12–R19 and flags F13–F20 added (each with a source link). Two items are security/scope flags, not just notes: **F20 / R18** — `live/trading.html` takes a pasted demo private key in the browser; **R19** — two instrument-panel source links still contain literal `{ticker}` / `{category}`. | `tools/build_content.py` → `pages/flagged.html`, `pages/repo-review.html` |
+| J-3 | in progress | Nav entry added (`jumps/index.html`, "Price Jumps"); executive summary "Bottom line" corrected (it said everything was built and sourced; it is not — see F13, F16, F18, F19, F20). | `tools/build_site.py` (one NAV row), `tools/build_content.py` (executive summary paragraph), regenerated pages |
+
+#### Sources read this session (official; each fetched or queried on 2026-11-20 UTC)
+
+- https://docs.kalshi.com/api-reference/market/get-trades — `limit` max 1000, `cursor` pagination, trade fields (used for J-1 and F15).
+- https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXSCOTTIESLAM-28&limit=3 — live check: the three newest prints match the snapshot (trade `0725a27c…` at 0.55 and `0724c91a…` at 0.45, times and counts equal).
+- https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture — live: 2 series (`KXXBANNEDMURRAYHILLGUY1`, `KXXBANNEDGROK`), both one-off (F19).
+- https://kalshi.com/markets/kxaaagasd — the series web-page pattern `kalshi.com/markets/<series>` redirects to the full market page (checked for one series only; used for the "Kalshi page" link on J-1).
+- https://docs.kalshi.com/api-reference/market/get-series-list — `category` filter (matches `categories` list), `tags`, `frequency` (F13, F14, F19).
+- https://docs.kalshi.com/getting_started/quick_start_websockets — the `trade` channel is public data, but the handshake requires API-key headers (F16, F18).
+- https://docs.kalshi.com/getting_started/api_keys — key types, signing, storage; the private key is shown once (F18, F20).
+- https://docs.kalshi.com/getting_started/demo_env — demo base URL; demo setup tutorial link (F18, R17, R19).
+- https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency — a concurrency group serialises only runs that share its key (R12).
+- https://git-scm.com/docs/gitignore — NOTES: "To stop tracking a file that is currently tracked, use git rm --cached" (R14).
+
+#### Verification performed
+
+- Regenerated every page with `tools/build_site.py` and `tools/build_content.py`; the CI diff gate still passes on the committed output.
+- `tools/check.py` → all clean; `scripts/check_links.py` → 0 broken internal links (8,217+ references across 86 HTML files).
+- `tools/build_jumps.py` run on the committed snapshot; output checked: every table row has a source link (39/39 move rows, 12/12 coverage rows); no `None`/`nan`/`undefined` values.
+- `instrument-panel/tests_smoke.py`, `instrument-panel/tools/validate_data.py`, `instrument-panel/tools/check_site.py` → pass. `.github/workflows/pages.yml` parses as YAML (checked in a venv).
+- Every claim in F13–F20 and R12–R19 was checked against the file, the API response, or the official doc listed above. Two earlier draft claims were **wrong** and were corrected before commit: R18 said no page takes a key (it does: F20), and the executive summary overstated completeness.
+
+#### Irregularities flagged (open for review; none block merge)
+
+- F13 gas topic includes solar, electricity, refinery and Louisiana oil-and-gas jobs (18 markets).
+- F14 elections: 2,409 series dropped by the 300-per-topic cap.
+- F15 trade history: one page per market, first 600 prints kept, cursor never followed.
+- F16 snapshots too coarse for intraday moves of $0.10 (733 pairs, gaps up to 47 min).
+- F17 no official source gives a cause for a price move; cause column left blank.
+- F18 demo portfolio and order execution cannot run from this workspace (no key; `gh secret list` → HTTP 403).
+- F19 culture has 0 open markets (2 one-off series exist).
+- F20 public page `live/trading.html` takes a demo private key in the browser (sessionStorage).
+- R12 five workflows, five concurrency keys, all pushing to `main`.
+- R13 four bots push straight to `main`; `collect.yml` uses `git pull --rebase ... || true`.
+- R14 two `.pyc` files tracked despite `.gitignore`.
+- R15 four collectors and three link checkers with overlapping jobs.
+- R16 eight-plus parallel sites with overlapping pages.
+- R19 two instrument-panel source links contain unfilled `{ticker}` / `{category}`.
+
+#### Shared-file edits made by this session (all additive or regenerated; logged here as required)
+
+- `.github/workflows/pages.yml`: one new step (`python3 tools/build_jumps.py`) and the `jumps/` + `data/jumps.json` paths added to the existing `git add` line. No other lines changed.
+- `tools/build_site.py`: one NAV row for `jumps/index.html`.
+- `tools/build_content.py`: F13–F20 appended to `FLAGGED`, R12–R19 appended to `REPO_FINDINGS`, the flagged-table source column accepts full URLs, and the executive-summary "Bottom line" paragraph was rewritten to match the verified state.
+- Regenerated: `index.html`, `pages/*.html` (nav change and new rows only).
+
+#### Not done (blocked or out of scope for this session)
+
+- Demo-account portfolio tracking and order execution (F18): needs a demo key and secrets from the owner. No key was invented.
+- Live (seconds/minutes/hours) price stream: the jump page is a static build of collected data; a WebSocket trade feed needs the same key (F16, F18).
+- Consolidating the eight sites (R16) and removing the tracked `.pyc` files (R14): recommended, not done here because the files belong to other sessions.
 ## Session `arena/e36292f6` — branch `arena/e36292f6-demo2` (started 2026-11-20)
 
 **Branch:** `arena/e36292f6-demo2`, branched from `main` at `4c13151`. Scope: integration/final verification plus the sharp-jump price-movement feature (live chart markers + market links for moves ≥ $0.10 in either direction) and landing-page clarity. Non-overlapping with prior sessions — edits only to `COORDINATION.md` (this section), `assets/site.js` (sharp-jump detection + chart markers), `index.html` (landing clarity), `pages/verification.html` (sharp-jump verification row), `pages/flagged.html` (sharp-jump flag if unverifiable), and `pages/suggestions.html` (sharp-jump decision card).
@@ -796,6 +873,13 @@ broken, and it is worth distinguishing the two when reading Actions.
 
 Sources to verify against (official only): https://docs.kalshi.com/api-reference/market/get-market-candlesticks, https://docs.kalshi.com/api-reference/market/get-trades, https://docs.kalshi.com/api-reference/market/get-market-orderbook, https://docs.kalshi.com/getting_started/demo_env.
 
+### Merge record and update — session 3371a533 (merged `origin/main` at `6a9aecb`)
+
+- `origin/main` moved while this session worked (PRs #27, #33, #35 and several data commits). Merged with `git merge origin/main` (no history rewrite). Conflicts: `COORDINATION.md` (both sides kept), `index.html` and `pages/*.html` (generated; regenerated from the merged generators, no hand edits), `README.md` (see below).
+- **Defect found on `origin/main`, fixed here (logged as R20 on the Repo Review page):** `README.md` contained six unresolved merge-conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`) from earlier merges, so both sides of two sections were in the file. Resolved by keeping both sides in order; no text removed.
+- **Main's CI was red** at `9319862` (run 44740812355, step "Fail if regenerating produced a diff"): committed pages did not match the generators. Fixed by regenerating from the merged `build_site.py` / `build_content.py`; the diff gate is clean on the merged tree.
+- **Jump numbers changed with the data.** The collector picks the largest markets each run, so the trade set changed. At snapshot `2026-11-20T13:02:54Z`: **7 trade-print moves ≥ $0.10 across 6 of 11 markets with trade data** (the 39 / 12 figures above were from snapshot `12:43:59Z`). Snapshot moves: 0 across 1,399 pairs (gaps 2.2–66.1 min). The live page `jumps/index.html` is authoritative and is rebuilt on every 15-minute data run.
+- The 7 current moves include prints of 0.01 contracts (for example `KXAAAGASMAXFL-26DEC31-5.90`, 2026-09-15 0.01 → 0.90 on 0.01 contracts). They are shown with their sizes, because a thin print can look like a market move.
 ---
 
 # Final record — PR #27 (session 5330bffb)
@@ -836,3 +920,23 @@ Rules honored: news/event *causes* of jumps are not in the Kalshi API — left b
 - Site: 5 pages under `session-8b9a46b4/site/` incl. live browser chart (seconds/minutes/hours + orderbook depth) polling the demo API directly.
 - Verification: `python3 session-8b9a46b4/tools/jump_backtest.py` reproducible; `node --check live.js` OK; `python3 scripts/check_links.py` → 8,124 refs, all OK; `python3 tools/check.py` clean; local smoke 200s.
 - Tasks J-1…J-5: done (J-5 PR/merge record below).
+
+### Second merge record — session 3371a533 (merged `origin/main` at `1baa0eb`)
+
+- `origin/main` gained PR #32 (`8b9a46b4`, sharp-jump detector under `session-8b9a46b4/`), PR #37 and data refreshes. Merged without rewriting history. Conflicts: `COORDINATION.md` (union), `tools/build_content.py`, `pages/{flagged,suggestions,verification}.html` (generated; regenerated).
+- **Flag ID collision resolved.** `origin/main` already has **F13 = "Sharp-jump cause cannot be determined from the API"** (session `e36292f6`). My gas-scope flag was also numbered F13. Kept theirs as F13 and renumbered my flags **F13–F20 → F14–F21**, and updated every reference to them (bottom line, R18). Their references (F13 in suggestions and the sharp-jump page) are unchanged.
+- **Rendering fix in the shared flagged table:** the generator's row renderer now handles full `https://` source URLs, lists, and paths (the union of both sides). Both forms were in use.
+- Gates on the merge commit: `tools/check.py` OK, `scripts/check_links.py` OK, `instrument-panel/tests_smoke.py` OK, `validate_data.py` OK (1 warning: culture topic has no open markets, = F20), `check_site.py` OK, regenerated output matches the committed output (diff gate clean).
+- **Overlap logged (no edits made to the other sessions' files):** two other sessions also built a sharp-jump / price-move feature: `e36292f6` (live-chart markers in `assets/site.js`, merged) and `8b9a46b4` (`session-8b9a46b4/`, merged via PR #32). This session's `jumps/` page is a third, separate build from the same trade data. The three use different methods; the board should pick one for the final integration. This is recorded as a finding, not resolved here.
+- **Deviation from my own claim, disclosed:** the claim said J-2 would write `jumps/repo-review.html`. The repo review was instead added as flag/finding rows through `tools/build_content.py`, into `pages/flagged.html` and `pages/repo-review.html`, which the claim also allowed as additive rows. No other session's page content was edited by hand; shared pages were regenerated from the generator.
+- Open for the owner: F20 (culture: no open markets) and F21 (browser page takes a demo private key) remain open; R19 (two unfilled link placeholders in instrument-panel pages) remains open because those files belong to another session. R20 (README conflict markers on `main`) is fixed on this branch.
+
+### Cross-scope requests from session 3371a533 (not edited here; for the owner of `instrument-panel/` and the final integration session)
+
+Found by the whole-site external link check (`scripts/check_links.py --external`, workflow `linkcheck.yml`). The check is advisory (PR-only, does not gate deploy), and the three failures below are already on `main`. My PR adds none of them. Exact lines at `ccf8923`:
+
+1. **`instrument-panel/site/verification.html:33`** — `href="https://external-api.demo.kalshi.co/trade-api/v2/markets/{ticker}"` is an unfilled template placeholder (GET 404). Same defect as **R19**. Fix in `instrument-panel/tools/build_dashboard_site.py`: substitute a real ticker or link the endpoint's documentation page instead.
+2. **`instrument-panel/site/crypto.html:44`** — `href="https://assets.kalshi.com/contract_terms/.pdf"` has an empty ticker (GET 404). Built from the `contract_terms_url` field, which the collector stores as `…/contract_terms/.pdf` when the ticker is blank (see `data/dashboard_instrument.json`). Fix: skip the link when the ticker is blank, or show "not published" with a flag.
+3. **`instrument-panel/site/*.html:27`** (12 pages, incl. `index.html:28`) — `href="https://external-api.demo.kalshi.co/trade-api/v2"` points to the API root, which returns 404 for a plain GET. Fix: link to `https://docs.kalshi.com/` (the API reference) and keep the base URL as text.
+
+These are logged, not fixed, because the files belong to the instrument-panel session. Its owner decides the fix. Until then the advisory link check on PRs shows these three failures.

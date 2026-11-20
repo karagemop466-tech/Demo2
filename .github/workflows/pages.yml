@@ -46,11 +46,13 @@ jobs:
         run: python instrument-panel/tools/validate_data.py
       - name: Rebuild the dashboard pages from the new snapshot
         run: python instrument-panel/tools/build_dashboard_site.py
+      - name: Rebuild the price-jump page from the collected trade prints and snapshots
+        run: python3 tools/build_jumps.py
       - name: Commit the snapshot and pages
         run: |
           git config user.name "kalshi-dashboard-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/dashboard_instrument.json data/history_instrument instrument-panel/site
+          git add data/dashboard_instrument.json data/history_instrument data/jumps.json instrument-panel/site jumps
           if git diff --cached --quiet; then
             echo "No data changes to commit."
           else
