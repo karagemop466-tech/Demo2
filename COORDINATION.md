@@ -365,9 +365,44 @@ Verification after fixes: `python3 scripts/check_links.py` → 0 problems;
 
 ### PR / deploy record — session 1d709f30
 
-- PR: (filled after `gh pr create`)
-- Merge result: (filled after merge)
-- Pages deploy: (filled after deploy check)
+- PR: https://github.com/karagemop466-tech/Demo2/pull/24 — **MERGED** 2026-11-20
+  12:11:53 UTC (`gh pr merge 24 --merge`), merge commit
+  `532edadfd490ed85570647fcf20ac2f0f149b266`. Both PR checks passed before merge:
+  `Build and check the site` (success, ~14 s) and `Link check (all pages,
+  internal + external)` (success, 52 s — 1,943+ internal references across 70
+  HTML files plus every external URL probed with HEAD→GET fallback, 429 backoff).
+- Pages deploy: `Deploy GitHub Pages` run for `532edad` — **success** (20 s);
+  `pages build and deployment` for the follow-up data commit `8d2c47d` —
+  **success** (59 s). Pages API: `status: built`, source `main /`,
+  https://karagemop466-tech.github.io/Demo2/ . Newest github-pages deployment
+  targets `8d2c47d` (github-pages[bot], 2026-11-20T12:12:56Z).
+  Live verification (fetched after deploy): `/Demo2/rankings.html` serves the
+  page with method box + tables, and `/Demo2/data/events_top.json` serves real
+  ranked rows (e.g. elections top event `KXPRESNOMD-28`, est. 24h $24,034.81,
+  1,555,533.39 contracts, per-row official source URLs).
+- Data pipeline first run on `main`: `Refresh Kalshi data` run 44733769348 —
+  **success** (fetch + commit steps), data commit `8d2c47d` on main. Outputs:
+  `data/events_top.json` (topic rankings: gas 1, elections 10, culture 0,
+  crypto 10, golf 6 rows — culture blank because no in-scope culture events
+  had volume/OI in the window, stated as blank, not filled),
+  `data/resolved.json` (200 settled markets with official `result` yes/no),
+  `data/series_index.json`, `data/live_snapshot.json`, `data/pipeline_meta.json`.
+- **CORS (previously open item) — observed, not assumed**: probe with
+  `Origin: https://karagemop466-tech.github.io` against
+  `GET /trade-api/v2/markets?limit=1` returned HTTP 200 with
+  `access-control-allow-origin: https://karagemop466-tech.github.io` (origin
+  echoed), `access-control-allow-credentials: true`, and
+  `access-control-expose-headers: X-Csrf-Token,X-Ratelimit-Limit,...`.
+  Conclusion: browser-side live fetch from the GitHub Pages origin is
+  supported by the demo API. Raw evidence: `data/cors.json` (refreshed every
+  pipeline run). Source: https://docs.kalshi.com/getting_started/quick_start_market_data .
+- Two genuinely broken external docs links found by the external probe and
+  fixed: `docs.kalshi.com/demo_env` → `docs.kalshi.com/getting_started/demo_env`
+  (in `tools/build_content.py` API rows) and
+  `docs.kalshi.com/api-reference/markets/get-market` → `.../market/get-market`
+  (singular `market`) in `review.html`. Both re-checked live (200).
+- This record + data sync PR: https://github.com/karagemop466-tech/Demo2/pull/25
+  (filled after create/merge).
 ---
 
 ---
