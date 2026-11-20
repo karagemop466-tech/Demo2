@@ -1,0 +1,19 @@
+{
+ "generated_at_utc": "2026-11-20T13:45:25+00:00",
+ "topic": "culture",
+ "count": 0,
+ "markets": [],
+ "resolutions": [
+  {
+   "market_ticker": "KXXBANNEDGROK-26",
+   "title": "In 2025",
+   "topic": "culture",
+   "result": "no",
+   "volume_fp": "0.00",
+   "settlement_ts": null,
+   "settlement_value_dollars": null,
+   "rules_primary": null,
+   "market_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXXBANNEDGROK-26"
+  }
+ ]
+}

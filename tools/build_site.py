@@ -208,7 +208,11 @@ tables on the category, resolution and verification pages still work without it.
 <div class="notice info"><b>What "highest dollar amount" means here.</b> The Trade API has no
   single dollar-volume field. Every row therefore shows the raw official fields
   (<code>volume_fp</code>, <code>open_interest_fp</code>, <code>last_price_dollars</code>) and
-  one clearly-labelled <b>estimate</b>: <code>volume_fp × last_price_dollars</code>. See
+  one clearly-labelled <b>estimate</b>: <code>volume_fp × last_price_dollars</code>.
+  Rows missing lifetime <code>volume_fp</code> (top-event lead markets) show a blank there and a
+  labelled 24h estimate beside it. Coverage note: the snapshot unions every source-linked market
+  set and is <b>not a complete enumeration</b> of the exchange (see the <code>adapter.coverage</code>
+  field in <code>data/snapshot.json</code>). See
   <a href="pages/flagged.html">Flagged F2</a> and <a href="pages/questions.html">Q1</a>.</div>
 <div class="row" style="margin:10px 0">
   <div><label for="topicFilter">Topic</label>

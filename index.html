@@ -7,7 +7,7 @@
 </head><body>
 <header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="index.html" aria-current="page">Dashboard</a><a href="pages/executive-summary.html">Executive Summary</a><a href="pages/gas.html">Gas</a><a href="pages/elections.html">Elections</a><a href="pages/culture.html">Culture</a><a href="pages/crypto.html">Crypto</a><a href="pages/golf.html">Golf</a><a href="verified/index.html">Verified Data</a><a href="rankings.html">Dollar Rankings</a><a href="instrument-panel/site/index.html">Instrument Panel</a><a href="live/index.html">Live Console</a><a href="pages/resolutions.html">Resolutions</a><a href="pages/portfolio.html">Portfolio</a><a href="pages/analysis.html">Analysis</a><a href="pages/suggestions.html">Suggestions</a><a href="pages/questions.html">Questions</a><a href="pages/api-reference.html">API Reference</a><a href="pages/verification.html">Verification</a><a href="pages/flagged.html">Flagged</a><a href="pages/repo-review.html">Repo Review</a><a href="pages/sources.html">Sources</a></nav></div></header>
 <div class="wrap">
-<div class="card tight"><div class="row" style="justify-content:space-between"><div class="status" id="staleness">Snapshot <span class="muted">none yet</span></div><div class="status muted">0 in-scope markets · API key configured: no · source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a></div></div></div>
+<div class="card tight"><div class="row" style="justify-content:space-between"><div class="status" id="staleness">Snapshot <span class="muted">2026-11-20T13:45:25+00:00</span></div><div class="status muted">1565 in-scope markets · API key configured: no · source <a href="https://docs.kalshi.com/getting_started/demo_env">demo environment</a></div></div></div>
 <h1>Highest-dollar live markets in scope</h1>
 <p class="lead">Live Kalshi <b>demo</b> markets for five topics only — <b>gas prices,
 elections, culture, crypto, golf</b>. Ranked by <i>estimated</i> dollar volume, charted by
@@ -94,7 +94,11 @@ tables on the category, resolution and verification pages still work without it.
 <div class="notice info"><b>What "highest dollar amount" means here.</b> The Trade API has no
   single dollar-volume field. Every row therefore shows the raw official fields
   (<code>volume_fp</code>, <code>open_interest_fp</code>, <code>last_price_dollars</code>) and
-  one clearly-labelled <b>estimate</b>: <code>volume_fp × last_price_dollars</code>. See
+  one clearly-labelled <b>estimate</b>: <code>volume_fp × last_price_dollars</code>.
+  Rows missing lifetime <code>volume_fp</code> (top-event lead markets) show a blank there and a
+  labelled 24h estimate beside it. Coverage note: the snapshot unions every source-linked market
+  set and is <b>not a complete enumeration</b> of the exchange (see the <code>adapter.coverage</code>
+  field in <code>data/snapshot.json</code>). See
   <a href="pages/flagged.html">Flagged F2</a> and <a href="pages/questions.html">Q1</a>.</div>
 <div class="row" style="margin:10px 0">
   <div><label for="topicFilter">Topic</label>
