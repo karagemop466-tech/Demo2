@@ -1,0 +1,53 @@
+:root{--bg:#f6f8fa;--card:#fff;--ink:#1f2328;--muted:#59636e;--line:#d8dee4;--brand:#00b67a;--warn:#9a6700;--bad:#cf222e;--ok:#1a7f37}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:#0969da}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding:10px 20px;background:#0d1117;color:#fff}
+header.top a{color:#c9d1d9;text-decoration:none;margin-right:12px;font-size:14px}
+header.top a.active,header.top a:hover{color:#fff;text-decoration:underline}
+.brand a{color:#fff;font-weight:700;font-size:16px;margin-right:8px}
+.brand .tag{font-size:11px;background:var(--brand);color:#04110c;padding:2px 6px;border-radius:4px;margin-left:6px}
+main{max-width:1200px;margin:0 auto;padding:20px}
+footer{max-width:1200px;margin:0 auto;padding:16px 20px 40px;color:var(--muted);font-size:13px}
+h1{font-size:26px;margin:4px 0 8px}h2{font-size:19px;margin:24px 0 10px}h3{font-size:16px;margin:0}
+section{margin-bottom:12px}
+.hero{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:16px}
+.hero.small p{margin:6px 0}
+.lead{font-size:16px}
+.meta,.note{color:var(--muted);font-size:13px}
+.banner{border-radius:8px;padding:10px 14px;margin:10px 0;border:1px solid}
+.banner.warn,.warn-pill{background:#fff8c5;border-color:#d4a72c;color:#633c01}
+.banner.bad{background:#ffebe9;border-color:#ff8182;color:#82071e}
+.pill{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:999px;padding:1px 8px;background:#f6f8fa;color:var(--muted);margin-right:6px}
+.warn-pill{color:#633c01}
+.ok{color:var(--ok);font-weight:600;font-size:13px}
+.flagchip{display:inline-block;font-size:12px;background:#ffebe9;color:#82071e;border-radius:4px;padding:0 5px;margin:2px 2px 0 0;text-decoration:none}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;text-decoration:none;color:var(--ink)}
+.card:hover{border-color:var(--brand)}
+.card p{color:var(--muted);font-size:13px;margin:6px 0}
+ul.summary li{margin-bottom:8px}
+.tablewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#f6f8fa;position:sticky;top:0;font-weight:600}
+code{font-size:12px;background:#f0f3f6;padding:1px 4px;border-radius:4px}
+.sugg,.flag{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.sugg header,.flag header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.opt{display:block;padding:6px 8px;border-radius:6px;margin:4px 0;cursor:pointer}
+.opt:hover{background:#f6f8fa}
+.opt.chosen{background:#dafbe1}
+.sev-high{border-left:5px solid var(--bad)}.sev-medium{border-left:5px solid var(--warn)}.sev-low{border-left:5px solid var(--muted)}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.controls label{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:4px}
+select,input,button{font:inherit;padding:6px 8px;border-radius:6px;border:1px solid var(--line);background:#fff}
+button{background:var(--brand);border-color:var(--brand);color:#fff;cursor:pointer;font-weight:600}
+button.secondary{background:#fff;color:var(--ink);border-color:var(--line)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:14px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kpi span{display:block;font-size:12px;color:var(--muted)}
+.kpi strong{font-size:20px}
+.chartbox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+canvas{width:100%;height:auto;display:block}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.twocol{grid-template-columns:1fr}}

@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Suggestions — Review & Choose</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Suggestions — Review & Choose</h1>
+<p>Review each suggestion, then mark <b>Choose</b> (best path) or <b>Defer</b>. Choices persist in your browser only and do not change code until you approve. Nothing here is implemented automatically.</p>
+<div id="sugList"></div>
+<script>
+const SUGS=[
+ {id:"s1",t:"Add series-ticker allowlist",d:"Replace keyword matching with explicit series_ticker filters per topic (e.g. gas series) for exact scoping. Needs series discovery via Get Series.",s:"https://docs.kalshi.com/getting_started/quick_start_market_data"},
+ {id:"s2",t:"WebSocket-first streaming",d:"Use wss demo feed for tick/orderbook updates instead of 15s polling; keep REST fallback.",s:"https://docs.kalshi.com/getting_started/api_environments"},
+ {id:"s3",t:"Server-side proxy for CORS",d:"If browser CORS blocks the API, add a small proxy that forwards demo REST/WS. Requires hosting decision.",s:"https://docs.kalshi.com/getting_started/demo_env"},
+ {id:"s4",t:"Paper-trade simulator",d:"Clearly-labeled simulator when no API keys exist, so analysis UI can be tested without claiming real trades.",s:"https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"},
+ {id:"s5",t:"Resolution alerts",d:"Notify when a tracked market settles and record yes/no outcome automatically.",s:"https://docs.kalshi.com/api-reference/market/get-markets"},
+ {id:"s6",t:"Export CSV of fills + outcomes",d:"One-click export for offline review; no new data collection.",s:"https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"}
+];
+const saved=JSON.parse(localStorage.getItem("sugVotes")||"{}");
+document.getElementById("sugList").innerHTML=SUGS.map(s=>"<div class='card' style='margin-bottom:10px'><h3>"+s.t+"</h3><p>"+s.d+"</p><p class='muted'>Source: <a href='"+s.s+"'>"+s.s+"</a></p><div class='row'><button data-id='"+s.id+"' data-v='choose'>Choose as best path</button><button class='secondary' data-id='"+s.id+"' data-v='defer'>Defer</button><span>"+(saved[s.id]||"No decision yet")+"</span></div></div>").join("");
+document.querySelectorAll("button[data-id]").forEach(b=>b.onclick=()=>{saved[b.dataset.id]=b.dataset.v;localStorage.setItem("sugVotes",JSON.stringify(saved));location.reload();});
+</script>
+</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>

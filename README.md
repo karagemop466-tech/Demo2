@@ -1,42 +1,40 @@
-# Demo2 — Kalshi demo dashboard
+# Kalshi Demo Dashboard
 
-Live site (GitHub Pages, served from `main` → `/docs`):
-https://karagemop466-tech.github.io/Demo2/
-
-## What is here
-
-| Path | What it is |
-|---|---|
-| `docs/index.html` | Landing page + executive summary |
-| `docs/markets.html` | Markets and series by category, with source links per row |
-| `docs/resolutions.html` | Settled markets with YES/NO results |
-| `docs/live.html` | Live price chart, timestamped live tape, orderbook liquidity (public REST, no login) |
-| `docs/portfolio.html` | Portfolio / trades — **blocked** until a Kalshi demo API key is provided |
-| `docs/analysis.html` | Verified observations, trade categories, strategy hypotheses (untested) |
-| `docs/suggestions.html` | Improvement suggestions with Approve / Defer / Reject — nothing is implemented until selected |
-| `docs/questions.html` | Questions, known vs missing information, how to find it |
-| `docs/flagged.html` | Flagged for review: irregularities, constraints, unverified items, source list |
-| `docs/data/snapshot.json` | The verified data snapshot behind the tables (each row carries its API source key) |
-| `COORDINATION.md` | Shared task board, claims, verification log, handoffs |
-
-## Data sources
-
-- Kalshi Trade API docs: https://docs.kalshi.com (API environments, Get Markets, Get Series List, Candlesticks, Orderbook, Settlement, Rate Limits, WebSocket, API Keys)
-- Demo REST base URL (as supplied): https://external-api.demo.kalshi.co/trade-api/v2
-- Production REST base URL (read-only comparison): https://external-api.kalshi.com/trade-api/v2
-
-Every value is taken from an official API response or the official docs. Values that could not be confirmed are left blank and marked **UNVERIFIED**. Nothing is inferred.
+Live client-side dashboard and supporting research pages for Kalshi **demo** markets in gas prices, elections, culture, crypto, and golf. The original category-specific site lives at `index.html` and `pages/`. Additional verification, limitations, and decision-register materials are at `analysis.html`, `portfolio.html`, and `review.html`.
 
 ## Run locally
 
-No build step. Serve the `docs/` folder with any static server:
+Open `index.html` in a browser or serve this repository with `python3 -m http.server 8000`. Public market data is requested client-side from Kalshi's demo API; availability and browser CORS/network restrictions can affect live results.
 
-```bash
-cd docs && python3 -m http.server 8000
-```
+## Important safety and verification notes
 
-The live page calls Kalshi’s public endpoints from the browser. It holds no API keys.
+The root-level monitor sorts only documented contract volume, not dollar turnover; its chart is local YES-bid REST snapshots rather than a historical series; topic matching is heuristic. `portfolio.html` deliberately leaves private account values blank and does not execute trades. Do not place private signing keys in a public static site. Review `review.html` for open questions and `pages/flagged.html` for the main site's existing review list.
 
-## Known limits
+The other branch's original implementation and research materials are retained. Its original README described browser-side private-key signing and trade execution; that approach requires a security review before use. Do not enter credentials in a public GitHub Pages application.
 
-See `docs/flagged.html`. In short: the tables are a sample, the API reports contracts (not dollars) for volume, WebSocket streams require authentication, and trading requires a demo API key.
+## Official references
+
+- [Kalshi market data quick start](https://docs.kalshi.com/getting_started/quick_start_market_data)
+- [Kalshi orderbook schema](https://docs.kalshi.com/getting_started/orderbook_responses)
+- [Kalshi authenticated order guide](https://docs.kalshi.com/getting_started/quick_start_create_order)
+- [Kalshi WebSocket guide](https://docs.kalshi.com/getting_started/quick_start_websockets)
+- [Kalshi events endpoint](https://docs.kalshi.com/api-reference/events/get-events)
+- [Kalshi API changelog](https://docs.kalshi.com/changelog)
+- [GitHub Pages documentation](https://docs.github.com/en/pages)
+
+See [COORDINATION.md](COORDINATION.md) for history and verification notes.
+
+
+---
+
+## Dashboard added by session arena-3420a90d (`dashboard/`)
+
+A separate dashboard lives in `dashboard/` (published by the same Pages workflow): https://karagemop466-tech.github.io/Demo2/dashboard/index.html
+
+- `dashboard/markets.html`: markets and series by category, each row linked to its Kalshi API response
+- `dashboard/resolutions.html`: settled markets with YES/NO results
+- `dashboard/live.html`: candlestick chart, live tape (timestamped polling) and orderbook liquidity, public endpoints only
+- `dashboard/portfolio.html`: BLOCKED until a Kalshi demo API key is supplied; no trades placed
+- `dashboard/analysis.html`, `suggestions.html` (decision-first), `questions.html`, `flagged.html`
+
+Data: `dashboard/data/snapshot.json`. Verified values only; blanks are marked UNVERIFIED. See `COORDINATION.md` for sources and irregularities.
