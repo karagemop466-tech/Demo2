@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analysis · Kalshi Demo Dashboard</title>
+<meta name="description" content="Live Kalshi demo-market dashboard for gas prices, elections, culture, crypto and golf, with sourced data, verification and a flagged-for-review register.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <div class="brand"><a href="index.html">Kalshi <span>Demo</span> Dashboard</a></div>
+    <span class="tagline">gas · elections · culture · crypto · golf — live demo market data</span>
+    <span class="pill-demo">DEMO DATA</span>
+    <span class="spacer"></span>
+    <span class="tagline">snapshot not collected yet</span>
+  </div>
+  <nav class="nav"><a href="index.html">Overview</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live.html">Live &amp; Liquidity</a><a href="resolved.html">Resolutions</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="analysis.html" class="active">Analysis</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="verification.html">Verification</a><a href="repo-review.html">Repo Review</a><a href="flagged.html">Flagged for Review</a></nav>
+</header>
+<main>
+
+
+<h1>Analysis</h1>
+<p class="lede">What the collected data can actually support. Two things are true at once: the market data is rich enough to measure whether prices were calibrated, and it is <b>not</b> rich enough to recommend a trade. This page keeps that line visible.</p>
+<div class="notice warn"><h4>Demo environment data — not real markets</h4>Every price, volume and resolution below comes from Kalshi's <b>demo</b> exchange (<a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co</a>). Kalshi states that demo prices and behaviour “may not be reflective of those in real markets”. See <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a>. No real money is involved anywhere on this site.</div>
+
+<h2>1. Price calibration of resolved in-scope markets</h2>
+<div class="notice"><h4>Method (reproducible from the published data)</h4>
+Take every resolved in-scope market, bucket it by its last traded YES price, and compare the band's mean price with the share of those markets that actually resolved YES. A market priced at $0.70 should resolve YES about 70% of the time; if the realised rate is far below that, the band was expensive. Arithmetic only — no model is fitted, nothing is predicted.</div>
+<div class="grid c3" style="margin:14px 0">
+  <div class="kpi "><div class="label">Resolved markets</div><div class="value">0</div><div class="sub">collected from settled-market responses</div></div>
+  <div class="kpi "><div class="label">With a usable price</div><div class="value">0</div><div class="sub">these feed the bands below</div></div>
+  <div class="kpi warn"><div class="label">Bands with n ≥ 10</div><div class="value">0</div><div class="sub">smaller bands are shown but not interpreted</div></div>
+</div>
+<div class="tablewrap"><table><thead><tr><th>Price band</th><th class="num">n</th><th class="num">Mean implied probability</th><th class="num">Realised YES rate</th></tr></thead><tbody><tr><td colspan="4" class="empty">No resolved markets with prices were collected.</td></tr></tbody></table></div>
+<p class="small muted">Source per row: ; each resolved row on the <a href="resolved.html">Resolutions</a> page links to its own response.</p>
+
+<h2>2. Bands where the realised rate differs from the price (n ≥ 5)</h2>
+<p class="empty">Not enough resolved markets in any band to compare.</p>
+<p class="small muted">A gap is a description of a small sample in a demo environment, not an edge. Before it could inform a decision you would need the sample size, the fee drag and a live order book — see <a href="questions.html#Q12">Q12</a> and <a href="suggestions.html#S3">S3</a>.</p>
+
+<h2>3. Resolutions by topic</h2>
+<div class="tablewrap"><table><thead><tr><th>Topic</th><th class="num">Resolved</th><th class="num">YES</th><th class="num">NO</th><th class="num">YES rate</th></tr></thead><tbody><tr><td colspan="5" class="empty">No resolved markets yet.</td></tr></tbody></table></div>
+
+<h2>4. Liquidity and concentration</h2>
+<p class="empty">No orderbook snapshots collected.</p>
+
+<h2>5. What cannot be concluded, and why</h2>
+<table><tbody>
+<tr><td><b>“This topic is more profitable.”</b></td><td class="small">Profitability needs a portfolio. There are no executed trades, so no realised P&amp;L exists. Market-level calibration is not the same thing as trade performance.</td></tr>
+<tr><td><b>“Demo behaviour predicts the real market.”</b></td><td class="small">Kalshi states demo prices and behaviour may not be reflective of real markets (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo_env</a>).</td></tr>
+<tr><td><b>“Volume shows dollar turnover.”</b></td><td class="small">Volume is contracts. Dollar figures here are contracts × price and are labelled as derived (<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>).</td></tr>
+<tr><td><b>“A wide price gap is free money.”</b></td><td class="small">Fees, spread and depth all reduce it; the orderbook is bids-only, so the true ask is 1 − best opposite bid. See the <a href="live.html">Live</a> page.</td></tr>
+</tbody></table>
+
+</main>
+<footer class="site">
+  <p><b>Sources.</b> Kalshi demo Trade API snapshot collected by <code>tools/kalshi_collect.py</code>; each table row links to the exact API response it was copied from.
+  Definitions: <a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">fixed-point fields</a> ·
+  <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">orderbook</a> ·
+  <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement</a>.</p>
+  <p><b>Not financial advice.</b> Demo environment only; Kalshi states demo prices may not reflect real markets.
+  Anything that could not be confirmed from an official source is left blank and listed on the
+  <a href="flagged.html">Flagged for Review</a> page. Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a></p>
+</footer>
+
+</body>
+</html>

@@ -1,5 +1,39 @@
 # Kalshi Demo Dashboard
 
+A dashboard for Kalshi's **demo** exchange covering five topics only: gas prices,
+elections, culture, crypto and golf. Every value is copied from an official Kalshi API
+response or is plain arithmetic over copied values; every table row links to the response
+it came from; anything that could not be confirmed is left blank and listed for review.
+
+| Page | What it is |
+|------|------------|
+| [index.html](index.html) | Landing page indexing every dashboard in the repository |
+| [site/index.html](site/index.html) | **Current dashboard** — live totals per topic |
+| [site/live.html](site/live.html) | Price chart (60 s → 6 h) and full orderbook depth |
+| [site/resolved.html](site/resolved.html) | Settled markets with the recorded YES/NO outcome |
+| [site/portfolio.html](site/portfolio.html) | Why portfolio/trading needs a backend, plus a key-free trade classifier |
+| [site/analysis.html](site/analysis.html) | Calibration of resolved contracts; what cannot be concluded |
+| [site/questions.html](site/questions.html) | 22 questions: known, missing, and how to find out |
+| [site/suggestions.html](site/suggestions.html) | 10 decisions with options, trade-offs and a recommendation |
+| [site/verification.html](site/verification.html) | Endpoints, scope queries, CORS probe, what is **not** verified |
+| [site/repo-review.html](site/repo-review.html) | Claim-by-claim check of this repo against official docs |
+| [site/flagged.html](site/flagged.html) | Every irregularity, with evidence links |
+
+The dashboard is generated: `tools/kalshi_collect.py` calls the public demo API, `tools/validate_data.py`
+refuses to publish anything unsourced or stale, `tools/build_dashboard_site.py` writes `site/`, and
+`tools/check_site.py` verifies every internal link before deploy. `.github/workflows/pages.yml` runs that
+chain every 15 minutes. Your browser also polls the API directly for live prices; the API's CORS policy
+allows this site's origin (verified on every run and shown on the Verification page).
+
+**Honest limits.** Demo data only — Kalshi states demo prices may not reflect real markets. No portfolio
+or trading: both need a private key, which cannot be shipped to a browser (see `site/suggestions.html#S1`).
+No dollar-volume field exists on the API, so dollar figures are `contracts × last price` and labelled.
+Seconds are not exchange history — candlesticks are 1-minute, 1-hour and 1-day only.
+
+---
+
+# Kalshi Demo Dashboard
+
 Live client-side dashboard and supporting research pages for Kalshi **demo** markets in gas prices, elections, culture, crypto, and golf. The original category-specific site lives at `index.html` and `pages/`. Additional verification, limitations, and decision-register materials are at `analysis.html`, `portfolio.html`, and `review.html`.
 
 ## Run locally

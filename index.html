@@ -1,13 +1,108 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kalshi Demo Dashboard</title><link rel="stylesheet" href="assets/style.css"></head><body>
-<header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="verified/index.html">Verified Data</a><a href="index.html">Dashboard</a><a href="pages/executive-summary.html">Executive Summary</a><a href="pages/gas.html">Gas</a><a href="pages/elections.html">Elections</a><a href="pages/culture.html">Culture</a><a href="pages/crypto.html">Crypto</a><a href="pages/golf.html">Golf</a><a href="pages/portfolio.html">Portfolio &amp; Trading</a><a href="pages/analysis.html">Analysis</a><a href="pages/suggestions.html">Suggestions</a><a href="pages/questions.html">Questions</a><a href="pages/verification.html">Verification</a><a href="pages/flagged.html">Flagged for Review</a><a href="pages/sources.html">Sources</a></nav></header>
-<div class="wrap">
-<h1>Live Demo Dashboard — Highest-Dollar In-Scope Events</h1>
-<p class="muted">Scope: gas prices, elections, culture, crypto, golf only. Data is fetched live in your browser from the Kalshi <b>demo</b> API. Demo prices are not reflective of real markets. Source: <a href="https://docs.kalshi.com/getting_started/demo_env">Demo Environment docs</a>.</p>
-<div class="card"><div class="row"><button id="refreshBtn">Refresh now</button><span id="liveStatus" class="status">Loading…</span><span id="wsStatus" class="status muted"></span></div></div>
-<div class="grid" style="margin-top:14px">
-<div class="card"><h3>Price chart</h3><p class="muted">X = time · Y = contract price. Choose window:</p><div class="row"><select id="windowSel"><option value="60">Last 60 seconds</option><option value="300" selected>Last 5 minutes</option><option value="3600">Last 1 hour</option></select><input id="tickerInput" placeholder="Market ticker (auto = top market)"></div><canvas id="priceChart" class="chart" style="margin-top:10px"></canvas></div>
-<div class="card"><h3>Orderbook / Liquidity</h3><p class="muted">Contracts available at each price. <button id="loadObBtn" class="secondary">Load orderbook</button></p><div id="orderbookBox">Select a market, then load.</div></div>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalshi Demo Dashboard · gas, elections, culture, crypto, golf</title>
+<meta name="description" content="Kalshi demo-market dashboard for gas prices, elections, culture, crypto and golf. Sourced data, resolution tracking, liquidity, verification, questions and a decision register.">
+<link rel="stylesheet" href="site/assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <div class="brand">Kalshi <span>Demo</span> Dashboard</div>
+    <span class="tagline">gas · elections · culture · crypto · golf</span>
+    <span class="pill-demo">DEMO DATA</span>
+  </div>
+  <nav class="nav">
+    <a href="site/index.html" class="active">Dashboard</a>
+    <a href="site/live.html">Live &amp; liquidity</a>
+    <a href="site/questions.html">Questions</a>
+    <a href="site/suggestions.html">Suggestions</a>
+    <a href="site/flagged.html">Flagged</a>
+    <a href="site/verification.html">Verification</a>
+  </nav>
+</header>
+<main>
+<h1>Kalshi demo market dashboard</h1>
+<p class="lede">A dashboard for Kalshi's <b>demo</b> exchange covering five topics only — gas prices, elections, culture, crypto and golf. Every price, volume and resolution is copied from an official Kalshi API response, every table row links back to the response it came from, and anything that could not be confirmed is left blank and listed for review.</p>
+
+<div class="notice warn"><h4>This is the demo environment</h4>
+Data comes from <a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co</a>. Kalshi states that demo prices and behaviour “may not be reflective of those in real markets”. No real money is involved. Not financial advice.</div>
+
+<div class="grid c3">
+  <div class="card">
+    <h3><a href="site/index.html">Overview →</a></h3>
+    <p class="small">Live totals, the highest open-interest in-scope markets, and a plain statement of what the dashboard can and cannot do.</p>
+    <p class="small muted">Snapshot in scope: <b>5 topics · 5 series queries · 2 sources per row</b></p>
+  </div>
+  <div class="card">
+    <h3><a href="site/live.html">Live &amp; liquidity →</a></h3>
+    <p class="small">Contract price against time in 60-second to 6-hour windows, and the full orderbook showing how many contracts sit at each price.</p>
+  </div>
+  <div class="card">
+    <h3><a href="site/resolved.html">Resolutions →</a></h3>
+    <p class="small">Every settled in-scope market with the YES/NO outcome Kalshi recorded. Tracked until the market resolves.</p>
+  </div>
 </div>
-<div class="card" style="margin-top:14px"><h3>Top markets by notional (volume × last price)</h3><p class="muted">“Highest dollar amount” is proxied by <code>volume_fp × last_price_dollars</code> because the API exposes no single dollar-volume field. See <a href="pages/flagged.html">Flagged for Review</a>. Fields per <a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a>.</p><div style="overflow:auto"><table id="marketsTable"><thead><tr><th></th><th>Ticker</th><th>Title</th><th>Topic</th><th>Last $</th><th>Volume</th><th>Notional $</th><th>Yes bid/ask</th><th>Close</th></tr></thead><tbody></tbody></table></div></div>
-<div class="card" style="margin-top:14px"><h3>Resolved events (tracked until resolution)</h3><p class="muted">Settled markets show <code>result</code> = yes/no. Source: <a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> (<code>status=settled</code>).</p><div style="overflow:auto"><table id="resolvedTable"><thead><tr><th>Ticker</th><th>Title</th><th>Topic</th><th>Result</th><th>Settlement $</th><th>Settled at</th></tr></thead><tbody></tbody></table></div></div>
-</div><footer>Demo only. No real funds. Keys stay in your browser. <a href="pages/sources.html">Sources</a> · <a href="pages/verification.html">Verification</a></footer><script src="assets/app.js"></script></body></html>
+<div class="grid c3" style="margin-top:14px">
+  <div class="card">
+    <h3><a href="site/portfolio.html">Portfolio &amp; trades →</a></h3>
+    <p class="small">Portfolio and order execution need a private key, which cannot live in a public site. This page explains the options and runs a trade classifier that needs no key.</p>
+  </div>
+  <div class="card">
+    <h3><a href="site/questions.html">Questions →</a></h3>
+    <p class="small">Every question that must be answered before a decision: what is known, what is missing, and the concrete step that would discover it.</p>
+  </div>
+  <div class="card">
+    <h3><a href="site/suggestions.html">Suggestions →</a></h3>
+    <p class="small">Ten decisions with options, trade-offs and a recommendation. Nothing is implemented until you choose.</p>
+  </div>
+</div>
+
+<h2>Topics in scope</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Topic</th><th>How membership is decided (Kalshi's own fields)</th><th>Page</th></tr></thead>
+<tbody>
+<tr><td><span class="b gas">Gas prices</span></td><td class="small">Series tagged <b>Oil and energy</b> under Economics, plus Economics series naming gas, gasoline or diesel. Daily AAA state averages.</td><td><a href="site/gas.html">Gas →</a></td></tr>
+<tr><td><span class="b elections">Elections</span></td><td class="small">Series whose discovery categories include <b>Elections</b>.</td><td><a href="site/elections.html">Elections →</a></td></tr>
+<tr><td><span class="b culture">Culture</span></td><td class="small">Series in the <b>Culture</b> category. Entertainment contracts (music, awards, TV, movies, games) are shown separately and never mixed in.</td><td><a href="site/culture.html">Culture →</a></td></tr>
+<tr><td><span class="b crypto">Crypto</span></td><td class="small">Series whose discovery categories include <b>Crypto</b>.</td><td><a href="site/crypto.html">Crypto →</a></td></tr>
+<tr><td><span class="b golf">Golf</span></td><td class="small">Series carrying the <b>Golf</b> tag — Golf is a tag under Sports, not a category of its own.</td><td><a href="site/golf.html">Golf →</a></td></tr>
+</tbody></table></div>
+
+<h2>Trust, review and decisions</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Page</th><th>What it answers</th></tr></thead>
+<tbody>
+<tr><td><a href="site/verification.html">Verification</a></td><td class="small">Every endpoint called, the exact scope query per topic, the CORS probe result, the automated checks, and an explicit list of what is <b>not</b> verified.</td></tr>
+<tr><td><a href="site/repo-review.html">Repo review</a></td><td class="small">A claim-by-claim check of what this repository asserts against official Kalshi documentation, with a verdict and source link for each.</td></tr>
+<tr><td><a href="site/flagged.html">Flagged for Review</a></td><td class="small">Every irregularity — in Kalshi's demo data and in this repository's history — with evidence links. Nothing here blocks the site; it blocks certainty.</td></tr>
+<tr><td><a href="site/analysis.html">Analysis</a></td><td class="small">Calibration of resolved contracts against their own prices, liquidity concentration, and what cannot be concluded.</td></tr>
+</tbody></table></div>
+
+<h2>How the data gets here</h2>
+<p class="small">A GitHub Actions workflow calls the public Kalshi demo API every 15 minutes, checks the result (a source link on every row, prices inside $0.00–$1.00, derived dollar values reconciling with their inputs, snapshot younger than six hours) and commits the snapshot. Your browser also polls the same API directly for live prices; a probe with <code>Origin: karagemop466-tech.github.io</code> returned that origin in <code>access-control-allow-origin</code>, so no proxy is needed for public data. Details and sources: <a href="site/verification.html">Verification</a>.</p>
+
+<h2>Other dashboards in this repository</h2>
+<p class="small muted">Earlier sessions published three more dashboards before this one existed. They are kept in place rather than deleted, because they are other sessions' work and some contain material not yet re-verified here:</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Path</th><th>Owner session</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td><a href="dashboard/index.html">dashboard/</a></td><td class="small">arena-3420a90d</td><td class="small">Nine pages, own snapshot. Different scope model; see its own flag list.</td></tr>
+<tr><td><a href="verified/index.html">verified/</a></td><td class="small">6822d767 and f1751c8f</td><td class="small">Row-level sourced tables and a live dashboard.</td></tr>
+<tr><td><a href="pages/executive-summary.html">pages/</a> + root monitor</td><td class="small">e3f65782</td><td class="small">First dashboard, dark theme, live browser fetch. It contains a credential-entry form that a later PR removed on a branch that was never merged — see <a href="site/flagged.html">F-08</a> before using it.</td></tr>
+<tr><td><a href="analysis.html">analysis.html</a>, <a href="portfolio.html">portfolio.html</a>, <a href="review.html">review.html</a></td><td class="small">407c72e2</td><td class="small">Light-theme notes pages, no shared navigation.</td></tr>
+</tbody></table></div>
+
+<h2>Repository docs</h2>
+<p class="small"><a href="README.md">README</a> · <a href="COORDINATION.md">COORDINATION.md</a> (session log, claims, verification record, PR history) · <a href="tools/kalshi_collect.py">collector</a> · <a href="tools/validate_data.py">validator</a> · <a href="tools/build_dashboard_site.py">site builder</a> · <a href="tools/check_site.py">link checker</a></p>
+</main>
+<footer class="site">
+  <p><b>Sources.</b> Kalshi demo Trade API · <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment</a> ·
+  <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> ·
+  <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement</a>.</p>
+  <p><b>Demo data only.</b> Not financial advice. Unconfirmed values are blank and flagged. Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">github.com/karagemop466-tech/Demo2</a></p>
+</footer>
+</body>
+</html>

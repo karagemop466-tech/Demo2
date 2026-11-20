@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gas prices · Kalshi Demo Dashboard</title>
+<meta name="description" content="Live Kalshi demo-market dashboard for gas prices, elections, culture, crypto and golf, with sourced data, verification and a flagged-for-review register.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <div class="brand"><a href="index.html">Kalshi <span>Demo</span> Dashboard</a></div>
+    <span class="tagline">gas · elections · culture · crypto · golf — live demo market data</span>
+    <span class="pill-demo">DEMO DATA</span>
+    <span class="spacer"></span>
+    <span class="tagline">snapshot not collected yet</span>
+  </div>
+  <nav class="nav"><a href="index.html">Overview</a><a href="gas.html" class="active">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live.html">Live &amp; Liquidity</a><a href="resolved.html">Resolutions</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="analysis.html">Analysis</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="verification.html">Verification</a><a href="repo-review.html">Repo Review</a><a href="flagged.html">Flagged for Review</a></nav>
+</header>
+<main>
+
+
+<h1>Gas prices</h1>
+<p class="lede"><b>Scope rule.</b> Series tagged <b>Oil and energy</b> (Kalshi category Economics) plus any Economics series whose title or ticker names gas, gasoline or diesel.</p>
+<div class="notice warn"><h4>Demo environment data — not real markets</h4>Every price, volume and resolution below comes from Kalshi's <b>demo</b> exchange (<a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co</a>). Kalshi states that demo prices and behaviour “may not be reflective of those in real markets”. See <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a>. No real money is involved anywhere on this site.</div>
+<div class="grid c4" style="margin:14px 0">
+  <div class="kpi "><div class="label">Open markets</div><div class="value">0</div><div class="sub">returned by the scope queries</div></div>
+  <div class="kpi "><div class="label">Series matched</div><div class="value">0</div><div class="sub">templates behind those markets</div></div>
+  <div class="kpi warn"><div class="label">Open interest</div><div class="value">$0.00</div><div class="sub">contracts × last price</div></div>
+  <div class="kpi "><div class="label">Resolved collected</div><div class="value">0</div><div class="sub">0 YES · 0 NO</div></div>
+</div>
+<details><summary>Discovery queries that define this topic</summary><ul class="small"><li class="empty">none recorded</li></ul>
+<p class="small muted">A market appears here only if its series was returned by one of these queries. Completeness beyond the queries is not proven — see <a href="flagged.html">F-12</a>.</p></details>
+
+<h2>Open markets — highest open interest first</h2>
+<p class="empty">No in-scope markets were returned by the API at collection time.</p>
+
+<h2>Series in scope</h2>
+<p class="hint muted">Each series carries the official settlement source and contract terms. These are the documents a resolution is settled against.</p>
+<p class="empty">No series returned.</p>
+
+<h2>Resolved</h2>
+<p class="empty">No settled in-scope markets were returned at collection time.</p>
+
+
+</main>
+<footer class="site">
+  <p><b>Sources.</b> Kalshi demo Trade API snapshot collected by <code>tools/kalshi_collect.py</code>; each table row links to the exact API response it was copied from.
+  Definitions: <a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">fixed-point fields</a> ·
+  <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">orderbook</a> ·
+  <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement</a>.</p>
+  <p><b>Not financial advice.</b> Demo environment only; Kalshi states demo prices may not reflect real markets.
+  Anything that could not be confirmed from an official source is left blank and listed on the
+  <a href="flagged.html">Flagged for Review</a> page. Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a></p>
+</footer>
+
+</body>
+</html>

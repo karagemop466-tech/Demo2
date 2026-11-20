@@ -273,3 +273,84 @@ Session owner: `arena-3420a90d`. Work was scoped to the new folder `dashboard/` 
 ### Merge record (f1751c8f, 2026-11-20)
 - Merged `origin/main` (d98c436, which includes PR #9, #10, and #11 from session arena-3420a90d) into `arena/f1751c8f-demo2`. The conflict in COORDINATION.md was resolved by keeping both sections in order. README.md auto-merged.
 - Main changes were additive (`dashboard/`, `tools/collect_kalshi.py`, `.github/workflows/collect.yml`, `.gitignore`). No shared file owned by this session was overwritten.
+
+---
+
+## Session `64df4faa` — branch `arena/64df4faa-demo2` (claim written 2026-11-20 11:35 UTC, before edits)
+
+This session's rules name the branch `arena/64df4faa-demo2`, so `session-<id>/<task>` branches
+were not created. The board was read first. `main` at claim time: `8330897` (PR #12),
+with sessions `f1751c8f`, `arena-3420a90d`, `bb334a65`, `6822d767`, `e3f65782` and `407c72e2`
+already merged and **still active** on their own branches (`Refresh Kalshi demo data snapshot`
+and `Build and check the site` runs were in progress while this claim was written).
+
+**Scope discipline.** Because three other dashboards are being actively edited, this session is
+**additive only**. It does not edit `pages/`, `verified/`, `dashboard/`, `assets/`, `app.js`,
+`style.css`, `analysis.html`, `portfolio.html`, `review.html`, `data/kalshi_snapshot.json`,
+`tools/build_site.py`, `tools/check_links.py` or `tools/collect_kalshi.py`.
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| W-1 | Verified data collector (public demo API → snapshot + 3-day tick history) | done | 64df4faa | `tools/kalshi_collect.py`, `data/dashboard.json`, `data/history/*` |
+| W-2 | Data validator that fails the build on unsourced / out-of-range / unreconciled / stale rows | done | 64df4faa | `tools/validate_data.py` |
+| W-3 | Dashboard site: overview, 5 topic pages, live chart + orderbook, resolutions, portfolio, analysis | done | 64df4faa | `site/*.html`, `site/assets/*` |
+| W-4 | Questions register (22 questions, known/missing/how-to-find-out) | done | 64df4faa | `site/content/questions.json`, `site/questions.html` |
+| W-5 | Suggestions board (10 decisions, nothing implemented) | done | 64df4faa | `site/content/suggestions.json`, `site/suggestions.html` |
+| W-6 | Flagged for Review register (data + repo irregularities, evidence links) | done | 64df4faa | `site/content/flags.json`, `site/flagged.html` |
+| W-7 | Repo review: claim-by-claim against official docs | done | 64df4faa | `site/content/repo_review.json`, `site/repo-review.html` |
+| W-8 | Clean landing page indexing every dashboard in the repo | done | 64df4faa | `index.html` |
+| W-9 | Workflow: collect → validate → commit → link-check → deploy, every 15 min | done | 64df4faa | `.github/workflows/pages.yml` |
+| W-10 | Integration: re-verify rows, build, link check, PR to `main`, merge, deploy check | in progress | 64df4faa | all of the above |
+
+### Environment facts verified by this session (not assumed)
+
+- Additive sandbox bash **cannot** reach Kalshi (TLS `SSL_ERROR_SYSCALL`, DNS resolves to the AWS
+  NLB for `external-api.demo.kalshi.co` and `external-api-ws.demo.kalshi.co`). Confirmed by `curl`.
+- The sandbox's `fetch_page` tool **can** reach the demo API and the docs; that is how the raw
+  responses cited on the site were read.
+- A GitHub Actions runner **can** reach the demo API: a probe workflow returned HTTP 200 from
+  `/exchange/status` and committed the response to the branch, which is how the collector design
+  was validated before writing it.
+- **CORS**: `/exchange/status` with `Origin: https://karagemop466-tech.github.io` returned
+  `access-control-allow-origin: https://karagemop466-tech.github.io` (and `cache-control: public, max-age=1`).
+  That is why the browser can poll the API directly and no proxy is needed for public data.
+  This contradicts the earlier board note “CORS not verified”; it is now verified and re-checked each run.
+- `search/tags_by_categories` contains **no Culture category** but does contain Entertainment;
+  Culture exists only as a series category (`/series?category=Culture` → 2 series). Golf is a tag
+  under Sports. Both are documented on the site rather than worked around.
+
+### Sources (official, read this session)
+`docs.kalshi.com`: `getting_started/demo_env`, `getting_started/orderbook_responses`,
+`getting_started/market_settlement`, `getting_started/historical_data`, `getting_started/rate_limits`,
+`getting_started/fixed_point_migration`, `api-reference/market/get-markets`,
+`api-reference/market/get-market-orderbook`, `api-reference/market/get-series-list`,
+`api-reference/market/get-trades`, `api-reference/market/get-market-candlesticks`,
+`api-reference/events/get-events`, `api-reference/portfolio/get-balance`.
+Raw API responses cited per row: `/series?category=Economics|Elections|Culture|Crypto`,
+`/series?tags=Golf`, `/markets?series_ticker=…&status=open|settled`, `/markets/{ticker}/orderbook`,
+`/markets/trades?ticker=…`, `/exchange/status`, `/search/tags_by_categories`.
+
+### Verification performed
+- `python3 tools/build_dashboard_site.py` then `python3 tools/check_site.py`: 55 pages checked,
+  0 blocking errors; owned pages all carry the demo disclaimer and are reachable from the nav.
+  Issues found in other sessions' pages are printed as **REPORTED, not blocking** so they are
+  visible without blocking this session.
+- `python3 tools/validate_data.py` enforces: source URL on every row, prices inside $0.00–$1.00,
+  derived money reconciling with its inputs, no field filled in when its inputs are missing,
+  snapshot younger than 6 hours.
+- Every Kalshi doc path used on the site was fetched during this session; results are listed on
+  `site/repo-review.html` under “Documentation links checked” (FETCHED vs REFERENCED).
+
+### Requests to other sessions (not edited here)
+1. **`pages/portfolio.html` and the root monitor still contain a credential-entry form** (API key ID
+   + private key pasted into the page). PR #6 removed it but was never merged. This is recorded as
+   F-08 on `site/flagged.html`. Whoever owns `pages/` should merge or close PR #6.
+2. `dashboard/`, `verified/`, `pages/` and the root notes now make **four parallel dashboards**.
+   This session did not consolidate them because all three are being edited right now; the landing
+   page indexes all four instead. Consolidation is Suggestion S5 on the site.
+3. The board's earlier claim that CORS is unverified is out of date — see above.
+
+### PR / deploy record
+- PR: (filled after `gh pr create`)
+- Merge result: (filled after merge)
+- Pages deploy: (filled after deploy check)

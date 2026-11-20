@@ -1,0 +1,155 @@
+{
+ "intro": "Every irregularity found while reviewing the repository and the data. None of these block the site from being published, but each one needs a human decision. Items marked DATA are properties of Kalshi's demo data; items marked REPO are problems in this repository's own history.",
+ "columns": ["#", "Kind", "What was found", "Impact if ignored", "Status / what was done", "Evidence"],
+ "items": [
+  {
+   "id": "F-01",
+   "kind": "DATA",
+   "found": "Demo markets include placeholder strike values: some events carry close dates in 2099 (for example KXNEXTNATOSECGEN-99 and KXELONMARS-99) and some markets carry a custom_strike reading “demo strike”.",
+   "impact": "A reader could treat a placeholder as a live forecast.",
+   "status": "Shown as returned and flagged. Never treated as a real-market signal; the demo caveat is repeated on every page.",
+   "evidence": [
+    {"name": "demo_env (prices may not reflect real markets)", "url": "https://docs.kalshi.com/getting_started/demo_env"},
+    {"name": "events?status=open (raw response)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=200"}
+   ]
+  },
+  {
+   "id": "F-02",
+   "kind": "DATA",
+   "found": "Kalshi publishes volume and open interest in contracts, not dollars, and exposes no dollar-turnover field.",
+   "impact": "Any 'highest dollar amount' ranking is a derived figure.",
+   "status": "Every dollar figure is labelled as contracts × last price. All three measures are shown so a reviewer can re-rank. Definition still needs a decision (Suggestion S2 / Question Q5).",
+   "evidence": [
+    {"name": "Get Markets (volume_fp, open_interest_fp are FixedPointCount)", "url": "https://docs.kalshi.com/api-reference/market/get-markets"},
+    {"name": "Fixed-point representation", "url": "https://docs.kalshi.com/getting_started/fixed_point_migration"}
+   ]
+  },
+  {
+   "id": "F-03",
+   "kind": "DATA",
+   "found": "Settlement sources that are not about the contract: series KXRIQUAHOG ('Rhode Island quahog landings') lists the New York Fed SOFR reference-rate page as its only settlement source.",
+   "impact": "The listed settlement source cannot determine a shellfish-landings outcome.",
+   "status": "Rendered exactly as returned; the mismatch is flagged here. Not corrected, because correcting it would mean inventing a source.",
+   "evidence": [
+    {"name": "series?category=Economics (raw response)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Economics&limit=200"},
+    {"name": "NY Fed SOFR page the API points at", "url": "https://www.newyorkfed.org/markets/reference-rates/sofr"}
+   ]
+  },
+  {
+   "id": "F-04",
+   "kind": "DATA",
+   "found": "Culture series KXXBANNEDGROK and KXXBANNEDMURRAYHILLGUY1 list settlement sources that include Google search-result URLs ('https://www.google.com/search?q=Verge', 'q=Engadget', 'q=Mashable'), a source named 'account holder of ' with a trailing blank, and a global 'Verge' instead of The Verge.",
+   "impact": "A settlement source that is a search query is not a determinable source.",
+   "status": "Displayed as returned with the flag; the Culture page says these are the only two series in the Culture category.",
+   "evidence": [
+    {"name": "series?category=Culture (raw response)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&limit=1"}
+   ]
+  },
+  {
+   "id": "F-05",
+   "kind": "DATA",
+   "found": "The Culture category exists in /series but is absent from search/tags_by_categories, whose category list contains Entertainment instead. Contracts a reader would call 'culture' (music, awards, TV, movies, video games) live under Entertainment.",
+   "impact": "A strict Culture filter yields two markets and hides the rest of the topic.",
+   "status": "Culture page shows the two true Culture series and a clearly separated Entertainment table labelled 'adjacent'. Nothing is silently reclassified. Decision open (Question Q2).",
+   "evidence": [
+    {"name": "search/tags_by_categories (no Culture category)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories"},
+    {"name": "series?category=Culture (two series)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&limit=1"}
+   ]
+  },
+  {
+   "id": "F-06",
+   "kind": "DATA",
+   "found": "Demo markets in scope frequently report zero volume, zero open interest and null bid/ask levels.",
+   "impact": "Several tables would look empty; a naive average price would be meaningless.",
+   "status": "Zero and null are displayed as returned. No row is dropped for being quiet and no value is imputed.",
+   "evidence": [
+    {"name": "Get Markets (raw response)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=2&status=open"}
+   ]
+  },
+  {
+   "id": "F-07",
+   "kind": "REPO",
+   "found": "Three earlier sessions published separate, partly overlapping dashboard implementations: pages/ with assets/app.js, an unlinked root set (analysis.html, portfolio.html, review.html) using style.css, and a verified/ subsite built by tools/build_site.py. Root index.html and pages/ remain styled for a dark theme; the root set uses a light theme with no shared navigation.",
+   "impact": "Readers land on different dashboards with different rules, and the repo cannot be verified line by line as one artefact.",
+   "status": "Not deleted (other sessions' work). A single new, fully verified site is published at /site/ and linked from the root. This page records the split so a reviewer can see it. Consolidation is Suggestion S5.",
+   "evidence": [
+    {"name": "Repository root", "url": "https://github.com/karagemop466-tech/Demo2"},
+    {"name": "Coordination log", "url": "https://github.com/karagemop466-tech/Demo2/blob/main/COORDINATION.md"}
+   ]
+  },
+  {
+   "id": "F-08",
+   "kind": "REPO",
+   "found": "The earlier dashboard (assets/app.js, index.html) accepted a private API key and PEM in browser form fields and signed orders client-side with WebCrypto. PR #6 removed that code but has remained open and never merged; check whether any deployed page still contains the credential form.",
+   "impact": "A public page that asks for a private key invites credential exposure.",
+   "status": "The new /site/ contains no credential input at all. Whether to merge or close PR #6 is left to the owner; the open PR is recorded here rather than merged, because its diff conflicts with main.",
+   "evidence": [
+    {"name": "Open PR #6", "url": "https://github.com/karagemop466-tech/Demo2/pull/6"},
+    {"name": "Authenticated-request docs (signature scheme)", "url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"}
+   ]
+  },
+  {
+   "id": "F-09",
+   "kind": "REPO",
+   "found": "Root portfolio.html and review.html contain statements such as 'keys never leave your browser' and links to documentation pages whose paths could not be reached during this review (for example /api-reference/markets/get-market, singular 'markets').",
+   "impact": "A broken documentation link plus a security claim that no longer matches the code.",
+   "status": "Recorded, not edited (owned by an earlier session's scope). The new site links only to documentation paths that were fetched successfully during this session.",
+   "evidence": [
+    {"name": "pages/portfolio.html in the repository", "url": "https://github.com/karagemop466-tech/Demo2/blob/main/pages/portfolio.html"},
+    {"name": "Get Market (working path, singular /market/get-market)", "url": "https://docs.kalshi.com/api-reference/market/get-market"}
+   ]
+  },
+  {
+   "id": "F-10",
+   "kind": "DATA",
+   "found": "No demo API key exists in this repository or in the GitHub secrets used by it, so portfolio balance, positions, fills and order execution cannot be read or demonstrated.",
+   "impact": "Part of the brief (portfolio performance, trade execution, per-trade analysis) is unmet until a key exists.",
+   "status": "The Portfolio page is explicit about this and shows no figures. Creating a demo account requires a human login at Kalshi. Decision recorded on Suggestions (S1) and Questions (Q16, Q17).",
+   "evidence": [
+    {"name": "Kalshi help: demo account creation", "url": "https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account"},
+    {"name": "API keys", "url": "https://docs.kalshi.com/getting_started/api_keys"}
+   ]
+  },
+  {
+   "id": "F-11",
+   "kind": "DATA",
+   "found": "Rate limits for unauthenticated public requests are documented only as 'separate limits' with no numbers.",
+   "impact": "The safe polling interval for a public dashboard is unknown; an aggressive refresh could be throttled.",
+   "status": "The collector pauses 120 ms between calls and backs off on 429. The browser refreshes one market and one orderbook per tick, default 15 s. The observed X-RateLimit headers, where present, are printed on the Verification page.",
+   "evidence": [
+    {"name": "Rate limits (unauthenticated section)", "url": "https://docs.kalshi.com/getting_started/rate_limits"}
+   ]
+  },
+  {
+   "id": "F-12",
+   "kind": "DATA",
+   "found": "Scope completeness cannot be proven: five documented discovery queries define the topics, so a market filed outside them is not displayed even if a reader would consider it in scope.",
+   "impact": "Possible silent under-coverage of a topic.",
+   "status": "The exact query for each topic is printed on the Verification page and on each topic page. An audit is proposed as Suggestion S8.",
+   "evidence": [
+    {"name": "Get Series List (category and tags filters)", "url": "https://docs.kalshi.com/api-reference/market/get-series-list"}
+   ]
+  },
+  {
+   "id": "F-13",
+   "kind": "REPO",
+   "found": "The previous Pages workflow uploaded the repository root, so the research site, the verified/ subsite and tools/ were all published, including a stale data/kalshi_snapshot.json from an earlier session.",
+   "impact": "Old snapshots remain publicly reachable and could be mistaken for current data.",
+   "status": "Left in place because deleting another session's data is out of this session's scope, but every page here prints its snapshot time and links its source. The stale snapshot is named on the Verification page.",
+   "evidence": [
+    {"name": "data/kalshi_snapshot.json (previous session)", "url": "https://github.com/karagemop466-tech/Demo2/blob/main/data/kalshi_snapshot.json"},
+    {"name": "Old workflow file", "url": "https://github.com/karagemop466-tech/Demo2/blob/main/.github/workflows/pages.yml"}
+   ]
+  },
+  {
+   "id": "F-14",
+   "kind": "DATA",
+   "found": "Candlesticks are published at 1-minute, 1-hour and 1-day intervals only. There is no seconds interval, so the requested 'seconds' chart cannot be built from official historical data.",
+   "impact": "A seconds window shows only points this dashboard observed itself; it is not an exchange history.",
+   "status": "The chart labels polled points separately from candlestick points and states the interval for each range. Recorded as Question Q12 and Suggestion S4.",
+   "evidence": [
+    {"name": "Get Market Candlesticks (period_interval enum 1/60/1440)", "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks"}
+   ]
+  }
+ ]
+}

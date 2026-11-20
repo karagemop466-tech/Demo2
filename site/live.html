@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live &amp;amp; Liquidity · Kalshi Demo Dashboard</title>
+<meta name="description" content="Live Kalshi demo-market dashboard for gas prices, elections, culture, crypto and golf, with sourced data, verification and a flagged-for-review register.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <div class="brand"><a href="index.html">Kalshi <span>Demo</span> Dashboard</a></div>
+    <span class="tagline">gas · elections · culture · crypto · golf — live demo market data</span>
+    <span class="pill-demo">DEMO DATA</span>
+    <span class="spacer"></span>
+    <span class="tagline">snapshot not collected yet</span>
+  </div>
+  <nav class="nav"><a href="index.html">Overview</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live.html" class="active">Live &amp; Liquidity</a><a href="resolved.html">Resolutions</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="analysis.html">Analysis</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="verification.html">Verification</a><a href="repo-review.html">Repo Review</a><a href="flagged.html">Flagged for Review</a></nav>
+</header>
+<main>
+
+
+<h1>Live price and liquidity</h1>
+<p class="lede">Pick a market: the chart plots contract price against time with a window you choose, and the orderbook shows how many contracts sit at each price right now. Prices below refresh from your browser; the snapshot columns come from the last collector run.</p>
+<div class="notice warn"><h4>Demo environment data — not real markets</h4>Every price, volume and resolution below comes from Kalshi's <b>demo</b> exchange (<a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co</a>). Kalshi states that demo prices and behaviour “may not be reflective of those in real markets”. See <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a>. No real money is involved anywhere on this site.</div>
+
+<div class="card">
+  <div class="controls">
+    <label for="mkt">Market</label>
+    <select id="mkt" style="min-width:420px;max-width:100%"></select>
+    <label for="win">Window</label>
+    <select id="win">
+      <option value="60">60 seconds</option>
+      <option value="300" selected>5 minutes</option>
+      <option value="900">15 minutes</option>
+      <option value="3600">1 hour</option>
+      <option value="21600">6 hours</option>
+    </select>
+    <label for="intv">Refresh</label>
+    <select id="intv">
+      <option value="5000">5 s</option>
+      <option value="15000" selected>15 s</option>
+      <option value="60000">60 s</option>
+    </select>
+    <button id="play">Pause</button>
+    <span class="status"><span class="dot" id="dot"></span><span id="status">starting…</span></span>
+  </div>
+  <div class="chartbox"><canvas id="chart" width="1200" height="420"></canvas></div>
+  <div class="legend">
+    <span><i style="background:#1f5fbf"></i>last trade price</span>
+    <span><i style="background:#1f9d55"></i>YES bid</span>
+    <span><i style="background:#b32d2d"></i>YES ask (implied 1 − best NO bid)</span>
+    <span><i style="background:#b9c3cf"></i>snapshot ticks from GitHub Actions (15 min)</span>
+  </div>
+  <p class="small muted" id="chartnote">Y axis = contract price in dollars (0.00–1.00). X axis = time. Second-level points are your own observations of the API and are labelled as polled, not as exchange history: Kalshi candlesticks exist only at 1-minute, 1-hour and 1-day intervals (<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">docs</a>).</p>
+</div>
+
+<h2>Orderbook — contracts available at each price</h2>
+<p class="hint muted">Kalshi orderbooks contain <b>bids only</b>. A YES bid at $X equals a NO ask at $1−X, so the implied ask is computed as 1 − best NO bid. Levels are the API's own [price, contracts] pairs, sorted best-first.</p>
+<div class="controls">
+  <label for="obmkt">Market</label>
+  <select id="obmkt" style="min-width:420px;max-width:100%"></select>
+  <button id="obload">Load live orderbook</button>
+  <button id="obsize" class="ghost">Show $ notional per level</button>
+</div>
+<div id="obout"><p class="empty">Choose a market and load its orderbook. Snapshot orderbooks are shown further down.</p></div>
+
+<h2>Snapshot orderbooks (depth 20, from the last collection)</h2>
+<p class="hint muted">Stored so you can compare a live book against the moment of collection, and so the page still has liquidity data if your browser is rate-limited.</p>
+<div class="depth" id="obsnap"></div>
+
+<h2>Markets with live depth in this snapshot</h2>
+<div class="tablewrap"><table><thead><tr>
+<th>Market</th><th class="num">Best YES bid</th><th class="num">Contracts at bid</th><th class="num">Implied YES ask</th>
+<th class="num">Resting YES $</th><th class="num">Resting NO $</th><th class="num">Levels</th><th>Source</th></tr></thead><tbody>
+
+</tbody></table></div>
+<p class="small muted">“Resting $” is the sum of price × contracts over the returned levels — a lower bound on book value when the API caps depth.</p>
+
+<script>window.__OB__ = {};</script>
+
+</main>
+<footer class="site">
+  <p><b>Sources.</b> Kalshi demo Trade API snapshot collected by <code>tools/kalshi_collect.py</code>; each table row links to the exact API response it was copied from.
+  Definitions: <a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">fixed-point fields</a> ·
+  <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">orderbook</a> ·
+  <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement</a>.</p>
+  <p><b>Not financial advice.</b> Demo environment only; Kalshi states demo prices may not reflect real markets.
+  Anything that could not be confirmed from an official source is left blank and listed on the
+  <a href="flagged.html">Flagged for Review</a> page. Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a></p>
+</footer>
+<script src="assets/live.js"></script>
+</body>
+</html>

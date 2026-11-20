@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overview · Kalshi Demo Dashboard</title>
+<meta name="description" content="Live Kalshi demo-market dashboard for gas prices, elections, culture, crypto and golf, with sourced data, verification and a flagged-for-review register.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <div class="brand"><a href="index.html">Kalshi <span>Demo</span> Dashboard</a></div>
+    <span class="tagline">gas · elections · culture · crypto · golf — live demo market data</span>
+    <span class="pill-demo">DEMO DATA</span>
+    <span class="spacer"></span>
+    <span class="tagline">snapshot not collected yet</span>
+  </div>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live.html">Live &amp; Liquidity</a><a href="resolved.html">Resolutions</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="analysis.html">Analysis</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="verification.html">Verification</a><a href="repo-review.html">Repo Review</a><a href="flagged.html">Flagged for Review</a></nav>
+</header>
+<main>
+
+
+<h1>Kalshi demo market dashboard</h1>
+<p class="lede">Live market data for the five requested topics, straight from Kalshi's demo exchange. Every number is either copied from an API response or is arithmetic over copied values, and every table row links to the response it came from. Prices refresh in your browser; the page also carries a 15-minute snapshot collected by GitHub Actions.</p>
+<div class="notice warn"><h4>Demo environment data — not real markets</h4>Every price, volume and resolution below comes from Kalshi's <b>demo</b> exchange (<a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co</a>). Kalshi states that demo prices and behaviour “may not be reflective of those in real markets”. See <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a>. No real money is involved anywhere on this site.</div>
+<p class="small muted">Snapshot <b>not collected</b> · API base  · 0 HTTP requests, 0 errors · collector <code></code></p>
+<div class="grid c3" style="margin:16px 0"><div class="kpi "><div class="label">Open in-scope markets</div><div class="value">0</div><div class="sub">across gas, elections, culture, crypto, golf</div></div><div class="kpi "><div class="label">In-scope series</div><div class="value">0</div><div class="sub">the 5 official discovery queries</div></div><div class="kpi "><div class="label">Resolved markets collected</div><div class="value">0</div><div class="sub">0 YES · 0 NO</div></div><div class="kpi "><div class="label">Live orderbooks</div><div class="value">0</div><div class="sub">depth-20 snapshots, top markets per topic</div></div><div class="kpi warn"><div class="label">Open interest in scope</div><div class="value">$0.00</div><div class="sub">contracts × last price</div></div><div class="kpi bad"><div class="label">Exchange trading</div><div class="value">—</div><div class="sub">GET /exchange/status</div></div></div>
+
+<div class="grid c2">
+  <div class="card">
+    <h3>Topics in scope</h3>
+    <p class="hint">Membership comes from Kalshi's own series categories and tags, not from keyword matching in titles.</p>
+    <div class="tablewrap"><table><thead><tr><th>Topic</th><th class="num">Open markets</th><th class="num">Open interest $</th><th></th></tr></thead><tbody><tr><td><span class="b gas">Gas prices</span></td><td class="num">0</td><td class="num">$0.00</td><td><a href="gas.html">open page →</a></td></tr><tr><td><span class="b elections">Elections</span></td><td class="num">0</td><td class="num">$0.00</td><td><a href="elections.html">open page →</a></td></tr><tr><td><span class="b culture">Culture</span></td><td class="num">0</td><td class="num">$0.00</td><td><a href="culture.html">open page →</a></td></tr><tr><td><span class="b crypto">Crypto</span></td><td class="num">0</td><td class="num">$0.00</td><td><a href="crypto.html">open page →</a></td></tr><tr><td><span class="b golf">Golf</span></td><td class="num">0</td><td class="num">$0.00</td><td><a href="golf.html">open page →</a></td></tr></tbody></table></div>
+    <p class="small muted" style="margin-top:10px">Culture note: Kalshi's <b>Culture</b> category contains two series in the demo API. Entertainment contracts (music, awards, TV, movies, games) are shown separately on the <a href="culture.html">Culture page</a> so the two are never mixed. Evidence: <a href="flagged.html">F-05</a>.</p>
+  </div>
+  <div class="card">
+    <h3>What this dashboard can and cannot do</h3>
+    <table><tbody>
+      <tr><td>✅ Live prices, volume, open interest, bid/ask</td><td class="small muted">public endpoints, no key needed</td></tr>
+      <tr><td>✅ Orderbook depth — contracts available at each price</td><td class="small muted">public endpoint</td></tr>
+      <tr><td>✅ Resolution tracking (YES / NO)</td><td class="small muted">Market.result, copied verbatim</td></tr>
+      <tr><td>✅ Price chart, seconds → hours</td><td class="small muted">polled ticks + official candlesticks</td></tr>
+      <tr><td>✅ Market-level calibration analysis</td><td class="small muted">resolved markets only</td></tr>
+      <tr><td>⛔ Portfolio balance, fills, order placement</td><td class="small muted">requires a private API key — <a href="portfolio.html">why</a></td></tr>
+    </tbody></table>
+    <p class="small muted">Nothing on this site asks for a credential. Anything unconfirmed is blank and listed on <a href="flagged.html">Flagged for Review</a>.</p>
+  </div>
+</div>
+
+<h2>Highest open-interest markets in scope</h2>
+<p class="hint muted">Ranked by open interest × last price. Volume is in contracts because Kalshi does not publish a dollar-turnover field — see <a href="questions.html#Q5">Q5</a> and <a href="suggestions.html#S2">S2</a>.</p>
+<p class="empty">No in-scope markets were returned by the API at collection time.</p>
+
+<h2>Start here</h2>
+<div class="grid c4">
+  <div class="card"><h3><a href="live.html">Live &amp; liquidity</a></h3><p class="small">Price chart with second/minute/hour windows, and the full orderbook: how many contracts sit at each price.</p></div>
+  <div class="card"><h3><a href="resolved.html">Resolutions</a></h3><p class="small">Every settled in-scope market with its recorded YES/NO outcome.</p></div>
+  <div class="card"><h3><a href="questions.html">Questions</a></h3><p class="small">What we know, what we do not, and how to find out — before deciding anything.</p></div>
+  <div class="card"><h3><a href="suggestions.html">Suggestions</a></h3><p class="small">Ten decisions with options and trade-offs. Choose one before it is built.</p></div>
+</div>
+
+</main>
+<footer class="site">
+  <p><b>Sources.</b> Kalshi demo Trade API snapshot collected by <code>tools/kalshi_collect.py</code>; each table row links to the exact API response it was copied from.
+  Definitions: <a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">fixed-point fields</a> ·
+  <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">orderbook</a> ·
+  <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">settlement</a>.</p>
+  <p><b>Not financial advice.</b> Demo environment only; Kalshi states demo prices may not reflect real markets.
+  Anything that could not be confirmed from an official source is left blank and listed on the
+  <a href="flagged.html">Flagged for Review</a> page. Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a></p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,135 @@
+{
+ "intro": "Each suggestion is a decision waiting to be made, not a change that has been made. Read the trade-off, record a lean, and only then implement. The board stores your selection in this browser only (localStorage); it is not sent anywhere, and no suggestion is applied by this site.",
+ "decision_gate": [
+  "Is the missing information identified on the card actually missing, or is it already answered on the Questions page?",
+  "Does the suggestion change what a reader would decide, or only how it looks?",
+  "What is the cost of being wrong (wrong data shown as verified, credential exposure, misleading P&L)?",
+  "Can it be verified from an official Kalshi source, and is that source linked?",
+  "Is it reversible in one commit?"
+ ],
+ "items": [
+  {
+   "id": "S1",
+   "title": "Run demo trade execution from a GitHub Actions job, not the browser",
+   "problem": "Trading needs a private key. A private key cannot live in a public static site, so today's public site can neither read the portfolio nor place orders.",
+   "options": [
+    {"id": "A", "label": "Actions-based trader", "detail": "Store the demo key pair as encrypted repository secrets. A scheduled workflow (or a manual workflow_dispatch with typed parameters) signs orders server-side and commits fills and positions to data/. The site stays read-only and shows results on the next build.", "risk": "Automated orders still trade mock money; a bug in the strategy spends the demo balance. Secrets are protected by GitHub, not by the site."},
+    {"id": "B", "label": "Small authenticated backend", "detail": "A separate service (for example a Cloudflare Worker or a small VPS) holds the key, exposes only read endpoints plus an order endpoint protected by a login you control.", "risk": "New infrastructure to own and patch; still no real money, so the value may not justify the effort."},
+    {"id": "C", "label": "Keep trading out of scope", "detail": "Leave portfolio and trading disabled and say so plainly, as the site does now.", "risk": "The original brief asked for execution and performance tracking, so this leaves part of the brief unmet."}
+   ],
+   "recommendation": "A",
+   "why": "It is the smallest change that satisfies the brief without exposing a key: secrets stay in GitHub, the audit trail is the commit history, and the site remains static and safe. B is the right answer only if orders must be placed interactively within seconds.",
+   "unlocks": ["Portfolio balance and positions", "Executed trades", "Per-trade P&L with fees", "Strategy categories grounded in real fills"],
+   "needs_review": true
+  },
+  {
+   "id": "S2",
+   "title": "Fix the definition of 'highest dollar amount'",
+   "problem": "Kalshi exposes volume in contracts, not dollars. Three different rankings are defensible and they disagree: lifetime notional (volume × last price), 24-hour notional, and open interest in dollars.",
+   "options": [
+    {"id": "A", "label": "Default to open-interest dollars", "detail": "Ranks by the money currently at risk in the market rather than by turnover that may be years old.", "risk": "Quiet but large markets outrank busy ones."},
+    {"id": "B", "label": "Default to 24-hour notional", "detail": "Ranks by recent activity, which matches an intuitive reading of 'live events with the most money moving'.", "risk": "Volatile; a new market can top the list on a handful of trades."},
+    {"id": "C", "label": "Compute true dollar turnover from trades", "detail": "Aggregate count_fp × yes_price_dollars over /markets/trades for the in-scope tickers.", "risk": "Hundreds of paginated requests per run on an unpublished unauthenticated rate limit."}
+   ],
+   "recommendation": "A as the default, with all three visible and sortable",
+   "why": "It is the only measure that is stable between refreshes and cannot be inflated by a single trade. Showing all three costs nothing and removes the ambiguity from the reader's path.",
+   "needs_review": true
+  },
+  {
+   "id": "S3",
+   "title": "Publish a calibration table before publishing any 'strategy'",
+   "problem": "There is no demo portfolio, so no recommendation can be backed by executed trades. What the data can support is whether price bands resolve as their prices imply.",
+   "options": [
+    {"id": "A", "label": "Calibration only, with sample sizes", "detail": "For each 10-cent price band, show n, mean implied probability and realised YES rate. Recommend nothing until n is large enough in the band of interest.", "risk": "Small n makes the table look more conclusive than it is if a reader ignores the counts."},
+    {"id": "B", "label": "Calibration plus a written strategy per topic", "detail": "Add prose strategies derived from the calibration bands.", "risk": "Turns an observation into advice on demo data that Kalshi itself says may not reflect real markets."}
+   ],
+   "recommendation": "A",
+   "why": "It keeps the site honest. Strategies belong on top of a portfolio with real fills (S1), where P&L can contradict them.",
+   "needs_review": true
+  },
+  {
+   "id": "S4",
+   "title": "Verify and optionally add WebSocket streaming for the price chart",
+   "problem": "Seconds-level history cannot come from candlesticks (1-minute minimum) and polling costs a request per tick. The docs recommend the WebSocket for current state, but streaming from a Pages origin is unverified.",
+   "options": [
+    {"id": "A", "label": "Keep polling, label it clearly", "detail": "Current behaviour: poll one market every 15 s, keep second-level points in the browser, and label every point as polled rather than streamed.", "risk": "A quiet market looks flat between ticks."},
+    {"id": "B", "label": "Add an opt-in WebSocket toggle", "detail": "Connect to wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2 on demand, subscribe to ticker and orderbook_delta, and merge into the chart.", "risk": "Unverified from the Pages origin; connection limits are undocumented for anonymous clients."}
+   ],
+   "recommendation": "A now, B after a browser test",
+   "why": "Do not ship an unverified connection path. The chart already separates polled points from candlestick points so a reader knows what they are looking at.",
+   "needs_review": true
+  },
+  {
+   "id": "S5",
+   "title": "Split 'read-only public data' from 'account data' at the architecture level",
+   "problem": "One static site is currently asked to do both a public market dashboard and a private account dashboard. That mixing is what makes the key-handling question reappear.",
+   "options": [
+    {"id": "A", "label": "Two surfaces", "detail": "This public site stays read-only market data. A separate private tool (Actions or backend) owns credentials and performance.", "risk": "Two places to check."},
+    {"id": "B", "label": "One site with a login", "detail": "Add authentication to the site so account pages are gated.", "risk": "GitHub Pages cannot authenticate users; this forces a backend anyway and adds a login surface to protect."}
+   ],
+   "recommendation": "A",
+   "why": "It removes a whole class of security questions from the public site instead of answering them carefully.",
+   "needs_review": true
+  },
+  {
+   "id": "S6",
+   "title": "Add per-row data lineage to every table",
+   "problem": "A reviewer should not have to trust the collector. They should be able to click through to the exact API response.",
+   "options": [
+    {"id": "A", "label": "Link each row to its response URL", "detail": "Already implemented: every row links to the market endpoint and the list query that produced it.", "risk": "A response changes over time, so the link proves provenance, not the historical value."},
+    {"id": "B", "label": "Also archive the raw response", "detail": "Commit the compressed raw JSON per run so the exact bytes behind each row are preserved.", "risk": "Repository growth; needs a retention policy."}
+   ],
+   "recommendation": "B, with 7-day retention",
+   "why": "Links prove where a number came from; an archive proves what it was. The cost is a small daily artefact with a short retention.",
+   "needs_review": true
+  },
+  {
+   "id": "S7",
+   "title": "Show liquidity, not just price, beside every ranking",
+   "problem": "A market can rank first by notional while having one contract available at the touch, so a reader who tries to act on the ranking would move the price.",
+   "options": [
+    {"id": "A", "label": "Add best-bid size columns", "detail": "yes_bid_size_fp and yes_ask_size_fp are already in the market object; surface them next to the price in every table.", "risk": "Sizes are stale by up to a cache interval."},
+    {"id": "B", "label": "Add a depth summary per market", "detail": "Pull depth=20 for the top markets and show total contracts within 5 cents of the touch.", "risk": "More requests per run."}
+   ],
+   "recommendation": "A plus B for the top 10 per topic",
+   "why": "Best-bid size is nearly free and answers the question a reader actually has; depth summarises the rest without doubling the request count.",
+   "needs_review": true
+  },
+  {
+   "id": "S8",
+   "title": "Audit scope completeness automatically",
+   "problem": "The five topic queries are a construction, not a proof that every in-scope contract was found.",
+   "options": [
+    {"id": "A", "label": "Diff all series against the scope queries", "detail": "Pull /series across all 19 categories each run and list any series that looks in-scope by title but was not matched by a scope query.", "risk": "A longer run and a review queue that needs a human."},
+    {"id": "B", "label": "Leave scope as documented", "detail": "State the query for each topic and accept that completeness is bounded by it.", "risk": "A genuinely in-scope market can be missed silently."}
+   ],
+   "recommendation": "A, as a nightly audit rather than every 15 minutes",
+   "why": "Completeness is exactly the kind of claim that should be measured rather than asserted, but it does not need to run on the live cadence.",
+   "needs_review": true
+  },
+  {
+   "id": "S9",
+   "title": "Surface the historical cutoffs and archive resolved markets",
+   "problem": "Settled markets move to /historical/markets after a cutoff, so a resolution can vanish from the live endpoint the dashboard reads.",
+   "options": [
+    {"id": "A", "label": "Store every resolved row seen", "detail": "The collector already appends resolved rows it observes; extend that to a durable per-topic archive keyed by ticker and result.", "risk": "Storage growth."},
+    {"id": "B", "label": "Read /historical/cutoff and query both tiers", "detail": "Display the three cutoff timestamps and query the historical endpoint for anything older.", "risk": "More requests and more code paths."}
+   ],
+   "recommendation": "A now, B when the first market is archived",
+   "why": "The archive makes resolutions durable with almost no extra requests; the cutoff display becomes necessary only once a market actually crosses it.",
+   "needs_review": true
+  },
+  {
+   "id": "S10",
+   "title": "Add a confidence band to every number, not just a source link",
+   "problem": "A source link says where a value came from; it does not say how much that value can be trusted.",
+   "options": [
+    {"id": "A", "label": "Three-state trust badge", "detail": "Verified (copied from an API response in this run), Stale (from an earlier run), Unverified (could not be confirmed) — applied to every cell.", "risk": "More visual noise."},
+    {"id": "B", "label": "Keep the current blank/flag convention", "detail": "Blank means the API returned nothing; flags live on one page.", "risk": "A reader has to know the convention."}
+   ],
+   "recommendation": "A for the tables that drive decisions",
+   "why": "It makes the verification work visible at the point of use instead of one click away.",
+   "needs_review": true
+  }
+ ]
+}
