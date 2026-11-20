@@ -36,7 +36,12 @@ NAV = [
     ("instrument-panel/site/index.html", "Instrument Panel", "inst"),
     ("live/index.html", "Live Console", "live"),
     ("jumps/index.html", "Price Jumps", "jumps"),
-    ("pages/live-alerts.html", "Live Alerts", "alerts"),
+    # Canonical Live Alerts page = the browser-live one at the site root (assets/alerts.js
+    # polls the demo API directly). Session 848af77d's snapshot-based pages/live-alerts.html
+    # stays published and is cross-linked from alerts.html ("Collected jump chat") and the
+    # Flagged rows — integration ruling a984e8f4: one nav entry per feature (brief: "organize
+    # and simplify the website continuously"), nothing deleted.
+    ("alerts.html", "Live Alerts", "alerts"),
     ("pages/resolutions.html", "Resolutions", "res"),
     ("pages/portfolio.html", "Portfolio", "port"),
     ("pages/analysis.html", "Analysis", "an"),
@@ -618,11 +623,145 @@ RES_JS = r"""
 """
 
 
+# --------------------------------------------------------------------------- live alerts
+ALERTS_BODY = r"""
+<h1>Live alert chats — price swings ≥ $0.10</h1>
+<p class="lead">A live alerting system for sudden swings in contract prices of
+<b>ten cents or more, in either direction</b>, across the in-scope topics
+(gas prices, elections, culture, crypto, golf). Two scrolling chats run side by side:
+<b>all events</b>, and a <b>selective filter</b> of the events a documented model likes as
+high-ROI. Markets are watched until they resolve <b>yes</b> or <b>no</b>; resolution notices
+appear in the feed.</p>
+<p class="small muted">Related: the <a href="pages/live-alerts.html">collected jump chat</a>
+renders the snapshot-based trade-print moves (tunable rule filter) as the same two-chat layout;
+this page is the browser-live version. See <a href="pages/flagged.html">Flagged</a> for the
+audit rows on that page.</p>
+<div id="stalenessAlerts"></div>
+
+<div class="kpis" id="alertsKpis">
+  <div class="kpi-card"><div class="k">All-event alerts</div><div class="v" id="allCount">0</div>
+    <div class="s">every ≥ $0.10 swing, session total</div></div>
+  <div class="kpi-card"><div class="k">High-ROI model picks</div><div class="v" id="roiCount">0</div>
+    <div class="s">alerts with model score ≥ 0.60</div></div>
+  <div class="kpi-card"><div class="k">Watched markets</div><div class="v" id="watchedCount">—</div>
+    <div class="s">top 12 per topic by est. dollar volume</div></div>
+  <div class="kpi-card"><div class="k">Feed status</div><div class="v" id="fetchStatus" style="font-size:.8em">connecting…</div>
+    <div class="s">polling every 15 s · 429-aware</div></div>
+</div>
+
+<div class="row" style="margin:10px 0">
+  <div><label for="topicFilterAlerts">Topic</label>
+    <select id="topicFilterAlerts"><option value="">All in-scope</option>
+      <option value="gas">Gas</option><option value="elections">Elections</option>
+      <option value="culture">Culture</option><option value="crypto">Crypto</option>
+      <option value="golf">Golf</option></select></div>
+  <div><label>&nbsp;</label><div class="row">
+    <button class="secondary" id="btnPause">Pause live feed</button>
+    <button class="secondary" id="btnClear">Clear chats</button></div></div>
+  <div><label for="mktSelAlerts">Chart market</label>
+    <select id="mktSelAlerts" style="min-width:280px"></select></div>
+</div>
+
+<div class="grid two" style="margin-top:6px">
+  <div class="card">
+    <h3>Chat 1 · All events <span class="muted">— every ≥ $0.10 swing + resolutions</span></h3>
+    <div class="chatfeed" id="chatAll" aria-live="polite"></div>
+    <p class="small muted">Newest first. Pause stops polling; the browser keeps what it has.
+      Detection is between two consecutive observations (trade prints from
+      <a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a>
+      or quote samples from
+      <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>),
+      so a swing that fully reverts between polls is not seen — nothing is interpolated.</p>
+  </div>
+  <div class="card">
+    <h3>Chat 2 · High-ROI model picks <span class="muted">— selective filter</span></h3>
+    <div class="chatfeed" id="chatRoi" aria-live="polite"></div>
+    <p class="small muted"><b>What "high ROI" means here.</b> A transparent heuristic computed in
+      your browser from official fields only — <b>not</b> financial advice, <b>not</b> an outcome
+      prediction, and not an official Kalshi measure. Formula:
+      <code>score = 0.40·liquidity + 0.30·tightness + 0.30·price action</code>, where
+      liquidity = clamp(log₁₀(1+volume)÷4), tightness = clamp(1 − 2·(ask − bid)) and
+      price action = (≥ $0.10 swings seen this session) ÷ 5, each clamped to 0–1.
+      Cutoff for this chat: <b>0.60</b>. Every input is shown in the model table below.</p>
+  </div>
+</div>
+
+<div class="grid two" style="margin-top:6px">
+  <div class="card">
+    <h3>Price movement <span class="muted">— X: time, Y: contract price ($)</span></h3>
+    <div class="row" style="margin-bottom:8px">
+      <label class="small" style="margin:0">Window</label>
+      <div class="seg" id="winSegAlerts" role="group" aria-label="Chart window">
+        <button data-w="60" aria-pressed="false">60 s</button>
+        <button data-w="300" aria-pressed="false">5 min</button>
+        <button data-w="3600" aria-pressed="true">1 h</button>
+        <button data-w="21600" aria-pressed="false">6 h</button>
+        <button data-w="86400" aria-pressed="false">24 h</button>
+      </div>
+    </div>
+    <div class="chartwrap"><canvas id="chartAlerts" class="chart"></canvas></div>
+    <div class="legend">
+      <span><span class="swatch" style="background:#00c389"></span>contract price, USD per $1 contract</span>
+      <span id="chartNoteAlerts" class="muted"></span>
+    </div>
+    <p class="small muted">Red markers: consecutive-point moves ≥ $0.10
+      (<a href="jumps/index.html">Price Jumps</a> page shows the collected trade-print set).
+      Long windows use collector candlesticks
+      (<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a>)
+      and tick history; the 60-second window fills from live samples taken every 15 s.</p>
+  </div>
+  <div class="card">
+    <h3>Liquidity <span class="muted">— contracts available at each price</span></h3>
+    <div id="liqAlerts"><div class="empty">Select a market.</div></div>
+  </div>
+</div>
+
+<h2>Model inputs — current top 10</h2>
+<div id="modelTable"></div>
+
+<h2>Tracked until resolution</h2>
+<p class="lead">Watched markets stay on this page until Kalshi settles them; the official
+<code>result</code> field (<code>yes</code>/<code>no</code>) posts a resolution notice to the
+chats and moves the row to <a href="pages/resolutions.html">Resolutions</a>.</p>
+<div id="trackTable"></div>
+
+<h2>Detection rules, sources and limits</h2>
+<table>
+  <thead><tr><th>Claim</th><th>Value</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td>Alert threshold</td><td>≥ $0.10 contract-price change, either direction (user requirement)</td>
+      <td><a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a> · <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+    <tr><td>Trade tape request</td><td><code>GET /markets/trades?limit=1000&amp;min_ts=&lt;unix s&gt;</code></td>
+      <td><a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">get-trades docs</a></td></tr>
+    <tr><td>Quote request</td><td><code>GET /markets?status=open&amp;limit=1000</code> (pagination limit verified)</td>
+      <td><a href="https://docs.kalshi.com/getting_started/pagination" target="_blank" rel="noopener">pagination docs</a></td></tr>
+    <tr><td>Order book</td><td><code>GET /markets/{ticker}/orderbook?depth=10</code>; yes/no bids only, ask side derived as 1 − p and labelled</td>
+      <td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">get-market-orderbook docs</a></td></tr>
+    <tr><td>WebSocket not used in the browser</td><td>the WS handshake requires signed <code>KALSHI-ACCESS-*</code> headers, which a public static page cannot produce</td>
+      <td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">websockets docs</a></td></tr>
+    <tr><td>Swing cause</td><td><span class="pill flag">unverified</span> — not derivable from the API; "possible context" links are news searches only and assert nothing</td>
+      <td><a href="pages/flagged.html">F13</a></td></tr>
+    <tr><td>High-ROI model</td><td><span class="pill flag">heuristic</span> — local formula above; no official ROI field exists and no outcome prediction is made</td>
+      <td><a href="pages/flagged.html">F22</a></td></tr>
+    <tr><td>Rate limits</td><td>polling every 15 s with 60 s backoff on HTTP 429</td>
+      <td><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">rate-limits docs</a></td></tr>
+    <tr><td>Fallback data</td><td><code>data/snapshot.json</code> + <code>data/history.json</code>, committed by the refresh workflow with logged requests</td>
+      <td><a href="pages/verification.html">Verification</a></td></tr>
+  </tbody>
+</table>
+"""
+
+ALERTS_JS = '\n<script src="assets/alerts.js"></script>\n'
+
+
 def build_live_pages() -> None:
     snap = snapshot_meta()
     page(path="index.html", title="Live dashboard", active="dash",
          body=meta_bar(snap) + DASH_BODY, extra_js=DASH_JS,
          desc="Live Kalshi demo markets for gas prices, elections, culture, crypto and golf with price charts, liquidity and resolution tracking.")
+    page(path="alerts.html", title="Live Alerts", active="alerts",
+         body=meta_bar(snap) + ALERTS_BODY, extra_js=ALERTS_JS,
+         desc="Live alert chats for Kalshi demo contract-price swings of $0.10 or more: all in-scope events and a transparent high-ROI model filter.")
 
     category_page(
         "gas", "Gas prices",
@@ -895,8 +1034,13 @@ def build_alerts_page(snap: dict) -> None:
     var minv=parseFloat(volInp.value)||MINVOL_DEFAULT;
     var roi=allRows.filter(function(r){
       var d=Math.abs(parseFloat(r.delta)||0);
-      var e=parseFloat((r.est_vol||'').replace(/[^0-9.]/g,'')||'0');
-      return d>=thr && e>=minv;
+      var raw=(r.est_vol||'').toString().replace(/[^0-9.]/g,'');
+      var known=raw!=='';
+      var e=parseFloat(raw||'0');
+      // Volume gate: rows with a computable est. volume must clear the floor;
+      // rows with NO computable volume pass the gate and show "est. vol -"
+      // in the feed (missing data is never dropped silently, never invented).
+      return d>=thr && (known ? e>=minv : true);
     });
     $('alertCountAll').textContent=allRows.length+' alert'+(allRows.length!==1?'s':'')+' \u00b7 \u2265 $0.10';
     $('alertCountRoi').textContent=roi.length+' alert'+(roi.length!==1?'s':'')+' \u00b7 \u2265 $'+thr.toFixed(2)+' and est. vol \u2265 $'+minv.toLocaleString();
@@ -905,8 +1049,8 @@ def build_alerts_page(snap: dict) -> None:
   }
 
   Promise.all([
-    fetch('data/snapshot.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);}),
-    fetch('data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
+    fetch('../data/snapshot.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);}),
+    fetch('../data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
   ]).then(function(res){
     var snap=res[0], jdata=res[1];
     var markets=(snap.markets||[]);
@@ -918,13 +1062,13 @@ def build_alerts_page(snap: dict) -> None:
       var ticker=mv.ticker||'';
       var m=mktByTicker[ticker]||{};
       return {
-        time:mv.to_time||'', topic:m.topic||'',
-        title:m.market_title||m.market_ticker||ticker, ticker:ticker,
-        series:m.series_ticker||'',
+        time:mv.to_time||'', topic:m.topic||mv.topic||'',
+        title:m.market_title||m.market_ticker||mv.title||ticker, ticker:ticker,
+        series:m.series_ticker||mv.series||'',
         from_price:mv.from_price||'', to_price:mv.to_price||'',
         delta:mv.delta||'', direction:mv.direction||'',
         from_size:mv.from_size||'\u2014', to_size:mv.to_size||'\u2014',
-        trade_source:mv.trade_source||'', market_source:mv.market_source||'',
+        trade_source:mv.trade_source||'', market_source:mv.market_source||mv.trade_source||'',
         volume:m.volume_fp||'', est_vol:m.est_dollar_volume||'',
       };
     }).sort(function(a,b){return (b.time||'').localeCompare(a.time||'');});
@@ -953,7 +1097,7 @@ why a move happened.</p>
       <input id="roiThreshold" type="number" step="0.05" min="0.10" max="1.00" value="0.15" style="width:90px"></div>
     <div><label for="roiMinVol">Min est. $ volume for High ROI</label>
       <input id="roiMinVol" type="number" step="1000" value="5000" style="width:110px"></div>
-    <div class="small muted">High ROI = move ≥ floor AND est. dollar volume ≥ min. Rule-based, not a model; causes blank &amp; unverified.</div>
+    <div class="small muted">High ROI = move ≥ floor AND est. dollar volume ≥ min (rows with no computable est. volume pass the volume gate and are labelled “est. vol —”). Rule-based, not a model; causes blank &amp; unverified.</div>
   </div>
 </div>
 <div id="alertCountAll" class="small muted" style="margin:4px 0 2px"></div>

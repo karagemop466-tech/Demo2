@@ -5,7 +5,7 @@
 <meta name="description" content="Live alerting feed: scrolling chats for Kalshi demo price swings of $0.10 or more, all-events and a high-ROI filter.">
 <link rel="stylesheet" href="../assets/style.css">
 </head><body>
-<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/live-alerts.html" aria-current="page">Live Alerts</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../alerts.html" aria-current="page">Live Alerts</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
 <div class="wrap">
 <style>.scrollchat{height:470px;overflow-y:auto;border:1px solid #d1d5db;border-radius:8px;background:#fff;padding:8px 10px;display:flex;flex-direction:column;gap:6px}.alertrow{border-bottom:1px solid #e5e7eb;padding:7px 2px;font-size:0.92rem;display:grid;grid-template-columns:44px 56px 1fr 130px 70px 90px 150px 140px;gap:6px;align-items:center}.alertrow:last-child{border-bottom:none}.at{font-size:0.8rem;color:#6b7280;font-variant-numeric:tabular-nums}.topic{font-size:0.78rem}.mkt b{font-size:0.94rem;display:block}.ticker{font-size:0.8rem;color:#4b5563}.move{font-size:0.94rem;font-variant-numeric:tabular-nums}.dir{font-weight:700}.dir.up{color:#16a34a}.dir.down{color:#dc2626}.size{font-size:0.85rem;color:#374151}.vol{font-size:0.8rem;color:#6b7280}.src{font-size:0.8rem}.src a{font-size:0.78rem}.ctx{font-size:0.8rem;color:#6b7280}.pill{font-size:0.72rem}</style>
 <h1>Live alerts — price swings ≥ $0.10</h1>
@@ -22,7 +22,7 @@ why a move happened.</p>
       <input id="roiThreshold" type="number" step="0.05" min="0.10" max="1.00" value="0.15" style="width:90px"></div>
     <div><label for="roiMinVol">Min est. $ volume for High ROI</label>
       <input id="roiMinVol" type="number" step="1000" value="5000" style="width:110px"></div>
-    <div class="small muted">High ROI = move ≥ floor AND est. dollar volume ≥ min. Rule-based, not a model; causes blank &amp; unverified.</div>
+    <div class="small muted">High ROI = move ≥ floor AND est. dollar volume ≥ min (rows with no computable est. volume pass the volume gate and are labelled “est. vol —”). Rule-based, not a model; causes blank &amp; unverified.</div>
   </div>
 </div>
 <div id="alertCountAll" class="small muted" style="margin:4px 0 2px"></div>
@@ -42,7 +42,7 @@ why a move happened.</p>
 <a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>). Market links point to the
 Kalshi series page pattern (checked against the live site); cause is never inferred — each row links to the
 market's own trade/market API responses and is flagged <span class="pill flag">cause unverified</span>.
-Data as of 2026-11-20T19:49:16Z; the collector runs every 10 minutes via
+Data as of 2026-11-20T20:19:56Z; the collector runs every 10 minutes via
 <a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>.</p>
 
 </div>
@@ -113,8 +113,13 @@ Data as of 2026-11-20T19:49:16Z; the collector runs every 10 minutes via
     var minv=parseFloat(volInp.value)||MINVOL_DEFAULT;
     var roi=allRows.filter(function(r){
       var d=Math.abs(parseFloat(r.delta)||0);
-      var e=parseFloat((r.est_vol||'').replace(/[^0-9.]/g,'')||'0');
-      return d>=thr && e>=minv;
+      var raw=(r.est_vol||'').toString().replace(/[^0-9.]/g,'');
+      var known=raw!=='';
+      var e=parseFloat(raw||'0');
+      // Volume gate: rows with a computable est. volume must clear the floor;
+      // rows with NO computable volume pass the gate and show "est. vol -"
+      // in the feed (missing data is never dropped silently, never invented).
+      return d>=thr && (known ? e>=minv : true);
     });
     $('alertCountAll').textContent=allRows.length+' alert'+(allRows.length!==1?'s':'')+' \u00b7 \u2265 $0.10';
     $('alertCountRoi').textContent=roi.length+' alert'+(roi.length!==1?'s':'')+' \u00b7 \u2265 $'+thr.toFixed(2)+' and est. vol \u2265 $'+minv.toLocaleString();
@@ -123,8 +128,8 @@ Data as of 2026-11-20T19:49:16Z; the collector runs every 10 minutes via
   }
 
   Promise.all([
-    fetch('data/snapshot.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);}),
-    fetch('data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
+    fetch('../data/snapshot.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);}),
+    fetch('../data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
   ]).then(function(res){
     var snap=res[0], jdata=res[1];
     var markets=(snap.markets||[]);
@@ -136,13 +141,13 @@ Data as of 2026-11-20T19:49:16Z; the collector runs every 10 minutes via
       var ticker=mv.ticker||'';
       var m=mktByTicker[ticker]||{};
       return {
-        time:mv.to_time||'', topic:m.topic||'',
-        title:m.market_title||m.market_ticker||ticker, ticker:ticker,
-        series:m.series_ticker||'',
+        time:mv.to_time||'', topic:m.topic||mv.topic||'',
+        title:m.market_title||m.market_ticker||mv.title||ticker, ticker:ticker,
+        series:m.series_ticker||mv.series||'',
         from_price:mv.from_price||'', to_price:mv.to_price||'',
         delta:mv.delta||'', direction:mv.direction||'',
         from_size:mv.from_size||'\u2014', to_size:mv.to_size||'\u2014',
-        trade_source:mv.trade_source||'', market_source:mv.market_source||'',
+        trade_source:mv.trade_source||'', market_source:mv.market_source||mv.trade_source||'',
         volume:m.volume_fp||'', est_vol:m.est_dollar_volume||'',
       };
     }).sort(function(a,b){return (b.time||'').localeCompare(a.time||'');});

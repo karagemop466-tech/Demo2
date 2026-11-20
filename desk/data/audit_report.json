@@ -1,0 +1,295 @@
+{
+ "generated_at": "2026-11-20T13:39:35Z",
+ "api_base": "https://external-api.demo.kalshi.co/trade-api/v2",
+ "api_docs": "https://docs.kalshi.com/getting_started/demo_env",
+ "mode": "static only (no egress)",
+ "row_coverage": [
+  {
+   "file": "data/analysis.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": "derived or reference data; checked but not required to carry a source on every row"
+  },
+  {
+   "file": "data/api_market_samples.json",
+   "rows": 24,
+   "with_source": 24,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": "derived or reference data; checked but not required to carry a source on every row"
+  },
+  {
+   "file": "data/api_reverification.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": "derived or reference data; checked but not required to carry a source on every row"
+  },
+  {
+   "file": "data/api_settlement_sources.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": "derived or reference data; checked but not required to carry a source on every row"
+  },
+  {
+   "file": "data/candlesticks.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/collection_log.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/cors.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": "derived or reference data; checked but not required to carry a source on every row"
+  },
+  {
+   "file": "data/dashboard_instrument.json",
+   "rows": 3200,
+   "with_source": 3200,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/events_open.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/events_top.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/executions.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": "derived or reference data; checked but not required to carry a source on every row"
+  },
+  {
+   "file": "data/kalshi_snapshot.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/live_snapshot.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/markets_open.json",
+   "rows": 1540,
+   "with_source": 1540,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/markets_settled.json",
+   "rows": 382,
+   "with_source": 382,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/meta.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/orderbooks.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/pipeline_meta.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": "derived or reference data; checked but not required to carry a source on every row"
+  },
+  {
+   "file": "data/portfolio.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": "derived or reference data; checked but not required to carry a source on every row"
+  },
+  {
+   "file": "data/resolved.json",
+   "rows": 200,
+   "with_source": 200,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/series_index.json",
+   "rows": 1419,
+   "with_source": 1419,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/series_scope.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "data/strategy_plan.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": "derived or reference data; checked but not required to carry a source on every row"
+  },
+  {
+   "file": "data/taxonomy.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "dashboard/data/snapshot.json",
+   "rows": 9,
+   "with_source": 9,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "desk/data/audit_report.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "desk/data/irregularities.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "desk/data/requirements.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "desk/data/summary.json",
+   "rows": 120,
+   "with_source": 120,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "intelligence/data/snapshot.json",
+   "rows": 24,
+   "with_source": 24,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "intelligence/data/watchlist.json",
+   "rows": 62,
+   "with_source": 62,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "session-8b9a46b4/data/backtest.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "session-8b9a46b4/data/jumps.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  }
+ ],
+ "rows_checked": 6980,
+ "rows_with_official_source": 6980,
+ "rows_missing_source": 0,
+ "rows_not_official": 0,
+ "missing_examples": [],
+ "not_official_examples": [],
+ "markdown_documentation_links": 7,
+ "rows_sourced_through_a_file_level_identifier": 9,
+ "live_rechecks": {
+  "attempted": 0,
+  "ok": 0,
+  "failed": 0,
+  "details": [],
+  "note": "skipped: this run had no route to the demo API"
+ },
+ "endpoint_probe": {
+  "url": "https://external-api.demo.kalshi.co/trade-api/v2/exchange/status",
+  "http_status": null,
+  "note": "skipped: offline"
+ },
+ "status": "pass",
+ "violations": [],
+ "summary": "6980 rows checked across 33 data files; 6980 carry an official Kalshi source; 0 of 0 live re-checks matched; 0 violation(s)."
+}
