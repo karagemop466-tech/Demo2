@@ -8,7 +8,7 @@ import {
   isActiveBinaryMarket,
   orderbookBidNotional,
   resolutionForMarket,
-} from "../assets/js/app.js";
+} from "../monitor/assets/js/app.js";
 
 test("topic matching uses requested topic terms and does not confuse Las Vegas with gas", () => {
   assert.deepEqual(getTopicsForEvent({ title: "US gasoline price forecast", category: "Economics" }), ["gas-prices"]);

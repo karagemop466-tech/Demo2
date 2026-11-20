@@ -2,6 +2,7 @@ import { cpSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
+const siteRoot = join(root, "monitor");
 const output = join(root, "dist");
 const staticPages = [
   "index.html",
@@ -14,14 +15,13 @@ const staticPages = [
   "suggestions.html",
   "review.html",
   "sources.html",
-  ".nojekyll",
 ];
 
 rmSync(output, { recursive: true, force: true });
 mkdirSync(output, { recursive: true });
-for (const file of staticPages) cpSync(join(root, file), join(output, file));
+for (const file of staticPages) cpSync(join(siteRoot, file), join(output, file));
 for (const directory of ["assets", "categories"]) {
-  cpSync(join(root, directory), join(output, directory), { recursive: true });
+  cpSync(join(siteRoot, directory), join(output, directory), { recursive: true });
 }
 
 const htmlCount = readdirSync(output, { recursive: true }).filter((file) => String(file).endsWith(".html")).length;
