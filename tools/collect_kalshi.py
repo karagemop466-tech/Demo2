@@ -354,6 +354,45 @@ def collect(out_dir):
         }
         time.sleep(0.1)
 
+    # 6b. Candlestick history for the same top markets (price-over-time data).
+    # Docs: GET /series/{series_ticker}/markets/{ticker}/candlesticks with
+    # start_ts/end_ts in Unix SECONDS and period_interval in {1, 60, 1440}
+    # minutes; max 5,000 periods per request
+    # (https://docs.kalshi.com/api-reference/market/get-market-candlesticks).
+    candlesticks = {}
+    now_s = int(time.time())
+    ranges = ((1, 24 * 60 * 60), (60, 7 * 24 * 60 * 60))  # (period_minutes, lookback_seconds)
+    for r in picked:
+        if not r.get("series_ticker"):
+            continue
+        per_period = {}
+        for period_minutes, lookback in ranges:
+            end_s = now_s
+            start_s = now_s - lookback
+            url = ("%s/series/%s/markets/%s/candlesticks?start_ts=%d&end_ts=%d&period_interval=%d"
+                   % (API_BASE,
+                      urllib.parse.quote(r["series_ticker"]),
+                      urllib.parse.quote(r["ticker"]),
+                      start_s, end_s, period_minutes))
+            data = c.get(url, note="candlesticks period_interval=%d" % period_minutes)
+            time.sleep(0.1)
+            if not data:
+                continue
+            rows = data.get("candlesticks") or []
+            per_period[str(period_minutes)] = {
+                "source_url": url,
+                "count": len(rows),
+                "candlesticks": rows,
+            }
+        if per_period:
+            candlesticks[r["ticker"]] = {
+                "ticker": r["ticker"],
+                "series_ticker": r["series_ticker"],
+                "title": r["title"],
+                "topic": r["topic"],
+                "periods": per_period,
+            }
+
     # 7. Event level rows
     event_rows = []
     for e in events:
@@ -438,6 +477,7 @@ def collect(out_dir):
             "in_scope_events": len(event_rows),
             "in_scope_series": len(series_rows),
             "orderbooks": len(orderbooks),
+            "candlesticks": len(candlesticks),
         },
         "scope": {k: v["label"] for k, v in TOPIC_RULES.items()},
         "scope_rules": TOPIC_RULES,
@@ -468,6 +508,7 @@ def collect(out_dir):
     dump("series_scope.json", {"source_urls": series_urls, "collected_at": started,
                                "rows": series_rows})
     dump("orderbooks.json", {"collected_at": started, "rows": orderbooks})
+    dump("candlesticks.json", {"collected_at": started, "rows": candlesticks})
     dump("collection_log.json", {"started_at": started, "finished_at": now_iso(),
                                  "requests": c.log})
     print("in-scope open=%d settled=%d events=%d series=%d orderbooks=%d" % (
