@@ -5,7 +5,7 @@
 <meta name="description" content="Official Kalshi documentation and live demo endpoints used by this site.">
 <link rel="stylesheet" href="../assets/style.css">
 </head><body>
-<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html" aria-current="page">Sources</a></nav></div></header>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../pages/resolutions.html">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html" aria-current="page">Sources</a></nav></div></header>
 <div class="wrap">
 
 <h1>Sources</h1>
@@ -24,8 +24,23 @@ can be opened in a browser to check any figure on this site.</p>
 unaffiliated demonstration project running entirely against the demo environment with mock funds.
 Nothing here is investment advice.</p>
 
+<h2>Integration source additions (session 5330bffb, 2026-11-20)</h2>
+<ul class="clean">
+<li><a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">Fixed-point migration (price/count strings)</a></li>
+<li><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order V2 (required body fields)</a></li>
+<li><a href="https://docs.kalshi.com/api-reference/orders/cancel-order-v2" target="_blank" rel="noopener">Cancel Order V2 (auto-routing)</a></li>
+<li><a href="https://docs.kalshi.com/getting_started/order_direction" target="_blank" rel="noopener">Order direction (bid &equiv; yes, ask &equiv; no)</a></li>
+<li><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Get Market Orderbook (bracket notation)</a></li>
+<li><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></li>
+<li><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market settlement ($1 per winning contract)</a></li>
+<li><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=1">Demo API CORS probe target</a> (observed headers recorded in <code>data/cors.json</code>)</li>
+<li>Official news outlets named in demo settlement sources: <a href="https://www.reuters.com/">Reuters</a>, <a href="https://apnews.com/">AP</a>, <a href="https://www.cnbc.com/">CNBC</a>, <a href="https://www.politico.com/">Politico</a>, <a href="https://www.bbc.com/news">BBC</a>, <a href="https://www.aljazeera.com/">Al Jazeera</a>, <a href="https://theathletic.com/">The Athletic</a>, <a href="https://www.espn.com/">ESPN</a>, <a href="https://www.foxsports.com/">Fox Sports</a>, <a href="https://www.wsj.com/">WSJ</a>, <a href="https://www.bloomberg.com/">Bloomberg</a>, <a href="https://www.coindesk.com/">CoinDesk</a>, <a href="https://cointelegraph.com/">Cointelegraph</a></li>
+<li>Official data/benchmark sources named in demo contract terms: <a href="https://gasprices.aaa.com/">AAA</a>, <a href="https://www.eia.gov/petroleum/gasdiesel/">EIA</a>, <a href="https://www.pgatour.com/">PGA Tour</a>, <a href="https://www.dpworldtour.com/">DP World Tour</a>, <a href="https://livgolf.com/">LIV Golf</a>, <a href="https://www.fifa.com/">FIFA</a>, <a href="https://tezos.com/">Tezos</a></li>
+<li>On-chain block explorers named in demo contract terms: <a href="https://etherscan.io/">Etherscan</a>, <a href="https://www.blockchain.com/explorer">Blockchain.com</a>, <a href="https://ethernodes.org/">Ethernodes</a>, <a href="https://beaconcha.in/">Beaconcha.in</a></li>
+</ul>
+
 </div>
-<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a></div></div></footer>
+<footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a> · <a href="../monitor/index.html">Read-only Monitor</a></div></div></footer>
 <script src="../assets/site.js"></script>
 
 </body></html>
