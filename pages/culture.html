@@ -1,9 +1,126 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Culture</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Culture</h1>
-<p>Live markets whose title/ticker matches: <b>oscar, grammy, emmy, celebrity, movie, film, music, album</b>. Ranking and prices are live from the <a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> endpoint (demo base <a href="https://docs.kalshi.com/getting_started/demo_env">external-api.demo.kalshi.co</a>). Use the <a href="../index.html">Dashboard</a> filter — the dashboard applies this keyword map and sorts by notional. No values are pre-filled here; blank means “live only”.</p>
-<table><tr><th>Item</th><th>Value</th><th>Source</th></tr>
-<tr><td>Open markets in scope</td><td>Live — see Dashboard</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></td></tr>
-<tr><td>Top market by notional</td><td>Live — see Dashboard</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></td></tr>
-<tr><td>Resolution (yes/no)</td><td>Live — see Dashboard resolved table</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets (settled)</a></td></tr>
-</table>
-<p class="muted">Keyword mapping is a heuristic (titles vary). Unmapped markets are excluded, not mislabeled. See <a href="flagged.html">Flagged for Review</a>.</p>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Culture · Kalshi Demo Monitor</title>
+<meta name="description" content="Kalshi demo markets for gas prices, elections, culture, crypto and golf.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html">Kalshi <span class="dot">Demo</span> Monitor<small>research dashboard</small></a>
+    <nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html" aria-current="page">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../pages/portfolio.html">Portfolio &amp; trading</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged for review</a><a href="../pages/sources.html">Sources</a></nav>
+    <span class="pill-demo">Demo only · no real funds</span>
+  </div>
+</header>
+<main class="wrap">
+
+<div class="breadcrumb">Dashboard › <a href="pages/culture.html">Culture</a></div>
+<p class="eyebrow">Category</p>
+<h1>Culture</h1>
+<p class="lede">Official Kalshi categories “Culture” and “Entertainment”: film, music, TV, awards.</p>
+
+<div class="card">
+  <h3>How this page is scoped</h3>
+  <p class="muted">Official series category allowlist: Culture, Entertainment. The allowlist contains only official Kalshi tag and category
+  strings published by <a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">Get Tags for Series Categories</a> and returned by
+  <a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a>. Markets inherit the topic of their series.</p>
+  <div class="tabs">
+    <a href="pages/gas.html">Gas prices</a><a href="pages/elections.html">Elections</a><a href="pages/culture.html" class="active">Culture</a><a href="pages/crypto.html">Crypto</a><a href="pages/golf.html">Golf</a>
+  </div>
+</div>
+
+<div class="grid grid-4" style="margin-bottom:14px">
+  <div class="kpi"><div class="k">Open markets</div><div class="v" id="kpiMarkets">—</div><div class="s"><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></div></div>
+  <div class="kpi"><div class="k">Contract value traded</div><div class="v" id="kpiTraded">—</div><div class="s">derived</div></div>
+  <div class="kpi"><div class="k">Contracts traded</div><div class="v" id="kpiVolume">—</div><div class="s">volume_fp</div></div>
+  <div class="kpi"><div class="k">In-scope events</div><div class="v" id="kpiEvents">—</div><div class="s"><a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a></div></div>
+</div>
+
+<div class="card">
+  <div class="card-head"><h2>Open culture markets by dollar amount</h2>
+    <span class="muted">click a row to chart it</span></div>
+  <div class="table-wrap">
+    <table id="marketTable">
+      <caption>Every row links to the demo API response it was read from.</caption>
+      <thead><tr><th>Topic</th><th>Ticker</th><th>Market</th><th>Last $</th><th>YES bid / ask</th><th>Contracts traded</th><th>Contract value traded $</th><th>Open interest $</th><th>Closes (UTC)</th><th>Source</th></tr></thead>
+      <tbody><tr><td colspan="10" class="muted">No rows in the current snapshot.</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card chart-card">
+    <div class="card-head"><h2>Price movement</h2>
+      <div style="min-width:190px"><label for="windowFilter">Graph length</label><select id="windowFilter"></select></div></div>
+    <p class="muted">X axis = time · Y axis = contract price. History from Kalshi candlesticks; newest points are live snapshots.</p>
+    <div class="chart-shell">
+      <canvas id="priceChart" class="chart"></canvas>
+      <div id="chartTip" style="display:none;position:absolute;background:#101a2b;color:#fff;padding:6px 9px;border-radius:8px;font-size:12px;pointer-events:none"></div>
+    </div>
+    <p class="muted" id="chartNote">—</p>
+    <div class="chart-legend"><span><b id="selectedTitle">—</b></span><span class="mono" id="selectedTicker">—</span></div>
+  </div>
+  <div class="card">
+    <h2>Selected market</h2>
+    <dl class="kv">
+      <dt>Last traded</dt><dd id="selLast">—</dd>
+      <dt>YES bid</dt><dd id="selBid">—</dd>
+      <dt>YES ask</dt><dd id="selAsk">—</dd>
+      <dt>Contracts traded</dt><dd id="selVolume">—</dd>
+      <dt>Open interest</dt><dd id="selOi">—</dd>
+      <dt>Closes</dt><dd id="selClose">—</dd>
+      <dt>Status</dt><dd id="selStatus">—</dd>
+    </dl>
+    <h3 style="margin-top:16px">Liquidity — contracts available at each price</h3>
+    <div class="book">
+      <div><h4>YES bids</h4><div id="bookYes" class="muted">—</div></div>
+      <div><h4>NO bids</h4><div id="bookNo" class="muted">—</div></div>
+    </div>
+    <p class="muted" id="bookAt">—</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><h2>Culture events</h2></div>
+  <div class="table-wrap">
+    <table id="eventTable">
+      <thead><tr><th>Topic</th><th>Event</th><th class="num">Markets</th><th class="num">Contracts</th>
+        <th class="num">Contract value traded $</th><th class="num">Open interest $</th><th>Closes (UTC)</th><th>Source</th></tr></thead>
+      <tbody><tr><td colspan="8" class="muted">No rows in the current snapshot.</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><h2>Resolved culture markets</h2>
+    <span class="muted">status = settled · result = yes / no</span></div>
+  <div class="table-wrap">
+    <table id="resolvedTable">
+      <thead><tr><th>Topic</th><th>Ticker</th><th>Market</th><th>Result</th>
+        <th class="num">Settlement $</th><th>Settled (UTC)</th><th>Source</th></tr></thead>
+      <tbody><tr><td colspan="7" class="muted">No rows in the current snapshot.</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>Demo environment only. Kalshi states that demo prices and market behaviour
+    <a href="https://docs.kalshi.com/getting_started/demo_env">may not be reflective of those in real markets</a>. Every figure on this site is read from the
+    Kalshi demo API and carries a link to the response it came from; nothing is inferred.
+    Build snapshot: <span id="snapshotStamp">—</span></p>
+    <p><a href="https://docs.kalshi.com/welcome">Kalshi API documentation</a> ·
+    <a href="https://demo.kalshi.co/">Kalshi demo</a> ·
+    <a href="pages/sources.html">Sources</a> ·
+    <a href="pages/verification.html">Verification</a> ·
+    <a href="pages/flagged.html">Flagged for review</a></p>
+  </div>
+</footer>
+<script src="../assets/chart.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

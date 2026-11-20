@@ -63,9 +63,11 @@ jobs:
         id: fetch
         continue-on-error: true
         run: |
-          set +e
+          set -o pipefail
           node scripts/fetch-data.mjs 2>&1 | tee /tmp/fetch.log
-          echo "exit_code=${PIPESTATUS[0]}" | tee -a /tmp/fetch.log
+          code=${PIPESTATUS[0]}
+          echo "exit_code=${code}" | tee -a /tmp/fetch.log
+          exit ${code}
 
       - name: Commit refreshed snapshot
         id: commit
@@ -93,6 +95,8 @@ jobs:
       - name: Publish run diagnostics to the tracking issue
         if: always()
         continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           {
             echo "# refresh-data run diagnostics"
@@ -113,6 +117,7 @@ jobs:
             echo
             cat /tmp/diagnostics.md
           } > /tmp/issue-body.md
+          cat /tmp/diagnostics.md
           EXISTING=$(gh issue list --state open --limit 100 --json number,title \
             --jq '[.[] | select(.title == "Kalshi data refresh log")] | .[0].number' 2>/dev/null || echo "")
           if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then

@@ -1,10 +1,98 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trade Analysis & Strategies</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Trade Analysis & Strategies</h1>
-<p>Analysis is computed <b>only</b> from your demo fills (Portfolio page → Load). Categories: topic (gas/elections/culture/crypto/golf/other), side (yes/no), and outcome once settled (win/loss vs <code>result</code>). Strategies are generated from observed patterns only; with no fills the correct output is “no strategy”.</p>
-<table><tr><th>Analysis</th><th>Method</th><th>Source</th></tr>
-<tr><td>Fill count by topic</td><td>Keyword map on fill ticker/title</td><td>Your fills via <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">portfolio/fills</a></td></tr>
-<tr><td>Win rate by topic/side</td><td>Join fills to settled <code>result</code></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets (settled)</a></td></tr>
-<tr><td>P&amp;L</td><td>Settlement value − entry price × count</td><td>Your fills + settled markets</td></tr>
-<tr><td>Strategy candidates</td><td>Only if ≥5 fills in a category; else “insufficient data”</td><td>Derived — no external source</td></tr>
-</table>
-<p class="muted">No backtest or strategy is shown until real demo fills exist. See <a href="questions.html">Questions</a> for what data is still missing.</p>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analysis · Kalshi Demo Monitor</title>
+<meta name="description" content="Kalshi demo markets for gas prices, elections, culture, crypto and golf.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html">Kalshi <span class="dot">Demo</span> Monitor<small>research dashboard</small></a>
+    <nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../pages/portfolio.html">Portfolio &amp; trading</a><a href="../pages/analysis.html" aria-current="page">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged for review</a><a href="../pages/sources.html">Sources</a></nav>
+    <span class="pill-demo">Demo only · no real funds</span>
+  </div>
+</header>
+<main class="wrap">
+
+<div class="breadcrumb">Kalshi Demo Monitor › Analysis</div>
+<p class="eyebrow">Analysis</p>
+<h1>Trade analysis and strategy formation</h1>
+<p class="lede">Two layers: what the <b>verified snapshot</b> says about the in-scope markets, and
+what your <b>demo fills</b> say about your trading. Strategy rules are only produced once real
+fills exist — until then the correct output is “no strategy”.</p>
+
+<div class="card">
+  <div class="card-head"><h2>Layer 1 — market structure in the snapshot</h2>
+    <span class="muted">source: <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> + <a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a></span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Topic</th><th class="num">Open markets</th><th class="num">Mean last price</th>
+        <th class="num">Settled</th><th class="num">Resolved yes</th><th class="num">Resolved no</th>
+        <th class="num">Contract value traded</th></tr></thead>
+      <tbody><tr><td><span class="tag gas">Gas prices</span></td><td class="num">0</td><td class="num"><span class="unv">UNVERIFIED</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">$0</td></tr><tr><td><span class="tag elections">Elections</span></td><td class="num">0</td><td class="num"><span class="unv">UNVERIFIED</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">$0</td></tr><tr><td><span class="tag culture">Culture</span></td><td class="num">0</td><td class="num"><span class="unv">UNVERIFIED</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">$0</td></tr><tr><td><span class="tag crypto">Crypto</span></td><td class="num">0</td><td class="num"><span class="unv">UNVERIFIED</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">$0</td></tr><tr><td><span class="tag golf">Golf</span></td><td class="num">0</td><td class="num"><span class="unv">UNVERIFIED</span></td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">$0</td></tr></tbody>
+    </table>
+  </div>
+  <p class="muted">“Mean last price” is the arithmetic mean of the <code>last_price_dollars</code> field
+  across the open in-scope markets of that topic. It is a market-structure statistic, not a forecast.</p>
+</div>
+
+<div class="card">
+  <div class="card-head"><h2>Layer 2 — trade review framework</h2>
+    <span class="muted">applies to demo fills from <a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Get Fills</a></span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Dimension</th><th>Field used</th><th>Official source</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Topic</td><td>series / event category of the traded market</td><td><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">Get Tags for Series Categories</a></td><td>computed from the snapshot series index</td></tr>
+        <tr><td>Direction</td><td><code>outcome_side</code> (yes / no)</td><td><a href="https://docs.kalshi.com/getting_started/order_direction" target="_blank" rel="noopener">Order direction</a></td><td>computed from fills</td></tr>
+        <tr><td>Entry price</td><td><code>yes_price_dollars</code> / <code>no_price_dollars</code></td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Get Fills</a></td><td>computed from fills</td></tr>
+        <tr><td>Size</td><td><code>count_fp</code></td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Get Fills</a></td><td>computed from fills</td></tr>
+        <tr><td>Outcome</td><td>market <code>result</code> (yes / no) joined on ticker</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> (status=settled)</td><td>computed from fills + settled markets</td></tr>
+        <tr><td>Net P&amp;L</td><td>settlement value − entry value − fees</td><td><a href="https://docs.kalshi.com/getting_started/fee_rounding" target="_blank" rel="noopener">Fee Rounding</a></td><td>computed from fills; fees come from the fill response</td></tr>
+        <tr><td>Strategy tag</td><td>entered by you at order time</td><td>—</td><td>not available yet — no fills in this account</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted">No win rate, drawdown or strategy is stated on this page because no demo fills are
+  available to this session. The framework above is the exact computation that runs once
+  <a href="pages/portfolio.html" target="_blank" rel="noopener">fills are loaded</a>.</p>
+</div>
+
+<div class="card">
+  <h2>Strategy taxonomy (applied to real fills)</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Strategy tag</th><th>Entry rule</th><th>Exit rule</th><th>Minimum fills before reporting</th></tr></thead>
+      <tbody>
+        <tr><td><code>fade-spread</code></td><td>buy at or below the best bid when the YES spread is ≥ 3¢</td><td>hold to settlement</td><td>10</td></tr>
+        <tr><td><code>near-miss</code></td><td>buy YES on a market whose last price is ≤ 0.15 and whose close is ≤ 7 days away</td><td>hold to settlement</td><td>10</td></tr>
+        <tr><td><code>deep-liquidity</code></td><td>limit order at a price level holding ≥ 100 contracts</td><td>re-quote or cancel</td><td>10</td></tr>
+        <tr><td><code>event-fade</code></td><td>buy NO when the event category is Crypto or Golf and the last price is ≥ 0.85</td><td>hold to settlement</td><td>10</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted">These are <b>hypothesis templates</b> for tagging, not validated strategies. They are
+  only reported on with observed fills, and they must be tested out of sample before use. Demo
+  prices may not reflect real markets (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo env</a>), so results do not transfer.</p>
+</div>
+
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>Demo environment only. Kalshi states that demo prices and market behaviour
+    <a href="https://docs.kalshi.com/getting_started/demo_env">may not be reflective of those in real markets</a>. Every figure on this site is read from the
+    Kalshi demo API and carries a link to the response it came from; nothing is inferred.
+    Build snapshot: <span id="snapshotStamp">—</span></p>
+    <p><a href="https://docs.kalshi.com/welcome">Kalshi API documentation</a> ·
+    <a href="https://demo.kalshi.co/">Kalshi demo</a> ·
+    <a href="pages/sources.html">Sources</a> ·
+    <a href="pages/verification.html">Verification</a> ·
+    <a href="pages/flagged.html">Flagged for review</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

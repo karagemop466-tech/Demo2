@@ -40,7 +40,11 @@ const argOf = (name, fallback) => {
 
 const BASE = argOf('--base', 'https://external-api.demo.kalshi.co/trade-api/v2').replace(/\/$/, '');
 const OUT = resolve(REPO, argOf('--out', 'data'));
-const SERIES_PER_TOPIC = parseInt(argOf('--series-per-topic', '30'), 10);
+const SERIES_PER_TOPIC = parseInt(argOf('--series-per-topic', '12'), 10);
+// Hard budget so a harvest always finishes inside the CI window instead of
+// grinding on rate limits. When the budget is hit, collection stops cleanly and
+// the partial snapshot is still written and flagged.
+const MAX_REQUESTS = parseInt(argOf('--max-requests', '900'), 10);
 
 const DOCS = {
   base: 'https://docs.kalshi.com/getting_started/demo_env',
@@ -120,6 +124,7 @@ const TOPICS = [
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const requestLog = [];
 let requestCount = 0;
+let budgetExhausted = false;
 
 /**
  * GET with exponential backoff.
@@ -127,13 +132,20 @@ let requestCount = 0;
  * header and asks clients to apply exponential backoff
  * (https://docs.kalshi.com/getting_started/rate_limits).
  */
-async function get(path, { allow404 = false, retries = 6, note = '' } = {}) {
+async function get(path, { allow404 = false, retries = 6, note = '', soft = false } = {}) {
+  if (budgetExhausted) return null;
   const url = BASE + path;
   // Be gentle: the demo API applies separate unauthenticated limits
   // (https://docs.kalshi.com/getting_started/rate_limits).
   await sleep(40);
   for (let attempt = 0; attempt <= retries; attempt += 1) {
     requestCount += 1;
+    if (requestCount > MAX_REQUESTS) {
+      budgetExhausted = true;
+      requestLog.push({ url, status: 'budget_exhausted', note });
+      console.warn(`[kalshi-snapshot] request budget (${MAX_REQUESTS}) reached; stopping collection`);
+      return null;
+    }
     const started = Date.now();
     let res;
     try {
@@ -141,7 +153,9 @@ async function get(path, { allow404 = false, retries = 6, note = '' } = {}) {
     } catch (err) {
       if (attempt === retries) {
         requestLog.push({ url, status: 'network_error', note, error: String(err && err.message) });
-        throw new Error(`GET ${path} -> network error: ${err.message}`);
+        const msg = `GET ${path} -> network error: ${err.message}`;
+        if (soft) { console.warn(`[kalshi-snapshot] soft-fail: ${msg}`); return null; }
+        throw new Error(msg);
       }
       const wait = Math.min(30000, 700 * 2 ** attempt);
       console.warn(`[kalshi-snapshot] network error on ${path}; retry in ${wait}ms`);
@@ -151,7 +165,9 @@ async function get(path, { allow404 = false, retries = 6, note = '' } = {}) {
     if (res.status === 429) {
       if (attempt === retries) {
         requestLog.push({ url, status: 429, note });
-        throw new Error(`GET ${path} -> HTTP 429 too_many_requests`);
+        const msg = `GET ${path} -> HTTP 429 too_many_requests`;
+        if (soft) { console.warn(`[kalshi-snapshot] soft-fail: ${msg}`); return null; }
+        throw new Error(msg);
       }
       const wait = Math.min(30000, 700 * 2 ** attempt);
       console.warn(`[kalshi-snapshot] 429 on ${path}; retry in ${wait}ms`);
@@ -171,7 +187,9 @@ async function get(path, { allow404 = false, retries = 6, note = '' } = {}) {
         continue;
       }
       requestLog.push({ url, status: res.status, note });
-      throw new Error(`GET ${path} -> HTTP ${res.status} ${res.statusText} ${body.slice(0, 300)}`);
+      const msg = `GET ${path} -> HTTP ${res.status} ${res.statusText} ${body.slice(0, 300)}`;
+      if (soft) { console.warn(`[kalshi-snapshot] soft-fail: ${msg}`); return null; }
+      throw new Error(msg);
     }
     const json = await res.json();
     requestLog.push({
@@ -213,13 +231,31 @@ async function loadSeries(taxonomy) {
     return json?.cursor || '';
   };
 
+  // 0) Full catalogue pagination. GET /series without a category filter returns
+  //    every series with its official category/categories/tags, so the whole
+  //    in-scope catalogue can be classified locally with a handful of requests.
+  {
+    let cursor = '';
+    for (let page = 0; page < 60; page += 1) {
+      const q = 'include_volume=true&limit=1000';
+      const json = await get(cursor ? `/series?${q}&cursor=${encodeURIComponent(cursor)}` : `/series?${q}`,
+        { note: 'series catalogue', soft: true });
+      if (!json) break;
+      cursor = absorb(json);
+      if (!cursor) break;
+    }
+  }
+
   // 1) Per-category queries (every series carries >=1 discovery category).
+  //    Soft-fail: a taxonomy category that is not itself a series category
+  //    answers 400 and must not abort the harvest.
   for (const category of Object.keys(taxonomy)) {
     const q = `category=${encodeURIComponent(category)}&include_volume=true&limit=1000`;
     let cursor = '';
     for (let page = 0; page < 20; page += 1) {
       const json = await get(cursor ? `/series?${q}&cursor=${encodeURIComponent(cursor)}` : `/series?${q}`,
-        { note: `series list for category=${category}` });
+        { note: `series list for category=${category}`, soft: true });
+      if (!json) break;
       cursor = absorb(json);
       if (!cursor) break;
     }
@@ -231,9 +267,10 @@ async function loadSeries(taxonomy) {
     for (const tag of topic.tags) {
       const q = `tags=${encodeURIComponent(tag)}&include_volume=true&limit=1000`;
       let cursor = '';
-      for (let page = 0; page < 20; page += 1) {
+      for (let page = 0; page < 4; page += 1) {
         const json = await get(cursor ? `/series?${q}&cursor=${encodeURIComponent(cursor)}` : `/series?${q}`,
-          { note: `series list for tag=${tag}` });
+          { note: `series list for tag=${tag}`, soft: true });
+        if (!json) break;
         cursor = absorb(json);
         if (!cursor) break;
       }
@@ -317,7 +354,8 @@ async function loadOrderbooks(tickers, depth = 12) {
   const out = {};
   for (const ticker of tickers) {
     const json = await get(`/markets/${encodeURIComponent(ticker)}/orderbook?depth=${depth}`,
-      { note: `orderbook for ${ticker}` });
+      { note: `orderbook for ${ticker}`, soft: true, allow404: true });
+    if (!json) continue;
     const book = json?.orderbook_fp || {};
     const trim = (levels) => (Array.isArray(levels) ? levels.slice(-depth).reverse() : []);
     out[ticker] = {
@@ -352,10 +390,11 @@ async function main() {
 
       // Markets for the series (no status filter -> open + closed + settled).
       let cursor = '';
-      for (let page = 0; page < 4; page += 1) {
+      for (let page = 0; page < 3; page += 1) {
         const q = `series_ticker=${encodeURIComponent(seriesTicker)}&limit=1000`;
         const json = await get(cursor ? `/markets?${q}&cursor=${encodeURIComponent(cursor)}` : `/markets?${q}`,
-          { note: `markets for series=${seriesTicker}` });
+          { note: `markets for series=${seriesTicker}`, soft: true });
+        if (!json) break;
         for (const m of json?.markets || []) markets.push(pickMarket(m, topic.id));
         cursor = json?.cursor || '';
         if (!cursor) break;
@@ -363,10 +402,11 @@ async function main() {
 
       // Events for the series (official event titles + official event category).
       cursor = '';
-      for (let page = 0; page < 4; page += 1) {
+      for (let page = 0; page < 3; page += 1) {
         const q = `series_ticker=${encodeURIComponent(seriesTicker)}&limit=200`;
         const json = await get(cursor ? `/events?${q}&cursor=${encodeURIComponent(cursor)}` : `/events?${q}`,
-          { note: `events for series=${seriesTicker}` });
+          { note: `events for series=${seriesTicker}`, soft: true });
+        if (!json) break;
         for (const e of json?.events || []) {
           const picked = pickEvent(e);
           eventsByTicker.set(picked.event_ticker, picked);
@@ -451,6 +491,8 @@ async function main() {
     base_url: BASE,
     environment: 'demo',
     request_count: requestCount,
+    request_budget: MAX_REQUESTS,
+    budget_exhausted: budgetExhausted,
     docs: DOCS,
     topic_rules: TOPICS.map((t) => ({
       id: t.id,
@@ -525,7 +567,45 @@ async function main() {
   console.log(`[kalshi-snapshot] done in ${Date.now() - startedAt}ms (${requestCount} requests)`);
 }
 
-main().catch((err) => {
+main().catch(async (err) => {
   console.error(`[kalshi-snapshot] FAILED: ${err && err.message ? err.message : err}`);
+  // Never lose a harvest: persist whatever was collected plus the failure reason
+  // so the site can publish it and flag it for review.
+  try {
+    const generatedAt = new Date().toISOString();
+    const byTopic = (rows) => {
+      const out = {};
+      for (const t of TOPICS) out[t.id] = rows.filter((r) => r.topic === t.id);
+      return out;
+    };
+    await mkdir(OUT, { recursive: true });
+    const write = async (name, value) => {
+      await writeFile(resolve(OUT, name), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+      console.log(`[kalshi-snapshot] wrote ${name}`);
+    };
+    await write('meta.json', {
+      generated_at: generatedAt,
+      base_url: BASE,
+      environment: 'demo',
+      request_count: requestCount,
+      partial: true,
+      error: String(err && err.message ? err.message : err),
+      docs: DOCS,
+      topic_rules: TOPICS.map((t) => ({ id: t.id, label: t.label, categories: t.categories, tags: t.tags })),
+      counts: { taxonomy_categories: null, series_catalogue: null, markets_collected: 0, events_collected: 0 },
+    });
+    await write('open-markets.json', { generated_at: generatedAt, source: DOCS.markets, partial: true, topics: byTopic([]) });
+    await write('open-events.json', { generated_at: generatedAt, source: DOCS.events, partial: true, topics: byTopic([]) });
+    await write('settled-markets.json', { generated_at: generatedAt, source: DOCS.markets, partial: true, topics: byTopic([]) });
+    await write('orderbooks.json', { generated_at: generatedAt, source: DOCS.orderbook, books: {} });
+    await write('collection-log.json', {
+      generated_at: generatedAt,
+      note: 'Every API request made by scripts/fetch-data.mjs, with its exact URL and HTTP status.',
+      error: String(err && err.message ? err.message : err),
+      requests: requestLog,
+    });
+  } catch (writeErr) {
+    console.error(`[kalshi-snapshot] could not even persist the partial snapshot: ${writeErr && writeErr.message}`);
+  }
   process.exit(1);
 });

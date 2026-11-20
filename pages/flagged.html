@@ -1,10 +1,59 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Flagged for Review</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Flagged for Review</h1>
-<table><tr><th>#</th><th>Irregularity / gap</th><th>Impact</th><th>What we did</th><th>Source</th></tr>
-<tr><td>F1</td><td>Sandbox cannot reach Kalshi API (TLS SSL_ERROR_SYSCALL). Live data unverified from sandbox.</td><td>Dashboard fetches in visitor browser; sandbox preview shows fetch errors.</td><td>No values fabricated; empty/error states shown.</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td></tr>
-<tr><td>F2</td><td>“Highest dollar amount” has no single API field.</td><td>Ranking is a proxy.</td><td>Use volume×last price, labeled everywhere. Awaiting Q1 answer.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td></tr>
-<tr><td>F3</td><td>Topic mapping is keyword heuristic, not series_ticker allowlist.</td><td>Some in-scope markets may be missed/mislabeled.</td><td>Documented on each category page; Suggestion S1 proposes allowlist.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">quick_start</a></td></tr>
-<tr><td>F4</td><td>Demo prices not reflective of real markets.</td><td>Strategies from demo may not transfer.</td><td>Warning on every page; no real-money claims.</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td></tr>
-<tr><td>F5</td><td>Browser CORS to demo API not confirmed from sandbox.</td><td>Live tables may fail in some browsers.</td><td>Error states + Suggestion S3 (proxy) for review.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">quick_start</a></td></tr>
-<tr><td>F6</td><td>No demo API keys in repo (by design).</td><td>Portfolio/trading blank until user pastes keys locally.</td><td>Secure in-browser signing; keys never committed.</td><td><a href="https://docs.kalshi.com/getting_started/api_keys">api_keys</a></td></tr>
-</table>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flagged for review · Kalshi Demo Monitor</title>
+<meta name="description" content="Kalshi demo markets for gas prices, elections, culture, crypto and golf.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html">Kalshi <span class="dot">Demo</span> Monitor<small>research dashboard</small></a>
+    <nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../pages/portfolio.html">Portfolio &amp; trading</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html" aria-current="page">Flagged for review</a><a href="../pages/sources.html">Sources</a></nav>
+    <span class="pill-demo">Demo only · no real funds</span>
+  </div>
+</header>
+<main class="wrap">
+
+<div class="breadcrumb">Kalshi Demo Monitor › Flagged for review</div>
+<p class="eyebrow">Open items</p>
+<h1>Flagged for review</h1>
+<p class="lede">Irregularities and unverified items, each with the source needed to check it by hand.
+None of them block the site. Review them after the site is live and ask for changes.</p>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>#</th><th>Item</th><th>What was observed</th><th>Why it matters</th>
+      <th>What was done</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td class='nowrap'>F1</td><td><b>Demo data is not real-market data</b></td><td>Kalshi states demo prices and market behaviour “may not be reflective of those in real markets”. Demo series also carry 2099 close dates and synthetic strikes.</td><td>Any result derived from demo prices does not transfer to live trading.</td><td>Every page carries the demo warning; no live-trading claim is made anywhere.</td><td class='nowrap'><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/demo_env</a></td></tr><tr><td class='nowrap'>F2</td><td><b>“Highest dollar amount” has no single API field</b></td><td>Kalshi defines <code>notional_value_dollars</code> as the value of one contract at settlement, so it is not turnover. <code>volume_fp</code> and <code>open_interest_fp</code> are contract counts.</td><td>Any dollar ranking is a derived measure and can be argued with.</td><td>The derived measure is labelled on every row and the ranking metric is a user choice.</td><td class='nowrap'><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/market/get-markets</a></td></tr><tr><td class='nowrap'>F3</td><td><b>Topic scope is a hand-assembled allowlist</b></td><td>The allowlists use official tag and category strings from Kalshi's taxonomy endpoint, but the exact set per topic was chosen here.</td><td>A market that Kalshi considers in-scope may be excluded, or vice versa.</td><td>Publish the generated allowlist and review it (suggestion S1).</td><td class='nowrap'><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories</a></td></tr><tr><td class='nowrap'>F4</td><td><b>Only the top series per topic are collected</b></td><td>The collector reads the highest-volume series per topic, because Get Series List returns <code>volume_fp</code> per series.</td><td>A low-volume but relevant series may be missing from the snapshot.</td><td>Raise <code>--series-per-topic</code> in the collector, or collect every in-scope series.</td><td class='nowrap'><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/market/get-series-list</a></td></tr><tr><td class='nowrap'>F5</td><td><b>A browser page may not be able to call the demo API</b></td><td>Public demo endpoints need no authentication, but browser CORS behaviour for this origin could not be confirmed from the build environment.</td><td>Live prices and the order book may fail to load in some browsers.</td><td>The site falls back to the verified snapshot and labels the state; a same-origin proxy is the fix (suggestion S3).</td><td class='nowrap'><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/quick_start_market_data</a></td></tr><tr><td class='nowrap'>F6</td><td><b>The WebSocket feed is not used</b></td><td>Kalshi requires the three authentication headers on the WebSocket handshake, and browsers cannot set custom headers on a WebSocket.</td><td>Prices are a few seconds behind, and there are no order-book deltas.</td><td>Use a relay (suggestion S3).</td><td class='nowrap'><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/quick_start_websockets</a></td></tr><tr><td class='nowrap'>F7</td><td><b>No demo API credentials are held by this project</b></td><td>Demo keys are created by the account owner in the Kalshi demo UI and are signed per request.</td><td>Portfolio performance, fills, settlements and executed trades cannot be reported until a key is loaded in the browser.</td><td>Load a demo key on the Portfolio page, or provide a private backend (suggestion S2).</td><td class='nowrap'><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/api_keys</a></td></tr><tr><td class='nowrap'>F8</td><td><b>Signed requests run from a public page</b></td><td>The private key is kept in page memory only; it is never written to storage and is only used to sign.</td><td>A public page is not an appropriate place for a long-lived credential.</td><td>Move signing to a private backend (suggestion S2).</td><td class='nowrap'><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/quick_start_authenticated_requests</a></td></tr><tr><td class='nowrap'>F9</td><td><b>Demo settlement sources contain placeholder text</b></td><td>Several demo series list settlement sources with unfilled template text (for example “account holder of”) and some point at search-engine pages rather than a named source.</td><td>The resolution rule for those contracts cannot be verified from the API alone.</td><td>Read the contract terms PDF linked on each series before relying on a resolution.</td><td class='nowrap'><a href="https://docs.kalshi.com/api-reference/market/get-series" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/market/get-series</a></td></tr><tr><td class='nowrap'>F10</td><td><b>Chart history is capped by the candlestick API</b></td><td>One candlestick request may span at most 5,000 periods; 1-minute data therefore reaches about 3.5 days, and the dashboard offers windows up to 3 days.</td><td>Longer-horizon analysis needs stored history.</td><td>Store a rolling tape (suggestion S5).</td><td class='nowrap'><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/market/get-market-candlesticks</a></td></tr><tr><td class='nowrap'>F11</td><td><b>Collection is limited by unauthenticated rate limits</b></td><td>Unauthenticated public requests have their own limits and return HTTP 429 without a Retry-After header.</td><td>A harvest can be incomplete if the limit is hit repeatedly.</td><td>The collector retries with exponential backoff and logs every request in <code>data/collection-log.json</code>.</td><td class='nowrap'><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/rate_limits</a></td></tr><tr><td class='nowrap'>F12</td><td><b>Strategy and win-rate claims are not made</b></td><td>No demo fills are available to this session, so there is no realised P&L, no win rate and no drawdown.</td><td>The strategy table on the Analysis page is a hypothesis taxonomy, not a result.</td><td>Load fills on the Portfolio page and the analysis becomes computable.</td><td class='nowrap'><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/portfolio/get-fills</a></td></tr><tr><td class='nowrap'>F13</td><td><b>Three earlier partial implementations existed in the repository</b></td><td>Earlier parallel sessions had produced <code>pages/</code>, <code>verified/</code> and <code>dashboard/</code> trees, each with its own navigation and data snapshot.</td><td>Duplicate navigation and contradictory figures were possible.</td><td>This integration keeps one site, one design system and one snapshot pipeline; the previous trees are removed and their content is folded in.</td><td class='nowrap'><a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a></td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="card" style="margin-top:14px">
+  <h3>Repository flags</h3>
+  <ul class="tight">
+    <li>No LICENSE file is present in the repository.</li>
+    <li>No secrets, API keys or market values are committed; the data files are public demo responses.</li>
+    <li>Earlier sessions left three parallel site trees; this integration merged them into one.</li>
+  </ul>
+</div>
+
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>Demo environment only. Kalshi states that demo prices and market behaviour
+    <a href="https://docs.kalshi.com/getting_started/demo_env">may not be reflective of those in real markets</a>. Every figure on this site is read from the
+    Kalshi demo API and carries a link to the response it came from; nothing is inferred.
+    Build snapshot: <span id="snapshotStamp">—</span></p>
+    <p><a href="https://docs.kalshi.com/welcome">Kalshi API documentation</a> ·
+    <a href="https://demo.kalshi.co/">Kalshi demo</a> ·
+    <a href="pages/sources.html">Sources</a> ·
+    <a href="pages/verification.html">Verification</a> ·
+    <a href="pages/flagged.html">Flagged for review</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

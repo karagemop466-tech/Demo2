@@ -1,17 +1,164 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Suggestions — Review & Choose</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Suggestions — Review & Choose</h1>
-<p>Review each suggestion, then mark <b>Choose</b> (best path) or <b>Defer</b>. Choices persist in your browser only and do not change code until you approve. Nothing here is implemented automatically.</p>
-<div id="sugList"></div>
-<script>
-const SUGS=[
- {id:"s1",t:"Add series-ticker allowlist",d:"Replace keyword matching with explicit series_ticker filters per topic (e.g. gas series) for exact scoping. Needs series discovery via Get Series.",s:"https://docs.kalshi.com/getting_started/quick_start_market_data"},
- {id:"s2",t:"WebSocket-first streaming",d:"Use wss demo feed for tick/orderbook updates instead of 15s polling; keep REST fallback.",s:"https://docs.kalshi.com/getting_started/api_environments"},
- {id:"s3",t:"Server-side proxy for CORS",d:"If browser CORS blocks the API, add a small proxy that forwards demo REST/WS. Requires hosting decision.",s:"https://docs.kalshi.com/getting_started/demo_env"},
- {id:"s4",t:"Paper-trade simulator",d:"Clearly-labeled simulator when no API keys exist, so analysis UI can be tested without claiming real trades.",s:"https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"},
- {id:"s5",t:"Resolution alerts",d:"Notify when a tracked market settles and record yes/no outcome automatically.",s:"https://docs.kalshi.com/api-reference/market/get-markets"},
- {id:"s6",t:"Export CSV of fills + outcomes",d:"One-click export for offline review; no new data collection.",s:"https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"}
-];
-const saved=JSON.parse(localStorage.getItem("sugVotes")||"{}");
-document.getElementById("sugList").innerHTML=SUGS.map(s=>"<div class='card' style='margin-bottom:10px'><h3>"+s.t+"</h3><p>"+s.d+"</p><p class='muted'>Source: <a href='"+s.s+"'>"+s.s+"</a></p><div class='row'><button data-id='"+s.id+"' data-v='choose'>Choose as best path</button><button class='secondary' data-id='"+s.id+"' data-v='defer'>Defer</button><span>"+(saved[s.id]||"No decision yet")+"</span></div></div>").join("");
-document.querySelectorAll("button[data-id]").forEach(b=>b.onclick=()=>{saved[b.dataset.id]=b.dataset.v;localStorage.setItem("sugVotes",JSON.stringify(saved));location.reload();});
-</script>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suggestions · Kalshi Demo Monitor</title>
+<meta name="description" content="Kalshi demo markets for gas prices, elections, culture, crypto and golf.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html">Kalshi <span class="dot">Demo</span> Monitor<small>research dashboard</small></a>
+    <nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../pages/portfolio.html">Portfolio &amp; trading</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html" aria-current="page">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged for review</a><a href="../pages/sources.html">Sources</a></nav>
+    <span class="pill-demo">Demo only · no real funds</span>
+  </div>
+</header>
+<main class="wrap">
+
+<div class="breadcrumb">Kalshi Demo Monitor › Suggestions</div>
+<p class="eyebrow">Review board</p>
+<h1>Suggested improvements</h1>
+<p class="lede">Nothing here is implemented. Each suggestion is written so a reviewer can accept,
+defer or reject it <b>before</b> any change is made. Your decision is stored in this browser only
+(localStorage) and never leaves your device — it is a working aid, not a submission.</p>
+
+<div class="notice">
+  <h3>How to review</h3>
+  <p>Read the suggestion, open its source link, then record a decision. Use
+  <a href="pages/questions.html" target="_blank" rel="noopener">Questions</a> for anything you still need before deciding, and
+  <a href="pages/flagged.html" target="_blank" rel="noopener">Flagged for review</a> for items that are already known to be irregular.</p>
+</div>
+
+
+<div class="card">
+  <div class="card-head">
+    <h3>S1 · Publish a signed series allowlist per topic</h3>
+    <span class="pill">Impact: High</span>
+  </div>
+  <p>The topic allowlists on the category pages are official Kalshi tag strings, but they were assembled by hand from the taxonomy endpoint. A generated allowlist file (topic → series tickers, refreshed by the collector) would make the scope reproducible and reviewable.</p>
+  <p class="muted">Source: <a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories</a></p>
+  <div class="row">
+    <button class="small" data-vote="S1" data-vote-label="Choose as the best path">Choose as the best path</button>
+    <button class="small secondary" data-vote="S1" data-vote-label="Defer">Defer</button>
+    <button class="small secondary" data-vote="S1" data-vote-label="Reject">Reject</button>
+    <span class="muted" id="vote-S1">No decision recorded</span>
+  </div>
+</div>
+<div class="card">
+  <div class="card-head">
+    <h3>S2 · Move signed requests to a private backend</h3>
+    <span class="pill">Impact: High</span>
+  </div>
+  <p>Browser-side signing keeps the private key on a public page. A small private service with the key in a secret manager, read-only by default and with an explicit trade-confirmation step, removes the exposure.</p>
+  <p class="muted">Source: <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/quick_start_authenticated_requests</a></p>
+  <div class="row">
+    <button class="small" data-vote="S2" data-vote-label="Choose as the best path">Choose as the best path</button>
+    <button class="small secondary" data-vote="S2" data-vote-label="Defer">Defer</button>
+    <button class="small secondary" data-vote="S2" data-vote-label="Reject">Reject</button>
+    <span class="muted" id="vote-S2">No decision recorded</span>
+  </div>
+</div>
+<div class="card">
+  <div class="card-head">
+    <h3>S3 · Add a WebSocket bridge for true tick-level updates</h3>
+    <span class="pill">Impact: Medium</span>
+  </div>
+  <p>Kalshi&#x27;s WebSocket requires authentication headers, which a browser page cannot set. A relay (backend or browser extension) would give sub-second prices and order-book deltas instead of REST polling.</p>
+  <p class="muted">Source: <a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/quick_start_websockets</a></p>
+  <div class="row">
+    <button class="small" data-vote="S3" data-vote-label="Choose as the best path">Choose as the best path</button>
+    <button class="small secondary" data-vote="S3" data-vote-label="Defer">Defer</button>
+    <button class="small secondary" data-vote="S3" data-vote-label="Reject">Reject</button>
+    <span class="muted" id="vote-S3">No decision recorded</span>
+  </div>
+</div>
+<div class="card">
+  <div class="card-head">
+    <h3>S4 · Rank on event dollar amount instead of market dollar amount</h3>
+    <span class="pill">Impact: Medium</span>
+  </div>
+  <p>The dashboard currently ranks markets and then rolls them up per event. Ranking the event directly, with its own toggle, matches the wording “highest dollar amount live events” more literally.</p>
+  <p class="muted">Source: <a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/events/get-events</a></p>
+  <div class="row">
+    <button class="small" data-vote="S4" data-vote-label="Choose as the best path">Choose as the best path</button>
+    <button class="small secondary" data-vote="S4" data-vote-label="Defer">Defer</button>
+    <button class="small secondary" data-vote="S4" data-vote-label="Reject">Reject</button>
+    <span class="muted" id="vote-S4">No decision recorded</span>
+  </div>
+</div>
+<div class="card">
+  <div class="card-head">
+    <h3>S5 · Persist the price history server-side</h3>
+    <span class="pill">Impact: Medium</span>
+  </div>
+  <p>Chart history is rebuilt from candlesticks on each load. Storing a rolling tape would allow long-window views, cross-market comparison and post-hoc strategy testing.</p>
+  <p class="muted">Source: <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/market/get-market-candlesticks</a></p>
+  <div class="row">
+    <button class="small" data-vote="S5" data-vote-label="Choose as the best path">Choose as the best path</button>
+    <button class="small secondary" data-vote="S5" data-vote-label="Defer">Defer</button>
+    <button class="small secondary" data-vote="S5" data-vote-label="Reject">Reject</button>
+    <span class="muted" id="vote-S5">No decision recorded</span>
+  </div>
+</div>
+<div class="card">
+  <div class="card-head">
+    <h3>S6 · Add settlement reconciliation against positions</h3>
+    <span class="pill">Impact: Medium</span>
+  </div>
+  <p>Joining settled markets to demo positions would produce realised P&amp;L automatically, instead of asking the reviewer to reconcile manually.</p>
+  <p class="muted">Source: <a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/portfolio/get-positions</a></p>
+  <div class="row">
+    <button class="small" data-vote="S6" data-vote-label="Choose as the best path">Choose as the best path</button>
+    <button class="small secondary" data-vote="S6" data-vote-label="Defer">Defer</button>
+    <button class="small secondary" data-vote="S6" data-vote-label="Reject">Reject</button>
+    <span class="muted" id="vote-S6">No decision recorded</span>
+  </div>
+</div>
+<div class="card">
+  <div class="card-head">
+    <h3>S7 · Show the contract terms PDF beside every market row</h3>
+    <span class="pill">Impact: Low</span>
+  </div>
+  <p>Each series exposes a contract_terms_url. Surfacing it next to the row makes the resolution rule reviewable in one click and reduces the false-positive risk of topic matching.</p>
+  <p class="muted">Source: <a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">https://docs.kalshi.com/api-reference/market/get-series-list</a></p>
+  <div class="row">
+    <button class="small" data-vote="S7" data-vote-label="Choose as the best path">Choose as the best path</button>
+    <button class="small secondary" data-vote="S7" data-vote-label="Defer">Defer</button>
+    <button class="small secondary" data-vote="S7" data-vote-label="Reject">Reject</button>
+    <span class="muted" id="vote-S7">No decision recorded</span>
+  </div>
+</div>
+<div class="card">
+  <div class="card-head">
+    <h3>S8 · Publish a per-topic settlement histogram</h3>
+    <span class="pill">Impact: Low</span>
+  </div>
+  <p>Resolved yes/no counts per topic are the cheapest sanity check that the topic filter is not accidentally biased towards one outcome.</p>
+  <p class="muted">Source: <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">https://docs.kalshi.com/getting_started/market_settlement</a></p>
+  <div class="row">
+    <button class="small" data-vote="S8" data-vote-label="Choose as the best path">Choose as the best path</button>
+    <button class="small secondary" data-vote="S8" data-vote-label="Defer">Defer</button>
+    <button class="small secondary" data-vote="S8" data-vote-label="Reject">Reject</button>
+    <span class="muted" id="vote-S8">No decision recorded</span>
+  </div>
+</div>
+
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>Demo environment only. Kalshi states that demo prices and market behaviour
+    <a href="https://docs.kalshi.com/getting_started/demo_env">may not be reflective of those in real markets</a>. Every figure on this site is read from the
+    Kalshi demo API and carries a link to the response it came from; nothing is inferred.
+    Build snapshot: <span id="snapshotStamp">—</span></p>
+    <p><a href="https://docs.kalshi.com/welcome">Kalshi API documentation</a> ·
+    <a href="https://demo.kalshi.co/">Kalshi demo</a> ·
+    <a href="pages/sources.html">Sources</a> ·
+    <a href="pages/verification.html">Verification</a> ·
+    <a href="pages/flagged.html">Flagged for review</a></p>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>
