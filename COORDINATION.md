@@ -423,11 +423,55 @@ handoff is logged below.
 
 | # | Task | Status | Owner | Files touched |
 |---|------|--------|-------|---------------|
-| R-1 | Repo line-by-line review vs official Kalshi sources; every claim checked or flagged | in progress | bdb4d2d0 | `integration/bdb4d2d0/repo-review.md` (new) |
-| R-2 | Independent re-verification of combined site data: every table row carries an official source link; unverifiable values stay blank + flagged | in progress | bdb4d2d0 | `integration/bdb4d2d0/verification.md` (new) |
-| R-3 | Irregularity register (data, security, CI, docs) with evidence links | in progress | bdb4d2d0 | `integration/bdb4d2d0/irregularities.md` (new) |
-| R-4 | Integration: bring origin/main + takeover PRs onto this branch, resolve conflicts additively, run every checker, fix broken links | unclaimed→in progress | bdb4d2d0 | merge commits on this branch; cross-scope fixes logged here |
-| R-5 | Final PR → main, merge without waiting, GitHub Pages deploy confirm, record here | unclaimed | bdb4d2d0 | this section |
+| R-1 | Repo line-by-line review vs official Kalshi sources; every claim checked or flagged | **done** | bdb4d2d0 | `integration/bdb4d2d0/repo-review.md` |
+| R-2 | Independent re-verification of combined site data: every table row carries an official source link; unverifiable values stay blank + flagged | **done** | bdb4d2d0 | `integration/bdb4d2d0/verification.md` |
+| R-3 | Irregularity register (data, security, CI, docs) with evidence links | **done** | bdb4d2d0 | `integration/bdb4d2d0/irregularities.md` |
+| R-4 | Integration: bring origin/main + takeover PRs onto this branch, resolve conflicts additively, run every checker, fix broken links | in progress | bdb4d2d0 | merge commits on this branch; cross-scope fixes logged below |
+| R-5 | Final PR → main, merge without waiting, GitHub Pages deploy confirm, record here | in progress | bdb4d2d0 | this section |
+
+### Findings, fixes and handoffs (session bdb4d2d0, 2026-11-20 13:0x–13:4x UTC)
+
+Full detail in `integration/bdb4d2d0/{repo-review,verification,irregularities}.md`.
+Summary of what this session changed and why (all verified after the change):
+
+1. **Main was red — fixed (commit `6df5c9f`).** PR #35 (session `e36292f6`)
+   hand-edited `index.html`, `pages/{flagged,suggestions,verification}.html`
+   without updating `tools/build_site.py`/`build_content.py`; the "pages must
+   match the generator" gate failed on main (runs 12:57:58 / 13:02:27). Ported
+   the sharp-jump feature into the generators (S9, F13, verification row,
+   dashboard card + jump table), repaired their `/bin/bash.10` heredoc
+   corruption (`$0.10`), and added the brief-required "possible context
+   (unverified)" news-search link per jump row (labelled, never causal).
+2. **Security — fixed (commit `49e706e`, flag F14).** Took over stale PR #6
+   (`22b4f0cb`, last commit 11:19 UTC, >60 min rule): removed the orphaned
+   WebCrypto signing code from `assets/app.js` and disabled the `live/trading.html`
+   Mode B credential form on the deployed copy (reversible notice points at the
+   gated Actions path + `server/`). Cross-scope request to session `6d75123b`:
+   if that session returns, keep Mode B disabled on the public deploy.
+3. **Placeholder links — fixed (commit `79fecce`).** `instrument-panel/tools/site_build_core.py`
+   `ext()` rendered endpoint URL *patterns* as clickable `{ticker}` links.
+   Patterns now render as `<code>`; the analysis source line keeps the official
+   `get-markets` docs link. (`instrument-panel/` = session `64df4faa` scope,
+   session done/merged; fix logged here per the cross-scope rule.)
+4. **Flagged (not changed): F15** — `data/snapshot.json` + `data/resolutions.json`
+   have never landed on main (collector step "Collect demo snapshot" failed in
+   the only main run, `44728913873`; log body unreachable from this sandbox,
+   GitHub blob EOF). The deployed `pages/resolutions.html` 404s its data file;
+   both pages show honest empty states. **Handoff:** session `6332d7d3` has a
+   rewritten collector green on `arena/6332d7d3-demo2` (runs 13:02/13:10 UTC) —
+   that PR is the proper fix; this session dispatched `Refresh Kalshi demo data`
+   on main (`44744689706`) at 13:29 UTC to re-test current code. Also **F16**
+   (history tick rows lack source URLs) and **F17** (4 pipelines → one `data/`).
+5. **Re-verification sample (8/8 matched):** resolved-market `result` +
+   `settlement_ts`, event + lead-market quotes, series tags/category, demo
+   endpoint table, create-order required-vs-optional fields, WS-handshake auth
+   requirement — all re-fetched from their official source URLs 13:15–13:25 UTC.
+   Provenance audit covered 11,430 rows across every `data/` list: every
+   rendered table row carries an official URL except F16's tick rows.
+6. **PR bookkeeping:** PR #15 (`0c901fea`) is superseded by PR #27
+   (`5330bffb`) — identical `monitor/` scope; integration treats #27 as the
+   superset and closes #15 with that note at merge time. PRs #32/#34/#27 were
+   active during this session (commits within the hour) and were left untouched.
 
 Outputs of this session live under `integration/bdb4d2d0/` (new directory,
 non-overlapping with every other session's scope). Any edit to a shared file is
