@@ -1,0 +1,73 @@
+{
+  "meta": {
+    "description": "Verified snapshot of Kalshi API responses. Every value below was read from an official API response listed in sources[]. Blank = not confirmed from an official source (flagged UNVERIFIED on the site). Values were NOT inferred or filled in.",
+    "captured_utc_date": "2026-11-20",
+    "environment": "Kalshi DEMO (https://external-api.demo.kalshi.co/trade-api/v2) unless noted",
+    "units": "prices are dollars per YES contract (0.00–1.00 = 0¢–100¢); volume and open interest are contracts (not dollars)",
+    "sample_note": "Market tables are a SAMPLE of series returned by the API, not an exhaustive list. Elections and Sports listings were truncated by the fetch tool."
+  },
+  "sources": {
+    "S_DOCS_MARKETS": "https://docs.kalshi.com/api-reference/market/get-markets",
+    "S_DOCS_ENV": "https://docs.kalshi.com/getting_started/api_environments.md",
+    "S_DOCS_SETTLEMENT": "https://docs.kalshi.com/getting_started/market_settlement.md",
+    "S_DOCS_SERIES": "https://docs.kalshi.com/api-reference/market/get-series-list.md",
+    "S_DOCS_CANDLES": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks.md",
+    "S_DOCS_ORDERBOOK": "https://docs.kalshi.com/getting_started/orderbook_responses.md",
+    "S_DOCS_WS": "https://docs.kalshi.com/getting_started/quick_start_websockets.md",
+    "S_DOCS_RATELIMIT": "https://docs.kalshi.com/getting_started/rate_limits.md",
+    "S_API_GAS_SERIES_DEMO": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASM",
+    "S_API_GAS_SERIES_PROD": "https://external-api.kalshi.com/trade-api/v2/series/KXAAAGASM",
+    "S_API_GAS_MARKETS": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&limit=10",
+    "S_API_BTC_MARKETS": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXBTCMINY&limit=5",
+    "S_API_GOLF_TOP40": "https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOP40&limit=5",
+    "S_API_SERIES_CRYPTO": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&include_volume=true",
+    "S_API_SERIES_ELECTIONS": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Elections&include_volume=true",
+    "S_API_SERIES_CULTURE": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&include_volume=true",
+    "S_API_SERIES_SPORTS": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Sports&include_volume=true",
+    "S_API_SERIES_GOLF_TAG": "https://external-api.demo.kalshi.co/trade-api/v2/series?tags=Golf&include_volume=true",
+    "S_API_EVENTS_OPEN": "https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=5&with_nested_markets=true",
+    "S_API_SETTLED_DEMO": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=3",
+    "S_API_XBANNED_CULTURE": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&include_volume=true",
+    "S_API_SERIES_ELONMARS": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXELONMARS"
+  },
+  "series": [
+    {"category": "Crypto", "series": "KXLINK", "title": "Chainlink range", "frequency": "daily", "series_volume_contracts": "24510512.00", "settlement_source": "CF Benchmarks", "source": "S_API_SERIES_CRYPTO"},
+    {"category": "Crypto", "series": "KXBTCMINY", "title": "How low will Bitcoin fall this year?", "frequency": "annual", "series_volume_contracts": "19464180.00", "settlement_source": "CF Benchmarks", "source": "S_API_SERIES_CRYPTO"},
+    {"category": "Crypto", "series": "KXAVAX", "title": "Avalanche range", "frequency": "daily", "series_volume_contracts": "17532299.00", "settlement_source": "CF Benchmarks", "source": "S_API_SERIES_CRYPTO"},
+    {"category": "Crypto", "series": "KXCRYPTORETURNY", "title": "Crypto being positive", "frequency": "annual", "series_volume_contracts": "165735.00", "settlement_source": "CF Benchmarks", "source": "S_API_SERIES_CRYPTO"},
+    {"category": "Crypto", "series": "KXDOTMINY", "title": "Polkadot min", "frequency": "annual", "series_volume_contracts": "71848.00", "settlement_source": "CF Benchmarks", "source": "S_API_SERIES_CRYPTO"},
+    {"category": "Crypto", "series": "KXPRCBTC", "title": "Bitcoin legalization in PRC", "frequency": "custom", "series_volume_contracts": "16875.00", "settlement_source": "Bloomberg", "source": "S_API_SERIES_CRYPTO"},
+    {"category": "Golf", "series": "KXPGATOP40", "title": "PGA Top 40 Finisher", "frequency": "custom", "series_volume_contracts": "1791408.00", "settlement_source": "ESPN; Fox Sports; the Governing League (pgatour.com)", "source": "S_API_SERIES_GOLF_TAG"},
+    {"category": "Golf", "series": "KXPGARYDER", "title": "Ryder Cup", "frequency": "custom", "series_volume_contracts": "43303.00", "settlement_source": "The Wall Street Journal; ESPN; Fox Sports", "source": "S_API_SERIES_GOLF_TAG"},
+    {"category": "Golf", "series": "KXPGAH2H", "title": "PGA Head-to-Head Matchups", "frequency": "custom", "series_volume_contracts": "1021.00", "settlement_source": "ESPN; NBC Sports; WSJ; Fox Sports; the Governing League; AP; Golf Channel", "source": "S_API_SERIES_GOLF_TAG"},
+    {"category": "Golf", "series": "KXPGAMAJOR", "title": "PGA Major Wins", "frequency": "custom", "series_volume_contracts": "0.00", "settlement_source": "ESPN; the Governing League (pgatour.com)", "source": "S_API_SERIES_GOLF_TAG"},
+    {"category": "Golf", "series": "KXPGAEAGLE", "title": "Player to Record an Eagle in Round", "frequency": "custom", "series_volume_contracts": "0.00", "settlement_source": "Fox Sports; ESPN; the Governing League (pgatour.com)", "source": "S_API_SERIES_GOLF_TAG"},
+    {"category": "Elections", "series": "KXCABALLOTMEASURES", "title": "Which California ballot measures will pass?", "frequency": "one_off", "series_volume_contracts": "40.00", "settlement_source": "BBC News; WSJ; Bloomberg; NBC; official electoral commission or equivalent authority of geography (placeholder text); CNN International; CBS; ABC; WaPo; Axios; Fox; NYT; Politico; MSNBC; AP; Reuters", "source": "S_API_SERIES_ELECTIONS"},
+    {"category": "Elections", "series": "KXUSPSELECTION", "title": "Will Trump’s election order lead to large-scale ballot blocking?", "frequency": "one_off", "series_volume_contracts": "1.00", "settlement_source": "WaPo; Fox; WSJ; Guardian; ABC; Bloomberg; CBS; SCMP; NBC; AP; The Verge; BBC; Axios; CNN; ABC Australia; The Information; Semafor; MSNBC; CBC; Reuters; Politico; NYT", "source": "S_API_SERIES_ELECTIONS"},
+    {"category": "Elections", "series": "KXTALARICOPAXTONDEBATE", "title": "Talarico and Paxton debate", "frequency": "one_off", "series_volume_contracts": "0.00", "settlement_source": "C-SPAN; ABC; WSJ; Bloomberg; CBS; NBC; Axios; WaPo; Fox; Reuters; CNN; Semafor; Politico; MSNBC; AP; YouTube; NYT (plus placeholder entries: 'their official campaigns or representatives', 'official website or social media accounts of any organization hosting the debate')", "source": "S_API_SERIES_ELECTIONS"},
+    {"category": "Elections", "series": "KXAGNOMDVA", "title": "Democratic Nominee for Attorney General in Virginia?", "frequency": "one_off", "series_volume_contracts": "0.00", "settlement_source": "WSJ; WaPo; Axios; Reuters; NYT; AP; Politico", "source": "S_API_SERIES_ELECTIONS"},
+    {"category": "Culture", "series": "KXXBANNEDGROK", "title": "Will Grok be banned this year", "frequency": "one_off", "series_volume_contracts": "0.00", "settlement_source": "ABC; 'account holder of ' (google search link); Fox; MSNBC; WSJ; Semafor; Barchart; Ars Technica (google search link); NYT; CBS; WaPo; Axios; CNN; Engadget (google search link); Reuters; Mashable (google search link); Bloomberg; Elon Musk (x.com); AP; EIA; Politico; TechCrunch; Verge (google search link)", "source": "S_API_XBANNED_CULTURE"},
+    {"category": "Culture", "series": "KXXBANNEDMURRAYHILLGUY1", "title": "Will @MurrayHillGuy1 get banned from X this year?", "frequency": "one_off", "series_volume_contracts": "0.00", "settlement_source": "Same source list as KXXBANNEDGROK (including placeholder and google-search entries)", "source": "S_API_XBANNED_CULTURE"},
+    {"category": "Gas prices", "series": "KXAAAGASM", "title": "US gas price", "frequency": "monthly", "series_volume_contracts": "", "settlement_source": "AAA (https://gasprices.aaa.com/)", "source": "S_API_GAS_SERIES_DEMO"}
+  ],
+  "markets": [
+    {"category": "Gas prices", "series": "KXAAAGASM", "ticker": "KXAAAGASM-26OCT31-4.18", "title": "Will average gas prices be above $4.18?", "status": "finalized", "result": "yes", "last_price": "0.8300", "yes_bid": "", "yes_ask": "", "volume_contracts": "784.60", "open_interest_contracts": "743.85", "close_time_utc": "2026-10-31T03:59:00Z", "source": "S_API_GAS_MARKETS"},
+    {"category": "Gas prices", "series": "KXAAAGASM", "ticker": "KXAAAGASM-26OCT31-4.16", "title": "Will average gas prices be above $4.16?", "status": "finalized", "result": "yes", "last_price": "0.0000", "yes_bid": "", "yes_ask": "", "volume_contracts": "0.00", "open_interest_contracts": "0.00", "close_time_utc": "2026-10-31T03:59:00Z", "source": "S_API_GAS_MARKETS"},
+    {"category": "Gas prices", "series": "KXAAAGASM", "ticker": "KXAAAGASM-26NOV30-5.00", "title": "Will average gas prices be above $5.00?", "status": "active", "result": "", "last_price": "0.0000", "yes_bid": "", "yes_ask": "", "volume_contracts": "0.00", "open_interest_contracts": "0.00", "close_time_utc": "2026-11-30T04:59:00Z", "source": "S_API_GAS_MARKETS"},
+    {"category": "Gas prices", "series": "KXAAAGASM", "ticker": "KXAAAGASM-26NOV30-4.90", "title": "Will average gas prices be above $4.90?", "status": "active", "result": "", "last_price": "0.0000", "yes_bid": "", "yes_ask": "", "volume_contracts": "0.00", "open_interest_contracts": "0.00", "close_time_utc": "2026-11-30T04:59:00Z", "source": "S_API_GAS_MARKETS"},
+    {"category": "Gas prices", "series": "KXAAAGASM", "ticker": "KXAAAGASM-26NOV30-4.80", "title": "Will average gas prices be above $4.80?", "status": "active", "result": "", "last_price": "0.0300", "yes_bid": "0.0000", "yes_ask": "1.0000", "volume_contracts": "55571.52", "open_interest_contracts": "55567.52", "close_time_utc": "2026-11-30T04:59:00Z", "source": "S_API_GAS_MARKETS"},
+    {"category": "Gas prices", "series": "KXAAAGASM", "ticker": "KXAAAGASM-26NOV30-4.70", "title": "Will average gas prices be above $4.70?", "status": "active", "result": "", "last_price": "0.0200", "yes_bid": "0.0000", "yes_ask": "1.0000", "volume_contracts": "58071.52", "open_interest_contracts": "58062.52", "close_time_utc": "2026-11-30T04:59:00Z", "source": "S_API_GAS_MARKETS"},
+    {"category": "Crypto", "series": "KXBTCMINY", "ticker": "KXBTCMINY-27JAN01-55000.00", "title": "Will Bitcoin be below $55000.00 by Jan 1, 2027 at 12:00am ET?", "status": "active", "result": "", "last_price": "0.4000", "yes_bid": "0.4600", "yes_ask": "0.4700", "volume_contracts": "815426.07", "open_interest_contracts": "498863.08", "close_time_utc": "2027-01-01T05:00:00Z", "source": "S_API_BTC_MARKETS"},
+    {"category": "Crypto", "series": "KXBTCMINY", "ticker": "KXBTCMINY-27JAN01-50000.00", "title": "Will Bitcoin be below $50000.00 by Jan 1, 2027 at 12:00am ET?", "status": "active", "result": "", "last_price": "0.5000", "yes_bid": "0.2300", "yes_ask": "0.2400", "volume_contracts": "607268.68", "open_interest_contracts": "459019.34", "close_time_utc": "2027-01-01T05:00:00Z", "source": "S_API_BTC_MARKETS"},
+    {"category": "Crypto", "series": "KXBTCMINY", "ticker": "KXBTCMINY-27JAN01-45000.00", "title": "Will Bitcoin be below $45000.00 by Jan 1, 2027 at 12:00am ET?", "status": "active", "result": "", "last_price": "0.0900", "yes_bid": "0.1000", "yes_ask": "0.1100", "volume_contracts": "1344878.71", "open_interest_contracts": "985851.04", "close_time_utc": "2027-01-01T05:00:00Z", "source": "S_API_BTC_MARKETS"},
+    {"category": "Golf", "series": "KXPGATOP40", "ticker": "KXPGATOP40-THOC26-APOT", "title": "The Open Championship: Will Aldrich Potgieter finish top 40?", "status": "finalized", "result": "no", "last_price": "0.4400", "yes_bid": "", "yes_ask": "", "volume_contracts": "4749.64", "open_interest_contracts": "4749.64", "close_time_utc": "2026-07-19T21:22:36Z", "source": "S_API_GOLF_TOP40"},
+    {"category": "Golf", "series": "KXPGATOP40", "ticker": "KXPGATOP40-THOC26-ZJOH", "title": "The Open Championship: Will Zach Johnson finish top 40?", "status": "finalized", "result": "yes", "last_price": "0.0000", "yes_bid": "", "yes_ask": "", "volume_contracts": "0.00", "open_interest_contracts": "0.00", "close_time_utc": "2026-07-16T20:53:25Z", "source": "S_API_GOLF_TOP40"},
+    {"category": "Golf", "series": "KXPGATOP40", "ticker": "KXPGATOP40-THOC26-XSCH", "title": "The Open Championship: Will Xander Schauffele finish top 40?", "status": "finalized", "result": "yes", "last_price": "0.9200", "yes_bid": "", "yes_ask": "", "volume_contracts": "58676.26", "open_interest_contracts": "57512.85", "close_time_utc": "2026-07-19T21:22:36Z", "source": "S_API_GOLF_TOP40"},
+    {"category": "Golf", "series": "KXPGATOP40", "ticker": "KXPGATOP40-THOC26-WKIM", "title": "The Open Championship: Will Si Woo Kim finish top 40?", "status": "finalized", "result": "yes", "last_price": "0.9200", "yes_bid": "", "yes_ask": "", "volume_contracts": "", "open_interest_contracts": "40012.41", "close_time_utc": "", "source": "S_API_GOLF_TOP40"}
+  ],
+  "demo_only_settled_examples": [
+    {"ticker": "KXQUICKSETTLE-20NOV26H0530-2", "title": "1+1 = 2", "status": "finalized", "result": "yes", "rules_primary": "If 1+1 equals 2 at the scheduled time, the market resolves to Yes.", "source": "S_API_SETTLED_DEMO"},
+    {"ticker": "KXQUICKSETTLE-20NOV26H0530-3", "title": "1+1 = 3", "status": "finalized", "result": "no", "rules_primary": "If 1+1 equals 3 at the scheduled time, the market resolves to Yes.", "source": "S_API_SETTLED_DEMO"},
+    {"ticker": "KXDEMOFUTHOURLY-26NOV20H11-UP", "title": "Demo BTC at or above 61580.32 USD", "status": "finalized", "result": "yes", "rules_primary": "Demo only. YES if the Coinbase Exchange BTC-USD one-minute candle ending at 2026-11-20T11:00:00+00:00 closes at or above 61580.32 USD; otherwise NO.", "source": "S_API_SETTLED_DEMO"}
+  ]
+}

@@ -1,8 +1,13 @@
-# Dependencies
+# Node
 node_modules/
+npm-debug.log*
 
 # Backend runtime data (tracking store, snapshots)
 .data/
+
+# Python
+__pycache__/
+*.pyc
 
 # Environment / secrets — NEVER commit Kalshi keys
 .env
@@ -10,7 +15,3 @@ node_modules/
 *.key
 *.pem
 kalshi*.key
-
-# Logs
-*.log
-npm-debug.log*

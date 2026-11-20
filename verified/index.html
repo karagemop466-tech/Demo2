@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home · Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<header class="top">
+  <div class="brand"><a href="index.html">Kalshi Demo Dashboard</a><span class="tag">DEMO DATA · read-only</span></div>
+  <nav><a href="index.html" class="active">Home</a><a href="gas-prices.html">Gas Prices</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="live-dashboard.html">Live Dashboard</a><a href="portfolio.html">Portfolio &amp; Trades</a><a href="questions.html">Questions</a><a href="suggestions.html">Suggestions</a><a href="markets.html">Market Samples</a><a href="resolutions.html">Resolutions</a><a href="flagged-for-review.html">Flagged for Review</a><a href="repo-review.html">Repo Review</a><a href="../index.html">Main dashboard ↗</a></nav>
+</header>
+<main>
+
+<section class="hero">
+  <h1>Kalshi Demo Dashboard</h1>
+  <p class="lead">A read-only dashboard built from the Kalshi <strong>demo</strong> API. It collects contracts for five topics (gas prices, elections, culture, crypto, golf), records their sources, and lists what is still missing before any trading decision.</p>
+  <div class="banner warn">Demo environment only. Kalshi says demo prices "may not be reflective of those in real markets." Nothing here is a trading recommendation.</div>
+</section>
+
+<section>
+<h2>Executive summary</h2>
+<ul class="summary">
+  <li><strong>What works:</strong> Public, unauthenticated market-data reads from the demo Trade API return verified data. Every row on the category pages links to the API response it came from.</li>
+  <li><strong>What is in the data:</strong> 24 rows: 2 AAA gas-price series, 6 elections rows (4 series, 2 events), 2 culture series, 9 crypto series, 5 golf series. Each category is the first page of results only, not a full list. Market Samples and Resolutions add open and settled markets from the same API (samples, first page only).</li>
+  <li><strong>Biggest limits:</strong> demo data includes 2099 close dates and placeholder-looking settlement sources (see <a href="flagged-for-review.html">Flagged for Review</a>). Volume fields are contract counts, not dollars, so the "highest dollar amount" ranking cannot be read directly.</li>
+  <li><strong>Blocked without your action:</strong> Portfolio tracking, trade execution, and per-trade performance need a Kalshi demo account and API key. Creating those requires logging in to Kalshi, so they are not done. See the <a href="portfolio.html">Portfolio &amp; Trades</a> page.</li>
+  <li><strong>Next decisions:</strong> review the <a href="suggestions.html">Suggestions</a> and answer the open <a href="questions.html">Questions</a>. No implementation changes are made until you choose.</li>
+</ul>
+</section>
+
+<section>
+<h2>Category pages</h2>
+<div class="cards"><a class="card" href="gas-prices.html"><h3>Gas Prices</h3><p>Daily AAA state gas-price contracts found under the Kalshi Economics category (tagged Oil and energy).</p><span class="pill">2 rows</span></a><a class="card" href="elections.html"><h3>Elections</h3><p>Election and appointment contracts found under the Kalshi Elections category.</p><span class="pill">6 rows</span></a><a class="card" href="culture.html"><h3>Culture</h3><p>Contracts found under the Kalshi Culture category. The category returned only two series in the demo API.</p><span class="pill">2 rows</span></a><a class="card" href="crypto.html"><h3>Crypto</h3><p>Contracts found under the Kalshi Crypto category (first page of results).</p><span class="pill">9 rows</span></a><a class="card" href="golf.html"><h3>Golf</h3><p>Contracts tagged Golf. Golf is a tag under the Sports category in Kalshi&#x27;s tag list, not its own category.</p><span class="pill">5 rows</span></a></div>
+</section>
+
+<section>
+<h2>Tools</h2>
+<div class="cards">
+  <a class="card" href="live-dashboard.html"><h3>Live Dashboard</h3><p>Price chart (x = time, y = contract price) and orderbook depth for a demo market. Polls the public API from your browser.</p></a>
+  <a class="card" href="portfolio.html"><h3>Portfolio &amp; Trades</h3><p>Status of the demo account, trade log layout, and the strategy categories proposed for analysis.</p></a>
+  <a class="card" href="questions.html"><h3>Questions</h3><p>What is answered, what is not, and how each missing item could be found.</p></a>
+  <a class="card" href="suggestions.html"><h3>Suggestions</h3><p>Options to improve the site and decisions. Each one waits for your choice.</p></a>
+  <a class="card" href="markets.html"><h3>Market Samples</h3><p>Open demo markets from the API with last price, bid, ask, volume, and open interest. Sample only, not a full list.</p></a>
+  <a class="card" href="resolutions.html"><h3>Resolutions</h3><p>Settled demo markets with the result (YES or NO), the settlement value, and the rule that decided it.</p></a>
+  <a class="card" href="flagged-for-review.html"><h3>Flagged for Review</h3><p>Irregularities and unverified items, with the source links for manual review.</p></a>
+  <a class="card" href="repo-review.html"><h3>Repo Review</h3><p>What the repository contains, checked against GitHub.</p></a>
+</div>
+</section>
+
+</main>
+<footer>
+  <p>Data source: Kalshi <strong>demo</strong> Trade API, <a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">https://external-api.demo.kalshi.co/trade-api/v2</a>.
+  Kalshi says demo prices and behavior may not reflect real markets. Not financial advice.
+  Repository: <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">https://github.com/karagemop466-tech/Demo2</a>.</p>
+  <p>Site built 2026-11-20 11:28 UTC from data/kalshi_snapshot.json (collected 2026-11-20).</p>
+</footer>
+
+</body>
+</html>

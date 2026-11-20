@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Analysis — Kalshi Demo Dashboard</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div id="nav"></div>
+<main>
+  <h1>Analysis &amp; findings</h1>
+  <p class="lead">Findings below are computed from the verified snapshot and labeled by evidence strength. Nothing here is a trading recommendation. No trades have been placed (see <a href="portfolio.html">Portfolio</a>).</p>
+
+  <h2>1. Where the contracts are (sample, contracts traded)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Series</th><th>Category</th><th class="num">Contracts traded</th><th class="barcell">Relative size</th></tr></thead>
+    <tbody id="bars"></tbody>
+  </table></div>
+  <p class="small muted">Contracts, not dollars. The API does not return dollar turnover. Series totals cover all events in each series (<a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List ↗</a>).</p>
+
+  <h2>2. Verified observations</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>#</th><th>Observation</th><th>Evidence (values from API)</th><th>Strength</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>O1</td><td>Bitcoin “below X” ladder is ordered as expected: lower thresholds carry lower YES prices.</td><td>Best YES bid/ask: $55k $0.46/$0.47 · $50k $0.23/$0.24 · $45k $0.10/$0.11</td><td><span class="badge b-ok">Strong (3 rungs, one snapshot)</span></td><td><span id="s-btc"></span></td></tr>
+      <tr><td>O2</td><td>Orderbook cross-check: the top YES bid in the orderbook equals the market’s <code>yes_bid</code>, and implied YES ask (1 − top NO bid) equals <code>yes_ask</code>.</td><td>KXBTCMINY-27JAN01-50000.00: orderbook top YES bid $0.23; top NO bid $0.76 ⇒ implied YES ask $0.24 (matches market $0.23/$0.24)</td><td><span class="badge b-ok">Strong (one market)</span></td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-50000.00/orderbook?depth=5" target="_blank" rel="noopener">official API ↗</a></td></tr>
+      <tr><td>O3</td><td>“Last traded” can sit outside the current quote. This affects any strategy that uses last price.</td><td>KXBTCMINY-27JAN01-50000.00: last $0.50 vs quote $0.23/$0.24. Candle data shows the $0.50 trade in an earlier period (no trades since). See Flagged F5.</td><td><span class="badge b-warn">Observed; cause not confirmed</span></td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-50000.00/candlesticks?start_ts=1795046400&amp;end_ts=1795172400&amp;period_interval=60" target="_blank" rel="noopener">official API ↗</a></td></tr>
+      <tr><td>O4</td><td>Gas monthly rung KXAAAGASM-26NOV30-4.80 carries open interest but a one-sided quote.</td><td>Open interest 55,567.52 contracts; best YES bid $0.00, best YES ask $1.00</td><td><span class="badge b-warn">Observed</span></td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXAAAGASM&amp;limit=10" target="_blank" rel="noopener">official API ↗</a></td></tr>
+      <tr><td>O5</td><td>Resolved golf sample (The Open 2026, top-40 markets): 3 of 4 captured resolved YES.</td><td>APOT NO · ZJOH YES · XSCH YES · WKIM YES (sample of 4 only)</td><td><span class="badge b-warn">Too small to generalize</span></td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?series_ticker=KXPGATOP40&amp;limit=5" target="_blank" rel="noopener">official API ↗</a></td></tr>
+      <tr><td>O6</td><td>Several settlement sources are placeholders or search-engine links, not named official sources.</td><td>Examples: “account holder of ”, “official electoral commission or equivalent authority of geography”, google.com/search links (KXXBANNED* series)</td><td><span class="badge b-bad">Verified irregularity</span></td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&amp;include_volume=true" target="_blank" rel="noopener">official API ↗</a></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>3. Trade categories (taxonomy) for classifying future trades</h2>
+  <p class="small muted">These are the buckets each trade will be filed under once trade data exists. They are not yet populated.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Dimension</th><th>Buckets</th><th>Data field used (API)</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Category</td><td>Gas prices · Crypto · Elections · Culture · Golf</td><td>series <code>category</code> / <code>tags</code></td><td><span class="badge b-info">Mapping assumption (Flagged F9)</span></td></tr>
+      <tr><td>Contract shape</td><td>Threshold (“above/below X”) · Range · Yes/No outcome · Top-N finish</td><td><code>strike_type</code>, <code>yes_sub_title</code>, title</td><td><span class="badge b-info">Field exists</span></td></tr>
+      <tr><td>Time to close</td><td>&lt; 1 day · 1–30 days · &gt; 30 days</td><td><code>close_time</code></td><td><span class="badge b-info">Field exists</span></td></tr>
+      <tr><td>Entry price band</td><td>&lt; $0.10 · $0.10–$0.90 · &gt; $0.90</td><td>fill price (needs trade data)</td><td><span class="badge b-bad">Blocked — no trades</span></td></tr>
+      <tr><td>Liquidity at entry</td><td>Resting size at best bid/ask (thin vs deep)</td><td><code>yes_bid_size_fp</code>, <code>yes_ask_size_fp</code>, orderbook</td><td><span class="badge b-info">Field exists</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>4. Strategy hypotheses (untested)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>ID</th><th>Hypothesis</th><th>What would test it</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>H1</td><td>Trade only where both sides show resting size, to avoid one-sided books (see O4).</td><td>Trade log + spread/size at entry</td><td><span class="badge b-info">Untested</span></td></tr>
+      <tr><td>H2</td><td>Price off bid/ask, not last trade, because last can be stale (see O3).</td><td>Compare P&amp;L using last vs mid on the same entries</td><td><span class="badge b-info">Untested</span></td></tr>
+      <tr><td>H3</td><td>Check ladder consistency before entry (monotonic thresholds, see O1).</td><td>Scan each ladder every poll; log inversions</td><td><span class="badge b-info">Scanner possible now; no trades</span></td></tr>
+      <tr><td>H4</td><td>Exclude markets whose settlement source is a placeholder or search link (see O6).</td><td>Tag every market by source quality; compare outcomes</td><td><span class="badge b-info">Untested</span></td></tr>
+      <tr><td>H5</td><td>Win rate by entry price band (favourite vs longshot).</td><td>Requires many settled outcomes with historical prices (Historical Data endpoints — not yet fetched)</td><td><span class="badge b-bad">Needs data</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="small muted">Sources for field names: <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets ↗</a>, <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook ↗</a>, <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Candlesticks ↗</a>.</p>
+</main>
+<footer>Computed from data/snapshot.json (captured 2026-11-20 UTC). No values were inferred.</footer>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  loadSnapshot().then(function (snap) {
+    document.getElementById("s-btc").innerHTML = apiLink(snap, "S_API_BTC_MARKETS");
+    var rows = snap.series.filter(function (s) { return !isNaN(parseFloat(s.series_volume_contracts)); })
+      .map(function (s) { return { n: s.series, c: s.category, v: parseFloat(s.series_volume_contracts) }; })
+      .sort(function (a, b) { return b.v - a.v; });
+    var max = rows.length ? rows[0].v : 1;
+    document.getElementById("bars").innerHTML = rows.map(function (r) {
+      return "<tr><td><code>" + esc(r.n) + "</code></td><td>" + esc(r.c) + "</td><td class='num'>" + contracts(r.v) +
+        "</td><td class='barcell'><div class='bar' style='width:" + ((r.v / max) * 100).toFixed(1) + "%'></div></td></tr>";
+    }).join("");
+  });
+})();
+</script>
+</body>
+</html>
