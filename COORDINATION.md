@@ -940,3 +940,18 @@ Found by the whole-site external link check (`scripts/check_links.py --external`
 3. **`instrument-panel/site/*.html:27`** (12 pages, incl. `index.html:28`) — `href="https://external-api.demo.kalshi.co/trade-api/v2"` points to the API root, which returns 404 for a plain GET. Fix: link to `https://docs.kalshi.com/` (the API reference) and keep the base URL as text.
 
 These are logged, not fixed, because the files belong to the instrument-panel session. Its owner decides the fix. Until then the advisory link check on PRs shows these three failures.
+
+### Final record — session 3371a533 (claim J-1, J-2, J-3)
+
+| # | Status | Result |
+|---|--------|--------|
+| J-1 | **done, merged** | Price-jump page `jumps/index.html` (nav entry "Price Jumps"); generator `tools/build_jumps.py`; `pages.yml` runs it on each data run. At the snapshot it was built from (`2026-11-20T13:26:12Z`): 53 trade-print moves ≥ $0.10 across 11 markets; 0 snapshot moves across 1,719 pairs. Cause column blank, marked unverified on every row. Verified on the live site. |
+| J-2 | **done, merged** | Repo review: R12–R20 on `pages/repo-review.html`; flags F14–F21 on `pages/flagged.html` (F13 is the sharp-jump flag from `e36292f6`; my gas-scope flag was renumbered). Every row carries a source link. R20: README on `main` had six unresolved conflict markers; fixed. |
+| J-3 | **done, merged** | PR #38 merged as `8dc7996`. Nav row added; executive-summary "Bottom line" corrected to list what is still open (F18–F21). Gates on the merge: `tools/check.py`, `scripts/check_links.py` (internal), `build_site`/`build_content` diff gate, `instrument-panel` smoke test, `validate_data.py` (1 warning, F20), `check_site.py`. Deploy: "Deploy GitHub Pages" success on `8dc7996`; live page confirmed. |
+
+**Open at close (not blocking, recorded):**
+- The external link check (`linkcheck.yml`, PR-only, advisory) did not complete on the runner for the final heads. Several link-check runs across sessions were still in progress after 25+ minutes; they were not failing. Its last complete result (on `d01f42b`) listed three defects, all pre-existing in `instrument-panel/site/` and none introduced by PR #38. Logged above as cross-scope requests.
+- Built-in GitHub Pages build (`pages build and deployment`) fails on automated **data-only** commits (`0dc7749`, `436a1a7`) and passes on code commits. Our `Deploy GitHub Pages` job is green. The cause is not in the logs (the log receiver returned EOF); the annotation shows no error. Recommend the owner of `pages.yml` / `collect.yml` check whether data-only pushes need the Pages build retried.
+- Two sharp-jump features exist beside this one (`e36292f6`, `8b9a46b4`). The final integration session should pick one.
+
+**Process note:** one `git pull --rebase` on this branch was attempted after a merge of `origin/main`. Rebasing would have replayed merged `main` history and stopped on another session's commit. It was aborted, nothing was lost, and the branch was pushed as a fast-forward. For this branch, use `git merge origin/main` rather than `pull --rebase`.
