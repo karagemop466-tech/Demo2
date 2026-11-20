@@ -630,46 +630,75 @@ def main():
     adj_markets.sort(key=lambda m: (m.get("open_interest_usd") or -1), reverse=True)
 
     # ---------------- calibration over resolved in-scope markets -------------
-    # Method: bucket resolved markets by their last traded YES price, then compare the
-    # mean implied probability with the realised YES frequency. Pure arithmetic over
-    # copied fields; no market is predicted.
-    buckets = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.01]
-    calib = {f"{buckets[i]:.1f}-{min(buckets[i+1],1.0):.2f}": {"n": 0, "yes": 0, "sum_p": 0.0}
-             for i in range(len(buckets) - 1)}
-    by_topic = {}
-    for r in resolved_rows:
-        res = (r.get("result") or "").lower()
-        p = fnum(r.get("last_price_dollars"))
-        if p is None:
-            p = r.get("last_price_used")
-        if p is None:
-            continue
-        if res not in ("yes", "no"):
-            continue
-        for i in range(len(buckets) - 1):
-            if buckets[i] <= p < buckets[i + 1]:
-                k = f"{buckets[i]:.1f}-{min(buckets[i+1],1.0):.2f}"
-                calib[k]["n"] += 1
-                calib[k]["yes"] += 1 if res == "yes" else 0
-                calib[k]["sum_p"] += p
-                break
-        bt = by_topic.setdefault(r["topic"], {"n": 0, "yes": 0, "no": 0})
-        bt["n"] += 1
-        bt["yes" if res == "yes" else "no"] += 1
+    # TWO populations, reported separately because they mean different things:
+    #   traded  - resolved markets that actually traded (volume_fp > 0). Their last price
+    #             is a price someone paid, so comparing it with the outcome is meaningful.
+    #   never-traded - volume_fp == 0. Kalshi returns last_price_dollars 0.0000 for these;
+    #             that is a default, not a quote. Counting them as "priced at 0%" would make
+    #             every long-shot band look mispriced by ~26 points. They are reported as
+    #             their own population and are NOT mixed into the calibration.
+    def band_key(p):
+        lo = min(int(p * 10) / 10, 0.9)
+        return f"{lo:.1f}-{min(lo + 0.1, 1.0):.2f}"
 
-    calibration = {
-        "method": ("Group resolved in-scope markets by their last traded YES price band, then compare the "
-                   "band's mean last traded price (the market's own implied probability) with the share of "
-                   "those markets that actually resolved YES. Arithmetic only; no model is fitted."),
-        "price_field": "last_price_dollars as returned in the settled-market response",
-        "bands": [
+    def summarise(rows):
+        buckets = {}
+        for r in rows:
+            p = fnum(r.get("last_price_dollars"))
+            if p is None:
+                p = r.get("last_price_used")
+            res = (r.get("result") or "").lower()
+            if p is None or res not in ("yes", "no"):
+                continue
+            k = band_key(p)
+            b = buckets.setdefault(k, {"n": 0, "yes": 0, "sum_p": 0.0})
+            b["n"] += 1
+            b["yes"] += 1 if res == "yes" else 0
+            b["sum_p"] += p
+        return [
             {"band": k, "n": v["n"], "resolved_yes": v["yes"],
              "implied_prob_mean": round4(v["sum_p"] / v["n"]) if v["n"] else None,
              "realised_yes_rate": round4(v["yes"] / v["n"]) if v["n"] else None}
-            for k, v in calib.items()
-        ],
-        "by_topic": [{"topic": k, "n": v["n"], "resolved_yes": v["yes"], "resolved_no": v["no"]} for k, v in sorted(by_topic.items())],
-        "totals": {"resolved_rows": len(resolved_rows), "with_price_and_result": sum(v["n"] for v in calib.values())},
+            for k, v in sorted(buckets.items())
+        ]
+
+    traded = [r for r in resolved_rows if (fnum(r.get("volume_fp")) or 0) > 0]
+    never = [r for r in resolved_rows if (fnum(r.get("volume_fp")) or 0) == 0]
+
+    by_topic = {}
+    for label, rows in (("traded", traded), ("never_traded", never)):
+        for r in rows:
+            res = (r.get("result") or "").lower()
+            if res not in ("yes", "no"):
+                continue
+            bt = by_topic.setdefault(r["topic"], {"n": 0, "yes": 0, "no": 0, "traded": 0, "never_traded": 0})
+            bt["n"] += 1
+            bt["yes" if res == "yes" else "no"] += 1
+            bt[label] += 1
+
+    def rate(rows, want="yes"):
+        sel = [r for r in rows if (r.get("result") or "").lower() in ("yes", "no")]
+        if not sel:
+            return None
+        return round4(sum(1 for r in sel if (r.get("result") or "").lower() == want) / len(sel))
+
+    calibration = {
+        "method": ("Resolved in-scope markets are split by whether they ever traded. Only traded "
+                   "markets carry a real last price, so only they are calibrated: each is bucketed by "
+                   "its last traded YES price and the bucket's mean price is compared with the share "
+                   "that resolved YES. Arithmetic only; no model is fitted."),
+        "price_field": "last_price_dollars as returned in the settled-market response",
+        "populations": {
+            "traded": {"n": len(traded), "resolved_yes": sum(1 for r in traded if (r.get('result') or '').lower() == 'yes'), "yes_rate": rate(traded)},
+            "never_traded": {"n": len(never), "resolved_yes": sum(1 for r in never if (r.get('result') or '').lower() == 'yes'), "yes_rate": rate(never),
+                             "price_returned": sorted({str(r.get("last_price_dollars")) for r in never})[:5]},
+        },
+        "bands": summarise(traded),
+        "bands_all_rows_for_comparison": summarise(resolved_rows),
+        "by_topic": [{"topic": k, **v} for k, v in sorted(by_topic.items())],
+        "totals": {"resolved_rows": len(resolved_rows),
+                   "traded": len(traded), "never_traded": len(never),
+                   "with_price_and_result": len(traded)},
     }
 
     doc = {

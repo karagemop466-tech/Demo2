@@ -1,16 +1,29 @@
 {
  "intro": "Every irregularity found while reviewing the repository and the data. None of these block the site from being published, but each one needs a human decision. Items marked DATA are properties of Kalshi's demo data; items marked REPO are problems in this repository's own history.",
- "columns": ["#", "Kind", "What was found", "Impact if ignored", "Status / what was done", "Evidence"],
+ "columns": [
+  "#",
+  "Kind",
+  "What was found",
+  "Impact if ignored",
+  "Status / what was done",
+  "Evidence"
+ ],
  "items": [
   {
    "id": "F-01",
    "kind": "DATA",
-   "found": "Demo markets include placeholder strike values: some events carry close dates in 2099 (for example KXNEXTNATOSECGEN-99 and KXELONMARS-99) and some markets carry a custom_strike reading “demo strike”.",
+   "found": "Demo markets include placeholder strike values: some events carry close dates in 2099 (for example KXNEXTNATOSECGEN-99 and KXELONMARS-99) and some markets carry a custom_strike reading \u201cdemo strike\u201d.",
    "impact": "A reader could treat a placeholder as a live forecast.",
    "status": "Shown as returned and flagged. Never treated as a real-market signal; the demo caveat is repeated on every page.",
    "evidence": [
-    {"name": "demo_env (prices may not reflect real markets)", "url": "https://docs.kalshi.com/getting_started/demo_env"},
-    {"name": "events?status=open (raw response)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=200"}
+    {
+     "name": "demo_env (prices may not reflect real markets)",
+     "url": "https://docs.kalshi.com/getting_started/demo_env"
+    },
+    {
+     "name": "events?status=open (raw response)",
+     "url": "https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=200"
+    }
    ]
   },
   {
@@ -18,10 +31,16 @@
    "kind": "DATA",
    "found": "Kalshi publishes volume and open interest in contracts, not dollars, and exposes no dollar-turnover field.",
    "impact": "Any 'highest dollar amount' ranking is a derived figure.",
-   "status": "Every dollar figure is labelled as contracts × last price. All three measures are shown so a reviewer can re-rank. Definition still needs a decision (Suggestion S2 / Question Q5).",
+   "status": "Every dollar figure is labelled as contracts \u00d7 last price. All three measures are shown so a reviewer can re-rank. Definition still needs a decision (Suggestion S2 / Question Q5).",
    "evidence": [
-    {"name": "Get Markets (volume_fp, open_interest_fp are FixedPointCount)", "url": "https://docs.kalshi.com/api-reference/market/get-markets"},
-    {"name": "Fixed-point representation", "url": "https://docs.kalshi.com/getting_started/fixed_point_migration"}
+    {
+     "name": "Get Markets (volume_fp, open_interest_fp are FixedPointCount)",
+     "url": "https://docs.kalshi.com/api-reference/market/get-markets"
+    },
+    {
+     "name": "Fixed-point representation",
+     "url": "https://docs.kalshi.com/getting_started/fixed_point_migration"
+    }
    ]
   },
   {
@@ -31,8 +50,14 @@
    "impact": "The listed settlement source cannot determine a shellfish-landings outcome.",
    "status": "Rendered exactly as returned; the mismatch is flagged here. Not corrected, because correcting it would mean inventing a source.",
    "evidence": [
-    {"name": "series?category=Economics (raw response)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Economics&limit=200"},
-    {"name": "NY Fed SOFR page the API points at", "url": "https://www.newyorkfed.org/markets/reference-rates/sofr"}
+    {
+     "name": "series?category=Economics (raw response)",
+     "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Economics&limit=200"
+    },
+    {
+     "name": "NY Fed SOFR page the API points at",
+     "url": "https://www.newyorkfed.org/markets/reference-rates/sofr"
+    }
    ]
   },
   {
@@ -42,7 +67,10 @@
    "impact": "A settlement source that is a search query is not a determinable source.",
    "status": "Displayed as returned with the flag; the Culture page says these are the only two series in the Culture category.",
    "evidence": [
-    {"name": "series?category=Culture (raw response)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&limit=1"}
+    {
+     "name": "series?category=Culture (raw response)",
+     "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&limit=1"
+    }
    ]
   },
   {
@@ -52,8 +80,14 @@
    "impact": "A strict Culture filter yields two markets and hides the rest of the topic.",
    "status": "Culture page shows the two true Culture series and a clearly separated Entertainment table labelled 'adjacent'. Nothing is silently reclassified. Decision open (Question Q2).",
    "evidence": [
-    {"name": "search/tags_by_categories (no Culture category)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories"},
-    {"name": "series?category=Culture (two series)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&limit=1"}
+    {
+     "name": "search/tags_by_categories (no Culture category)",
+     "url": "https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories"
+    },
+    {
+     "name": "series?category=Culture (two series)",
+     "url": "https://external-api.demo.kalshi.co/trade-api/v2/series?category=Culture&limit=1"
+    }
    ]
   },
   {
@@ -63,7 +97,10 @@
    "impact": "Several tables would look empty; a naive average price would be meaningless.",
    "status": "Zero and null are displayed as returned. No row is dropped for being quiet and no value is imputed.",
    "evidence": [
-    {"name": "Get Markets (raw response)", "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=2&status=open"}
+    {
+     "name": "Get Markets (raw response)",
+     "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=2&status=open"
+    }
    ]
   },
   {
@@ -73,8 +110,14 @@
    "impact": "Readers land on different dashboards with different rules, and the repo cannot be verified line by line as one artefact.",
    "status": "Not deleted (other sessions' work). A single new, fully verified site is published at /site/ and linked from the root. This page records the split so a reviewer can see it. Consolidation is Suggestion S5.",
    "evidence": [
-    {"name": "Repository root", "url": "https://github.com/karagemop466-tech/Demo2"},
-    {"name": "Coordination log", "url": "https://github.com/karagemop466-tech/Demo2/blob/main/COORDINATION.md"}
+    {
+     "name": "Repository root",
+     "url": "https://github.com/karagemop466-tech/Demo2"
+    },
+    {
+     "name": "Coordination log",
+     "url": "https://github.com/karagemop466-tech/Demo2/blob/main/COORDINATION.md"
+    }
    ]
   },
   {
@@ -84,8 +127,14 @@
    "impact": "A public page that asks for a private key invites credential exposure.",
    "status": "The new /site/ contains no credential input at all. Whether to merge or close PR #6 is left to the owner; the open PR is recorded here rather than merged, because its diff conflicts with main.",
    "evidence": [
-    {"name": "Open PR #6", "url": "https://github.com/karagemop466-tech/Demo2/pull/6"},
-    {"name": "Authenticated-request docs (signature scheme)", "url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"}
+    {
+     "name": "Open PR #6",
+     "url": "https://github.com/karagemop466-tech/Demo2/pull/6"
+    },
+    {
+     "name": "Authenticated-request docs (signature scheme)",
+     "url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"
+    }
    ]
   },
   {
@@ -95,8 +144,14 @@
    "impact": "A broken documentation link plus a security claim that no longer matches the code.",
    "status": "Recorded, not edited (owned by an earlier session's scope). The new site links only to documentation paths that were fetched successfully during this session.",
    "evidence": [
-    {"name": "pages/portfolio.html in the repository", "url": "https://github.com/karagemop466-tech/Demo2/blob/main/pages/portfolio.html"},
-    {"name": "Get Market (working path, singular /market/get-market)", "url": "https://docs.kalshi.com/api-reference/market/get-market"}
+    {
+     "name": "pages/portfolio.html in the repository",
+     "url": "https://github.com/karagemop466-tech/Demo2/blob/main/pages/portfolio.html"
+    },
+    {
+     "name": "Get Market (working path, singular /market/get-market)",
+     "url": "https://docs.kalshi.com/api-reference/market/get-market"
+    }
    ]
   },
   {
@@ -106,8 +161,14 @@
    "impact": "Part of the brief (portfolio performance, trade execution, per-trade analysis) is unmet until a key exists.",
    "status": "The Portfolio page is explicit about this and shows no figures. Creating a demo account requires a human login at Kalshi. Decision recorded on Suggestions (S1) and Questions (Q16, Q17).",
    "evidence": [
-    {"name": "Kalshi help: demo account creation", "url": "https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account"},
-    {"name": "API keys", "url": "https://docs.kalshi.com/getting_started/api_keys"}
+    {
+     "name": "Kalshi help: demo account creation",
+     "url": "https://help.kalshi.com/en/articles/13823775-creating-and-using-a-demo-account"
+    },
+    {
+     "name": "API keys",
+     "url": "https://docs.kalshi.com/getting_started/api_keys"
+    }
    ]
   },
   {
@@ -117,7 +178,10 @@
    "impact": "The safe polling interval for a public dashboard is unknown; an aggressive refresh could be throttled.",
    "status": "The collector pauses 120 ms between calls and backs off on 429. The browser refreshes one market and one orderbook per tick, default 15 s. The observed X-RateLimit headers, where present, are printed on the Verification page.",
    "evidence": [
-    {"name": "Rate limits (unauthenticated section)", "url": "https://docs.kalshi.com/getting_started/rate_limits"}
+    {
+     "name": "Rate limits (unauthenticated section)",
+     "url": "https://docs.kalshi.com/getting_started/rate_limits"
+    }
    ]
   },
   {
@@ -127,7 +191,10 @@
    "impact": "Possible silent under-coverage of a topic.",
    "status": "The exact query for each topic is printed on the Verification page and on each topic page. An audit is proposed as Suggestion S8.",
    "evidence": [
-    {"name": "Get Series List (category and tags filters)", "url": "https://docs.kalshi.com/api-reference/market/get-series-list"}
+    {
+     "name": "Get Series List (category and tags filters)",
+     "url": "https://docs.kalshi.com/api-reference/market/get-series-list"
+    }
    ]
   },
   {
@@ -137,8 +204,14 @@
    "impact": "Old snapshots remain publicly reachable and could be mistaken for current data.",
    "status": "Left in place because deleting another session's data is out of this session's scope, but every page here prints its snapshot time and links its source. The stale snapshot is named on the Verification page.",
    "evidence": [
-    {"name": "data/kalshi_snapshot.json (previous session)", "url": "https://github.com/karagemop466-tech/Demo2/blob/main/data/kalshi_snapshot.json"},
-    {"name": "Old workflow file", "url": "https://github.com/karagemop466-tech/Demo2/blob/main/.github/workflows/pages.yml"}
+    {
+     "name": "data/kalshi_snapshot.json (previous session)",
+     "url": "https://github.com/karagemop466-tech/Demo2/blob/main/data/kalshi_snapshot.json"
+    },
+    {
+     "name": "Old workflow file",
+     "url": "https://github.com/karagemop466-tech/Demo2/blob/main/.github/workflows/pages.yml"
+    }
    ]
   },
   {
@@ -148,7 +221,48 @@
    "impact": "A seconds window shows only points this dashboard observed itself; it is not an exchange history.",
    "status": "The chart labels polled points separately from candlestick points and states the interval for each range. Recorded as Question Q12 and Suggestion S4.",
    "evidence": [
-    {"name": "Get Market Candlesticks (period_interval enum 1/60/1440)", "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks"}
+    {
+     "name": "Get Market Candlesticks (period_interval enum 1/60/1440)",
+     "url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks"
+    }
+   ]
+  },
+  {
+   "id": "F-15",
+   "kind": "DATA",
+   "found": "Most resolved demo markets never traded: 1,383 of 1,601 resolved in-scope markets have volume_fp = 0 and come back with last_price_dollars = 0.0000, a default rather than a price. Only 218 resolved markets ever traded.",
+   "impact": "Any calibration or 'implied probability' computed over all resolved rows is measuring Kalshi's default value, not a market opinion. A first version of this site's analysis page did exactly that and reported a fake +26 point edge on long shots.",
+   "status": "Corrected. The Analysis page now separates traded from never-traded populations, calibrates only the traded ones, labels bands with n < 30 as too small to interpret, and shows the uncorrected version in a collapsible block so the correction can be checked.",
+   "evidence": [
+    {
+     "name": "Settled markets query (raw response)",
+     "url": "https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=1000"
+    },
+    {
+     "name": "Get Markets (volume_fp / last_price_dollars semantics)",
+     "url": "https://docs.kalshi.com/api-reference/market/get-markets"
+    },
+    {
+     "name": "Demo environment caveat",
+     "url": "https://docs.kalshi.com/getting_started/demo_env"
+    }
+   ]
+  },
+  {
+   "id": "F-16",
+   "kind": "DATA",
+   "found": "48 orderbook snapshots were taken for the largest markets per topic, but only 20 contain any resting orders; the rest are empty arrays. The largest markets by open interest are frequently the least quoted.",
+   "impact": "A ranking built on open interest alone can put untradeable markets at the top.",
+   "status": "The Liquidity column on every market table labels 0.00/1.00 quotes as 'empty book', and the Live page shows the empty arrays rather than hiding them. Depth is reported as observed with no attempt to infer hidden orders.",
+   "evidence": [
+    {
+     "name": "Get Market Orderbook (empty book returns 200 with empty arrays)",
+     "url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook"
+    },
+    {
+     "name": "Orderbook responses (bids only)",
+     "url": "https://docs.kalshi.com/getting_started/orderbook_responses"
+    }
    ]
   }
  ]

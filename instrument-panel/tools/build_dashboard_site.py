@@ -269,7 +269,11 @@ def page_resolved():
   </tbody></table></div>
 </div>
 <h2>All resolved in-scope markets ({len(res)})</h2>
-<p class="hint muted">Sorted by final traded price. “Final price” is the last traded YES price reported for the settled market, not the payout.</p>
+<div class="notice warn"><h4>Read the volume column</h4>
+{sum(1 for r in res if (r.get("volume_fp") or "0") in ("0", "0.00", "0.0")):,} of these {len(res):,} markets never traded.
+Their “final price” is the API's default <code>0.0000</code>, not a price anyone paid — so the outcome alone is informative and
+the price is not. The <a href="analysis.html">Analysis</a> page excludes them from calibration for that reason (<a href="flagged.html">F-15</a>).</div>
+<p class="hint muted">Sorted by last traded price. “Final price” is the last traded YES price reported for the settled market, not the payout.</p>
 {resolved_table(res)}
 """
     page("resolved.html", "Resolutions", body, active="resolved.html")
@@ -324,68 +328,7 @@ Order placement needs the same signed requests as the portfolio. The previous im
 # --------------------------------------------------------------------------
 # Analysis
 # --------------------------------------------------------------------------
-def page_analysis():
-    bands = CAL.get("bands") or []
-    tot = CAL.get("totals") or {}
-    by_topic = CAL.get("by_topic") or []
-    rows = "".join(
-        f'<tr><td class="tick">{E(b["band"])}</td><td class="num">{b["n"]}</td>'
-        f'<td class="num">{price(b["implied_prob_mean"])}</td>'
-        f'<td class="num">{b["realised_yes_rate"]:.0%}</td>' if b.get("realised_yes_rate") is not None else
-        f'<tr><td class="tick">{E(b["band"])}</td><td class="num">{b["n"]}</td><td class="num">—</td><td class="num">—</td>'
-        for b in bands)
-    topic_rows = "".join(
-        f'<tr><td>{badge(TOPIC_META.get(t["topic"], {}).get("title", t["topic"]), TOPIC_META.get(t["topic"], {}).get("cls", "info"))}</td>'
-        f'<td class="num">{t["n"]}</td><td class="num">{t["resolved_yes"]}</td><td class="num">{t["resolved_no"]}</td>'
-        f'<td class="num">{(t["resolved_yes"] / max(1, t["n"])):.0%}</td></tr>'
-        for t in by_topic if t.get("topic") in TOPIC_META)
-
-    gap_rows = []
-    for b in bands:
-        if b.get("realised_yes_rate") is None or b.get("implied_prob_mean") is None or b["n"] < 5:
-            continue
-        gap = b["realised_yes_rate"] - b["implied_prob_mean"]
-        gap_rows.append((b["band"], b["n"], b["implied_prob_mean"], b["realised_yes_rate"], gap))
-    gap_html = "".join(
-        f'<tr><td class="tick">{E(g[0])}</td><td class="num">{g[1]}</td><td class="num">{price(g[2])}</td>'
-        f'<td class="num">{g[3]:.0%}</td><td class="num" style="color:{"#1f7a3f" if g[4] > 0 else "#b32d2d"}">{g[4]:+.1%}</td></tr>'
-        for g in gap_rows)
-
-    body = f"""
-<h1>Analysis</h1>
-<p class="lede">What the collected data can actually support. Two things are true at once: the market data is rich enough to measure whether prices were calibrated, and it is <b>not</b> rich enough to recommend a trade. This page keeps that line visible.</p>
-{demo_banner()}
-
-<h2>1. Price calibration of resolved in-scope markets</h2>
-<div class="notice"><h4>Method (reproducible from the published data)</h4>
-Take every resolved in-scope market, bucket it by its last traded YES price, and compare the band's mean price with the share of those markets that actually resolved YES. A market priced at $0.70 should resolve YES about 70% of the time; if the realised rate is far below that, the band was expensive. Arithmetic only — no model is fitted, nothing is predicted.</div>
-<div class="grid c3" style="margin:14px 0">
-  {kpi("Resolved markets", f"{tot.get('resolved_rows', 0):,}", "collected from settled-market responses")}
-  {kpi("With a usable price", f"{tot.get('with_price_and_result', 0):,}", "these feed the bands below")}
-  {kpi("Bands with n ≥ 10", str(sum(1 for b in bands if b["n"] >= 10)), "smaller bands are shown but not interpreted", "warn")}
-</div>
-<div class="tablewrap"><table><thead><tr><th>Price band</th><th class="num">n</th><th class="num">Mean implied probability</th><th class="num">Realised YES rate</th></tr></thead><tbody>{rows or '<tr><td colspan="4" class="empty">No resolved markets with prices were collected.</td></tr>'}</tbody></table></div>
-<p class="small muted">Source per row: {ext(META.get("endpoints", {}).get("markets"), "settled markets query")}; each resolved row on the <a href="resolved.html">Resolutions</a> page links to its own response.</p>
-
-<h2>2. Bands where the realised rate differs from the price (n ≥ 5)</h2>
-{'<div class="tablewrap"><table><thead><tr><th>Band</th><th class="num">n</th><th class="num">Implied</th><th class="num">Realised</th><th class="num">Gap</th></tr></thead><tbody>' + gap_html + '</tbody></table></div>' if gap_html else '<p class="empty">Not enough resolved markets in any band to compare.</p>'}
-<p class="small muted">A gap is a description of a small sample in a demo environment, not an edge. Before it could inform a decision you would need the sample size, the fee drag and a live order book — see <a href="questions.html#Q12">Q12</a> and <a href="suggestions.html#S3">S3</a>.</p>
-
-<h2>3. Resolutions by topic</h2>
-<div class="tablewrap"><table><thead><tr><th>Topic</th><th class="num">Resolved</th><th class="num">YES</th><th class="num">NO</th><th class="num">YES rate</th></tr></thead><tbody>{topic_rows or '<tr><td colspan="5" class="empty">No resolved markets yet.</td></tr>'}</tbody></table></div>
-
-<h2>4. Liquidity and concentration</h2>
-{analysis_liquidity()}
-
-<h2>5. What cannot be concluded, and why</h2>
-<table><tbody>
-<tr><td><b>“This topic is more profitable.”</b></td><td class="small">Profitability needs a portfolio. There are no executed trades, so no realised P&amp;L exists. Market-level calibration is not the same thing as trade performance.</td></tr>
-<tr><td><b>“Demo behaviour predicts the real market.”</b></td><td class="small">Kalshi states demo prices and behaviour may not be reflective of real markets ({ext("https://docs.kalshi.com/getting_started/demo_env", "demo_env")}).</td></tr>
-<tr><td><b>“Volume shows dollar turnover.”</b></td><td class="small">Volume is contracts. Dollar figures here are contracts × price and are labelled as derived ({ext("https://docs.kalshi.com/api-reference/market/get-markets", "Get Markets")}).</td></tr>
-<tr><td><b>“A wide price gap is free money.”</b></td><td class="small">Fees, spread and depth all reduce it; the orderbook is bids-only, so the true ask is 1 − best opposite bid. See the <a href="live.html">Live</a> page.</td></tr>
-</tbody></table>
-"""
-    page("analysis.html", "Analysis", body, active="analysis.html")
+EMPTY_BOOK = '<span class="b warn">empty book</span>'
 
 
 def analysis_liquidity():
@@ -393,6 +336,7 @@ def analysis_liquidity():
     with_ob = [m for m in rows if m["ticker"] in ORDERBOOKS]
     if not with_ob:
         return '<p class="empty">No orderbook snapshots collected.</p>'
+    empty = sum(1 for m in with_ob if not (ORDERBOOKS[m["ticker"]]["derived"].get("yes_levels") or ORDERBOOKS[m["ticker"]]["derived"].get("no_levels")))
     out = []
     for m in with_ob[:15]:
         ob = ORDERBOOKS[m["ticker"]]
@@ -400,21 +344,120 @@ def analysis_liquidity():
         spread = None
         if d.get("best_yes_bid") is not None and d.get("implied_yes_ask") is not None:
             spread = d["implied_yes_ask"] - d["best_yes_bid"]
+        no_levels = not d.get("yes_levels") and not d.get("no_levels")
         out.append(
             "<tr>"
             f'<td class="tick">{E(m["ticker"])}</td>'
             f'<td class="num">{price(d.get("best_yes_bid"))}</td>'
             f'<td class="num">{price(d.get("implied_yes_ask"))}</td>'
             f'<td class="num">{f"${spread:.4f}" if spread is not None else "—"}</td>'
-            f'<td class="num">{money(d.get("yes_resting_usd"))}</td>'
+            f'<td class="num">{money(d.get("yes_resting_usd")) or "—"}</td>'
+            "<td>" + (EMPTY_BOOK if no_levels else badge("quoted", "yes")) + "</td>"
             f'<td class="num">{count(m.get("open_interest_fp"))}</td>'
             f'<td class="num">{money(m.get("open_interest_usd"))}</td>'
             f'<td class="small">{ext(ob.get("source_url"), "book")}</td>'
             "</tr>")
-    return ('<p class="hint muted">Resting dollars are what is actually bid in the visible book; open interest is contracts held. A market can carry large open interest with a thin touch — that is the gap these two columns expose.</p>'
+    return (f'<div class="notice"><h4>{empty} of {len(with_ob)} snapshot orderbooks are completely empty</h4>'
+            'Open interest says how many contracts are held; the orderbook says how many are actually bid right now. '
+            'Where the two disagree, the orderbook wins for any question about trading — you cannot sell into a bid that does not exist.</div>'
             '<div class="tablewrap"><table><thead><tr><th>Market</th><th class="num">Best YES bid</th><th class="num">Implied YES ask</th><th class="num">Spread</th>'
-            '<th class="num">Resting YES $</th><th class="num">Open interest (ct)</th><th class="num">Open interest $</th><th>Source</th></tr></thead><tbody>'
+            '<th class="num">Resting YES $</th><th>Book</th><th class="num">Open interest (ct)</th><th class="num">Open interest $</th><th>Source</th></tr></thead><tbody>'
             + "".join(out) + "</tbody></table></div>")
+
+
+def page_analysis():
+    bands = CAL.get("bands") or []
+    pop = CAL.get("populations") or {}
+    tot = CAL.get("totals") or {}
+    by_topic = CAL.get("by_topic") or []
+    all_bands = CAL.get("bands_all_rows_for_comparison") or []
+    traded_pop = pop.get("traded") or {}
+    never_pop = pop.get("never_traded") or {}
+
+    def band_rows(rows):
+        out = ""
+        for b in rows:
+            if not b.get("n"):
+                continue
+            imp = b.get("implied_prob_mean")
+            rl = b.get("realised_yes_rate")
+            gap = None if (imp is None or rl is None) else rl - imp
+            colour = "" if gap is None else (' style="color:#1f7a3f"' if gap > 0 else ' style="color:#b32d2d"')
+            out += (f'<tr><td class="tick">{E(b["band"])}</td><td class="num">{b["n"]}</td>'
+                    f'<td class="num">{price(imp)}</td><td class="num">{f"{rl:.1%}" if rl is not None else "—"}</td>'
+                    f'<td class="num"{colour}>{f"{gap:+.1%}" if gap is not None else "—"}</td>'
+                    f'<td class="small">{"interpreterable" if b["n"] >= 30 else "too few to interpret"}</td></tr>')
+        return out
+
+    topic_rows = "".join(
+        f'<tr><td>{badge(TOPIC_META.get(t["topic"], {}).get("title", t["topic"]), TOPIC_META.get(t["topic"], {}).get("cls", "info"))}</td>'
+        f'<td class="num">{t["n"]}</td><td class="num">{t.get("traded", 0)}</td>'
+        f'<td class="num">{t.get("never_traded", 0)}</td>'
+        f'<td class="num">{t["resolved_yes"]}</td><td class="num">{t["resolved_no"]}</td>'
+        f'<td class="num">{(t["resolved_yes"] / max(1, t["n"])):.1%}</td></tr>'
+        for t in by_topic if t.get("topic") in TOPIC_META)
+
+    big = [b for b in bands if b.get("n", 0) >= 30]
+    biggest = max(big, key=lambda b: b["n"]) if big else None
+
+    body = f"""
+<h1>Analysis</h1>
+<p class="lede">What the collected data can actually support — including one correction that changes the answer. The first version of this page calibrated every resolved market. That was wrong, and the reason is on this page: most resolved demo markets never traded, so the price attached to them is a default, not a quote.</p>
+{demo_banner()}
+
+<h2>0. The correction: a resolved market is not necessarily a priced market</h2>
+<div class="notice bad"><h4>1,383 of {tot.get('resolved_rows', 0):,} resolved in-scope markets never traded</h4>
+A settled market with <code>volume_fp = 0</code> comes back with <code>last_price_dollars = 0.0000</code>
+(values observed in this snapshot: {", ".join(never_pop.get("price_returned") or ["—"])}). Treating that zero as “the market priced this at 0%”
+and then observing that {never_pop.get('resolved_yes') or 0} of them resolved YES produces a fake edge of
+about {((never_pop.get('yes_rate') or 0) * 100):.0f} percentage points. It measures Kalshi's default, not the market's opinion.
+
+The calibration below therefore uses only markets that actually traded
+(<b>{tot.get('traded', 0):,}</b> of {tot.get('resolved_rows', 0):,}). The never-traded population is reported next to it, for transparency, and is excluded from the bands.</div>
+
+<div class="grid c3" style="margin:14px 0">
+  {kpi("Resolved markets", f"{tot.get('resolved_rows', 0):,}", "collected from settled-market queries")}
+  {kpi("Traded (calibrated)", f"{tot.get('traded', 0):,}", "volume &gt; 0, so the price is real", "good")}
+  {kpi("Never traded (excluded)", f"{tot.get('never_traded', 0):,}", "price field is a 0.00 default", "warn")}
+</div>
+
+<h2>1. Calibration of traded, resolved markets</h2>
+<div class="notice"><h4>Method (reproducible from the published data)</h4>
+For each resolved market with <code>volume_fp &gt; 0</code>, take its last traded YES price, put it in a
+10-cent band, and compare the band's mean price with the share of those markets that resolved YES.
+Prices are already the market's own implied probability, so a calibrated band has mean ≈ realised rate.
+Arithmetic only. A band with n &lt; 30 is labelled too small to interpret, because it is.</div>
+<div class="tablewrap"><table><thead><tr><th>Price band</th><th class="num">n</th><th class="num">Mean implied</th><th class="num">Realised YES</th><th class="num">Gap</th><th>Sample</th></tr></thead><tbody>
+{band_rows(bands) or '<tr><td colspan="6" class="empty">No traded resolved markets were collected.</td></tr>'}
+</tbody></table></div>
+{f'<p class="small">Largest interpretable band: <b>{E(biggest["band"])}</b> with n={biggest["n"]}, mean implied {price(biggest["implied_prob_mean"])}, realised {biggest["realised_yes_rate"]:.1%} ({biggest["realised_yes_rate"] - biggest["implied_prob_mean"]:+.1%} points).</p>' if biggest else ''}
+<p class="small muted">Source per row: {ext(META.get("endpoints", {}).get("markets"), "settled market queries")} — one per series, so attribution is exact. Every resolved row on the <a href="resolved.html">Resolutions</a> page links to its own response.</p>
+
+<h2>2. Resolutions by topic, split by whether the market traded</h2>
+<div class="tablewrap"><table><thead><tr><th>Topic</th><th class="num">Resolved</th><th class="num">Traded</th><th class="num">Never traded</th><th class="num">YES</th><th class="num">NO</th><th class="num">YES rate</th></tr></thead><tbody>{topic_rows or '<tr><td colspan="7" class="empty">No resolved markets yet.</td></tr>'}</tbody></table></div>
+<p class="small muted">A topic with a high never-traded count gives a weak signal even if its YES rate looks striking: those markets were never priced by anyone.</p>
+
+<details><summary>For comparison: the same bands computed over <b>all</b> resolved rows, including never-traded ones</summary>
+<p class="small muted">This is the version that produced the misleading result. It is kept so the correction can be checked, not because it should be used.</p>
+<div class="tablewrap"><table><thead><tr><th>Price band</th><th class="num">n</th><th class="num">Mean implied</th><th class="num">Realised YES</th><th class="num">Gap</th><th>Sample</th></tr></thead><tbody>
+{band_rows(all_bands)}
+</tbody></table></div>
+</details>
+
+<h2>3. Liquidity and concentration</h2>
+{analysis_liquidity()}
+
+<h2>4. What cannot be concluded, and why</h2>
+<table><tbody>
+<tr><td><b>“This topic is more profitable.”</b></td><td class="small">Profitability needs a portfolio. There are no executed trades, so no realised P&amp;L exists. Calibration of market prices is not the same thing as trade performance.</td></tr>
+<tr><td><b>“Long shots are underpriced.”</b></td><td class="small">The apparent edge in the low bands comes mostly from never-traded markets, and the remaining traded low-band sample is still small relative to its spread. See section 0.</td></tr>
+<tr><td><b>“Demo behaviour predicts the real market.”</b></td><td class="small">Kalshi states demo prices and behaviour may not be reflective of real markets ({ext("https://docs.kalshi.com/getting_started/demo_env", "demo_env")}).</td></tr>
+<tr><td><b>“Volume shows dollar turnover.”</b></td><td class="small">Volume is contracts. Dollar figures here are contracts × price and are labelled as derived ({ext("https://docs.kalshi.com/api-reference/market/get-markets", "Get Markets")}).</td></tr>
+<tr><td><b>“A wide gap is free money.”</b></td><td class="small">Fees, spread and depth all reduce it; the orderbook is bids-only, so the true ask is 1 − best opposite bid, and many markets here have an empty book. See <a href="live.html">Live &amp; liquidity</a>.</td></tr>
+<tr><td><b>“The resolved set is complete.”</b></td><td class="small">Resolved rows are capped per topic and only series inside the scope queries are read. Counts are a lower bound. See <a href="verification.html">Verification</a>.</td></tr>
+</tbody></table>
+"""
+    page("analysis.html", "Analysis", body, active="analysis.html")
 
 
 # --------------------------------------------------------------------------
