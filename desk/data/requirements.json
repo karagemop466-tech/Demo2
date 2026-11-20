@@ -1,0 +1,205 @@
+{
+  "title": "Requirements register",
+  "updated": "2026-11-20",
+  "note": "Every requirement from the project brief, mapped to where it is met in this repository and to the official Kalshi source that supports the claim. Status values: implemented, partial, blocked, open, not verified. A row is only 'implemented' when the code and the official evidence both exist.",
+  "requirements": [
+    {
+      "id": "R-01",
+      "area": "Scope",
+      "requirement": "Collect, organize and analyse the project against a full list of requirements.",
+      "status": "implemented",
+      "where": "requirements.html",
+      "where_label": "this register",
+      "evidence": "https://docs.kalshi.com/getting_started/demo_env",
+      "evidence_label": "demo environment (API surface the register describes)",
+      "note": "The register is the artefact; each row links the official endpoint or documentation page the claim rests on."
+    },
+    {
+      "id": "R-02",
+      "area": "Scope",
+      "requirement": "Produce an executive summary of the important details.",
+      "status": "implemented",
+      "where": "../pages/executive-summary.html",
+      "where_label": "Executive Summary",
+      "evidence": "https://docs.kalshi.com/getting_started/demo_env",
+      "evidence_label": "demo environment",
+      "note": "A second executive summary also exists in the intelligence subsite; both are kept."
+    },
+    {
+      "id": "R-03",
+      "area": "Dashboard",
+      "requirement": "A dashboard that tracks the highest dollar amount of live events, limited to gas prices, elections, culture, crypto and golf.",
+      "status": "implemented",
+      "where": "index.html",
+      "where_label": "Desk dashboard",
+      "evidence": "https://docs.kalshi.com/api-reference/events/get-events",
+      "evidence_label": "Get Events",
+      "note": "The API publishes no dollar-volume field, so each row shows the official contract volume plus a clearly labelled estimate computed as volume_24h_fp x last_price_dollars."
+    },
+    {
+      "id": "R-04",
+      "area": "Dashboard",
+      "requirement": "Keep tracking live events until they resolve, and record how each resolved, yes or no.",
+      "status": "implemented",
+      "where": "categories/gas.html",
+      "where_label": "Gas page (same layout on every topic page)",
+      "evidence": "https://docs.kalshi.com/getting_started/market_settlement",
+      "evidence_label": "Market Settlement",
+      "note": "The official result field carries yes or no; 1,601 settled in-scope markets are shown with their result."
+    },
+    {
+      "id": "R-05",
+      "area": "Trading",
+      "requirement": "Automate simulated trades to test different strategies.",
+      "status": "implemented",
+      "where": "../live/trading.html",
+      "where_label": "paper-trade simulator",
+      "evidence": "https://docs.kalshi.com/api-reference/market/get-market",
+      "evidence_label": "Get Market",
+      "note": "Simulated trades need no credential and are scored against the official settlement result."
+    },
+    {
+      "id": "R-06",
+      "area": "Trading",
+      "requirement": "Track portfolio performance on the Kalshi demo account.",
+      "status": "blocked",
+      "where": "trading.html",
+      "where_label": "Trading and performance",
+      "evidence": "https://docs.kalshi.com/api-reference/portfolio/get-balance",
+      "evidence_label": "Get Balance",
+      "note": "Balance, positions and fills need a signed request with an API key. No key exists in this repository, so the values stay blank and flagged rather than being filled in."
+    },
+    {
+      "id": "R-07",
+      "area": "Trading",
+      "requirement": "Analyse trade results, categorise the trades and create strategies per trade type.",
+      "status": "implemented",
+      "where": "trading.html",
+      "where_label": "Trading and strategies",
+      "evidence": "https://docs.kalshi.com/api-reference/portfolio/get-fills",
+      "evidence_label": "Get Fills",
+      "note": "Categorisation axes are topic, side, price band and topic x side. A bucket needs 10 trades before a pattern is described."
+    },
+    {
+      "id": "R-08",
+      "area": "Trading",
+      "requirement": "Execute trades on events and track the performance.",
+      "status": "blocked",
+      "where": "../server/index.js",
+      "where_label": "signed-order backend",
+      "evidence": "https://docs.kalshi.com/api-reference/orders/create-order-v2",
+      "evidence_label": "Create Order (V2)",
+      "note": "The V2 endpoint POST /portfolio/events/orders is implemented behind three gates. The legacy endpoint returns 410 Gone and is not used. Execution cannot run until a demo key pair exists."
+    },
+    {
+      "id": "R-09",
+      "area": "Chart",
+      "requirement": "A live interactive graph of contract price movement: X axis time with a selectable length in seconds, minutes or hours, Y axis the current contract price.",
+      "status": "implemented",
+      "where": "index.html",
+      "where_label": "Live price panel",
+      "evidence": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
+      "evidence_label": "Get Market Candlesticks",
+      "note": "Windows of 60 s, 5 min, 15 min, 1 h, 6 h, 24 h, 7 d and 30 d. Short windows use the trade prints, longer windows use the documented 1, 60 and 1440 minute candlesticks."
+    },
+    {
+      "id": "R-10",
+      "area": "Chart",
+      "requirement": "Show current liquidity: how many contracts are available at a given price.",
+      "status": "implemented",
+      "where": "index.html",
+      "where_label": "Depth ladder",
+      "evidence": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
+      "evidence_label": "Get Market Orderbook",
+      "note": "Kalshi publishes yes bids and no bids only, so the ask ladder is derived from the no bids as 1 - p and is labelled as derived."
+    },
+    {
+      "id": "R-11",
+      "area": "Live and interactive",
+      "requirement": "Suggestions on how to make the site more live and interactive, with simplified graphs and charts.",
+      "status": "implemented",
+      "where": "../pages/suggestions.html",
+      "where_label": "Suggestions",
+      "evidence": "https://docs.kalshi.com/getting_started/quick_start_websockets",
+      "evidence_label": "Quick Start Websockets",
+      "note": "The websocket handshake needs signed headers, so a static page cannot subscribe to it; that constraint is what the suggestions are measured against."
+    },
+    {
+      "id": "R-12",
+      "area": "Live and interactive",
+      "requirement": "Live charts should show the events and website links that may have caused a sharp jump in contract price of $0.10 or more in either direction.",
+      "status": "partial",
+      "where": "jumps.html",
+      "where_label": "Sharp move monitor",
+      "evidence": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
+      "evidence_label": "Get Market Candlesticks",
+      "note": "The moves and their official source are detected and shown. The cause cannot be verified because the Kalshi Trade API publishes no news feed, so that column is left empty and flagged. The links shown are the settlement references Kalshi itself names for the series."
+    },
+    {
+      "id": "R-13",
+      "area": "Organisation",
+      "requirement": "Keep the topics separate while keeping the events inside one topic together, and simplify the site so a trader can decide from it.",
+      "status": "partial",
+      "where": "categories/elections.html",
+      "where_label": "Topic pages",
+      "evidence": "https://docs.kalshi.com/api-reference/market/get-series-list",
+      "evidence_label": "Get Series List",
+      "note": "Topics are separated using the official category and tags filters. The repository still holds six dashboards built by parallel sessions; this desk is the consolidated surface and the landing page is simplified at final integration."
+    },
+    {
+      "id": "R-14",
+      "area": "Operation",
+      "requirement": "No manual input from the operator: the collection, verification and publication run on their own.",
+      "status": "implemented",
+      "where": "../.github/workflows/pages.yml",
+      "where_label": "scheduled Pages workflow",
+      "evidence": "https://docs.kalshi.com/getting_started/rate_limits",
+      "evidence_label": "Rate limits",
+      "note": "Collection runs on a schedule from a runner with outbound access; the rate-limit document explains the backoff the collector uses."
+    },
+    {
+      "id": "R-15",
+      "area": "Verification",
+      "requirement": "Review the repository line by line, verify from official trusted sources, provide links for manual review and flag irregularities.",
+      "status": "implemented",
+      "where": "irregularities.html",
+      "where_label": "Flagged for review",
+      "evidence": "https://docs.kalshi.com/getting_started/api_environments",
+      "evidence_label": "API environments",
+      "note": "The verification page adds a machine-checked audit: every data row must carry an official Kalshi URL, and a sample is re-fetched from the live API and compared with the committed snapshot."
+    },
+    {
+      "id": "R-16",
+      "area": "Site",
+      "requirement": "A GitHub Pages site with a clean landing page and subpages organised by category, holding every entry and finding in simple readable tables.",
+      "status": "implemented",
+      "where": "index.html",
+      "where_label": "Desk landing page",
+      "evidence": "https://docs.kalshi.com/getting_started/demo_env",
+      "evidence_label": "demo environment",
+      "note": "One landing page, one page per topic, and pages for sharp moves, trading, requirements, verification and flagged items. Every table row carries its official source."
+    },
+    {
+      "id": "R-17",
+      "area": "Verification",
+      "requirement": "Every table row must have a source link to an official site; a value that cannot be confirmed is left blank and flagged, never inferred.",
+      "status": "implemented",
+      "where": "verification.html",
+      "where_label": "Verification report",
+      "evidence": "https://docs.kalshi.com/api-reference/market/get-market",
+      "evidence_label": "Get Market",
+      "note": "Blank portfolio values, unverified cause columns and the absent culture rows are all stated as such on the pages themselves."
+    },
+    {
+      "id": "R-18",
+      "area": "Coordination",
+      "requirement": "Coordinate parallel sessions through a shared task board with claims, sources and recorded irregularities.",
+      "status": "implemented",
+      "where": "../COORDINATION.md",
+      "where_label": "COORDINATION.md",
+      "evidence": "https://github.com/karagemop466-tech/Demo2",
+      "evidence_label": "repository",
+      "note": "This row describes repository process rather than a Kalshi fact, so it links the repository itself."
+    }
+  ]
+}
