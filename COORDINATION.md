@@ -1229,12 +1229,21 @@ belonged to another tree's register), and two decision rows are added.
   deterministic selection, history capped at 144 points/40 keys, `api_log` trimmed to 150,
   resolutions kept per queried series, guard naming an oversized file.
 - `python3 session-eeb796d7/tools/test_collector_fix.py` → 13/13 pass after the row-builder refactor.
+- `node session-7085e643/tests/test_alerts.cjs` → **25/25 pass**: the model screen's accept/reject
+  cases and reasons (including a free-entry pass reported as n/a), snapshot seeding from
+  `data/history.json`, a live poll turn producing an alert on a ≥ $0.10 move, no duplicate
+  announcement, no alert on a sub-threshold move, the official `result` settling the matching lines,
+  newest-first ordering, and the offline fallback keeping the snapshot stream while the banner
+  reports it.
+- `python3 tools/guard_sizes.py --max-mb 95 data` → OK on the committed data (the old 47.26 MB
+  snapshot is under the push limit; it warns that it is large for a browser payload, which the next
+  refresh run's bounded payload resolves).
 - `python3 tools/build_site.py` + `python3 tools/build_content.py` → all 18 pages regenerate, including
   the new `pages/paper-trading.html`.
 - `python3 tools/check.py` → **OK**: links, nav (25 entries, derived from `tools/build_site.py` NAV),
   data, secrets and inline-script syntax all clean.
 
-### Irregularities and judgement calls (mirrored on `pages/flagged.html` as N-1…N-6)
+### Irregularities and judgement calls (mirrored on `pages/flagged.html` as N-1…N-7)
 
 - **The published snapshot is bounded, not the universe** — N-1: cap + byte budget + dropped counts
   are disclosed in `publish_policy`/`coverage` rather than left implicit.

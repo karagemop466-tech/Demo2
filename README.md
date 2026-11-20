@@ -100,7 +100,7 @@ tracking it until the official `result` (yes/no) lands. The high-ROI chat is a d
 screen over official fields — printed thresholds, arithmetic potential ROI, and a clear
 **not a forecast** label; the cause of a move is not returned by the API, so the "possible context"
 link is a news search tagged as not an official source (see `pages/flagged.html` N-7 / F13).
-Verified offline by `node session-7085e643/tests/test_alerts.cjs` (24 checks: screen cases, snapshot
+Verified offline by `node session-7085e643/tests/test_alerts.cjs` (25 checks: screen cases, snapshot
 seeding, live polling, no duplicate alerts, sub-threshold moves, resolution, offline fallback).
 
 ## Trade execution

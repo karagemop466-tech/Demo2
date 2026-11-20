@@ -70,7 +70,7 @@ desk's heuristic.
 - `python3 session-7085e643/tests/test_pipeline.py` — 21 offline assertions on the publish budget,
   byte halving, history bounds, resolution filtering and the size guard.
 - `python3 session-eeb796d7/tools/test_collector_fix.py` — 13/13 collector row-schema checks.
-- `node session-7085e643/tests/test_alerts.cjs` — 24 offline checks of the alert desk.
+- `node session-7085e643/tests/test_alerts.cjs` — 25 offline checks of the alert desk.
 - Live API checks on 2026-11-20 (all URLs in `pages/verification.html` and `COORDINATION.md`):
   the `tickers=` filter, the `max_close_ts` short-dated filter, settled-row fields, series fee
   fields, and `exchange/status` (active).
