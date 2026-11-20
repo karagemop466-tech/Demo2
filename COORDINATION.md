@@ -273,3 +273,11 @@ Session owner: `arena-3420a90d`. Work was scoped to the new folder `dashboard/` 
 ### Merge record (f1751c8f, 2026-11-20)
 - Merged `origin/main` (d98c436, which includes PR #9, #10, and #11 from session arena-3420a90d) into `arena/f1751c8f-demo2`. The conflict in COORDINATION.md was resolved by keeping both sections in order. README.md auto-merged.
 - Main changes were additive (`dashboard/`, `tools/collect_kalshi.py`, `.github/workflows/collect.yml`, `.gitignore`). No shared file owned by this session was overwritten.
+
+### PR and merge record — session f1751c8f (T-final, 2026-11-20)
+- PR: https://github.com/karagemop466-tech/Demo2/pull/12 (`arena/f1751c8f-demo2` → `main`), created and merged with `gh pr merge 12 --merge` (no `--auto`), not waiting for review.
+- Merge commit on main: `833089766a371b9484cd91ed607a0240527ab95a` (merged 2026-11-20 11:29 UTC).
+- Pages deploy: run `44728004360` (Deploy GitHub Pages) on `833089766a…` — completed, success. Live check: `https://karagemop466-tech.github.io/Demo2/verified/markets.html` serves the new Market Samples page.
+- Pre-merge checks on the merged tree: `build_site.py` OK; `check_links.py` OK; 40 HTML files, 0 broken local links; `node --check` on all JS files OK.
+- Open follow-ups (flagged, non-blocking): F-14 settlement-link blanks (only three links confirmed); F-23 two parallel sites (not consolidated); portfolio and trade execution BLOCKED (human Kalshi demo account and API key).
+- Push note: one `git pull --rebase` attempt mid-session replayed main's commits because the branch includes a merge of main. It was aborted (`git rebase --abort`), and nothing was lost. The branch was already in sync with origin, so no rewrite happened.
