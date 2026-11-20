@@ -8,6 +8,19 @@ name: Refresh Kalshi demo data
 
 on:
   workflow_dispatch:
+    inputs:
+      max_runtime:
+        description: "Soft wall-clock budget in seconds (default 2100)"
+        required: false
+        default: "2100"
+      volume_markets:
+        description: "Markets to pull trade prints for (default 30)"
+        required: false
+        default: "30"
+      book_samples:
+        description: "Order-book samples per market (default 12)"
+        required: false
+        default: "12"
   schedule:
     # every 10 minutes (GitHub cron is best-effort and may run late)
     - cron: "*/10 * * * *"
@@ -45,16 +58,21 @@ jobs:
       - name: Collect demo snapshot
         timeout-minutes: 45
         env:
+          # A manual run may pass a lighter scope (used to validate this workflow on a
+          # branch); scheduled runs on main always take the full sweep below.
+          MAX_RUNTIME: ${{ inputs.max_runtime || '2100' }}
+          VOLUME_MARKETS: ${{ inputs.volume_markets || '30' }}
+          BOOK_SAMPLES: ${{ inputs.book_samples || '12' }}
           # Optional. Without keys the collector still works: every market-data
           # endpoint used here is public. Keys only add portfolio/trading coverage.
           KALSHI_DEMO_API_KEY_ID: ${{ secrets.KALSHI_DEMO_API_KEY_ID }}
           KALSHI_DEMO_PRIVATE_KEY: ${{ secrets.KALSHI_DEMO_PRIVATE_KEY }}
         run: |
           python tools/collector.py \
-            --max-runtime 2100 \
-            --volume-markets 30 \
+            --max-runtime "$MAX_RUNTIME" \
+            --volume-markets "$VOLUME_MARKETS" \
             --book-markets 10 \
-            --book-samples 12
+            --book-samples "$BOOK_SAMPLES"
 
       - name: Show result summary
         run: |
