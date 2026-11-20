@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trading · Kalshi Demo Desk</title>
+<meta name="description" content="Consolidated Kalshi demo dashboard for gas prices, elections, culture, crypto and golf, with an official source link on every row.">
+<link rel="stylesheet" href="assets/desk.css">
+</head><body>
+<header class="top"><div class="in">
+<div class="brand">Kalshi <b>Demo Desk</b><small>demo environment · mock funds · not investment advice</small></div>
+<nav><a href="index.html">Dashboard</a><a href="categories/gas.html">Gas</a><a href="categories/elections.html">Elections</a><a href="categories/culture.html">Culture</a><a href="categories/crypto.html">Crypto</a><a href="categories/golf.html">Golf</a><a href="jumps.html">Jumps</a><a href="trading.html" aria-current="page">Trading</a><a href="requirements.html">Requirements</a><a href="verification.html">Verification</a><a href="irregularities.html">Irregularities</a></nav>
+</div></header>
+<main class="wrap">
+
+<h1>Trading, strategies and performance</h1>
+<p class="lead">What the repository can and cannot do on a Kalshi demo account, and how trades are
+categorised so a strategy can be tested against evidence rather than opinion.</p>
+
+<div class="note warn"><b>No account values are shown on this page.</b> Portfolio, positions, fills and
+order placement need a Kalshi API key. No key exists in this repository and none was invented, so
+every value below is a dash and flagged. The three gates that must all open before a demo order is
+sent are listed under <a href="#policy">Execution policy</a>.</div>
+
+<h2>Portfolio and performance</h2>
+<div class="tbl-scroll"><table><thead><tr><thItem>Item</th><thValue>Value</th><thOfficial source>Official source</th></tr></thead><tbody><tr><td>Demo account balance</td><td><span class="pill unverified">unverified — needs an API key</span></td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">Get Balance</a></td></tr><tr><td>Open positions</td><td><span class="pill unverified">unverified — needs an API key</span></td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">Get Positions</a></td></tr><tr><td>Fills and realised profit and loss</td><td><span class="pill unverified">unverified — needs an API key</span></td><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Get Fills</a></td></tr><tr><td>Simulated (paper) trades</td><td><a href="../live/trading.html">interactive simulator</a></td><td><a href="https://docs.kalshi.com/api-reference/market/get-market" target="_blank" rel="noopener">Get Market</a></td></tr></tbody></table></div>
+
+<h2 id="policy">Execution policy</h2>
+<p class="lead">Three independent gates must all be open before the repository will send a demo order.</p>
+<ol class="tight">
+<li>Repository secrets <code>KALSHI_DEMO_API_KEY_ID</code> and <code>KALSHI_DEMO_PRIVATE_KEY</code>
+exist — see <a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a>.</li>
+<li>Repository variable <code>KALSHI_TRADING_ENABLED=1</code> is set.</li>
+<li>The order passes the executor's checks: the ticker is in the collector's in-scope set, no
+duplicate tickers, and the order is inside the per-run notional cap.</li>
+</ol>
+<p class="lead">Orders use the documented V2 endpoint <code>POST /portfolio/events/orders</code>
+(<a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a>). The legacy
+<code>POST /portfolio/orders</code> returns 410 Gone and is not used. No browser page in this
+repository asks for a private key.</p>
+
+<h2>How trades are categorised</h2>
+<p class="lead">Every trade is labelled on four axes so that a strategy is proposed only when the
+evidence supports it. A bucket needs at least 10 trades before a pattern is described.</p>
+<div class="tbl-scroll"><table><thead><tr><thAxis>Axis</th><thValues>Values</th><thWhy it matters>Why it matters</th></tr></thead><tbody><tr><td>Topic</td><td>gas, elections, culture, crypto, golf</td><td>Behaviour differs by topic; the same price level means different things in each.</td></tr><tr><td>Side</td><td>yes, no</td><td>A no contract at price p is economically a yes contract at 1 − p, so the side changes the risk, not just the direction.</td></tr><tr><td>Price band</td><td>0.00–0.10, 0.10–0.40, 0.40–0.70, 0.70–1.00</td><td>Long shots pay differently from favourites; the bands are read from the contract price, not from the outcome.</td></tr><tr><td>Topic × side</td><td>the cross of the two axes above</td><td>Shows where an edge, if any, actually concentrates.</td></tr></tbody></table></div>
+
+<h2>Strategies that can be tested today</h2>
+<div class="tbl-scroll"><table><thead><tr><thStrategy>Strategy</th><thWhat it does>What it does</th><thWhere to run it>Where to run it</th></tr></thead><tbody><tr><td>Paper round trip</td><td>Buy and hold a simulated contract to settlement and score the result as yes or no.</td><td><a href="../live/trading.html">paper simulator</a></td></tr><tr><td>Liquidity sweep</td><td>Walk the order book and report how many contracts are available at each price before a size is committed.</td><td><a href="index.html">depth ladder</a></td></tr><tr><td>Sharp-move reaction</td><td>Act on a confirmed move of $0.10 or more rather than on a single quote.</td><td><a href="jumps.html">jump monitor</a></td></tr><tr><td>Resolution tracking</td><td>Hold a market until Kalshi settles it and record the official result.</td><td><a href="categories/gas.html">topic pages</a></td></tr></tbody></table></div>
+
+<h2>Where the numbers come from</h2>
+<ul class="tight">
+<li>Trade prints: <a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a>.</li>
+<li>Resting liquidity: <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Get Market Orderbook</a>.</li>
+<li>Price history: <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a>.</li>
+<li>Settlement values: <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a>.</li>
+</ul>
+
+</main>
+<footer class="site"><div class="in">
+<div>Every row links the official Kalshi source it came from. Values that no official source confirms are shown as a dash and flagged.</div>
+<div><a href="requirements.html">Requirements</a> · <a href="verification.html">Verification</a> · <a href="irregularities.html">Irregularities</a> · <a href="../index.html">Repository dashboard</a></div>
+</div></footer>
+<script src="assets/desk.js"></script>
+</body></html>
