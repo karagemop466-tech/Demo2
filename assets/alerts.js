@@ -38,13 +38,17 @@
   A.EPS = 1e-9;               // binary floats: 1.00 - 0.90 is 0.09999999999999998, and a
                               // real $0.10 move must not be silently missed because of it
   A.POLL_MS = 20000;          // live poll interval
-  A.TOP_N = 40;               // how many in-scope markets the desk polls: the highest
-                              // estimated-dollar-volume ones, so the poll stays small
+  A.TOP_N = 40;               // how many in-scope markets the desk polls, so the poll stays small
+  A.WATCH_MAX_DAYS = 45;      // horizon for "closes soon": the desk tracks events that can
+                              // actually resolve, not far-dated contracts that cannot
   A.MAX_LINES = 200;          // lines kept per chat, oldest dropped
   A.MIN_VOLUME_24H = 100;     // screen: contracts traded in 24 h
   A.MAX_DAYS_TO_CLOSE = 30;   // screen: only near-dated events
   A.ROI_ENTRY_MAX = 0.45;     // screen: entry price at or below this -> >= 122% potential
   A.DEMO_REST = "https://external-api.demo.kalshi.co/trade-api/v2";
+
+  A.WATCH_RULE = "watching the in-scope markets that close soonest (within " +
+    A.WATCH_MAX_DAYS + " days), then the largest by estimated dollar volume";
 
   A.SCREEN_TEXT =
     "screen: move >= $0.10, entry price <= $0.45 on the side the move favours, " +
@@ -325,7 +329,8 @@
         offline: "live polling unavailable — snapshot-derived alerts only",
         starting: "starting",
       }[state.mode] || state.mode;
-      st.innerHTML = "<b>" + mode + "</b> · polled " + state.watch.length + " in-scope markets · " +
+      st.innerHTML = "<b>" + mode + "</b> · " + A.WATCH_RULE + " · " + state.watch.length +
+        " markets · " +
         "every " + Math.round(A.POLL_MS / 1000) + "s · last poll " + last +
         ' · <button class="btn sm secondary" id="alertPollNow">poll now</button>' +
         ' <span class="muted">(data: official <code>last_price_dollars</code>; the cause of a move ' +
@@ -371,8 +376,25 @@
           volume24h: m.volume_24h_fp,
         };
       });
-      // Bound the polled set to the highest-estimated-dollar-volume in-scope markets.
-      state.watch = Object.keys(byTicker).slice(0, A.TOP_N);
+      /* Watch set: the markets that can actually move and resolve soon, not the largest
+         far-dated contracts. Ranked by (closes within the horizon, days to close, then
+         estimated dollar volume), capped at TOP_N. The rule is printed in the status banner
+         so the choice of what the chats watch is auditable. */
+      state.watch = Object.keys(byTicker)
+        .map(function (tk) {
+          var dtc = daysToClose(byTicker[tk].closeTime);
+          return {
+            tk: tk,
+            soon: dtc !== null && dtc <= A.WATCH_MAX_DAYS ? 0 : 1,
+            dtc: dtc === null ? Number.POSITIVE_INFINITY : dtc,
+            est: -(byTicker[tk].est_dollar_volume || 0),
+          };
+        })
+        .sort(function (a, b) {
+          return a.soon - b.soon || a.dtc - b.dtc || a.est - b.est;
+        })
+        .slice(0, A.TOP_N)
+        .map(function (o) { return o.tk; });
       /* start from the collector's own tick history so the chat is not empty before the
          first poll; those lines are labelled "snapshot" so nobody reads them as live. */
       try {

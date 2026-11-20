@@ -192,7 +192,10 @@ returns price and volume only: <b>it does not say what caused a move</b>, so the
 <span class="pill flag">not an official source</span>, and the cause stays unverified
 (<a href="pages/flagged.html">F13</a>). Demo prices are not real prices
 (<a href="pages/flagged.html">F5</a>).</div>
-<p class="lead" style="font-size:.88em">Model screen: move &ge; $0.10, entry price &le; $0.45 on
+<p class="lead" style="font-size:.88em">What the chats watch: the in-scope markets that
+<b>close soonest</b> (within 45 days), then the largest by estimated dollar volume, capped at 40 —
+so the desk tracks events that can actually resolve, not far-dated contracts that cannot. The
+status line below states the rule and the count. Model screen: move &ge; $0.10, entry price &le; $0.45 on
 the side the move favours, <code>volume_24h_fp</code> &ge; 100 contracts, closes within 30 days
 &mdash; a heuristic over official fields, <b>not a forecast</b>. Potential ROI shown beside a passing
 line is the arithmetic payout if the favoured side resolves, not a prediction of the outcome.</p>
