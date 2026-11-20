@@ -418,3 +418,52 @@ broken, and it is worth distinguishing the two when reading Actions.
 | E-6 | PR from this branch to main, merge, Pages deploy confirm, record | in progress | e36292f6 | this section, PR record |
 
 Sources to verify against (official only): https://docs.kalshi.com/api-reference/market/get-market-candlesticks, https://docs.kalshi.com/api-reference/market/get-trades, https://docs.kalshi.com/api-reference/market/get-market-orderbook, https://docs.kalshi.com/getting_started/demo_env.
+
+---
+
+## Session `arena/99bf124c` — branch `arena/99bf124c-demo2` (claimed 2026-11-20)
+
+**Branch:** `arena/99bf124c-demo2`, branched from live `main` at `2d1045b` (merge of PR #35). This is the
+**final integration session**: it owns the shared tables, the site index/navigation, and the published
+outputs, and it must merge the parallel-session branches and re-verify the combined result.
+
+**Scope (files this session will edit):** `COORDINATION.md`, `tools/build_site.py` (generator of the
+shared nav/index/pages), `assets/site.js`, `assets/style.css`, `index.html` and `pages/*.html` (only via
+the generator), `scripts/fetch_data.py`, `tools/collector.py`, `data/*.json` (published outputs),
+`.github/workflows/refresh-data.yml`, `.github/workflows/pages.yml`, `.github/workflows/ci.yml`,
+`tools/check.py`, `tools/check_links.py`, `README.md`.
+
+**Non-overlapping with other sessions' claimed scopes** — `session-8b9a46b4/` (PR #32), `monitor/`
+(PR #15), `intelligence/`, `verified/`, `site/`, `dashboard/`, `live/`, `instrument-panel/` are read-only
+for this session except where the final integration copies their *published* functionality into the
+canonical root site (recorded explicitly below).
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| 99-1 | Coordination claim + claim commit/push | done | 99bf124c | `COORDINATION.md` |
+| 99-2 | Reconcile the 4 open PRs (#32 jump/backtest, #6 security, #15 monitor, #27 integration) against live `main`; merge what is still relevant, close what is superseded | in progress | 99bf124c | PRs, `COORDINATION.md` |
+| 99-3 | Restore the root dashboard's data path: `assets/site.js` requires `data/snapshot.json`, which no pipeline on `main` produces | pending | 99bf124c | `tools/collector.py`, `scripts/fetch_data.py`, `data/` |
+| 99-4 | Integrate #6's security corrections (no browser-side keys/signing/order submission) into the canonical root client | pending | 99bf124c | `assets/site.js`, `assets/app.js`, `live/trading.html` |
+| 99-5 | Adapt #32's simulated-backtest/strategy functionality into the published site (not an orphaned `session-8b9a46b4/` subsite) | pending | 99bf124c | generator, `pages/`, `assets/` |
+| 99-6 | Re-verify every published row against official Kalshi sources; blank + flag anything unverifiable | pending | 99bf124c | `data/`, `pages/` |
+| 99-7 | Full check suite (build regeneration diff, link check, nav check, secret scan), then PR to `main`, merge, confirm Pages deployment | pending | 99bf124c | all |
+| 99-8 | Record PR, merge, deployment, verification, sources and irregularities | pending | 99bf124c | `COORDINATION.md` |
+
+**Facts verified by this session before claiming (not assumed):**
+
+- Live `main` = `2d1045b`; PR #35 (sharp-jump detection) is already merged into `assets/site.js`, with a
+  correct `0.10` threshold in code. Only the *commit message* of `24e1b13` shows the shell-expansion
+  artefact `≥ /bin/bash.10` — the code itself is `0.10`. Recorded as an irregularity.
+- Root defect is real: `assets/site.js:82` loads `data/snapshot.json`; no file on `main` produces it
+  (`tools/collector.py` writes it, but its scheduled run on `main` failed and it is the only writer).
+- `tools/check.py` exits 0 while only *warning* about the missing snapshot — a passing check that does not
+  prove the dashboard works. This session will make the missing-snapshot case a hard failure.
+- No Kalshi DEMO credentials exist (repo + Actions secrets are empty), so account metrics stay unverified.
+
+**Sources used by this session (official only; all read 2026-11-20):**
+https://docs.kalshi.com/getting_started/demo_env, https://docs.kalshi.com/getting_started/api_keys,
+https://docs.kalshi.com/api-reference/market/get-markets,
+https://docs.kalshi.com/api-reference/market/get-market-candlesticks,
+https://docs.kalshi.com/api-reference/market/get-market-orderbook,
+https://docs.kalshi.com/getting_started/orderbook_responses,
+https://external-api.demo.kalshi.co/trade-api/v2/exchange/status (read via fetch).
