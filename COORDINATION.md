@@ -1078,3 +1078,29 @@ Actions (44753235358, exit 1) — reproduced offline: `GET /series/{ticker}` can
 dict records with a ticker and never lets one series kill the run (logged as an api_log note
 instead), `inventory` tolerates records without a ticker. Adversarial-shape regression case
 added to `session-eeb796d7/tools/test_collector_fix.py` (13/13 PASS).
+
+## Session `c36beea1` — branch `arena/c36beea1-demo2` (claim written 2026-11-20, before edits)
+
+Scope (exclusive, new directory — no other session's files touched):
+`alerts/` (new subsite: pages, assets, data, tools), plus append-only entries in
+`COORDINATION.md` (this section) and `README.md` (one appended section).
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| C-1 | Claim scope, push claim | in progress | c36beea1 | `COORDINATION.md` |
+| C-2 | Executive summary (important details, official surfaces) | unclaimed | c36beea1 | `alerts/index.html` (generated) |
+| C-3 | Two scrolling alert chats: all ≥$0.10 moves + high-ROI filtered | unclaimed | c36beea1 | `alerts/alerts.html`, `alerts/assets/alerts.js`, `alerts/tools/build_alerts.py` |
+| C-4 | Price chart (X=time seconds/minutes/hours, Y=price) + orderbook depth | unclaimed | c36beea1 | `alerts/alerts.html`, `alerts/assets/alerts.js` |
+| C-5 | Per-topic pages (gas/elections/culture/crypto/golf), events grouped by topic | unclaimed | c36beea1 | `alerts/{gas,elections,culture,crypto,golf}.html` (generated) |
+| C-6 | Resolution tracking to YES/NO | unclaimed | c36beea1 | `alerts/resolutions.html` (generated) |
+| C-7 | Simulated trades, strategy tests, portfolio + categorisation | unclaimed | c36beea1 | `alerts/trading.html` (generated), `alerts/data/alerts.json` |
+| C-8 | Suggestions (more live/interactive), verification, flagged, repo review | unclaimed | c36beea1 | `alerts/{suggestions,verification,flagged,repo-review}.html` (generated) |
+| C-9 | Checks (links, JS syntax, data), PR → main, merge, Pages confirm, record | unclaimed | c36beea1 | this section |
+
+Method: read-only reuse of already-collected official demo data
+(`data/dashboard_instrument.json`, `data/jumps.json`, `data/history_instrument/`,
+`data/portfolio.json`). No market value is invented; every table row carries an
+official source link; unverifiable values stay blank + flagged. Demo-account
+portfolio/trading is reported honestly as not-configured (no API key in repo)
+with a paper-trade simulation alongside. Jump causes stay blank (Kalshi API
+publishes no causes); context links are the market's official API + Kalshi page.
