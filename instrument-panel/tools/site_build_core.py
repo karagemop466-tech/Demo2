@@ -22,6 +22,14 @@ PAGES_BASE = "https://karagemop466-tech.github.io/Demo2/instrument-panel/site/"
 
 E = html.escape
 
+import urllib.parse  # noqa: E402  (link policy in ext() needs urlparse)
+
+# Source URLs verified dead / non-resolvable on 2026-11-20 (external link check).
+# They stay visible as text for manual review; never invented replacements.
+KNOWN_DEAD_URLS = {
+    "https://www.crunchyroll.com/en/animeawards/": "2026-11-20",
+}
+
 NAV = [
     ("index.html", "Overview"),
     ("gas.html", "Gas"),
@@ -98,9 +106,32 @@ def count(v, dash="—"):
 
 
 def ext(url, label=None):
+    """Render an external source link.
+
+    Link policy (integration link-check fixes, 2026-11-20): a published <a href>
+    must resolve. URL patterns ("{ticker}" etc.), REST/WS base URLs and verified-dead
+    source URLs render as code text (with a flag where the official source URL is
+    broken) instead of clickable links — never invented, never silently dropped.
+    """
     if not url:
         return ""
-    return f'<a href="{E(url, quote=True)}" target="_blank" rel="noopener">{E(label or url)}</a>'
+    u = str(url)
+    note = ""
+    if "{" in u:
+        # template URL pattern — documentation, not a live link
+        return f'<code>{E(label or u)}</code>'
+    if u in KNOWN_DEAD_URLS:
+        note = f' <span class="small muted">(source URL returns 404 — flagged, checked {KNOWN_DEAD_URLS[u]})</span>'
+        return f'<code>{E(label or u)}</code>{note}'
+    path = urllib.parse.urlparse(u).path
+    if path.rstrip("/").endswith("/trade-api/v2") or path.rstrip("/").endswith("/trade-api/ws/v2"):
+        # API base URL — not itself a resolvable page
+        return f'<code>{E(label or u)}</code>'
+    last = path.rstrip("/").rsplit("/", 1)[-1] if path.rstrip("/") else ""
+    if last == "" or last.startswith("."):
+        # e.g. https://assets.kalshi.com/contract_terms/.pdf — empty source filename
+        return f'<code>{E(label or u)}</code> <span class="small muted">(blank source in official data — flagged)</span>'
+    return f'<a href="{E(u, quote=True)}" target="_blank" rel="noopener">{E(label or u)}</a>'
 
 
 def liquidity(m):
@@ -144,7 +175,7 @@ def top_nav_html(active=None):
 def demo_banner():
     return ('<div class="notice warn"><h4>Demo environment data — not real markets</h4>'
             'Every price, volume and resolution below comes from Kalshi\'s <b>demo</b> exchange '
-            '(<a href="https://external-api.demo.kalshi.co/trade-api/v2" target="_blank" rel="noopener">external-api.demo.kalshi.co</a>). '
+            '(<code>external-api.demo.kalshi.co</code>). '
             'Kalshi states that demo prices and behaviour “may not be reflective of those in real markets”. '
             'See <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a>. '
             'No real money is involved anywhere on this site.</div>')

@@ -897,3 +897,21 @@ stale limit with no commits and are eligible for takeover.
 Verification performed for E-5: `python3 session-eeb796d7/tools/test_collector_fix.py`
 (11/11), `python3 -m py_compile tools/collector.py`, `python3 tools/check.py` (clean),
 `python3 scripts/check_links.py` (all links OK).
+
+**Integration link fixes (session eeb796d7, 13:55-14:05 UTC, logged per the rules):**
+The external link check ("Link check (all pages, internal + external)") failed on every PR
+with 4 pre-existing non-resolvable URLs (example: PR #40's run 44743893105: crunchyroll
+`/en/animeawards/` 404, bare REST base GET 404, `contract_terms/.pdf` 404,
+`markets/{ticker}` pattern 404). Because the integration gate is "no broken links", the
+following minimal, policy-compliant fixes were made in `instrument-panel/tools/` (NOT in any
+open PR's diff) and the site regenerated with `build_dashboard_site.py`:
+- `ext()` renders URL patterns (`{ticker}` etc.) and REST/WS base URLs as `<code>` (they are
+  documentation, not pages) and verified-dead/blank source URLs as flagged text — no URL is
+  invented, dead official URLs stay visible for manual review;
+- the demo banner links no longer point at the non-resolvable API base;
+- request-error rows render their URLs as text.
+All instrument-panel and root checkers re-run clean afterwards (`check_site.py` OK,
+`tests_smoke.py` OK, `tools/check.py` OK, `scripts/check_links.py` all links OK).
+Follow-up flagged (R-8, not fixed): some `culture.html` rows link rules-prose fragments to
+`kalshi.com` (collector parsed rules text as settlement sources) — rows should show the API's
+real `settlement_sources` or blank + flag. Full register: `session-eeb796d7/index.html`.
