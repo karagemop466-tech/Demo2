@@ -224,16 +224,18 @@ def collect(out_dir):
     taxonomy_raw = c.get(taxonomy_url, note="official tag taxonomy per category")
     taxonomy = (taxonomy_raw or {}).get("tags_by_categories", {})
 
-    # 2. Official series list (carries category + tags + settlement sources)
+    # 2. Official series list (carries category + tags + settlement sources).
+    # Coverage is bounded (max_pages) because the demo API rate-limits anonymous
+    # clients; the bound is recorded in meta.notes. Re-running refreshes coverage.
     series_records, series_urls = c.get_paged(
-        "/series", {}, "series", max_pages=20, note="series catalogue"
+        "/series", {}, "series", max_pages=4, note="series catalogue"
     )
     if not series_records:
         # Fall back to per-category queries if an unfiltered /series call fails.
         series_records, series_urls = [], []
         for cat_name in sorted(taxonomy.keys()):
             recs, urls = c.get_paged(
-                "/series", {"category": cat_name}, "series", max_pages=10,
+                "/series", {"category": cat_name}, "series", max_pages=2,
                 note="series catalogue for category=%s" % cat_name,
             )
             series_records.extend(recs)
@@ -246,19 +248,19 @@ def collect(out_dir):
 
     # 3. Open markets (paginated)
     open_markets, open_urls = c.get_paged(
-        "/markets", {"status": "open", "limit": 1000}, "markets", max_pages=40,
-        note="open markets, full pagination",
+        "/markets", {"status": "open", "limit": 1000}, "markets", max_pages=6,
+        note="open markets (bounded pagination)",
     )
     # 4. Settled markets (paginated) - used for resolution tracking
     settled_markets, settled_urls = c.get_paged(
-        "/markets", {"status": "settled", "limit": 1000}, "markets", max_pages=40,
-        note="settled markets, full pagination",
+        "/markets", {"status": "settled", "limit": 1000}, "markets", max_pages=4,
+        note="settled markets (bounded pagination)",
     )
 
     # 5. Open events (paginated) - event level category, volume, liquidity
     events, event_urls = c.get_paged(
-        "/events", {"status": "open", "limit": 200}, "events", max_pages=40,
-        note="open events, full pagination",
+        "/events", {"status": "open", "limit": 200}, "events", max_pages=3,
+        note="open events (bounded pagination)",
     )
 
     # ---------------------------------------------------------------- build
@@ -332,8 +334,8 @@ def collect(out_dir):
     for r in open_rows:
         picked.append(r)
         seen_topics[r["topic"]] = seen_topics.get(r["topic"], 0) + 1
-        if len(picked) >= 30 and all(
-            seen_topics.get(t, 0) >= 3 for t in TOPIC_RULES
+        if len(picked) >= 15 and all(
+            seen_topics.get(t, 0) >= 2 for t in TOPIC_RULES
         ):
             break
     for r in picked:
@@ -353,6 +355,45 @@ def collect(out_dir):
             "source_url": url,
         }
         time.sleep(0.1)
+
+    # 6b. Candlestick history for the same top markets (price-over-time data).
+    # Docs: GET /series/{series_ticker}/markets/{ticker}/candlesticks with
+    # start_ts/end_ts in Unix SECONDS and period_interval in {1, 60, 1440}
+    # minutes; max 5,000 periods per request
+    # (https://docs.kalshi.com/api-reference/market/get-market-candlesticks).
+    candlesticks = {}
+    now_s = int(time.time())
+    ranges = ((1, 24 * 60 * 60), (60, 7 * 24 * 60 * 60))  # (period_minutes, lookback_seconds)
+    for r in picked:
+        if not r.get("series_ticker"):
+            continue
+        per_period = {}
+        for period_minutes, lookback in ranges:
+            end_s = now_s
+            start_s = now_s - lookback
+            url = ("%s/series/%s/markets/%s/candlesticks?start_ts=%d&end_ts=%d&period_interval=%d"
+                   % (API_BASE,
+                      urllib.parse.quote(r["series_ticker"]),
+                      urllib.parse.quote(r["ticker"]),
+                      start_s, end_s, period_minutes))
+            data = c.get(url, note="candlesticks period_interval=%d" % period_minutes)
+            time.sleep(0.1)
+            if not data:
+                continue
+            rows = data.get("candlesticks") or []
+            per_period[str(period_minutes)] = {
+                "source_url": url,
+                "count": len(rows),
+                "candlesticks": rows,
+            }
+        if per_period:
+            candlesticks[r["ticker"]] = {
+                "ticker": r["ticker"],
+                "series_ticker": r["series_ticker"],
+                "title": r["title"],
+                "topic": r["topic"],
+                "periods": per_period,
+            }
 
     # 7. Event level rows
     event_rows = []
@@ -438,6 +479,7 @@ def collect(out_dir):
             "in_scope_events": len(event_rows),
             "in_scope_series": len(series_rows),
             "orderbooks": len(orderbooks),
+            "candlesticks": len(candlesticks),
         },
         "scope": {k: v["label"] for k, v in TOPIC_RULES.items()},
         "scope_rules": TOPIC_RULES,
@@ -446,6 +488,10 @@ def collect(out_dir):
             "volume_fp is a contract count, not dollars.",
             "dollar_turnover_estimate = volume_fp x last_price_dollars (a computed proxy, not an official field).",
             "Kalshi states demo prices and behaviour may not reflect real markets.",
+            "Coverage is bounded (series 4 pages; open markets 6 pages; settled 4; events 3; "
+            "orderbooks/candlesticks for the top 15 in-scope markets) because the demo API "
+            "rate-limits anonymous clients. Every collected row still carries its source_url; "
+            "re-run the collector to widen coverage.",
         ],
     }
 
@@ -468,6 +514,7 @@ def collect(out_dir):
     dump("series_scope.json", {"source_urls": series_urls, "collected_at": started,
                                "rows": series_rows})
     dump("orderbooks.json", {"collected_at": started, "rows": orderbooks})
+    dump("candlesticks.json", {"collected_at": started, "rows": candlesticks})
     dump("collection_log.json", {"started_at": started, "finished_at": now_iso(),
                                  "requests": c.log})
     print("in-scope open=%d settled=%d events=%d series=%d orderbooks=%d" % (

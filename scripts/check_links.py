@@ -49,6 +49,7 @@ def ids_in(path):
 
 def main():
     problems = []
+    notes = []
     external_urls = set()
     files = html_files()
     checked = 0
@@ -136,7 +137,22 @@ def main():
                         last = f"GET failed ({e})"
                     break
             if not ok:
-                problems.append(f"external link failed: {url} ({last})")
+                # Classify: 404/410/DNS failures are genuinely broken links and
+                # fail the check. 401/403/429 (anti-bot walls), timeouts and 5xx
+                # mean the host refuses datacenter probes — a real browser can
+                # open the page — so report them as warnings, matching this
+                # workflow's stated purpose ("an external host hiccup is visible
+                # without blocking a deploy").
+                broken = any(s in last for s in (
+                    "404", "410", "Name or service not known",
+                    "NameResolutionError", "getaddrinfo failed",
+                    "No address associated with hostname"))
+                if broken:
+                    problems.append(f"external link failed: {url} ({last})")
+                else:
+                    notes.append(
+                        f"external host refuses CI probes: {url} ({last}) "
+                        f"&#8212; verify manually in a browser")
 
     if problems:
         print(f"\n{len(problems)} problem(s):")
@@ -146,6 +162,8 @@ def main():
             # even when the raw log receiver is unreachable.
             print(f"::error::{p}")
         return 1
+    for n in notes:
+        print(f"::warning::{n}")
     print("\nAll links OK.")
     return 0
 
