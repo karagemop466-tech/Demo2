@@ -1,0 +1,69 @@
+name: Refresh Kalshi demo data snapshot
+
+# Keeps data/*.json in sync with the public Kalshi *demo* Trade API so the
+# GitHub Pages site always ships a current, source-linked snapshot.
+#
+# The harvester uses only unauthenticated endpoints:
+#   GET /markets, /events, /series, /search/tags_by_categories,
+#   GET /markets/{ticker}/orderbook
+# (see scripts/fetch-data.mjs header for the official doc links)
+#
+# After refreshing, the workflow re-deploys GitHub Pages so the published site
+# picks up the new snapshot.
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Every 30 minutes (off the hour to avoid the GitHub cron stampede).
+    - cron: '7,37 * * * *'
+  push:
+    branches: ['**']
+    paths:
+      - 'scripts/fetch-data.mjs'
+      - '.github/workflows/refresh-data.yml'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch Kalshi demo snapshot
+        run: node scripts/fetch-data.mjs
+
+      - name: Commit refreshed snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --staged --quiet; then
+            echo "Snapshot unchanged - nothing to commit."
+          else
+            git commit -m "data: refresh Kalshi demo snapshot"
+            git push
+          fi
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
