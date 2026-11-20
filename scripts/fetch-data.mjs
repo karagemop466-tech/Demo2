@@ -213,8 +213,8 @@ async function loadSeries(taxonomy) {
   for (const category of categories) {
     let cursor = '';
     for (let page = 0; page < 40; page += 1) {
-      const sep = `?category=${encodeURIComponent(category)}&limit=1000`;
-      const json = await get(cursor ? `${sep}&cursor=${encodeURIComponent(cursor)}` : sep);
+      const query = `category=${encodeURIComponent(category)}&limit=1000`;
+      const json = await get(cursor ? `/series?${query}&cursor=${encodeURIComponent(cursor)}` : `/series?${query}`);
       cursor = absorb(json);
       if (!cursor) break;
     }
