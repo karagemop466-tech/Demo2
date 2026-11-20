@@ -16,8 +16,8 @@ import os
 import sys
 import time
 
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-DATA = os.path.join(ROOT, "data", "dashboard.json")
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+DATA = os.path.join(ROOT, "data", "dashboard_instrument.json")
 API_PREFIX = "https://external-api.demo.kalshi.co/trade-api/v2"
 PRICE_FIELDS = ["yes_bid_dollars", "yes_ask_dollars", "no_bid_dollars", "no_ask_dollars",
                 "last_price_dollars", "previous_price_dollars"]

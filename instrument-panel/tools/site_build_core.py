@@ -13,12 +13,12 @@ import os
 import shutil
 from datetime import datetime, timezone
 
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-DATA = os.path.join(ROOT, "data", "dashboard.json")
-CONTENT = os.path.join(ROOT, "site", "content")
-OUT = os.path.join(ROOT, "site")
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+DATA = os.path.join(ROOT, "data", "dashboard_instrument.json")
+CONTENT = os.path.join(ROOT, "instrument-panel", "site", "content")
+OUT = os.path.join(ROOT, "instrument-panel", "site")
 REPO = "https://github.com/karagemop466-tech/Demo2"
-PAGES_BASE = "https://karagemop466-tech.github.io/Demo2/site/"
+PAGES_BASE = "https://karagemop466-tech.github.io/Demo2/instrument-panel/site/"
 
 E = html.escape
 

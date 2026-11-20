@@ -18,18 +18,18 @@ jobs:
         with:
           python-version: '3.12'
       - name: Collect demo market data
-        run: python tools/kalshi_collect.py
+        run: python instrument-panel/tools/kalshi_collect.py
       - name: Validate
-        run: python tools/validate_data.py
+        run: python instrument-panel/tools/validate_data.py
       - name: Rebuild pages
-        run: python tools/build_dashboard_site.py
+        run: python instrument-panel/tools/build_dashboard_site.py
       - name: Link check
-        run: python tools/check_site.py
+        run: python instrument-panel/tools/check_site.py
       - name: Commit results
         run: |
           git config user.name "kalshi-dashboard-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/dashboard.json data/history site
+          git add data/dashboard_instrument.json data/history_instrument instrument-panel/site
           git diff --cached --quiet && echo "nothing to commit" && exit 0
           git commit -m "data: Kalshi demo snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
           git pull --rebase --autostash origin "${{ github.ref_name }}"

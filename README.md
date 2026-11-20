@@ -8,20 +8,20 @@ it came from; anything that could not be confirmed is left blank and listed for 
 | Page | What it is |
 |------|------------|
 | [index.html](index.html) | Landing page indexing every dashboard in the repository |
-| [site/index.html](site/index.html) | **Current dashboard** — live totals per topic |
-| [site/live.html](site/live.html) | Price chart (60 s → 6 h) and full orderbook depth |
-| [site/resolved.html](site/resolved.html) | Settled markets with the recorded YES/NO outcome |
-| [site/portfolio.html](site/portfolio.html) | Why portfolio/trading needs a backend, plus a key-free trade classifier |
-| [site/analysis.html](site/analysis.html) | Calibration of resolved contracts; what cannot be concluded |
-| [site/questions.html](site/questions.html) | 22 questions: known, missing, and how to find out |
-| [site/suggestions.html](site/suggestions.html) | 10 decisions with options, trade-offs and a recommendation |
-| [site/verification.html](site/verification.html) | Endpoints, scope queries, CORS probe, what is **not** verified |
-| [site/repo-review.html](site/repo-review.html) | Claim-by-claim check of this repo against official docs |
-| [site/flagged.html](site/flagged.html) | Every irregularity, with evidence links |
+| [site/index.html`](instrument-panel/site/index.html) | **Current dashboard** — live totals per topic |
+| [site/live.html`](instrument-panel/site/live.html) | Price chart (60 s → 6 h) and full orderbook depth |
+| [site/resolved.html`](instrument-panel/site/resolved.html) | Settled markets with the recorded YES/NO outcome |
+| [site/portfolio.html`](instrument-panel/site/portfolio.html) | Why portfolio/trading needs a backend, plus a key-free trade classifier |
+| [site/analysis.html`](instrument-panel/site/analysis.html) | Calibration of resolved contracts; what cannot be concluded |
+| [site/questions.html`](instrument-panel/site/questions.html) | 22 questions: known, missing, and how to find out |
+| [site/suggestions.html`](instrument-panel/site/suggestions.html) | 10 decisions with options, trade-offs and a recommendation |
+| [site/verification.html`](instrument-panel/site/verification.html) | Endpoints, scope queries, CORS probe, what is **not** verified |
+| [site/repo-review.html`](instrument-panel/site/repo-review.html) | Claim-by-claim check of this repo against official docs |
+| [site/flagged.html`](instrument-panel/site/flagged.html) | Every irregularity, with evidence links |
 
-The dashboard is generated: `tools/kalshi_collect.py` calls the public demo API, `tools/validate_data.py`
-refuses to publish anything unsourced or stale, `tools/build_dashboard_site.py` writes `site/`, and
-`tools/check_site.py` verifies every internal link before deploy. `.github/workflows/pages.yml` runs that
+The dashboard is generated: `instrument-panel/tools/kalshi_collect.py` calls the public demo API, `instrument-panel/tools/validate_data.py`
+refuses to publish anything unsourced or stale, `instrument-panel/tools/build_dashboard_site.py` writes `site/`, and
+`instrument-panel/tools/check_site.py` verifies every internal link before deploy. `.github/workflows/pages.yml` runs that
 chain every 15 minutes. Your browser also polls the API directly for live prices; the API's CORS policy
 allows this site's origin (verified on every run and shown on the Verification page).
 

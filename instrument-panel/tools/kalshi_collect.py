@@ -21,7 +21,8 @@ from datetime import datetime, timezone
 
 API = "https://external-api.demo.kalshi.co/trade-api/v2"
 DOCS = "https://docs.kalshi.com"
-OUT = os.path.join(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")), "data", "dashboard.json")
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+OUT = os.path.join(ROOT, "data", "dashboard_instrument.json")
 
 ENDPOINTS = {
     "exchange_status": f"{API}/exchange/status",
@@ -558,7 +559,7 @@ def main():
         json.dump(doc, fh, indent=1, ensure_ascii=False)
 
     # ---- append to the rolling price history (real observed ticks only) ----
-    hist_dir = os.path.join(os.path.dirname(OUT), "history")
+    hist_dir = os.path.join(os.path.dirname(OUT), "history_instrument")
     os.makedirs(hist_dir, exist_ok=True)
     epoch = doc["meta"]["generated_epoch"]
     tick = {}

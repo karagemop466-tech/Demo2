@@ -17,10 +17,10 @@ import sys
 from collections import Counter
 from html.parser import HTMLParser
 
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 SKIP_DIRS = {".git", "node_modules", "out", "dist", "__pycache__"}
 
-OWNED_DIRS = ("site",)
+OWNED_DIRS = (os.path.join("instrument-panel", "site"),)
 OWNED_FILES = ("index.html",)
 
 
@@ -46,6 +46,7 @@ class Collector(HTMLParser):
 def pages():
     out = []
     for base, dirs, files in os.walk(ROOT):
+        # third-party and generated dependency trees are not part of the site
         dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
         for f in files:
             if f.endswith(".html"):
@@ -55,7 +56,7 @@ def pages():
 
 def owned(path):
     rel = os.path.relpath(path, ROOT)
-    return rel in OWNED_FILES or rel.split(os.sep)[0] in OWNED_DIRS
+    return rel in OWNED_FILES or os.sep.join(rel.split(os.sep)[:2]) in OWNED_DIRS
 
 
 def main():
@@ -99,14 +100,25 @@ def main():
             blocking.append(f"{rel}: missing demo-data disclaimer")
 
     # owned pages must reach the dashboard, the review pages and the sources
-    idx = raw.get(os.path.join(ROOT, "index.html"), "")
-    for must in ("site/index.html", "site/questions.html", "site/suggestions.html",
-                 "site/flagged.html", "site/verification.html", "site/live.html"):
-        if must not in idx:
-            blocking.append(f"index.html: does not link to {must}")
+    idx_path = os.path.normpath(os.path.join(ROOT, "index.html"))
+    idx = raw.get(idx_path)
+    if idx is None:
+        blocking.append("index.html: landing page missing")
+        idx = ""
+    linked = set()
+    c = Collector(); c.feed(idx)
+    for href in c.links:
+        if href.endswith(".html") and not href.startswith(("http", "/")):
+            linked.add(os.path.normpath(os.path.join(ROOT, href)))
+    for must in ("index.html", "questions.html", "suggestions.html", "flagged.html",
+                 "verification.html", "live.html", "resolved.html", "portfolio.html",
+                 "analysis.html", "gas.html", "elections.html", "culture.html",
+                 "crypto.html", "golf.html", "repo-review.html"):
+        if os.path.normpath(os.path.join(ROOT, "instrument-panel", "site", must)) not in linked:
+            blocking.append(f"index.html: does not link to instrument-panel/site/{must}")
 
     # every generated site page must be reachable from index.html or the site nav
-    site_dir = os.path.join(ROOT, "site")
+    site_dir = os.path.join(ROOT, "instrument-panel", "site")
     nav_pages = set()
     if os.path.isdir(site_dir):
         core = os.path.join(site_dir, "index.html")

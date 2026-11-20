@@ -39,16 +39,16 @@ jobs:
         with:
           python-version: '3.12'
       - name: Collect demo market data
-        run: python tools/kalshi_collect.py
+        run: python instrument-panel/tools/kalshi_collect.py
       - name: Validate the snapshot
-        run: python tools/validate_data.py
+        run: python instrument-panel/tools/validate_data.py
       - name: Rebuild the dashboard pages from the new snapshot
-        run: python tools/build_dashboard_site.py
+        run: python instrument-panel/tools/build_dashboard_site.py
       - name: Commit the snapshot and pages
         run: |
           git config user.name "kalshi-dashboard-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/dashboard.json data/history site
+          git add data/dashboard_instrument.json data/history_instrument instrument-panel/site
           if git diff --cached --quiet; then
             echo "No data changes to commit."
           else
@@ -60,8 +60,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: kalshi-collection
-          path: data/dashboard.json
+          name: kalshi-instrument-collection
+          path: data/dashboard_instrument.json
           retention-days: 7
           if-no-files-found: warn
 
@@ -79,9 +79,9 @@ jobs:
         with:
           python-version: '3.12'
       - name: Validate the data snapshot
-        run: python tools/validate_data.py
+        run: python instrument-panel/tools/validate_data.py
       - name: Check every internal link and anchor
-        run: python tools/check_site.py
+        run: python instrument-panel/tools/check_site.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
