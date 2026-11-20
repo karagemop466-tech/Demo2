@@ -268,7 +268,7 @@
   {
    "id": "F-17",
    "kind": "DATA",
-   "found": "Two Crypto series rows in the captured demo response (KXLINKPERP and KXLTCPERP) contain a contract_terms_url ending in /contract_terms/.pdf, with no filename. The table now leaves this link blank; no substitute URL is inferred.",
+   "found": "The current captured Crypto series response returns a contract_terms_url ending in /contract_terms/.pdf with no filename for KXZECPERP. The table leaves this link blank; no substitute URL is inferred.",
    "impact": "The previous page linked to a guaranteed 404 and presented an empty path as contract terms.",
    "status": "Unverified — blanked in the rendered table and retained as contract_terms_url_unverified in the snapshot. Re-check when Kalshi returns a populated URL.",
    "evidence": [
