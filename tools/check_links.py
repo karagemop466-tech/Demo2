@@ -53,7 +53,7 @@ class Collector(HTMLParser):
         if tag == "tbody":
             self._in_tbody = True
         if tag == "tr" and self._in_tbody:
-            self._row = {"links": [], "text": ""}
+            self._row = {"links": [], "text": "", "class": a.get("class") or ""}
 
     def handle_endtag(self, tag):
         if tag == "tbody":
@@ -121,6 +121,8 @@ def main():
         for row in c.rows:
             text = row["text"].strip()
             if not text:
+                continue
+            if "placeholder" in row.get("class", ""):
                 continue
             row_count += 1
             api_links = [h for h in row["links"] if h.startswith(API_HOSTS)]

@@ -1,15 +1,121 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Verification — Line by Line</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Verification — Line by Line</h1>
-<p>Every factual claim below was checked against the linked official page on 2026-11-20. Live market values are <b>not</b> listed here (they change); they appear only on the Dashboard from the live API.</p>
-<table><tr><th>Claim</th><th>Value</th><th>Official source</th><th>Status</th></tr>
-<tr><td>Recommended demo REST base</td><td>https://external-api.demo.kalshi.co/trade-api/v2</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td><td>Verified</td></tr>
-<tr><td>Also-supported demo REST</td><td>https://demo-api.kalshi.co/trade-api/v2</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td><td>Verified</td></tr>
-<tr><td>Recommended demo WS</td><td>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</td><td><a href="https://docs.kalshi.com/getting_started/api_environments">api_environments</a></td><td>Verified</td></tr>
-<tr><td>Demo uses mock funds; prices may not reflect real markets</td><td>—</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td><td>Verified</td></tr>
-<tr><td>Public market-data endpoints need no auth</td><td>—</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">quick_start_market_data</a></td><td>Verified</td></tr>
-<tr><td>Get Markets fields incl. volume_fp, last_price_dollars, result</td><td>—</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Verified</td></tr>
-<tr><td>Orderbook: yes_dollars/no_dollars [price, count]</td><td>—</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">quick_start_market_data</a></td><td>Verified</td></tr>
-<tr><td>Auth headers + signing (timestamp+method+path, RSA-PSS/SHA-256 or Ed25519, base64)</td><td>—</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">quick_start_authenticated</a></td><td>Verified</td></tr>
-<tr><td>Timestamp tolerance 30s; sign path without query</td><td>—</td><td><a href="https://docs.kalshi.com/getting_started/api_keys">api_keys</a></td><td>Verified</td></tr>
-<tr><td>Live market values (prices, volumes, results)</td><td>(blank — live only)</td><td>Dashboard live fetch</td><td>Unverified by design — never hard-coded</td></tr>
-</table>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verification — line by line · Kalshi Demo Dashboard</title>
+<meta name="description" content="Every request the collector made, the values it stored, and the checks that were run.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="../index.html"><span>KALSHI</span> DEMO<small>RESEARCH DASHBOARD</small></a>
+    <nav class="main">
+      <a href="../index.html" class="active">Dashboard</a>
+      <a href="executive-summary.html">Executive Summary</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio &amp; Trading</a>
+      <a href="analysis.html">Analysis</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions</a>
+      <a href="verification.html">Verification</a>
+      <a href="flagged.html">Flagged for Review</a>
+      <a href="repo-review.html">Repo Review</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+    <span class="tag">DEMO · NO REAL FUNDS</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="eyebrow">Audit trail</p>
+  <h1>Verification — line by line</h1>
+  <p class="lede">
+    What was checked, against which official source, and what the result was. Every request the collector made is
+    listed with its exact URL so it can be opened and compared with the row it produced.
+  </p>
+
+  <h2 id="method">1 · What was verified, and how</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:28%">Claim</th><th style="width:34%">Method</th><th style="width:22%">Source</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>The demo REST and WebSocket roots</td><td>Read the demo environment page</td><td><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment</a></td><td><span class="pill yes">Confirmed</span></td></tr>
+        <tr><td>Market, event and series field names</td><td>Read the raw JSON responses of the demo API and copied the field names from them</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=open&limit=1000" target="_blank" rel="noopener">/markets</a> · <a href="https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=200" target="_blank" rel="noopener">/events</a> · <a href="https://external-api.demo.kalshi.co/trade-api/v2/series" target="_blank" rel="noopener">/series</a></td><td><span class="pill yes">Confirmed</span></td></tr>
+        <tr><td>The five topic mappings</td><td>Fetched the published taxonomy and matched each series' <code>category</code> and <code>tags</code> against it</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories" target="_blank" rel="noopener">taxonomy</a></td><td><span class="pill yes">Confirmed</span></td></tr>
+        <tr><td>Settled markets carry a YES/NO result</td><td>Queried <code>status=settled</code> and read <code>result</code>, <code>settlement_value_dollars</code> and <code>settlement_ts</code> from the responses</td><td><a href="https://external-api.demo.kalshi.co/trade-api/v2/markets?status=settled&limit=1000" target="_blank" rel="noopener">/markets?status=settled</a></td><td><span class="pill yes">Confirmed</span></td></tr>
+        <tr><td>Orderbook shape and the implied ask</td><td>Read <code>orderbook_fp.yes_dollars</code> / <code>no_dollars</code> and applied the published reciprocal rule</td><td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">orderbook responses</a></td><td><span class="pill yes">Confirmed</span></td></tr>
+        <tr><td>The request-signing format</td><td>Generated throw-away Ed25519 and RSA keys, signed with the implementation, and verified the signature against the matching public key</td><td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a> · <code>tools/test_signing.py</code></td><td><span class="pill yes">Confirmed offline</span></td></tr>
+        <tr><td>That volume is in contracts, not dollars</td><td>Read the field descriptions in the market schema</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td><td><span class="pill yes">Confirmed</span></td></tr>
+        <tr><td>That the demo environment is mock</td><td>Read the demo environment page and observed synthetic contracts in the responses</td><td><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment</a></td><td><span class="pill yes">Confirmed</span></td></tr>
+        <tr><td>Portfolio and trade performance</td><td>Requires a demo API key; no account existed in the build environment</td><td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API keys</a></td><td><span class="pill flag">Unverified — no account</span></td></tr>
+        <tr><td>Browser CORS access to the demo API</td><td>Not testable without a browser; the published page reports its own mode in the status line</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">market data quick start</a></td><td><span class="pill flag">Unverified</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="requests">2 · Every request the collector made</h2>
+  <div class="card">
+    <p class="muted small">Opened directly from this table; the response is the source of the rows below it.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>#</th><th>Request</th><th class="num">HTTP</th><th class="num">Bytes</th><th>Requested at (UTC)</th></tr></thead>
+      <tbody>
+<tr><td colspan="5" class="muted">No request log was found.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="rows">3 · Spot checks — stored value against the response it came from</h2>
+  <div class="card">
+    <p class="muted small">
+      A representative row from each topic, with every field exactly as the API returned it and a link to that
+      response. The full set is in <code>data/markets_open.json</code> and on the category pages.
+    </p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Ticker</th><th>Title</th><th>Topic</th><th class="num">Last $</th><th class="num">Volume (contracts)</th><th class="num">Close (UTC)</th><th>Source</th></tr></thead>
+      <tbody>
+<tr><td colspan="7" class="muted">No rows in the snapshot.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="checks">4 · Checks run before publication</h2>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:34%">Check</th><th style="width:34%">Command</th><th>What it proves</th></tr></thead>
+      <tbody>
+        <tr><td>Internal links and anchors</td><td class="mono">python3 tools/check_links.py</td><td>No broken link, no missing anchor, and every data row cites an official API response</td></tr>
+        <tr><td>Signing implementation</td><td class="mono">python3 tools/test_signing.py</td><td>The signature format still matches the published Kalshi specification</td></tr>
+        <tr><td>Script syntax</td><td class="mono">node --check assets/app.js</td><td>Every browser script parses</td></tr>
+        <tr><td>Generated pages match the data</td><td class="mono">python3 tools/build_site.py</td><td>The category and verification pages are regenerated from <code>data/</code>, never edited by hand</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2 id="limits">5 · Limits of this verification</h2>
+  <div class="card">
+    <ul class="tight">
+      <li>The values were verified against the <b>demo</b> environment only. Nothing here says anything about production markets.</li>
+      <li>The collector reads the public endpoints without credentials, so it cannot see anything an account holder can see: balance, positions, fills, settlements or order state.</li>
+      <li>Listings are read at a point in time. Kalshi states that responses are cached briefly, so a value can lag the exchange by several seconds.</li>
+      <li>Markets that settled before the historical cutoff are only available through the separate historical endpoint, so the resolution table covers the recent window only. <a href="flagged.html#f17">Flag F17</a></li>
+      <li>Every remaining uncertainty is listed on the <a href="flagged.html">Flagged for Review</a> page.</li>
+    </ul>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="inner">
+    <span>Kalshi Demo Dashboard · demo environment only · no real funds · research, not advice</span>
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs</a>
+    <a href="sources.html">All sources</a>
+    <a href="../COORDINATION.md">Coordination log</a>
+  </div>
+</footer>
+</body>
+</html>

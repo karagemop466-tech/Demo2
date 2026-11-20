@@ -1,9 +1,137 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Elections</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Elections</h1>
-<p>Live markets whose title/ticker matches: <b>election, president, senate, house, vote, ballot, governor, mayor, congress</b>. Ranking and prices are live from the <a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> endpoint (demo base <a href="https://docs.kalshi.com/getting_started/demo_env">external-api.demo.kalshi.co</a>). Use the <a href="../index.html">Dashboard</a> filter — the dashboard applies this keyword map and sorts by notional. No values are pre-filled here; blank means “live only”.</p>
-<table><tr><th>Item</th><th>Value</th><th>Source</th></tr>
-<tr><td>Open markets in scope</td><td>Live — see Dashboard</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></td></tr>
-<tr><td>Top market by notional</td><td>Live — see Dashboard</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></td></tr>
-<tr><td>Resolution (yes/no)</td><td>Live — see Dashboard resolved table</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets (settled)</a></td></tr>
-</table>
-<p class="muted">Keyword mapping is a heuristic (titles vary). Unmapped markets are excluded, not mislabeled. See <a href="flagged.html">Flagged for Review</a>.</p>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elections · Kalshi Demo Dashboard</title>
+<meta name="description" content="Election, primary, ballot, nominee and control contracts. Verified Kalshi demo market rows, each linked to the official API response it came from.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <a class="brand" href="../index.html"><span>KALSHI</span> DEMO<small>RESEARCH DASHBOARD</small></a>
+    <nav class="main">
+      <a href="../index.html" class="active">Dashboard</a>
+      <a href="executive-summary.html">Executive Summary</a>
+      <a href="gas.html">Gas</a>
+      <a href="elections.html">Elections</a>
+      <a href="culture.html">Culture</a>
+      <a href="crypto.html">Crypto</a>
+      <a href="golf.html">Golf</a>
+      <a href="portfolio.html">Portfolio &amp; Trading</a>
+      <a href="analysis.html">Analysis</a>
+      <a href="suggestions.html">Suggestions</a>
+      <a href="questions.html">Questions</a>
+      <a href="verification.html">Verification</a>
+      <a href="flagged.html">Flagged for Review</a>
+      <a href="repo-review.html">Repo Review</a>
+      <a href="sources.html">Sources</a>
+    </nav>
+    <span class="tag">DEMO · NO REAL FUNDS</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="eyebrow">Category · Elections</p>
+  <h1>Elections</h1>
+  <p class="lede">Election, primary, ballot, nominee and control contracts.</p>
+
+  <div class="callout">
+    <b>How this topic was selected.</b>
+    <span>Official Kalshi category <b>Elections</b>, plus title-keyword matches for election, primary, ballot and nominee.</span>
+  </div>
+
+  <div class="card">
+    <h3>Open markets in scope</h3>
+    <p class="muted small">
+      Sorted by estimated dollar turnover (<code>volume_fp × last_price_dollars</code>). The Kalshi API reports
+      volume in contracts and has no dollar-turnover field, so the dollar column is a labelled estimate.
+      Each row links to the exact API response it was read from.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>Ticker</th><th>Title</th><th>Topic / basis</th>
+          <th class="num">Last $</th><th class="num">YES bid</th><th class="num">YES ask</th>
+          <th class="num">Volume (contracts)</th><th class="num">Est. $ turnover</th>
+          <th class="num">Open interest</th><th>Close (UTC)</th><th>Source</th>
+        </tr></thead>
+        <tbody>
+<tr class="placeholder"><td colspan="11" class="muted">No rows in the collected snapshot for this topic.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted small">Blank cells mean the field was not present in the API response — they are unverified, not zero.</p>
+  </div>
+
+  <div class="card">
+    <h3>Orderbook depth — contracts available at each price</h3>
+    <p class="muted small">
+      Best bid per side plus the implied YES ask (<code>$1.00 − best NO bid</code>). Kalshi publishes bids only.
+      Full live depth is on the <a href="../index.html">dashboard</a>.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Ticker</th><th>Title</th><th class="num">Best YES bid</th><th class="num">YES bid contracts</th>
+        <th class="num">Best NO bid</th><th class="num">NO bid contracts</th><th>Source</th></tr></thead>
+        <tbody>
+<tr class="placeholder"><td colspan="7" class="muted">No orderbook snapshots collected for this topic.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Resolved markets — how each one settled</h3>
+    <p class="muted small">
+      Markets from the same API listing that have already settled, with the official <code>result</code>
+      value (YES or NO) and the settlement amount.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Ticker</th><th>Title</th><th>Result</th><th class="num">Settlement $</th>
+        <th>Settled at (UTC)</th><th>Close (UTC)</th><th>Source</th></tr></thead>
+        <tbody>
+<tr class="placeholder"><td colspan="8" class="muted">No settled rows in the collected snapshot for this topic.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Series behind this topic</h3>
+    <p class="muted small">
+      The official Kalshi series records, including their category, tags and the settlement sources Kalshi
+      publishes for them.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Series ticker</th><th>Title</th><th>Category</th><th>Tags</th><th>Settlement sources</th><th></th></tr></thead>
+        <tbody>
+<tr class="placeholder"><td colspan="7" class="muted">No series rows in the collected snapshot for this topic.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="muted small">
+      Snapshot collected <b>not recorded</b> by <a href="https://github.com/karagemop466-tech/Demo2/blob/main/tools/collect_kalshi.py">tools/collect_kalshi.py</a>
+      and refreshed automatically by the scheduled collector. API base
+      <code>https://external-api.demo.kalshi.co/trade-api/v2</code>.
+      See <a href="../pages/verification.html">Verification</a> and <a href="../pages/flagged.html">Flagged for Review</a>.
+    </p>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="inner">
+    <span>Kalshi Demo Dashboard · demo environment only · no real funds · research, not advice</span>
+    <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs</a>
+    <a href="sources.html">All sources</a>
+    <a href="../COORDINATION.md">Coordination log</a>
+  </div>
+</footer>
+</body>
+</html>

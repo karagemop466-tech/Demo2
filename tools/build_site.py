@@ -51,8 +51,8 @@ FOOTER = """<footer class="site">
   <div class="inner">
     <span>Kalshi Demo Dashboard · demo environment only · no real funds · research, not advice</span>
     <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Demo environment docs</a>
-    <a href="pages/sources.html">All sources</a>
-    <a href="COORDINATION.md">Coordination log</a>
+    <a href="{sources}">All sources</a>
+    <a href="{coord}">Coordination log</a>
   </div>
 </footer>"""
 
@@ -81,9 +81,14 @@ def nav_html():
     if not m:
         raise SystemExit("could not find the navigation block in index.html")
     nav = m.group(0)
-    for _, filename, label, _, _ in TOPICS:
-        nav = nav.replace('href="pages/%s"' % filename, 'href="pages/%s" data-nav="%s"' % (filename, filename))
     return nav
+
+
+def nav_for_subdir(nav):
+    """Rewrite the root-relative navigation so it also works from pages/."""
+    out = nav.replace('href="index.html"', 'href="../index.html"')
+    out = out.replace('href="pages/', 'href="')
+    return out
 
 
 def load(name):
@@ -129,7 +134,7 @@ def market_rows(rows):
                 source_link(r.get("source_url"), "API"),
             ))
     if not out:
-        return '<tr><td colspan="11" class="muted">No rows in the collected snapshot for this topic.</td></tr>'
+        return '<tr class="placeholder"><td colspan="11" class="muted">No rows in the collected snapshot for this topic.</td></tr>'
     return "\n".join(out)
 
 
@@ -145,7 +150,6 @@ def settled_rows(rows):
             "<td>%s</td>"
             '<td><span class="pill %s">%s</span></td>'
             '<td class="num">%s</td>'
-            '<td class="num">%s</td>'
             '<td class="nowrap small">%s</td>'
             '<td class="nowrap small">%s</td>'
             "<td>%s</td>"
@@ -156,7 +160,7 @@ def settled_rows(rows):
                 e(r.get("close_time")), source_link(r.get("source_url"), "API"),
             ))
     if not out:
-        return '<tr><td colspan="8" class="muted">No settled rows in the collected snapshot for this topic.</td></tr>'
+        return '<tr class="placeholder"><td colspan="8" class="muted">No settled rows in the collected snapshot for this topic.</td></tr>'
     return "\n".join(out)
 
 
@@ -187,7 +191,7 @@ def series_rows(rows):
                 source_link(r.get("source_url"), "API"),
             ))
     if not out:
-        return '<tr><td colspan="7" class="muted">No series rows in the collected snapshot for this topic.</td></tr>'
+        return '<tr class="placeholder"><td colspan="7" class="muted">No series rows in the collected snapshot for this topic.</td></tr>'
     return "\n".join(out)
 
 
@@ -223,7 +227,7 @@ def depth_rows(orderbooks, topic):
             "<tr><td colspan=\"7\" class=\"small muted\">Implied best YES ask from the best NO bid: %s</td></tr>"
             % (("$" + implied_yes_ask) if implied_yes_ask else e("")))
     if not rows:
-        return '<tr><td colspan="7" class="muted">No orderbook snapshots collected for this topic.</td></tr>'
+        return '<tr class="placeholder"><td colspan="7" class="muted">No orderbook snapshots collected for this topic.</td></tr>'
     return "\n".join(rows)
 
 
@@ -304,7 +308,7 @@ PAGE = """<!doctype html>
     <div class="tablewrap">
       <table>
         <thead><tr><th>Ticker</th><th>Title</th><th>Result</th><th class="num">Settlement $</th>
-        <th class="num">Settled at (UTC)</th><th>Close (UTC)</th><th>Source</th></tr></thead>
+        <th>Settled at (UTC)</th><th>Close (UTC)</th><th>Source</th></tr></thead>
         <tbody>
 {settled_rows}
         </tbody>
@@ -538,7 +542,7 @@ def build_verification(nav, open_data, log, meta):
     if not spots:
         spots.append('<tr><td colspan="7" class="muted">No rows in the snapshot.</td></tr>')
 
-    return VERIFICATION.format(nav=nav, request_rows="\n".join(req_rows),
+    return VERIFICATION.format(nav=nav_for_subdir(nav), request_rows="\n".join(req_rows),
                                spot_rows="\n".join(spots))
 
 
@@ -550,6 +554,7 @@ def main():
     orderbooks = (load("orderbooks.json") or {}).get("rows", {})
 
     nav = nav_html()
+    subnav = nav_for_subdir(nav)
     os.makedirs(PAGES, exist_ok=True)
     written = []
     for topic_id, filename, title, blurb, scope in TOPICS:
@@ -557,7 +562,8 @@ def main():
         srows = [r for r in settled_data.get("rows", []) if r.get("topic") == topic_id]
         serrows = [r for r in series_data.get("rows", []) if r.get("topic") == topic_id]
         page = PAGE.format(
-            title=title, blurb=blurb, scope=scope, nav=nav, footer=FOOTER,
+            title=title, blurb=blurb, scope=scope, nav=subnav,
+            footer=FOOTER.format(sources="sources.html", coord="../COORDINATION.md"),
             market_rows=market_rows(mrows), settled_rows=settled_rows(srows),
             series_rows=series_rows(serrows), depth_rows=depth_rows(orderbooks, topic_id),
             collected=html.escape(str(open_data.get("collected_at") or meta.get("collected_at") or "not recorded")),
@@ -583,7 +589,13 @@ def main():
         with open(exec_path, encoding="utf-8") as fh:
             doc = fh.read()
         block = fixtures_block(open_data, settled_data, series_data, orderbooks, meta)
-        doc = doc.replace("<!-- DATA:FIXTURES -->", block)
+        block = ("<!-- DATA:FIXTURES:START -->\n" + block + "\n<!-- DATA:FIXTURES:END -->")
+        import re as _re
+        if _re.search(r"<!-- DATA:FIXTURES:START -->.*?<!-- DATA:FIXTURES:END -->", doc, _re.S):
+            doc = _re.sub(r"<!-- DATA:FIXTURES:START -->.*?<!-- DATA:FIXTURES:END -->",
+                          block, doc, flags=_re.S)
+        else:
+            doc = doc.replace("<!-- DATA:FIXTURES -->", block)
         with open(exec_path, "w", encoding="utf-8") as fh:
             fh.write(doc)
         print("filled pages/executive-summary.html fixtures")
