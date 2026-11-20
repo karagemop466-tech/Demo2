@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive Summary — Kalshi Demo Intelligence</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="shell">
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="k">◈</span> Kalshi Demo Intelligence</a>
+    <span class="tagline">Verified demo-exchange analytics · session arena-ddc587ae</span>
+    <div class="nav-section">Start</div>
+    <a class="item" href="index.html">🏠 Overview</a>
+    <a class="item active" href="executive-summary.html">📄 Executive Summary</a>
+    <div class="nav-section">Monitor</div>
+    <a class="item" href="dashboard.html">📊 Live Dashboard</a>
+    <a class="item" href="events.html">🎯 Events &amp; Resolutions</a>
+    <div class="nav-section">Account</div>
+    <a class="item" href="portfolio.html">💼 Portfolio &amp; Analysis</a>
+    <a class="item" href="trading.html">🧪 Trading</a>
+    <div class="nav-section">Review</div>
+    <a class="item" href="suggestions.html">💡 Suggestions</a>
+    <a class="item" href="questions.html">❓ Questions &amp; Answers</a>
+    <a class="item" href="flagged.html">🚩 Flagged for Review</a>
+  </nav>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <h1>Executive Summary</h1>
+        <div class="sub">Everything below is verified against official sources only — the live Kalshi demo API, docs.kalshi.com (Kalshi's official documentation), and cftc.gov (U.S. regulator). Each row links to its source. Unverifiable values are blank and flagged.</div>
+      </div>
+      <div class="badges"><span class="badge" id="modeBadge"><span class="spin"></span> <b>Checking</b>…</span></div>
+    </div>
+
+    <div class="panel">
+      <h2>1 · What is being tracked</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Fact</th><th>Value</th><th>Source (official)</th></tr></thead>
+        <tbody>
+          <tr><td>Venue</td><td>Kalshi — event-contract (prediction) market exchange; operates a demo environment with mock funds</td><td><a class="src-link" href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">docs · Test In The Demo Environment</a></td></tr>
+          <tr><td>Regulatory status</td><td>KalshiEX LLC designated a Contract Market (DCM) by the CFTC — Order of Designation, 2020-11-04</td><td><a class="src-link" href="https://www.cftc.gov/PressRoom/PressReleases/8302-20" target="_blank" rel="noopener">cftc.gov release 8302-20</a></td></tr>
+          <tr><td>Official API documentation</td><td>docs.kalshi.com — Predictions API (REST, WebSocket, FIX) spec version 3.37.0</td><td><a class="src-link" href="https://docs.kalshi.com/openapi.yaml" target="_blank" rel="noopener">docs · openapi.yaml</a></td></tr>
+          <tr><td>Demo environment UI</td><td>https://demo.kalshi.co/ (credentials separate from production)</td><td><a class="src-link" href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">docs · demo_env</a></td></tr>
+          <tr><td>Exchange status at collection</td><td><code>exchange_active=true</code>, <code>trading_active=true</code>; 4 exchange indexes (Default + Demo shard 1 + Demo shard 2 + 1 unnamed), all trading</td><td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">GET /exchange/status</a></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="panel">
+      <h2>2 · API surfaces (as published by Kalshi)</h2>
+      <p class="hint">Table reproduced from the official "Demo Environment" docs page and verified live where possible.</p>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Surface</th><th>Recommended demo endpoint</th><th>Also supported</th><th>Verification performed</th></tr></thead>
+        <tbody>
+          <tr><td>REST Trade API</td><td><code>https://external-api.demo.kalshi.co/trade-api/v2</code></td><td><code>https://demo-api.kalshi.co/trade-api/v2</code></td><td>Live <code>GET /exchange/status</code> returned 200 with active flags — <a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">view</a> · source <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">docs/demo_env</a></td></tr>
+          <tr><td>WebSocket API</td><td><code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code></td><td><code>wss://demo-api.kalshi.co/trade-api/ws/v2</code></td><td>URL matches official docs; <b>connection requires KALSHI-ACCESS-KEY / SIGNATURE / TIMESTAMP headers</b> (auth handshake) — <a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">docs/quick_start_websockets</a></td></tr>
+        </tbody>
+      </table></div>
+      <div class="flagbox"><b>Design consequence (verified):</b> because the WebSocket handshake requires signing with a private API key, a public GitHub Pages dashboard cannot open the WS stream without credentials. The dashboard therefore <b>polls public REST endpoints</b> (market data needs no auth) and falls back to bundled snapshots when the browser cannot reach the API. See <a href="questions.html">Q&amp;A</a> Q7.</div>
+    </div>
+
+    <div class="panel">
+      <h2>3 · Endpoints verified line-by-line (spec §3.37.0 + live calls)</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Endpoint</th><th>Purpose in this project</th><th>Key verified parameters / fields</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>GET /exchange/status</code></td><td>Live-up/status pill</td><td><code>exchange_active</code>, <code>trading_active</code>, <code>exchange_index_statuses[]</code></td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/exchange/get-exchange-status.md" target="_blank" rel="noopener">docs spec</a></td></tr>
+          <tr><td><code>GET /search/tags_by_categories</code></td><td>Official topic → category/tag mapping</td><td><code>tags_by_categories{}</code> — categories include Commodities, Elections, Entertainment, Crypto, Sports (tag Golf), Economics</td><td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories" target="_blank" rel="noopener">live response</a></td></tr>
+          <tr><td><code>GET /series</code></td><td>Topic watchlists + all-time volume</td><td><code>category</code> (exact, matches any of series' categories), <code>tags</code>, <code>include_volume=true</code> → <code>volume_fp</code>, <code>settlement_sources[]</code>, <code>contract_url</code></td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/market/get-series-list.md" target="_blank" rel="noopener">docs spec</a></td></tr>
+          <tr><td><code>GET /events</code></td><td>Live/settled event tracking</td><td><code>status</code>=unopened|open|closed|settled, <code>series_ticker</code>, <code>tickers</code> (CSV), <code>with_nested_markets</code>, <code>limit</code>≤200, <code>cursor</code>; event <code>category</code> field is <b>deprecated</b> (use series-level)</td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/events/get-events.md" target="_blank" rel="noopener">docs spec</a></td></tr>
+          <tr><td><code>GET /markets</code></td><td>Market ranking &amp; detail</td><td><code>status</code>=unopened|open|paused|closed|settled, <code>series_ticker</code>, <code>event_ticker</code>, <code>tickers</code>, <code>limit</code>≤1000; fields <code>last_price_dollars</code>, <code>volume_fp</code>, <code>volume_24h_fp</code>, <code>open_interest_fp</code>, <code>yes_bid/ask_dollars</code> + sizes, <code>result</code> ∈ yes|no|scalar|"", <code>status</code> ∈ initialized…finalized. <b>No server-side sort-by-volume parameter exists</b> (verified in spec)</td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noopener">docs spec</a></td></tr>
+          <tr><td><code>GET /markets/{t}/orderbook</code></td><td>Liquidity at each price</td><td><code>orderbook_fp.yes_dollars[]</code> and <code>.no_dollars[]</code> = [price$, size contracts]; doc states bids only — a YES bid at <i>p</i> equals a NO bid at <i>1−p</i></td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/market/get-market-orderbook.md" target="_blank" rel="noopener">docs</a> · <a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDANCINGWITHTHESTARS-26DEC31-TAT/orderbook" target="_blank" rel="noopener">live sample</a></td></tr>
+          <tr><td><code>GET /series/{s}/markets/{t}/candlesticks</code></td><td>Price history chart</td><td><code>period_interval</code> ∈ 1|60|1440 minutes, <code>start_ts</code>, <code>end_ts</code> (≤5,000 periods/req); bars expose <code>price</code> (open/high/low/close/previous/mean $), <code>yes_bid</code>, <code>yes_ask</code>, <code>volume_fp</code>, <code>end_period_ts</code></td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks.md" target="_blank" rel="noopener">docs</a> · <a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/series/KXDANCINGWITHTHESTARS/markets/KXDANCINGWITHTHESTARS-26DEC31-TAT/candlesticks?period_interval=60&amp;start_ts=1794568809&amp;end_ts=1795173609" target="_blank" rel="noopener">live sample</a></td></tr>
+          <tr><td><code>GET /markets/trades</code></td><td>Seconds-level price series (tick data)</td><td><code>ticker</code>, <code>min_ts</code>/<code>max_ts</code> in seconds, <code>limit</code>≤1000; each trade: <code>count_fp</code>, <code>yes_price_dollars</code>, <code>no_price_dollars</code>, <code>taker_outcome_side</code>, <code>created_time</code> (ms precision)</td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/market/get-trades.md" target="_blank" rel="noopener">docs spec</a></td></tr>
+          <tr><td><code>GET /portfolio/balance</code> · <code>/portfolio/positions</code> · <code>/portfolio/fills</code></td><td>Portfolio tracking</td><td>Require <code>KALSHI-ACCESS-KEY/SIGNATURE/TIMESTAMP</code> headers (RSA-PSS SHA-256 or Ed25519 over <code>timestamp+METHOD+path</code>, timestamp in ms, ±30 s)</td><td><a class="src-link" href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noopener">docs · authenticated requests</a></td></tr>
+          <tr><td><code>POST /portfolio/events/orders</code></td><td>Trade execution (V2)</td><td>Required body: <code>ticker</code>, <code>side</code> ∈ bid|ask, <code>count</code>, <code>price</code> (fixed-point $), <code>time_in_force</code> ∈ fill_or_kill|good_till_canceled|immediate_or_cancel, <code>self_trade_prevention_type</code>; response 201 → <code>order_id</code>, <code>fill_count</code>, <code>remaining_count</code>. Legacy <code>/portfolio/orders</code> → 410 <code>deprecated_v1_order_endpoint</code></td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/orders/create-order-v2.md" target="_blank" rel="noopener">docs · Create Order (V2)</a></td></tr>
+          <tr><td>Settlement</td><td>YES/NO payout rules</td><td>Yes holders receive $1/contract; No holders receive $1/contract; only net positions settled; simple yes/no determinations carry zero settlement fee</td><td><a class="src-link" href="https://docs.kalshi.com/getting_started/market_settlement.md" target="_blank" rel="noopener">docs · Market Settlement</a></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="panel">
+      <h2>4 · Headline findings (each linked to its source row)</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>#</th><th>Finding</th><th>Evidence</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><b>All five required topics exist as official API categories:</b> gas prices ← Commodities/"Oil &amp; Gas" + Economics/"Oil and energy" (AAA pump-price series); elections ← Elections; culture ← Entertainment; crypto ← Crypto; golf ← Sports tag "Golf"</td><td><a class="src-link" href="https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories" target="_blank" rel="noopener">GET /search/tags_by_categories</a></td></tr>
+          <tr><td>2</td><td><b>Highest all-time series volumes observed (demo):</b> golf KXDPWORLDTOUR 8,245,802,181 contracts; gas KXWTI 332,483,087; crypto KXETH 72,112,699; culture KXMETGALA 42,441,900; elections KXVPRESNOMR 1,273,383</td><td>Per-row sources in <a href="data/watchlist.json">data/watchlist.json</a> (each record embeds its query URL)</td></tr>
+          <tr><td>3</td><td><b>Live now (snapshot 2026-11-20 ~11:15 UTC):</b> ≥1 open event per topic — WTI hourly &amp; Brent daily (gas), Republican VP 2028 (elections), DWTS S35 winner + Billboard (culture), BTC hourly range (crypto), Masters R1 leader (golf)</td><td>Rows + sources in <a href="events.html">Events &amp; Resolutions</a> / <a href="data/snapshot.json">snapshot.json</a></td></tr>
+          <tr><td>4</td><td><b>Resolutions verified with money movement:</b> YES pays <code>settlement_value_dollars=1.0000</code>, NO pays <code>0.0000</code>, each with <code>settlement_ts</code> and <code>status=finalized</code> (e.g. "1+1 = 3" → NO; California Prop 1 → YES)</td><td><a href="events.html">Resolutions table</a> (rows source: GET /markets?status=settled and settled events)</td></tr>
+          <tr><td>5</td><td><b>Demo market activity at collection:</b> global trade feed showed executions at 11:19:35Z across elections, golf (KXPGATOUR), crypto (KXBTCD), culture (KXTOPSONG)</td><td><a href="events.html#trades">Recent trades sample</a> — GET /markets/trades?limit=40</td></tr>
+          <tr><td>6</td><td><b>No official dollar-volume field exists.</b> The Market schema carries contract counts (volume_fp, volume_24h_fp) and prices, but no turnover/dollar figure, and no volume sort. Dollar rankings must be derived (documented formula) or computed client-side across paged results</td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noopener">Market schema in spec</a> → <a href="flagged.html">Flag F-01</a></td></tr>
+          <tr><td>7</td><td><b>Portfolio &amp; trade execution are credential-gated.</b> No demo API credentials exist in this session's environment or repository; authenticated endpoints cannot be read or written until keys are supplied</td><td><a class="src-link" href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noopener">docs · auth</a> → <a href="questions.html">Q1</a> / <a href="flagged.html">Flag F-02</a></td></tr>
+          <tr><td>8</td><td><b>Market-data responses are cached server-side</b> "for a short time, so prices, sizes and status can lag the exchange by several seconds" — polling design must not assume tick-exact REST data</td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/market/get-markets.md" target="_blank" rel="noopener">docs · Get Markets (caching note)</a></td></tr>
+          <tr><td>9</td><td><b>Demo data has irregularities</b> (test series volumes in the billions, event/market status mismatches, 2035-titled markets settled in 2026, literal <code>"hi"</code> cadence value) — all itemised on the Flagged page with sources</td><td><a href="flagged.html">🚩 Flagged for Review</a></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="panel">
+      <h2>5 · What this site does (scope delivered)</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Requirement</th><th>Where delivered</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Executive summary</td><td>This page</td><td><span class="pill yes">done</span></td></tr>
+          <tr><td>Dashboard of highest-dollar live events in 5 topics</td><td><a href="dashboard.html">Live Dashboard</a> — ranked table, topic filters, derived $ estimate labelled</td><td><span class="pill yes">done</span></td></tr>
+          <tr><td>Track live events until resolution (YES/NO)</td><td><a href="events.html">Events &amp; Resolutions</a> — live tracker + settlement evidence</td><td><span class="pill yes">done</span></td></tr>
+          <tr><td>Price chart, X = time (seconds/minutes/hours), Y = contract price</td><td><a href="dashboard.html#chart">Dashboard chart</a> — tick (s) / 1-min / 1-hour / 1-day selectors</td><td><span class="pill yes">done</span></td></tr>
+          <tr><td>Liquidity at given price</td><td><a href="dashboard.html#depth">Dashboard depth ladder</a> — contracts per price level (yes &amp; no books)</td><td><span class="pill yes">done</span></td></tr>
+          <tr><td>Portfolio performance from demo account</td><td><a href="portfolio.html">Portfolio</a> — engine ready; blocked on missing API credentials (Q1)</td><td><span class="pill">blocked · flagged</span></td></tr>
+          <tr><td>Analyse &amp; categorise trades; strategies by trade type</td><td><a href="portfolio.html#analysis">Analysis &amp; categorisation</a> + <a href="portfolio.html#strategies">strategy templates</a></td><td><span class="pill yes">done</span></td></tr>
+          <tr><td>Execute trades and track performance</td><td><a href="trading.html">Trading</a> — V2 request builder + signed curl export; execution through secured paths (local <code>server/</code> backend / docs playground). Browser credential entry removed at integration (F-17, D-05)</td><td><span class="pill">security-aligned · needs env keys to run</span></td></tr>
+          <tr><td>Suggestions section with review-before-implement</td><td><a href="suggestions.html">Suggestions</a> — review queue states</td><td><span class="pill yes">done</span></td></tr>
+          <tr><td>Questions / missing information discovery</td><td><a href="questions.html">Questions &amp; Answers</a></td><td><span class="pill yes">done</span></td></tr>
+          <tr><td>Clean GitHub Pages site, sourced tables, flagged page</td><td>Whole site + <a href="flagged.html">Flagged</a>; published from <code>main</code></td><td><span class="pill yes">done</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="panel">
+      <h2>6 · Methodology (short form)</h2>
+      <ol class="note" style="margin:0; padding-left:20px; line-height:1.9">
+        <li>Enumerate official categories/tags, then enumerate series per topic query (completeness recorded per query: complete vs partial).</li>
+        <li>Capture live events (status=open) and settled events (status=settled) for watchlist series; capture orderbooks, candlesticks and trade ticks from the official endpoints.</li>
+        <li>Transcribe values verbatim into <code>data/*.json</code> with the source URL on each record; blanks stay blank.</li>
+        <li>The dashboard prefers <b>live</b> data (browser → demo API) and uses the verified snapshots when the browser cannot reach the API; mode is always displayed.</li>
+        <li>Anything unverified, derived, or anomalous is listed on <a href="flagged.html">Flagged for Review</a> — it never blocks the site, but it is never hidden either.</li>
+      </ol>
+    </div>
+
+    <div class="foot">
+      Sources: <a href="https://docs.kalshi.com" target="_blank" rel="noopener">docs.kalshi.com</a> ·
+      <a href="https://external-api.demo.kalshi.co/trade-api/v2/exchange/status" target="_blank" rel="noopener">demo API</a> ·
+      <a href="https://www.cftc.gov/PressRoom/PressReleases/8302-20" target="_blank" rel="noopener">cftc.gov</a>
+    </div>
+  </main>
+</div>
+<script src="assets/app.js"></script>
+<script>KDS.setModeBadge(document.getElementById("modeBadge"));</script>
+</body>
+</html>

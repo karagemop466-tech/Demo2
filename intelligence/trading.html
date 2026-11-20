@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trading — Kalshi Demo Intelligence</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="shell">
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="k">◈</span> Kalshi Demo Intelligence</a>
+    <span class="tagline">Verified demo-exchange analytics · session arena-ddc587ae</span>
+    <div class="nav-section">Start</div>
+    <a class="item" href="index.html">🏠 Overview</a>
+    <a class="item" href="executive-summary.html">📄 Executive Summary</a>
+    <div class="nav-section">Monitor</div>
+    <a class="item" href="dashboard.html">📊 Live Dashboard</a>
+    <a class="item" href="events.html">🎯 Events &amp; Resolutions</a>
+    <div class="nav-section">Account</div>
+    <a class="item" href="portfolio.html">💼 Portfolio &amp; Analysis</a>
+    <a class="item active" href="trading.html">🧪 Trading</a>
+    <div class="nav-section">Review</div>
+    <a class="item" href="suggestions.html">💡 Suggestions</a>
+    <a class="item" href="questions.html">❓ Questions &amp; Answers</a>
+    <a class="item" href="flagged.html">🚩 Flagged for Review</a>
+  </nav>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <h1>Trading — demo order execution</h1>
+        <div class="sub">Build a Create Order (V2) request against the official spec, export it as a ready-to-run signed call, and submit it through a <b>secured</b> path (local backend with environment-variable keys, or Kalshi's official docs playground). This static page never accepts private keys.</div>
+      </div>
+      <div class="badges"><span class="badge" id="modeBadge"><span class="spin"></span> <b>Checking</b>…</span></div>
+    </div>
+
+    <div class="flagbox">
+      <b>Security decision (F-17, decision D-05): no credentials in the browser.</b>
+      Repository policy on <code>main</code> states plainly: <i>“Do not place private signing keys in a public static site… Do not enter credentials in a public GitHub Pages application”</i> — see the <a href="https://github.com/karagemop466-tech/Demo2/blob/main/README.md" target="_blank" rel="noopener">repo README</a> and open PR
+      <a href="https://github.com/karagemop466-tech/Demo2/pull/6" target="_blank" rel="noopener">#6 “Disable unsafe browser-side trading credentials”</a>.
+      An earlier draft of this page offered key paste + client-side signing; post-integration review <b>removed</b> it. The signing spec itself is still documented below (it is public knowledge from official docs) — only the credential-entry vector was removed.
+    </div>
+
+    <div class="panel">
+      <h2>Order ticket — builds the official V2 request body</h2>
+      <p class="hint">Fields are validated against the Create Order (V2) spec: required <code>ticker</code>, <code>side</code> ∈ bid|ask, <code>count</code>, <code>price</code>, <code>time_in_force</code>, <code>self_trade_prevention_type</code>. Source: <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2.md" target="_blank" rel="noopener">docs · Create Order (V2)</a>.</p>
+      <div class="controls">
+        <label>Market ticker <input type="text" id="ordTicker" placeholder="KXDANCINGWITHTHESTARS-26DEC31-TAT" style="min-width:300px"></label>
+        <button id="fillFromChart" title="uses last selected market on the dashboard">use last charted market</button>
+        <label>Side
+          <select id="ordSide">
+            <option value="bid">bid</option>
+            <option value="ask">ask</option>
+          </select>
+        </label>
+      </div>
+      <div class="controls">
+        <label>Count (contracts) <input type="text" id="ordCount" value="10.00" style="min-width:90px"></label>
+        <label>Price (YES $) <input type="text" id="ordPrice" placeholder="0.5600" style="min-width:90px"></label>
+        <label>Time in force
+          <select id="ordTif">
+            <option value="good_till_canceled">good_till_canceled</option>
+            <option value="immediate_or_cancel">immediate_or_cancel</option>
+            <option value="fill_or_kill">fill_or_kill</option>
+          </select>
+        </label>
+        <label>Self-trade prevention
+          <select id="ordStp">
+            <option value="taker_at_cross">taker_at_cross</option>
+            <option value="maker">maker</option>
+          </select>
+        </label>
+      </div>
+      <div class="controls">
+        <label><input type="checkbox" id="ordPostOnly"> post_only</label>
+        <label>expiration_time (unix s) <input type="text" id="ordExp" placeholder="—" style="min-width:110px"></label>
+        <button class="primary" id="buildBtn">Build request body</button>
+      </div>
+
+      <div class="table-wrap" style="margin-top:10px">
+        <table class="data">
+          <thead><tr><th>Request (verbatim JSON)</th></tr></thead>
+          <tbody><tr><td><pre id="bodyOut" class="mono" style="white-space:pre-wrap; margin:0; font-size:12.5px">{ "ticker": "…", "side": "bid", "count": "10.00", "price": "0.5600", "time_in_force": "good_till_canceled", "self_trade_prevention_type": "taker_at_cross" }</pre></td></tr></tbody>
+        </table>
+      </div>
+      <div class="table-wrap" style="margin-top:8px">
+        <table class="data">
+          <thead><tr><th>Signed curl export (env placeholders — fill locally, never paste keys here)</th></tr></thead>
+          <tbody><tr><td><pre id="curlOut" class="mono" style="white-space:pre-wrap; margin:0; font-size:12.5px">Press “Build request body”.</pre></td></tr></tbody>
+        </table>
+      </div>
+      <p class="note">Signature recipe (official): <code>message = timestamp_ms + "POST" + "/trade-api/v2/portfolio/events/orders"</code> (path without query) → RSA-PSS SHA-256 (salt = digest length) or Ed25519 → base64 → headers <code>KALSHI-ACCESS-KEY</code>, <code>KALSHI-ACCESS-TIMESTAMP</code>, <code>KALSHI-ACCESS-SIGNATURE</code>; ±30 s clock tolerance — <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noopener">authenticated-requests quickstart</a>.</p>
+    </div>
+
+    <div class="panel">
+      <h2>How to actually submit (approved paths)</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Path</th><th>Where keys live</th><th>Steps</th><th>Status for this session</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>1 · Repo backend (local)</b></td>
+            <td>Environment variables on your machine (never in the repo — <code>*.key</code>/<code>*.pem</code>/<code>.env</code> are gitignored)</td>
+            <td>From repo root: <code>npm install</code> → export <code>KALSHI_ACCESS_KEY</code> / <code>KALSHI_PRIVATE_KEY</code> → <code>npm start</code>. The <code>server/</code> component signs and submits V2 orders and reads portfolio data server-side (added by another session — see README).</td>
+            <td>Available to the owner (no keys in this session's environment — F-02)</td>
+          </tr>
+          <tr>
+            <td><b>2 · Official docs playground</b></td>
+            <td>Kalshi docs session (your login)</td>
+            <td>Open <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2.md" target="_blank" rel="noopener">Create Order (V2)</a> on docs.kalshi.com and use its <i>Try it</i> console with your demo key.</td>
+            <td>Manual path, official</td>
+          </tr>
+          <tr>
+            <td><b>3 · Your own script</b></td>
+            <td>Local script</td>
+            <td>Python example (signing, headers, base URL) is in the official <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests.md" target="_blank" rel="noopener">quickstart</a>; POST the body built above.</td>
+            <td>Manual path, official</td>
+          </tr>
+        </tbody>
+      </table></div>
+      <div class="warnbox"><b>No automated orders were executed during this build:</b> no demo credentials existed in the session environment (F-02), and browser-side execution was removed as a security matter (F-17). Nothing on this page fabricates fills, positions or balances.</div>
+    </div>
+
+    <div class="panel">
+      <h2>What a successful create returns (spec)</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Field</th><th>Type</th><th>Meaning (verbatim from spec)</th></tr></thead>
+        <tbody>
+          <tr><td><code>order_id</code></td><td>string</td><td>Server-assigned order id</td></tr>
+          <tr><td><code>client_order_id</code></td><td>string</td><td>Your id if supplied (≤64 chars, unique per subaccount while open)</td></tr>
+          <tr><td><code>fill_count</code></td><td>fixed-point count</td><td>Contracts filled immediately on placement (e.g. <code>"0.00"</code>)</td></tr>
+          <tr><td><code>remaining_count</code></td><td>fixed-point count</td><td>What still rests — <b>201 means accepted, not resting</b></td></tr>
+          <tr><td><code>ts_ms</code></td><td>int64</td><td>Server timestamp (ms)</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Error families on this endpoint (spec): 400 / 401 / 403 / 409 / 429 / 500 / 503 — error codes catalogued at <a href="https://docs.kalshi.com/getting_started/order_errors.md" target="_blank" rel="noopener">docs · Order Errors</a>. Legacy <code>/portfolio/orders</code> writes return <b>410 Gone</b> (<code>deprecated_v1_order_endpoint</code>). Cancel path: <a href="https://docs.kalshi.com/api-reference/orders/cancel-order-v2.md" target="_blank" rel="noopener">Cancel Order (V2)</a> (documented, not exercised).</p>
+    </div>
+
+    <div class="panel">
+      <h2>Account activity (balance · positions · fills)</h2>
+      <div class="reqbox">
+        <b>Unavailable from a static page by design.</b> <code>GET /portfolio/balance</code>, <code>/portfolio/positions</code> and <code>/portfolio/fills</code> require signed requests (official spec), and signing keys must not enter a public web page (F-17 / repo policy). Use path 1 (local backend) to view account data; this site's <a href="portfolio.html">Portfolio &amp; Analysis</a> page shows the verified metrics formulas and the public-feed trade-analysis engine, with personal tables left blank until a secured source exists.
+      </div>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Endpoint</th><th>Field semantics used by the portfolio engine (verified)</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>GET /portfolio/balance</code></td><td><code>balance_dollars</code> (string), <code>portfolio_value</code> (cents), <code>updated_ts</code>; own rate bucket 1 req/s (Basic/Advanced)</td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/portfolio/get-balance.md" target="_blank" rel="noopener">Get Balance</a></td></tr>
+          <tr><td><code>GET /portfolio/positions</code></td><td><code>position_fp</code> signed (+YES/−NO), <code>total_traded_dollars</code>, <code>market_exposure_dollars</code>, <code>realized_pnl_dollars</code>, <code>fees_paid_dollars</code></td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/portfolio/get-positions.md" target="_blank" rel="noopener">Get Positions</a></td></tr>
+          <tr><td><code>GET /portfolio/fills</code></td><td><code>outcome_side</code> (yes|no exposure), <code>book_side</code> (bid≡yes, ask≡no), <code>count_fp</code>, prices, <code>is_taker</code>, <code>fee_cost</code>, <code>created_time</code></td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/portfolio/get-fills.md" target="_blank" rel="noopener">Get Fills</a></td></tr>
+          <tr><td><code>GET /portfolio/settlements</code></td><td><code>market_result</code> (yes|no|scalar|""), <code>revenue</code> in cents, yes/no cost basis, <code>fee_cost</code>, <code>settled_time</code></td><td><a class="src-link" href="https://docs.kalshi.com/api-reference/portfolio/get-settlements.md" target="_blank" rel="noopener">Get Settlements</a></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="foot">Execution targets the demo API only: <code>https://external-api.demo.kalshi.co/trade-api/v2</code> · Security decisions: <a href="flagged.html">F-17 / D-05</a> · <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment docs</a></div>
+  </main>
+</div>
+<script src="assets/app.js"></script>
+<script src="assets/trading.js"></script>
+</body>
+</html>

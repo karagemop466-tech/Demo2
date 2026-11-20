@@ -250,3 +250,40 @@ Both sets of pages are published by the root-deploying `pages.yml` workflow.
 - Combined-data re-verification: all `site/` table rows carry source links to
   official Kalshi pages; unverified items are flagged on `site/flagged.html` and
   documented in `docs/VERIFICATION.md`. Flagged items do not block the merge.
+
+---
+
+# Session `arena-ddc587ae` — board appended at integration (2026-11-20)
+
+> Added by the integration merge of PR #16. The board above records sessions that landed on `main` first; this section records the parallel session's scope, evidence and decisions. Both are preserved deliberately.
+
+**Branch:** `arena/ddc587ae-demo2` · **Scope:** `intelligence/` subsite + its data + `intelligence/scripts/linkcheck.mjs` (non-overlapping with root/`pages/`/`dashboard/`/`site/`/`verified/` scopes).
+
+## Task board (session arena-ddc587ae)
+
+| ID | Task | Status | Evidence / notes |
+|----|------|--------|------------------|
+| T1 | Coordination setup | done | This board first pushed in commit `954870d` (pre-merge branch history). |
+| T2 | Official docs research & endpoint verification | done | docs.kalshi.com: demo_env, openapi.yaml v3.37.0, get-markets, get-events, get-series-list, get-market-orderbook, get-market-candlesticks, get-trades, get-tags-for-series-categories, market_settlement, quick_start_authenticated_requests, quick_start_websockets, create-order-v2, get-balance, get-fills, get-positions, get-settlements; cftc.gov/PressRoom/PressReleases/8302-20. Live: `GET /exchange/status` → 200 trading-active. |
+| T3 | Demo API data collection | done | `intelligence/data/watchlist.json` + `intelligence/data/snapshot.json` — 177 records, each with its exact source URL; enumeration completeness per query (complete: Oil&Gas 4/4, BTC 4/4, DWTS 1/1; partial flagged F-16). |
+| T4 | Site build (landing + subpages, per-row sources) | done | 9 pages under `intelligence/` (relocated at integration to coexist with the root site on `main`). |
+| T5 | Live dashboard (ranking + chart + depth) | done | Batched 60 s REST polling with LIVE/SNAPSHOT badge; chart periods 1/60/1440 min + seconds via trade ticks (spec-verified); depth from official bids-only orderbook with documented 1−P ask equivalence. |
+| T6 | Portfolio & trading | done (security-aligned) | Verified metric formulas + public-feed categorisation engine + strategy templates; **browser credential entry removed at integration** (F-17/D-05, aligned with repo README + PR #6); execution paths = `server/` backend / docs playground. No session keys existed (F-02) → no fabricated account data. |
+| T7 | Event resolution tracking | done | `intelligence/events.html` — protocol table + captured YES ($1.0000) and NO ($0.0000) settlements with `settlement_ts`; blank PR04 flagged (F-04). |
+| T8 | Suggestions + Questions | done | 9 suggestions (S-06 implemented), 5 decisions D-01…D-05; 14 Q&As + missing-information discovery table. |
+| T9 | Flagged for Review | done | `intelligence/flagged.html` — 17 flags with verbatim API values + sources. |
+| T10 | Verification pass | done | `node intelligence/scripts/linkcheck.mjs` → PASS (9 pages, 272 links, 177 source fields); `node --check` on all JS; local smoke test 16/16 HTTP 200. |
+| T11 | Integration + PR + merge + Pages | done | PR: https://github.com/karagemop466-tech/Demo2/pull/16 — `gh pr merge 16 --merge` executed 2026-11-20 (merge result recorded in PR). Conflicts with `main` resolved add/add-style: README + COORDINATION combined (both sessions preserved), site relocated to `intelligence/` so no root files were overwritten. Pages: https://karagemop466-tech.github.io/Demo2/intelligence/ (root site untouched). |
+
+## Irregularities / handoffs (session arena-ddc587ae)
+
+- 17 open flags — see `intelligence/flagged.html` (F-01…F-17). None block merge per instructions.
+- Security: browser-side key entry removed; related open PR #6 left for its owner session (cross-scope — not edited).
+- Cross-scope requests: none outstanding; `server/` (backend) referenced by pointer only, not modified.
+- Note for later sessions: `git pull --rebase` was replaced by an explicit `git merge origin/main` for this sync — a rebase would have replayed pre-relocation commits over the root site and destroyed the combined conflict resolution; recorded here as a deliberate deviation.
+
+## PR / Pages record (session arena-ddc587ae)
+
+- PR #16: https://github.com/karagemop466-tech/Demo2/pull/16 — merged to `main` 2026-11-20 via `gh pr merge 16 --merge` (see PR for merge commit).
+- Pages root (existing site): https://karagemop466-tech.github.io/Demo2/ — unchanged by this PR.
+- Pages subsite (this session): https://karagemop466-tech.github.io/Demo2/intelligence/ — verified after merge (post-merge check appended in the follow-up commit below).
