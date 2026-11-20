@@ -41,29 +41,76 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Fetch Kalshi demo snapshot
-        run: node scripts/fetch-data.mjs
-
-      - name: Commit refreshed snapshot
+      - name: Probe Kalshi demo API reachability
+        id: probe
+        continue-on-error: true
         run: |
+          set +e
+          {
+            echo "probe utc: $(date -u)"
+            echo "dns:"
+            getent hosts external-api.demo.kalshi.co || echo "  (no A record from runner)"
+            echo "http:"
+            curl -sS -m 25 -o /tmp/probe-body.json -w '  status=%{http_code} time=%{time_total}s\n' \
+              'https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=1'
+            echo "  body:"
+            head -c 300 /tmp/probe-body.json 2>/dev/null || echo "  (no body)"
+            echo
+          } 2>&1 | tee /tmp/probe.log
+
+      - name: Fetch Kalshi demo snapshot
+        id: fetch
+        continue-on-error: true
+        run: |
+          set +e
+          node scripts/fetch-data.mjs 2>&1 | tee /tmp/fetch.log
+          echo "exit_code=${PIPESTATUS[0]}" | tee -a /tmp/fetch.log
+
+      - name: Publish run diagnostics
+        if: always()
+        run: |
+          mkdir -p data
+          {
+            echo "# refresh-data run diagnostics"
+            echo
+            echo "- run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "- commit: ${{ github.sha }}"
+            echo "- branch: ${{ github.ref_name }}"
+            echo "- finished (UTC): $(date -u)"
+            echo
+            echo "## Connectivity probe"
+            cat /tmp/probe.log 2>/dev/null || echo "(not run)"
+            echo
+            echo "## Snapshot harvest"
+            cat /tmp/fetch.log 2>/dev/null || echo "(not run)"
+          } > data/last-run.md
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data
+          git add -A data
           if git diff --staged --quiet; then
-            echo "Snapshot unchanged - nothing to commit."
+            echo "Nothing to commit."
           else
             git commit -m "data: refresh Kalshi demo snapshot"
             git push
           fi
 
+      - name: Fail if harvest failed
+        if: steps.fetch.outcome == 'failure'
+        run: |
+          echo "::error::Snapshot harvest failed - see data/last-run.md"
+          exit 1
+
       - name: Configure Pages
+        if: steps.fetch.outcome == 'success'
         uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
+        if: steps.fetch.outcome == 'success'
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
       - name: Deploy to GitHub Pages
         id: deployment
+        if: steps.fetch.outcome == 'success'
         uses: actions/deploy-pages@v4

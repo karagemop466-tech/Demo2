@@ -114,13 +114,52 @@ const TOPICS = [
 
 /* ------------------------------- HTTP ------------------------------ */
 let requestCount = 0;
-async function get(path, { allow404 = false } = {}) {
-  requestCount += 1;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * GET with exponential backoff.
+ * Kalshi returns 429 {"error":{"code":"too_many_requests"}} without a
+ * Retry-After header and asks clients to apply exponential backoff
+ * (https://docs.kalshi.com/getting_started/rate_limits).
+ */
+async function get(path, { allow404 = false, retries = 6 } = {}) {
   const url = BASE + path;
-  const res = await fetch(url, { headers: { accept: 'application/json' } });
-  if (res.status === 404 && allow404) return null;
-  if (!res.ok) throw new Error(`GET ${path} -> HTTP ${res.status} ${res.statusText}`);
-  return res.json();
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    requestCount += 1;
+    let res;
+    try {
+      res = await fetch(url, { headers: { accept: 'application/json' } });
+    } catch (err) {
+      if (attempt === retries) throw new Error(`GET ${path} -> network error: ${err.message}`);
+      const wait = Math.min(30000, 500 * 2 ** attempt);
+      console.warn(`[kalshi-snapshot] network error on ${path}; retry in ${wait}ms`);
+      await sleep(wait);
+      continue;
+    }
+    if (res.status === 429) {
+      const body = await res.text().catch(() => '');
+      if (attempt === retries) {
+        throw new Error(`GET ${path} -> HTTP 429 too_many_requests ${body.slice(0, 200)}`);
+      }
+      const wait = Math.min(30000, 500 * 2 ** attempt);
+      console.warn(`[kalshi-snapshot] 429 on ${path}; retry in ${wait}ms`);
+      await sleep(wait);
+      continue;
+    }
+    if (res.status === 404 && allow404) return null;
+    if (!res.ok) {
+      const body = await res.text().catch(() => '');
+      if (res.status >= 500 && attempt < retries) {
+        const wait = Math.min(30000, 500 * 2 ** attempt);
+        console.warn(`[kalshi-snapshot] ${res.status} on ${path}; retry in ${wait}ms`);
+        await sleep(wait);
+        continue;
+      }
+      throw new Error(`GET ${path} -> HTTP ${res.status} ${res.statusText} ${body.slice(0, 300)}`);
+    }
+    return res.json();
+  }
+  throw new Error(`GET ${path} -> exhausted retries`);
 }
 
 /** Cursor pagination helper (https://docs.kalshi.com/getting_started/pagination). */
