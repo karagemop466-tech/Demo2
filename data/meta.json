@@ -1,24 +1,30 @@
 {
-  "generated_at": "2026-11-20T11:23:57.252Z",
+  "generated_at": "2026-11-20T11:45:13.282Z",
   "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
   "environment": "demo",
-  "request_count": 233,
-  "sources": {
-    "base": "https://external-api.demo.kalshi.co/trade-api/v2",
-    "taxonomy": "https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories",
+  "request_count": 277,
+  "request_budget": 900,
+  "budget_exhausted": false,
+  "docs": {
+    "base": "https://docs.kalshi.com/getting_started/demo_env",
+    "apiEnvironments": "https://docs.kalshi.com/getting_started/api_environments",
     "markets": "https://docs.kalshi.com/api-reference/market/get-markets",
     "events": "https://docs.kalshi.com/api-reference/events/get-events",
     "series": "https://docs.kalshi.com/api-reference/market/get-series-list",
+    "taxonomy": "https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories",
     "orderbook": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
     "marketData": "https://docs.kalshi.com/getting_started/quick_start_market_data",
-    "demoEnv": "https://docs.kalshi.com/getting_started/demo_env",
     "fixedPoint": "https://docs.kalshi.com/getting_started/fixed_point_migration",
-    "pagination": "https://docs.kalshi.com/getting_started/pagination"
+    "pagination": "https://docs.kalshi.com/getting_started/pagination",
+    "rateLimits": "https://docs.kalshi.com/getting_started/rate_limits",
+    "orderDirection": "https://docs.kalshi.com/getting_started/order_direction",
+    "settlement": "https://docs.kalshi.com/getting_started/market_settlement"
   },
   "topic_rules": [
     {
       "id": "gas",
       "label": "Gas prices",
+      "blurb": "Diesel, gasoline and crude-oil / fuel-energy price contracts.",
       "categories": [],
       "tags": [
         "Oil & Gas",
@@ -33,6 +39,7 @@
     {
       "id": "elections",
       "label": "Elections",
+      "blurb": "Official Kalshi category \"Elections\".",
       "categories": [
         "Elections"
       ],
@@ -42,6 +49,7 @@
     {
       "id": "culture",
       "label": "Culture",
+      "blurb": "Official Kalshi categories \"Culture\" and \"Entertainment\" (film, music, TV, awards).",
       "categories": [
         "Culture",
         "Entertainment"
@@ -52,6 +60,7 @@
     {
       "id": "crypto",
       "label": "Crypto",
+      "blurb": "Official Kalshi crypto tags (BTC, ETH, SOL, ...), applied across categories.",
       "categories": [],
       "tags": [
         "Crypto",
@@ -77,6 +86,7 @@
     {
       "id": "golf",
       "label": "Golf",
+      "blurb": "Official Kalshi tag \"Golf\" (PGA, majors, tour events).",
       "categories": [],
       "tags": [
         "Golf"
@@ -86,18 +96,31 @@
   ],
   "counts": {
     "taxonomy_categories": 19,
-    "series": 16643,
-    "series_mapped": 5978,
-    "open_markets": 60000,
-    "settled_markets": 60000,
-    "open_events": 12000,
-    "in_scope_open_markets": 0,
-    "in_scope_settled_markets": 0,
-    "in_scope_open_events": 0
+    "series_catalogue": 16643,
+    "series_per_topic": {
+      "gas": 12,
+      "elections": 12,
+      "culture": 12,
+      "crypto": 12,
+      "golf": 12
+    },
+    "markets_collected": 79541,
+    "events_collected": 7209,
+    "active_markets": 13589,
+    "settled_markets": 58212,
+    "open_events": 182
+  },
+  "caps": {
+    "series_per_topic": 12,
+    "open_markets_per_topic": 250,
+    "settled_markets_per_topic": 150,
+    "events_per_topic": 150,
+    "note": "Rows are ranked first, then capped per topic. The rows kept are the highest-value ones; rows beyond the cap are not published."
   },
   "metric_definitions": {
-    "contract_value_traded_usd": "volume_fp (contracts traded, https://docs.kalshi.com/api-reference/market/get-series-list) x last_price_dollars ($ per contract, https://docs.kalshi.com/api-reference/market/get-markets). Derived, not an API field.",
-    "open_interest_usd": "open_interest_fp (open contracts) x last_price_dollars ($ per contract). Derived, not an API field.",
-    "notional_value_dollars": "API field returned verbatim by Get Markets; definition not published in the API reference."
+    "contract_value_traded_usd": "DERIVED: volume_fp (contracts traded) x last_price_dollars ($ per contract). Not an API field. Sources: https://docs.kalshi.com/api-reference/market/get-markets , https://docs.kalshi.com/getting_started/fixed_point_migration",
+    "open_interest_usd": "DERIVED: open_interest_fp (open contracts) x last_price_dollars ($ per contract). Not an API field.",
+    "notional_value_dollars": "API field, verbatim. Kalshi defines it as \"the total value of a single contract at settlement in dollars\" - it is NOT turnover.",
+    "series_volume_fp": "API field, verbatim: total number of contracts traded across all events in the series."
   }
 }

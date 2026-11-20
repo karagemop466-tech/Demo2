@@ -35,7 +35,7 @@ tracking, a verified data snapshot, and an explicit register of everything that 
       <a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a>, <a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a> and
       <a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Get Market Orderbook</a> are collected by
       <code>scripts/fetch-data.mjs</code> on a GitHub Actions schedule; every request is logged in
-      <code>data/collection-log.json</code>. Snapshot built: <b>2026-11-20 11:23 UTC</b>.</li>
+      <code>data/collection-log.json</code>. Snapshot built: <b>2026-11-20 11:45 UTC</b>.</li>
       <li><b>Real price history.</b> The chart uses Kalshi candlesticks
       (<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a>) for the x-axis history and live REST
       snapshots for the newest points.</li>
@@ -64,14 +64,14 @@ tracking, a verified data snapshot, and an explicit register of everything that 
     <table>
       <thead><tr><th>Topic</th><th class="num">Open markets</th><th class="num">Settled markets</th>
         <th class="num">Contract value traded</th><th>Scope rule (official strings)</th><th>Source</th></tr></thead>
-      <tbody><tr><td><span class="tag gas">Gas prices</span></td><td class="num">0</td><td class="num">0</td><td class="num">$0</td><td>Official series tag allowlist: Oil &amp; Gas, Oil and energy, Gas, Gasoline, Diesel, Crude oil.</td><td class="nowrap"><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">taxonomy</a></td></tr><tr><td><span class="tag elections">Elections</span></td><td class="num">0</td><td class="num">0</td><td class="num">$0</td><td>Official series category allowlist: Elections.</td><td class="nowrap"><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">taxonomy</a></td></tr><tr><td><span class="tag culture">Culture</span></td><td class="num">0</td><td class="num">0</td><td class="num">$0</td><td>Official series category allowlist: Culture, Entertainment.</td><td class="nowrap"><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">taxonomy</a></td></tr><tr><td><span class="tag crypto">Crypto</span></td><td class="num">0</td><td class="num">0</td><td class="num">$0</td><td>Official series tag allowlist: Crypto, Bitcoin, BTC, ETH, Ethereum, SOL, Solana, DOGE, Dogecoin, XRP, BNB, HYPE, ZEC, Zcash, NEAR, Shiba Inu, Tokens.</td><td class="nowrap"><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">taxonomy</a></td></tr><tr><td><span class="tag golf">Golf</span></td><td class="num">0</td><td class="num">0</td><td class="num">$0</td><td>Official series tag allowlist: Golf.</td><td class="nowrap"><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">taxonomy</a></td></tr></tbody>
+      <tbody><tr><td><span class="tag gas">Gas prices</span></td><td class="num">250</td><td class="num">150</td><td class="num">$785,283</td><td>Official series tag allowlist: Oil &amp; Gas, Oil and energy, Gas, Gasoline, Diesel, Crude oil.</td><td class="nowrap"><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">taxonomy</a></td></tr><tr><td><span class="tag elections">Elections</span></td><td class="num">248</td><td class="num">150</td><td class="num">$1,169,604,646</td><td>Official series category allowlist: Elections.</td><td class="nowrap"><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">taxonomy</a></td></tr><tr><td><span class="tag culture">Culture</span></td><td class="num">242</td><td class="num">150</td><td class="num">$3,689,315</td><td>Official series category allowlist: Culture, Entertainment.</td><td class="nowrap"><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">taxonomy</a></td></tr><tr><td><span class="tag crypto">Crypto</span></td><td class="num">250</td><td class="num">150</td><td class="num">$254,184,059</td><td>Official series tag allowlist: Crypto, Bitcoin, BTC, ETH, Ethereum, SOL, Solana, DOGE, Dogecoin, XRP, BNB, HYPE, ZEC, Zcash, NEAR, Shiba Inu, Tokens.</td><td class="nowrap"><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">taxonomy</a></td></tr><tr><td><span class="tag golf">Golf</span></td><td class="num">250</td><td class="num">150</td><td class="num">$207,262</td><td>Official series tag allowlist: Golf.</td><td class="nowrap"><a href="https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories" target="_blank" rel="noopener">taxonomy</a></td></tr></tbody>
     </table>
   </div>
-  <p class="muted">Totals across all five topics: <b>0</b> open in-scope markets,
-  <b>0</b> in-scope events, <b>0</b> settled in-scope markets
-  (0 resolved yes, 0 resolved no), $0 of derived contract value traded.
+  <p class="muted">Totals across all five topics: <b>1240</b> open in-scope markets,
+  <b>182</b> in-scope events, <b>750</b> settled in-scope markets
+  (90 resolved yes, 660 resolved no), $1,428,470,566 of derived contract value traded.
   Contract value traded is a derived measure (contracts × last price), not an API field.</p>
-  <p class="muted"></p>
+  <p class="muted">The collector read <b>79541</b> in-scope markets in this run. The published tables keep the highest-value <b>250</b> per topic, so the tables are a ranked sample of the catalogue rather than the whole catalogue.</p>
 </div>
 
 <div class="grid grid-3">
@@ -104,11 +104,11 @@ tracking, a verified data snapshot, and an explicit register of everything that 
 <div class="card">
   <h3>Pipeline facts</h3>
   <dl class="kv">
-    <dt>Snapshot generated</dt><dd>2026-11-20 11:23 UTC</dd>
-    <dt>API requests in the last harvest</dt><dd>233</dd>
-    <dt>Series catalogue read</dt><dd></dd>
-    <dt>Markets collected</dt><dd></dd>
-    <dt>Events collected</dt><dd></dd>
+    <dt>Snapshot generated</dt><dd>2026-11-20 11:45 UTC</dd>
+    <dt>API requests in the last harvest</dt><dd>277</dd>
+    <dt>Series catalogue read</dt><dd>16,643</dd>
+    <dt>Markets collected</dt><dd>79,541</dd>
+    <dt>Events collected</dt><dd>7,209</dd>
     <dt>Collector</dt><dd><code>scripts/fetch-data.mjs</code> (Node 20, public endpoints only)</dd>
   </dl>
 </div>

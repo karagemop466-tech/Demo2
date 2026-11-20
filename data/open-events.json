@@ -1,11 +1,4105 @@
 {
-  "generated_at": "2026-11-20T11:23:57.252Z",
+  "generated_at": "2026-11-20T11:45:13.282Z",
   "source": "https://docs.kalshi.com/api-reference/events/get-events",
+  "metric": "rows sorted by contract_value_traded_usd (derived)",
+  "cap_per_topic": 150,
   "topics": {
-    "gas": [],
-    "elections": [],
-    "culture": [],
-    "crypto": [],
-    "golf": []
+    "gas": [
+      {
+        "event_ticker": "KXTXERCOTPEAK-27JAN01",
+        "series_ticker": "KXTXERCOTPEAK",
+        "title": "How high will peak electricity demand on the Texas ERCOT grid get this year?",
+        "sub_title": null,
+        "category": "Economics",
+        "topic": "gas",
+        "markets": 7,
+        "volume_fp": 2280158.5,
+        "open_interest_fp": 2220436.34,
+        "contract_value_traded_usd": 417539.98,
+        "open_interest_usd": 372248.35,
+        "last_price_dollars": 0,
+        "close_time": "2027-01-01T06:29:00Z",
+        "settlement_sources": [
+          {
+            "name": "Electric Reliability Council of Texas (ERCOT)",
+            "url": "https://www.ercot.com/static-assets/data/news/content/a-peak-demand/all-time-records.htm"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXTXERCOTPEAK-27JAN01"
+      },
+      {
+        "event_ticker": "KXWTIMAX-26DEC31",
+        "series_ticker": "KXWTIMAX",
+        "title": "How high will WTI oil get by end of year?",
+        "sub_title": null,
+        "category": "Financials",
+        "topic": "gas",
+        "markets": 10,
+        "volume_fp": 7645486.88,
+        "open_interest_fp": 2446611.65,
+        "contract_value_traded_usd": 279628.66,
+        "open_interest_usd": 85149.51,
+        "last_price_dollars": 0.081,
+        "close_time": "2026-12-31T19:30:00Z",
+        "settlement_sources": [
+          {
+            "name": "ICE",
+            "url": "https://www.ice.com/report-center"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXWTIMAX-26DEC31"
+      },
+      {
+        "event_ticker": "KXAAAGASM-26NOV30",
+        "series_ticker": "KXAAAGASM",
+        "title": "Gas prices in the US in Nov 2026?",
+        "sub_title": null,
+        "category": "Economics",
+        "topic": "gas",
+        "markets": 26,
+        "volume_fp": 436567.44,
+        "open_interest_fp": 405027.25,
+        "contract_value_traded_usd": 62061.55,
+        "open_interest_usd": 48544.47,
+        "last_price_dollars": 0.01,
+        "close_time": "2026-11-30T04:59:00Z",
+        "settlement_sources": [
+          {
+            "name": "AAA",
+            "url": "https://gasprices.aaa.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASM-26NOV30"
+      },
+      {
+        "event_ticker": "KXAAAGASW-26NOV23",
+        "series_ticker": "KXAAAGASW",
+        "title": "US gas prices this week",
+        "sub_title": null,
+        "category": "Economics",
+        "topic": "gas",
+        "markets": 21,
+        "volume_fp": 138767.99,
+        "open_interest_fp": 115999.68,
+        "contract_value_traded_usd": 25817.48,
+        "open_interest_usd": 21368.52,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-23T04:59:00Z",
+        "settlement_sources": [
+          {
+            "name": "AAA",
+            "url": "https://gasprices.aaa.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASW-26NOV23"
+      },
+      {
+        "event_ticker": "KXAAAGASM-26DEC31",
+        "series_ticker": "KXAAAGASM",
+        "title": "Gas prices in the US in Dec 2026?",
+        "sub_title": null,
+        "category": "Economics",
+        "topic": "gas",
+        "markets": 5,
+        "volume_fp": 400.47,
+        "open_interest_fp": 201.03,
+        "contract_value_traded_usd": 115.74,
+        "open_interest_usd": 58.63,
+        "last_price_dollars": 0.01,
+        "close_time": "2026-12-31T04:59:00Z",
+        "settlement_sources": [
+          {
+            "name": "AAA",
+            "url": "https://gasprices.aaa.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASM-26DEC31"
+      },
+      {
+        "event_ticker": "KXNATGASW-26NOV2017",
+        "series_ticker": "KXNATGASW",
+        "title": "Natural gas price on Nov 20, 2026 at 5:00 PM EST?",
+        "sub_title": null,
+        "category": "Commodities",
+        "topic": "gas",
+        "markets": 40,
+        "volume_fp": 926,
+        "open_interest_fp": 925,
+        "contract_value_traded_usd": 75.76,
+        "open_interest_usd": 75.26,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Pyth - NATGAS",
+            "url": "https://app.pyth.com/explore/Commodities.Index.NATGAS%2FUSD?returnUrl=%2Fexplore%3Fsearch%3Dgas%26state%3Dstable"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXNATGASW-26NOV2017"
+      },
+      {
+        "event_ticker": "KXWTI-26NOV2014",
+        "series_ticker": "KXWTI",
+        "title": "Oil Price (WTI) on Friday?",
+        "sub_title": null,
+        "category": "Commodities",
+        "topic": "gas",
+        "markets": 30,
+        "volume_fp": 58.79,
+        "open_interest_fp": 37.28,
+        "contract_value_traded_usd": 19.89,
+        "open_interest_usd": 17.4,
+        "last_price_dollars": 0.6,
+        "close_time": "2026-11-20T19:30:00Z",
+        "settlement_sources": [
+          {
+            "name": "ICE",
+            "url": "https://www.theice.com/products/213/WTI-Crude-Futures"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXWTI-26NOV2014"
+      },
+      {
+        "event_ticker": "KXBRENTW-26NOV2017",
+        "series_ticker": "KXBRENTW",
+        "title": "Brent crude oil price on Nov 20, 2026 at 5:00 PM EST?",
+        "sub_title": null,
+        "category": "Commodities",
+        "topic": "gas",
+        "markets": 20,
+        "volume_fp": 14,
+        "open_interest_fp": 14,
+        "contract_value_traded_usd": 13.3,
+        "open_interest_usd": 13.3,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Pyth - Brent",
+            "url": "https://app.pyth.com/explore/Commodities.Index.BRENT%2FUSD?returnUrl=%2Fexplore%3Fsearch%3Dbrent%2Bindex%26state%3Dstable"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBRENTW-26NOV2017"
+      },
+      {
+        "event_ticker": "KXAAAGASD-28SEP16",
+        "series_ticker": "KXAAAGASD",
+        "title": "US Gas prices in at the end of in Sep 2028?",
+        "sub_title": null,
+        "category": "Economics",
+        "topic": "gas",
+        "markets": 3,
+        "volume_fp": 24.31,
+        "open_interest_fp": 14.89,
+        "contract_value_traded_usd": 10.74,
+        "open_interest_usd": 5.53,
+        "last_price_dollars": 0.35,
+        "close_time": "2028-09-16T13:59:00Z",
+        "settlement_sources": [
+          {
+            "name": "AAA",
+            "url": "https://gasprices.aaa.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-28SEP16"
+      },
+      {
+        "event_ticker": "KXWTIMAX-26NOV30",
+        "series_ticker": "KXWTIMAX",
+        "title": "How high will WTI oil get by Nov 30, 2026?",
+        "sub_title": null,
+        "category": "Commodities",
+        "topic": "gas",
+        "markets": 30,
+        "volume_fp": 5,
+        "open_interest_fp": 5,
+        "contract_value_traded_usd": 0.35,
+        "open_interest_usd": 0.35,
+        "last_price_dollars": 0.07,
+        "close_time": "2026-12-01T00:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "ICE",
+            "url": "https://www.ice.com/report/10"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXWTIMAX-26NOV30"
+      },
+      {
+        "event_ticker": "KXWTI-26NOV2314",
+        "series_ticker": "KXWTI",
+        "title": "Oil Price (WTI) on Monday?",
+        "sub_title": null,
+        "category": "Commodities",
+        "topic": "gas",
+        "markets": 30,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-23T19:30:00Z",
+        "settlement_sources": [
+          {
+            "name": "ICE",
+            "url": "https://www.theice.com/products/213/WTI-Crude-Futures"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXWTI-26NOV2314"
+      },
+      {
+        "event_ticker": "KXWTIW-26NOV2014",
+        "series_ticker": "KXWTIW",
+        "title": "Oil Price (WTI) on Nov 20, 2026?",
+        "sub_title": null,
+        "category": "Commodities",
+        "topic": "gas",
+        "markets": 27,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T19:30:00Z",
+        "settlement_sources": [
+          {
+            "name": "ICE",
+            "url": "https://www.theice.com/products/213/WTI-Crude-Futures"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXWTIW-26NOV2014"
+      },
+      {
+        "event_ticker": "KXBRENTW-26NOV2717",
+        "series_ticker": "KXBRENTW",
+        "title": "Brent crude oil price on Nov 27, 2026 at 5:00 PM EST?",
+        "sub_title": null,
+        "category": "Commodities",
+        "topic": "gas",
+        "markets": 20,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-27T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Pyth - Brent",
+            "url": "https://app.pyth.com/explore/Commodities.Index.BRENT%2FUSD?returnUrl=%2Fexplore%3Fsearch%3Dbrent%2Bindex%26state%3Dstable"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBRENTW-26NOV2717"
+      },
+      {
+        "event_ticker": "KXBRENTD-26NOV2317",
+        "series_ticker": "KXBRENTD",
+        "title": "Brent crude oil price on Monday at 5:00 PM EST?",
+        "sub_title": null,
+        "category": "Commodities",
+        "topic": "gas",
+        "markets": 20,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-23T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Pyth - Brent",
+            "url": "https://app.pyth.com/explore/Commodities.Index.BRENT%2FUSD?returnUrl=%2Fexplore%3Fsearch%3Dbrent%2Bindex%26state%3Dstable"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBRENTD-26NOV2317"
+      },
+      {
+        "event_ticker": "KXBRENTMON-26NOV3017",
+        "series_ticker": "KXBRENTMON",
+        "title": "Brent crude oil price on Nov 30, 2026 at 5:00 PM EST?",
+        "sub_title": null,
+        "category": "Commodities",
+        "topic": "gas",
+        "markets": 20,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-30T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Pyth - Brent",
+            "url": "https://app.pyth.com/explore/Commodities.Index.BRENT%2FUSD?returnUrl=%2Fexplore%3Fsearch%3Dbrent%2Bindex%26state%3Dstable"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBRENTMON-26NOV3017"
+      },
+      {
+        "event_ticker": "KXNATGASW-26NOV2717",
+        "series_ticker": "KXNATGASW",
+        "title": "Natural gas price on Nov 27, 2026 at 5:00 PM EST?",
+        "sub_title": null,
+        "category": "Commodities",
+        "topic": "gas",
+        "markets": 40,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-27T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Pyth - NATGAS",
+            "url": "https://app.pyth.com/explore/Commodities.Index.NATGAS%2FUSD?returnUrl=%2Fexplore%3Fsearch%3Dgas%26state%3Dstable"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXNATGASW-26NOV2717"
+      },
+      {
+        "event_ticker": "KXDIESELMON-26NOV30",
+        "series_ticker": "KXDIESELMON",
+        "title": "Diesel prices in Nov 2026",
+        "sub_title": null,
+        "category": "Economics",
+        "topic": "gas",
+        "markets": 21,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-30T04:59:00Z",
+        "settlement_sources": [
+          {
+            "name": "AAA",
+            "url": "https://gasprices.aaa.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDIESELMON-26NOV30"
+      }
+    ],
+    "elections": [
+      {
+        "event_ticker": "KXPRESNOMD-28",
+        "series_ticker": "KXPRESNOMD",
+        "title": "Who will be the Democratic nominee in 2028?",
+        "sub_title": null,
+        "category": "Elections",
+        "topic": "elections",
+        "markets": 62,
+        "volume_fp": 7982691100.25,
+        "open_interest_fp": 2507790981.28,
+        "contract_value_traded_usd": 901382613.83,
+        "open_interest_usd": 225540109.07,
+        "last_price_dollars": 0.11,
+        "close_time": "2028-11-07T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Democratic Party",
+            "url": "https://democrats.org/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPRESNOMD-28"
+      },
+      {
+        "event_ticker": "KXPRESPERSON-28",
+        "series_ticker": "KXPRESPERSON",
+        "title": "Who will win the next presidential election?",
+        "sub_title": null,
+        "category": "Elections",
+        "topic": "elections",
+        "markets": 53,
+        "volume_fp": 1442374813.13,
+        "open_interest_fp": 565432053.47,
+        "contract_value_traded_usd": 134614115.27,
+        "open_interest_usd": 59730652.53,
+        "last_price_dollars": 0.091,
+        "close_time": "2029-11-07T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Office of the Presidency",
+            "url": "https://www.whitehouse.gov/administration/executive-office-of-the-president/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPRESPERSON-28"
+      },
+      {
+        "event_ticker": "KXGOVAK-26",
+        "series_ticker": "KXGOVAK",
+        "title": "Who will win the governorship in Alaska?",
+        "sub_title": null,
+        "category": "Politics",
+        "topic": "elections",
+        "markets": 8,
+        "volume_fp": 326117533.75,
+        "open_interest_fp": 110899917.54,
+        "contract_value_traded_usd": 57747221.19,
+        "open_interest_usd": 6412966.01,
+        "last_price_dollars": 0.03,
+        "close_time": "2027-11-03T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "The New York Times",
+            "url": "https://www.nytimes.com/"
+          },
+          {
+            "name": "the Associated Press",
+            "url": "https://apnews.com/"
+          },
+          {
+            "name": "Reuters",
+            "url": "https://www.reuters.com/"
+          },
+          {
+            "name": "Axios",
+            "url": "https://www.axios.com/"
+          },
+          {
+            "name": "Politico",
+            "url": "https://www.politico.com/"
+          },
+          {
+            "name": "Semafor",
+            "url": "https://www.semafor.com/"
+          },
+          {
+            "name": "The Information",
+            "url": "https://www.theinformation.com/"
+          },
+          {
+            "name": "The Washington Post",
+            "url": "https://www.washingtonpost.com/"
+          },
+          {
+            "name": "The Wall Street Journal",
+            "url": "https://www.wsj.com/"
+          },
+          {
+            "name": "ABC",
+            "url": "https://www.abc.net.au/"
+          },
+          {
+            "name": "CBS",
+            "url": "https://www.cbsnews.com/"
+          },
+          {
+            "name": "CNN",
+            "url": "https://www.cnn.com/"
+          },
+          {
+            "name": "Fox News",
+            "url": "https://www.foxnews.com/"
+          },
+          {
+            "name": "MSNBC",
+            "url": "https://www.msnbc.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXGOVAK-26"
+      },
+      {
+        "event_ticker": "KXPRESNOMR-28",
+        "series_ticker": "KXPRESNOMR",
+        "title": "Who will be the Republican nominee in 2028?",
+        "sub_title": null,
+        "category": "Elections",
+        "topic": "elections",
+        "markets": 56,
+        "volume_fp": 1026869203.69,
+        "open_interest_fp": 497104499.64,
+        "contract_value_traded_usd": 48359302.36,
+        "open_interest_usd": 16478221.88,
+        "last_price_dollars": 0.003,
+        "close_time": "2028-11-07T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Republican Party",
+            "url": "https://gop.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPRESNOMR-28"
+      },
+      {
+        "event_ticker": "KXMAYORLA-26",
+        "series_ticker": "KXMAYORLA",
+        "title": "Los Angeles Mayoral Election",
+        "sub_title": null,
+        "category": "Elections",
+        "topic": "elections",
+        "markets": 10,
+        "volume_fp": 198718970.29,
+        "open_interest_fp": 20136402.73,
+        "contract_value_traded_usd": 27501386.46,
+        "open_interest_usd": 9806838.95,
+        "last_price_dollars": 0.01,
+        "close_time": "2027-06-02T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "City of Los Angeles",
+            "url": "https://lacity.gov/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXMAYORLA-26"
+      },
+      {
+        "event_ticker": "KXVOTEPRIMARY-26JUN02ESWA",
+        "series_ticker": "KXVOTEPRIMARY",
+        "title": "California governor primary: Eric Swalwell vote percent",
+        "sub_title": null,
+        "category": "Elections",
+        "topic": "elections",
+        "markets": 9,
+        "volume_fp": 10.45,
+        "open_interest_fp": 0.19,
+        "contract_value_traded_usd": 1.22,
+        "open_interest_usd": 0.03,
+        "last_price_dollars": 0.02,
+        "close_time": "2027-06-02T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "California Secretary of State",
+            "url": "https://www.sos.ca.gov/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXVOTEPRIMARY-26JUN02ESWA"
+      },
+      {
+        "event_ticker": "KXVOTEPRIMARY-26JUN02KPOR",
+        "series_ticker": "KXVOTEPRIMARY",
+        "title": "California governor primary: Katie Porter vote percent",
+        "sub_title": null,
+        "category": "Elections",
+        "topic": "elections",
+        "markets": 9,
+        "volume_fp": 10.45,
+        "open_interest_fp": 0.19,
+        "contract_value_traded_usd": 1.21,
+        "open_interest_usd": 0.03,
+        "last_price_dollars": 0.02,
+        "close_time": "2027-06-02T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "California Secretary of State",
+            "url": "https://www.sos.ca.gov/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXVOTEPRIMARY-26JUN02KPOR"
+      },
+      {
+        "event_ticker": "KXVOTEPRIMARY-26JUN02SHIL",
+        "series_ticker": "KXVOTEPRIMARY",
+        "title": "California governor primary: Steve Hilton vote percent",
+        "sub_title": null,
+        "category": "Elections",
+        "topic": "elections",
+        "markets": 9,
+        "volume_fp": 10.45,
+        "open_interest_fp": 0.19,
+        "contract_value_traded_usd": 1.21,
+        "open_interest_usd": 0.03,
+        "last_price_dollars": 0.02,
+        "close_time": "2027-06-02T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "California Secretary of State",
+            "url": "https://www.sos.ca.gov/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXVOTEPRIMARY-26JUN02SHIL"
+      },
+      {
+        "event_ticker": "KXVOTEPRIMARY-GOVCAPRIMARY26XBEC",
+        "series_ticker": "KXVOTEPRIMARY",
+        "title": "California governor primary: Xavier Becerra vote percent",
+        "sub_title": null,
+        "category": "Elections",
+        "topic": "elections",
+        "markets": 9,
+        "volume_fp": 10.36,
+        "open_interest_fp": 0.1,
+        "contract_value_traded_usd": 1.2,
+        "open_interest_usd": 0.02,
+        "last_price_dollars": 0.02,
+        "close_time": "2027-06-02T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "California Secretary of State",
+            "url": "https://www.sos.ca.gov/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXVOTEPRIMARY-GOVCAPRIMARY26XBEC"
+      },
+      {
+        "event_ticker": "KXVOTEPRIMARY-26JUN02TSYE",
+        "series_ticker": "KXVOTEPRIMARY",
+        "title": "California governor primary: Tom Steyer vote percent",
+        "sub_title": null,
+        "category": "Elections",
+        "topic": "elections",
+        "markets": 9,
+        "volume_fp": 10.43,
+        "open_interest_fp": 0.17,
+        "contract_value_traded_usd": 1.2,
+        "open_interest_usd": 0.02,
+        "last_price_dollars": 0.02,
+        "close_time": "2027-06-02T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "California Secretary of State",
+            "url": "https://www.sos.ca.gov/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXVOTEPRIMARY-26JUN02TSYE"
+      },
+      {
+        "event_ticker": "KXPRIMARYMOV-SENATEMED26",
+        "series_ticker": "KXPRIMARYMOV",
+        "title": "Margin of victory in the Maine Democratic Senate primary?",
+        "sub_title": null,
+        "category": "Elections",
+        "topic": "elections",
+        "markets": 6,
+        "volume_fp": 6.97,
+        "open_interest_fp": 0.07,
+        "contract_value_traded_usd": 1.15,
+        "open_interest_usd": 0.02,
+        "last_price_dollars": 0.02,
+        "close_time": "2027-06-09T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Maine Secretary of State",
+            "url": "https://www.maine.gov/sos/elections-voting"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPRIMARYMOV-SENATEMED26"
+      },
+      {
+        "event_ticker": "KXMAYORLA-30",
+        "series_ticker": "KXMAYORLA",
+        "title": "Los Angeles Mayor winner?",
+        "sub_title": null,
+        "category": "Elections",
+        "topic": "elections",
+        "markets": 8,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2031-06-04T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "City of Los Angeles",
+            "url": "https://lacity.gov/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXMAYORLA-30"
+      }
+    ],
+    "culture": [
+      {
+        "event_ticker": "KXOSCARPIC-27",
+        "series_ticker": "KXOSCARPIC",
+        "title": "Oscar for Best Picture?",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 41,
+        "volume_fp": 31477067.62,
+        "open_interest_fp": 20789003.03,
+        "contract_value_traded_usd": 3481073.87,
+        "open_interest_usd": 1836028.97,
+        "last_price_dollars": 0.03,
+        "close_time": "2027-12-31T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Academy of Motion Picture Arts and Sciences",
+            "url": "https://www.oscars.org/oscars"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXOSCARPIC-27"
+      },
+      {
+        "event_ticker": "KXTIME-26",
+        "series_ticker": "KXTIME",
+        "title": "TIME's Person of the Year for 2026?",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 48,
+        "volume_fp": 2686235.29,
+        "open_interest_fp": 1985457.57,
+        "contract_value_traded_usd": 131039.35,
+        "open_interest_usd": 98450.91,
+        "last_price_dollars": 0.03,
+        "close_time": "2027-01-01T04:59:00Z",
+        "settlement_sources": [
+          {
+            "name": "TIME",
+            "url": "https://time.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXTIME-26"
+      },
+      {
+        "event_ticker": "KXRT-HUN",
+        "series_ticker": "KXRT",
+        "title": "The Hunger Games: Sunrise on the Reaping · Rotten Tomatoes score",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 13,
+        "volume_fp": 176330.92,
+        "open_interest_fp": 148353.89,
+        "contract_value_traded_usd": 41785.39,
+        "open_interest_usd": 36839.46,
+        "last_price_dollars": 0.99,
+        "close_time": "2026-11-23T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Rotten Tomatoes",
+            "url": "https://www.rottentomatoes.com/m/the_hunger_games_sunrise_on_the_reaping"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXRT-HUN"
+      },
+      {
+        "event_ticker": "KXRT-FOC",
+        "series_ticker": "KXRT",
+        "title": "Focker-In-Law · Rotten Tomatoes score",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 10,
+        "volume_fp": 39462.92,
+        "open_interest_fp": 37127.62,
+        "contract_value_traded_usd": 13034.02,
+        "open_interest_usd": 12050.27,
+        "last_price_dollars": 0.95,
+        "close_time": "2026-11-30T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Rotten Tomatoes",
+            "url": "https://www.rottentomatoes.com/m/focker_in_law"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXRT-FOC"
+      },
+      {
+        "event_ticker": "KXRT-FUR",
+        "series_ticker": "KXRT",
+        "title": "The Further Mis-Adventures of Cliff Booth · Rotten Tomatoes score",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 10,
+        "volume_fp": 42372.82,
+        "open_interest_fp": 37802.53,
+        "contract_value_traded_usd": 12521.45,
+        "open_interest_usd": 11494.08,
+        "last_price_dollars": 0.97,
+        "close_time": "2026-11-30T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Rotten Tomatoes",
+            "url": "https://www.rottentomatoes.com/m/the_further_mis-adventures_of_cliff_booth"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXRT-FUR"
+      },
+      {
+        "event_ticker": "KXRT-IPL",
+        "series_ticker": "KXRT",
+        "title": "I Play Rocky · Rotten Tomatoes score",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 13,
+        "volume_fp": 25109.03,
+        "open_interest_fp": 17403.61,
+        "contract_value_traded_usd": 5667.01,
+        "open_interest_usd": 3648.71,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-23T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Rotten Tomatoes",
+            "url": "https://www.rottentomatoes.com/m/i_play_rocky"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXRT-IPL"
+      },
+      {
+        "event_ticker": "KXRT-AVE",
+        "series_ticker": "KXRT",
+        "title": "\"Avengers: Doomsday\" Rotten Tomatoes score?",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 11,
+        "volume_fp": 5017.72,
+        "open_interest_fp": 2304.95,
+        "contract_value_traded_usd": 2468.02,
+        "open_interest_usd": 1856.55,
+        "last_price_dollars": 0.97,
+        "close_time": "2026-12-21T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Rotten Tomatoes",
+            "url": "https://www.rottentomatoes.com/m/avengers_doomsday"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXRT-AVE"
+      },
+      {
+        "event_ticker": "KXRT-VIO",
+        "series_ticker": "KXRT",
+        "title": "Violent Night 2 · Rotten Tomatoes score",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 10,
+        "volume_fp": 9153.38,
+        "open_interest_fp": 8636.97,
+        "contract_value_traded_usd": 1682.39,
+        "open_interest_usd": 1640.65,
+        "last_price_dollars": 0.89,
+        "close_time": "2026-12-07T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Rotten Tomatoes",
+            "url": "https://www.rottentomatoes.com/m/violent_night_2"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXRT-VIO"
+      },
+      {
+        "event_ticker": "KXOSCARACTO-27",
+        "series_ticker": "KXOSCARACTO",
+        "title": "Oscar for Best Actor?",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 25,
+        "volume_fp": 169.91,
+        "open_interest_fp": 99.08,
+        "contract_value_traded_usd": 41.86,
+        "open_interest_usd": 26.99,
+        "last_price_dollars": 0.01,
+        "close_time": "2027-12-31T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Academy of Motion Picture Arts and Sciences",
+            "url": "https://www.oscars.org/oscars"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXOSCARACTO-27"
+      },
+      {
+        "event_ticker": "KXRT-DUNE",
+        "series_ticker": "KXRT",
+        "title": "\"Dune: Part Three\" Rotten Tomatoes score?",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 11,
+        "volume_fp": 12.68,
+        "open_interest_fp": 0.13,
+        "contract_value_traded_usd": 1.86,
+        "open_interest_usd": 0.03,
+        "last_price_dollars": 0.02,
+        "close_time": "2026-12-21T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Rotten Tomatoes",
+            "url": "https://www.rottentomatoes.com/m/dune_part_three"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXRT-DUNE"
+      },
+      {
+        "event_ticker": "KXRT-ZER",
+        "series_ticker": "KXRT",
+        "title": "ZERO A.D.: The Birth of Christ · Rotten Tomatoes score",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 10,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-12-14T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Rotten Tomatoes",
+            "url": "https://www.rottentomatoes.com/m/zero_ad_the_birth_of_christ"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXRT-ZER"
+      },
+      {
+        "event_ticker": "KXRT-ANG",
+        "series_ticker": "KXRT",
+        "title": "The Angry Birds Movie 3 · Rotten Tomatoes score",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 10,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-12-28T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Rotten Tomatoes",
+            "url": "https://www.rottentomatoes.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXRT-ANG"
+      },
+      {
+        "event_ticker": "KXRT-WER",
+        "series_ticker": "KXRT",
+        "title": "Werwulf · Rotten Tomatoes score",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 10,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-12-28T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Rotten Tomatoes",
+            "url": "https://www.rottentomatoes.com/m/werwulf"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXRT-WER"
+      },
+      {
+        "event_ticker": "KXRT-JUM",
+        "series_ticker": "KXRT",
+        "title": "Jumanji: Open World · Rotten Tomatoes score",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 10,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-12-28T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Rotten Tomatoes",
+            "url": "https://www.rottentomatoes.com/m/jumanji_open_world"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXRT-JUM"
+      },
+      {
+        "event_ticker": "KXRT-HEX",
+        "series_ticker": "KXRT",
+        "title": "Hexed · Rotten Tomatoes score",
+        "sub_title": null,
+        "category": "Entertainment",
+        "topic": "culture",
+        "markets": 10,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-30T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Rotten Tomatoes",
+            "url": "https://www.rottentomatoes.com/m/hexed_2026"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXRT-HEX"
+      }
+    ],
+    "crypto": [
+      {
+        "event_ticker": "KXBTCY-27JAN0100",
+        "series_ticker": "KXBTCY",
+        "title": "Bitcoin price at the end of 2026",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 28,
+        "volume_fp": 1972930317.79,
+        "open_interest_fp": 387182807.89,
+        "contract_value_traded_usd": 217258948.88,
+        "open_interest_usd": 46657802.75,
+        "last_price_dollars": 0.01,
+        "close_time": "2027-01-01T05:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCY-27JAN0100"
+      },
+      {
+        "event_ticker": "KXETHY-27JAN0100",
+        "series_ticker": "KXETHY",
+        "title": "Ethereum price at the end of 2026",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 18,
+        "volume_fp": 249551766.77,
+        "open_interest_fp": 26894668.97,
+        "contract_value_traded_usd": 36904168.88,
+        "open_interest_usd": 3001255.36,
+        "last_price_dollars": 0.05,
+        "close_time": "2027-01-01T05:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXETHY-27JAN0100"
+      },
+      {
+        "event_ticker": "KXBTCMAXMON-BTC-26NOV30",
+        "series_ticker": "KXBTCMAXMON",
+        "title": "How high will BTC get in November?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 8,
+        "volume_fp": 616530.43,
+        "open_interest_fp": 448989.91,
+        "contract_value_traded_usd": 20932.21,
+        "open_interest_usd": 15555.82,
+        "last_price_dollars": 0.79,
+        "close_time": "2026-12-01T04:59:59Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMAXMON-BTC-26NOV30"
+      },
+      {
+        "event_ticker": "KXMAXSHARDINGTEST-27DEC2413",
+        "series_ticker": "KXMAXSHARDINGTEST",
+        "title": "BTC price on Dec 24, 2027 at 1pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 10,
+        "volume_fp": 116,
+        "open_interest_fp": 86,
+        "contract_value_traded_usd": 1.16,
+        "open_interest_usd": 0.86,
+        "last_price_dollars": 0,
+        "close_time": "2027-12-24T18:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXMAXSHARDINGTEST-27DEC2413"
+      },
+      {
+        "event_ticker": "KXMAXSHARDINGTEST-27DEC2414",
+        "series_ticker": "KXMAXSHARDINGTEST",
+        "title": "BTC price on Dec 24, 2027 at 2pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 10,
+        "volume_fp": 112,
+        "open_interest_fp": 88,
+        "contract_value_traded_usd": 1.12,
+        "open_interest_usd": 0.88,
+        "last_price_dollars": 0,
+        "close_time": "2027-12-24T19:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXMAXSHARDINGTEST-27DEC2414"
+      },
+      {
+        "event_ticker": "KXMAXSHARDINGTEST-27DEC2418",
+        "series_ticker": "KXMAXSHARDINGTEST",
+        "title": "BTC price on Dec 24, 2027 at 6pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 10,
+        "volume_fp": 108,
+        "open_interest_fp": 88,
+        "contract_value_traded_usd": 1.08,
+        "open_interest_usd": 0.88,
+        "last_price_dollars": 0,
+        "close_time": "2027-12-24T23:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXMAXSHARDINGTEST-27DEC2418"
+      },
+      {
+        "event_ticker": "KXMAXSHARDINGTEST-27DEC2410",
+        "series_ticker": "KXMAXSHARDINGTEST",
+        "title": "BTC price on Dec 24, 2027 at 10am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 10,
+        "volume_fp": 108,
+        "open_interest_fp": 92,
+        "contract_value_traded_usd": 1.08,
+        "open_interest_usd": 0.92,
+        "last_price_dollars": 0,
+        "close_time": "2027-12-24T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXMAXSHARDINGTEST-27DEC2410"
+      },
+      {
+        "event_ticker": "KXMAXSHARDINGTEST-27DEC2419",
+        "series_ticker": "KXMAXSHARDINGTEST",
+        "title": "BTC price on Dec 24, 2027 at 7pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 10,
+        "volume_fp": 90,
+        "open_interest_fp": 76,
+        "contract_value_traded_usd": 0.9,
+        "open_interest_usd": 0.76,
+        "last_price_dollars": 0,
+        "close_time": "2027-12-25T00:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXMAXSHARDINGTEST-27DEC2419"
+      },
+      {
+        "event_ticker": "KXMAXSHARDINGTEST-27DEC2415",
+        "series_ticker": "KXMAXSHARDINGTEST",
+        "title": "BTC price on Dec 24, 2027 at 3pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 10,
+        "volume_fp": 88,
+        "open_interest_fp": 68,
+        "contract_value_traded_usd": 0.88,
+        "open_interest_usd": 0.68,
+        "last_price_dollars": 0,
+        "close_time": "2027-12-24T20:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXMAXSHARDINGTEST-27DEC2415"
+      },
+      {
+        "event_ticker": "KXMAXSHARDINGTEST-27DEC2417",
+        "series_ticker": "KXMAXSHARDINGTEST",
+        "title": "BTC price on Dec 24, 2027 at 5pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 10,
+        "volume_fp": 80,
+        "open_interest_fp": 66,
+        "contract_value_traded_usd": 0.8,
+        "open_interest_usd": 0.66,
+        "last_price_dollars": 0,
+        "close_time": "2027-12-24T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXMAXSHARDINGTEST-27DEC2417"
+      },
+      {
+        "event_ticker": "KXMAXSHARDINGTEST-27DEC2416",
+        "series_ticker": "KXMAXSHARDINGTEST",
+        "title": "BTC price on Dec 24, 2027 at 4pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 10,
+        "volume_fp": 78,
+        "open_interest_fp": 56,
+        "contract_value_traded_usd": 0.78,
+        "open_interest_usd": 0.56,
+        "last_price_dollars": 0,
+        "close_time": "2027-12-24T21:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXMAXSHARDINGTEST-27DEC2416"
+      },
+      {
+        "event_ticker": "KXMAXSHARDINGTEST-27DEC2412",
+        "series_ticker": "KXMAXSHARDINGTEST",
+        "title": "BTC price on Dec 24, 2027 at 12pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 5,
+        "volume_fp": 70,
+        "open_interest_fp": 58,
+        "contract_value_traded_usd": 0.7,
+        "open_interest_usd": 0.58,
+        "last_price_dollars": 0.01,
+        "close_time": "2027-12-24T17:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXMAXSHARDINGTEST-27DEC2412"
+      },
+      {
+        "event_ticker": "KXMAXSHARDINGTEST-27DEC2411",
+        "series_ticker": "KXMAXSHARDINGTEST",
+        "title": "BTC price on Dec 24, 2027 at 11am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 2,
+        "volume_fp": 40,
+        "open_interest_fp": 28,
+        "contract_value_traded_usd": 0.4,
+        "open_interest_usd": 0.28,
+        "last_price_dollars": 0.01,
+        "close_time": "2027-12-24T16:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXMAXSHARDINGTEST-27DEC2411"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2016",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 20, 2026 at 4pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 60,
+        "volume_fp": 6,
+        "open_interest_fp": 6,
+        "contract_value_traded_usd": 0.06,
+        "open_interest_usd": 0.06,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T21:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2016"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2014",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 20, 2026 at 2pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 5,
+        "open_interest_fp": 5,
+        "contract_value_traded_usd": 0.05,
+        "open_interest_usd": 0.05,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T19:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2014"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2013",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 20, 2026 at 1pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 4,
+        "open_interest_fp": 4,
+        "contract_value_traded_usd": 0.04,
+        "open_interest_usd": 0.04,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T18:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2013"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2015",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 20, 2026 at 3pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 4,
+        "open_interest_fp": 4,
+        "contract_value_traded_usd": 0.04,
+        "open_interest_usd": 0.04,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T20:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2015"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2007",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 20, 2026 at 7am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 3,
+        "open_interest_fp": 3,
+        "contract_value_traded_usd": 0.03,
+        "open_interest_usd": 0.03,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T12:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2007"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2012",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 20, 2026 at 12pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 3,
+        "open_interest_fp": 3,
+        "contract_value_traded_usd": 0.03,
+        "open_interest_usd": 0.03,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T17:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2012"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2008",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 20, 2026 at 8am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 2,
+        "open_interest_fp": 2,
+        "contract_value_traded_usd": 0.02,
+        "open_interest_usd": 0.02,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T13:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2008"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2011",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 20, 2026 at 11am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 2,
+        "open_interest_fp": 2,
+        "contract_value_traded_usd": 0.02,
+        "open_interest_usd": 0.02,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T16:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2011"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2010",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 20, 2026 at 10am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 1,
+        "open_interest_fp": 1,
+        "contract_value_traded_usd": 0.01,
+        "open_interest_usd": 0.01,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2010"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2101",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 1am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T06:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2101"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2102",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 2am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T07:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2102"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2103",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 3am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T08:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2103"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2104",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 4am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T09:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2104"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2105",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 5am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T10:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2105"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2106",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 6am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T11:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2106"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2107",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 7am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T12:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2107"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2108",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 8am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T13:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2108"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2109",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 9am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2109"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2110",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 10am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2110"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2111",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 11am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T16:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2111"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2112",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 12pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T17:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2112"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2113",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 1pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T18:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2113"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2114",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 2pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T19:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2114"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2115",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 3pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T20:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2115"
+      },
+      {
+        "event_ticker": "KXBTCD-26NOV2116",
+        "series_ticker": "KXBTCD",
+        "title": "BTC price tomorrow at 4pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 180,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T21:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCD-26NOV2116"
+      },
+      {
+        "event_ticker": "KXETHD-26NOV2117",
+        "series_ticker": "KXETHD",
+        "title": "ETH price on Nov 21, 2026 at 5pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 40,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/ETHUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXETHD-26NOV2117"
+      },
+      {
+        "event_ticker": "KXETHD-26NOV2717",
+        "series_ticker": "KXETHD",
+        "title": "ETH price on Nov 27, 2026 at 5pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 50,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-27T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/ETHUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXETHD-26NOV2717"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2101",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 1am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T06:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2101"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2102",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 2am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T07:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2102"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2103",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 3am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T08:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2103"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2104",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 4am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T09:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2104"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2105",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 5am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T10:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2105"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2106",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 6am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T11:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2106"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2107",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 7am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T12:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2107"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2108",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 8am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T13:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2108"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2109",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 9am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2109"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2110",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 10am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2110"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2111",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 11am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T16:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2111"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2112",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 12pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T17:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2112"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2113",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 1pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T18:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2113"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2114",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 2pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T19:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2114"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2115",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 3pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 188,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T20:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2115"
+      },
+      {
+        "event_ticker": "KXBTC-26NOV2116",
+        "series_ticker": "KXBTC",
+        "title": "BTC price range tomorrow at 4pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 180,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T21:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC-26NOV2116"
+      },
+      {
+        "event_ticker": "KXETH-26NOV2117",
+        "series_ticker": "KXETH",
+        "title": "ETH price range on Nov 21, 2026 at 5pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 40,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/ETHUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXETH-26NOV2117"
+      },
+      {
+        "event_ticker": "KXETH-26NOV2717",
+        "series_ticker": "KXETH",
+        "title": "ETH price range on Nov 27, 2026 at 5pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 50,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-27T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/ETHUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXETH-26NOV2717"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2101",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 1am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T06:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2101"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2102",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 2am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T07:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2102"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2103",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 3am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T08:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2103"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2104",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 4am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T09:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2104"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2105",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 5am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T10:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2105"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2106",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 6am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T11:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2106"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2107",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 7am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T12:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2107"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2108",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 8am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T13:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2108"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2109",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 9am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2109"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2110",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 10am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2110"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2111",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 11am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T16:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2111"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2112",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 12pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T17:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2112"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2113",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 1pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T18:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2113"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2114",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 2pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T19:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2114"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2115",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 3pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T20:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2115"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2116",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 4pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T21:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2116"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2117",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 5pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 40,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2117"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2118",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 6pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T23:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2118"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2119",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 7pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T00:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2119"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2120",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 8pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T01:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2120"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2121",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 9pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T02:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2121"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2122",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 10pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T03:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2122"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2123",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 21, 2026 at 11pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T04:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2123"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2200",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Sunday at 12am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T05:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2200"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2717",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 27, 2026 at 5pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 50,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-27T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2717"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2007",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 20, 2026 at 7am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T12:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2007"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2008",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 20, 2026 at 8am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T13:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2008"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2009",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 20, 2026 at 9am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2009"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2010",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 20, 2026 at 10am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2010"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2011",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 20, 2026 at 11am EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T16:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2011"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2012",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 20, 2026 at 12pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T17:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2012"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2013",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 20, 2026 at 1pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T18:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2013"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2014",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 20, 2026 at 2pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T19:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2014"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2015",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 20, 2026 at 3pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T20:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2015"
+      },
+      {
+        "event_ticker": "KXXRP-26NOV2016",
+        "series_ticker": "KXXRP",
+        "title": " XRP price range at Nov 20, 2026 at 4pm EST? ",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 60,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T21:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRP-26NOV2016"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2101",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 1am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T06:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2101"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2102",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 2am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T07:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2102"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2103",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 3am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T08:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2103"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2104",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 4am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T09:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2104"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2105",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 5am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T10:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2105"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2106",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 6am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T11:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2106"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2107",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 7am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T12:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2107"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2108",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 8am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T13:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2108"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2109",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 9am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2109"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2110",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 10am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2110"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2112",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 12pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T17:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2112"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2111",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 11am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T16:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2111"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2113",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 1pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T18:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2113"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2114",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 2pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T19:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2114"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2115",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 3pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T20:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2115"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2116",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 4pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T21:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2116"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2117",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 5pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 40,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2117"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2118",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 6pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T23:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2118"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2119",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 7pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T00:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2119"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2120",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 8pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T01:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2120"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2121",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 9pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T02:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2121"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2122",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 10pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T03:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2122"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2123",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 21, 2026 at 11pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T04:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2123"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2200",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Sunday at 12am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T05:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2200"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2717",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 27, 2026 at 5pm EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 50,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-27T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2717"
+      },
+      {
+        "event_ticker": "KXXRPD-26NOV2009",
+        "series_ticker": "KXXRPD",
+        "title": " XRP price at Nov 20, 2026 at 9am EST?\n",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 75,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T14:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/XRPUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXXRPD-26NOV2009"
+      },
+      {
+        "event_ticker": "KXDOGE-26NOV2117",
+        "series_ticker": "KXDOGE",
+        "title": "Dogecoin price range on Nov 21, 2026 at 5pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 29,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/DOGEUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2117"
+      },
+      {
+        "event_ticker": "KXDOGE-26NOV2717",
+        "series_ticker": "KXDOGE",
+        "title": "Dogecoin price range on Nov 27, 2026 at 5pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 34,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-27T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/DOGEUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2717"
+      },
+      {
+        "event_ticker": "KXDOGE-26NOV2007",
+        "series_ticker": "KXDOGE",
+        "title": "Dogecoin price range on Nov 20, 2026 at 7am EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 47,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T12:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/DOGEUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDOGE-26NOV2007"
+      },
+      {
+        "event_ticker": "KXSHIBA-26NOV2117",
+        "series_ticker": "KXSHIBA",
+        "title": "Shiba Inu price range on Nov 21, 2026 at 5pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 25,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/SHIBUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXSHIBA-26NOV2117"
+      },
+      {
+        "event_ticker": "KXSHIBA-26NOV2017",
+        "series_ticker": "KXSHIBA",
+        "title": "Shiba Inu price range on Nov 20, 2026 at 5pm EST?",
+        "sub_title": null,
+        "category": "Crypto",
+        "topic": "crypto",
+        "markets": 25,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-20T22:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "CF Benchmarks",
+            "url": "https://www.cfbenchmarks.com/data/indices/SHIBUSD_RTI"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXSHIBA-26NOV2017"
+      }
+    ],
+    "golf": [
+      {
+        "event_ticker": "KXPGATOUR-THRC26",
+        "series_ticker": "KXPGATOUR",
+        "title": "The RSM Classic Winner",
+        "sub_title": null,
+        "category": "Sports",
+        "topic": "golf",
+        "markets": 155,
+        "volume_fp": 16085493.72,
+        "open_interest_fp": 14682847.56,
+        "contract_value_traded_usd": 171488.73,
+        "open_interest_usd": 151066.86,
+        "last_price_dollars": 0.005,
+        "close_time": "2026-12-06T00:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "Fox Sports",
+            "url": "https://www.foxsports.com"
+          },
+          {
+            "name": "ESPN",
+            "url": "https://www.espn.com/"
+          },
+          {
+            "name": "the Governing League",
+            "url": "https://www.pgatour.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGATOUR-THRC26"
+      },
+      {
+        "event_ticker": "KXPGATOUR-MAST27",
+        "series_ticker": "KXPGATOUR",
+        "title": "2027 The Masters Champion",
+        "sub_title": null,
+        "category": "Sports",
+        "topic": "golf",
+        "markets": 52,
+        "volume_fp": 2066820.04,
+        "open_interest_fp": 2009896.49,
+        "contract_value_traded_usd": 30095.42,
+        "open_interest_usd": 29812.31,
+        "last_price_dollars": 0,
+        "close_time": "2027-04-25T23:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "ESPN",
+            "url": "https://www.espn.com/"
+          },
+          {
+            "name": "the Governing League",
+            "url": "https://www.pgatour.com/"
+          },
+          {
+            "name": "the Governing Body",
+            "url": "https://www.masters.com/index.html"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGATOUR-MAST27"
+      },
+      {
+        "event_ticker": "KXLPGATOUR-CMEGTC26",
+        "series_ticker": "KXLPGATOUR",
+        "title": "CME Group Tour Championship Winner",
+        "sub_title": null,
+        "category": "Sports",
+        "topic": "golf",
+        "markets": 60,
+        "volume_fp": 194874.61,
+        "open_interest_fp": 194874.61,
+        "contract_value_traded_usd": 4943.2,
+        "open_interest_usd": 4943.2,
+        "last_price_dollars": 0,
+        "close_time": "2026-12-06T00:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "The Wall Street Journal",
+            "url": "https://www.wsj.com/"
+          },
+          {
+            "name": "ESPN",
+            "url": "https://www.espn.com/"
+          },
+          {
+            "name": "Fox Sports",
+            "url": "https://www.foxsports.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXLPGATOUR-CMEGTC26"
+      },
+      {
+        "event_ticker": "KXPGATOP20-THRC26",
+        "series_ticker": "KXPGATOP20",
+        "title": "The Rsm Classic: Top 20 Finishers",
+        "sub_title": null,
+        "category": "Sports",
+        "topic": "golf",
+        "markets": 145,
+        "volume_fp": 14446.14,
+        "open_interest_fp": 14432.14,
+        "contract_value_traded_usd": 719.46,
+        "open_interest_usd": 719.04,
+        "last_price_dollars": 0,
+        "close_time": "2026-12-06T00:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "ESPN",
+            "url": "https://www.espn.com"
+          },
+          {
+            "name": "Fox Sports",
+            "url": "https://www.foxsports.com"
+          },
+          {
+            "name": "the Governing League",
+            "url": "https://www.pgatour.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGATOP20-THRC26"
+      },
+      {
+        "event_ticker": "KXPGATOP5-THRC26",
+        "series_ticker": "KXPGATOP5",
+        "title": "The Rsm Classic: Top 5 Finishers",
+        "sub_title": null,
+        "category": "Sports",
+        "topic": "golf",
+        "markets": 145,
+        "volume_fp": 38,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 15.2,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-12-06T00:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "ESPN",
+            "url": "https://www.espn.com"
+          },
+          {
+            "name": "Fox Sports",
+            "url": "https://www.foxsports.com"
+          },
+          {
+            "name": "the Governing League",
+            "url": "https://www.pgatour.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGATOP5-THRC26"
+      },
+      {
+        "event_ticker": "KXPGATOP10-THRC26",
+        "series_ticker": "KXPGATOP10",
+        "title": "The Rsm Classic: Top 10 Finishers",
+        "sub_title": null,
+        "category": "Sports",
+        "topic": "golf",
+        "markets": 145,
+        "volume_fp": 2,
+        "open_interest_fp": 2,
+        "contract_value_traded_usd": 0.02,
+        "open_interest_usd": 0.02,
+        "last_price_dollars": 0,
+        "close_time": "2026-12-06T00:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "ESPN",
+            "url": "https://www.espn.com"
+          },
+          {
+            "name": "Fox Sports",
+            "url": "https://www.foxsports.com"
+          },
+          {
+            "name": "the Governing League",
+            "url": "https://www.pgatour.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGATOP10-THRC26"
+      },
+      {
+        "event_ticker": "KXPGATOUR-THOC26H24975",
+        "series_ticker": null,
+        "title": null,
+        "sub_title": null,
+        "category": null,
+        "topic": "golf",
+        "markets": 1,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2027-01-02T05:00:00Z",
+        "settlement_sources": null,
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGATOUR-THOC26H24975"
+      },
+      {
+        "event_ticker": "KXPGATOP20-THOC26H24975",
+        "series_ticker": null,
+        "title": null,
+        "sub_title": null,
+        "category": null,
+        "topic": "golf",
+        "markets": 1,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2027-01-02T05:00:00Z",
+        "settlement_sources": null,
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGATOP20-THOC26H24975"
+      },
+      {
+        "event_ticker": "KXPGATOP10-THOC26H24975",
+        "series_ticker": null,
+        "title": null,
+        "sub_title": null,
+        "category": null,
+        "topic": "golf",
+        "markets": 1,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2027-01-02T05:00:00Z",
+        "settlement_sources": null,
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGATOP10-THOC26H24975"
+      },
+      {
+        "event_ticker": "KXPGATOP5-THOC26H24975",
+        "series_ticker": null,
+        "title": null,
+        "sub_title": null,
+        "category": null,
+        "topic": "golf",
+        "markets": 1,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2027-01-02T05:00:00Z",
+        "settlement_sources": null,
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGATOP5-THOC26H24975"
+      },
+      {
+        "event_ticker": "KXPGAR2LEAD-THRC26",
+        "series_ticker": "KXPGAR2LEAD",
+        "title": "The RSM Classic End of Round 2 Leader",
+        "sub_title": null,
+        "category": "Sports",
+        "topic": "golf",
+        "markets": 148,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-21T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "the Governing League",
+            "url": "https://www.pgatour.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAR2LEAD-THRC26"
+      },
+      {
+        "event_ticker": "KXPGAMAKECUT-THRC26",
+        "series_ticker": "KXPGAMAKECUT",
+        "title": "The RSM Classic: To Make the Cut",
+        "sub_title": null,
+        "category": "Sports",
+        "topic": "golf",
+        "markets": 145,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-12-06T00:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "ESPN",
+            "url": "https://www.espn.com"
+          },
+          {
+            "name": "Fox Sports",
+            "url": "https://www.foxsports.com"
+          },
+          {
+            "name": "the Governing League",
+            "url": "https://www.pgatour.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAMAKECUT-THRC26"
+      },
+      {
+        "event_ticker": "KXPGAMAKECUT-THOC26H24975",
+        "series_ticker": null,
+        "title": null,
+        "sub_title": null,
+        "category": null,
+        "topic": "golf",
+        "markets": 1,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2027-01-02T05:00:00Z",
+        "settlement_sources": null,
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAMAKECUT-THOC26H24975"
+      },
+      {
+        "event_ticker": "KXPGAR3LEAD-THRC26",
+        "series_ticker": "KXPGAR3LEAD",
+        "title": "The RSM Classic End of Round 3 Leader",
+        "sub_title": null,
+        "category": "Sports",
+        "topic": "golf",
+        "markets": 148,
+        "volume_fp": 0,
+        "open_interest_fp": 0,
+        "contract_value_traded_usd": 0,
+        "open_interest_usd": 0,
+        "last_price_dollars": 0,
+        "close_time": "2026-11-22T15:00:00Z",
+        "settlement_sources": [
+          {
+            "name": "the Governing League",
+            "url": "https://www.pgatour.com/"
+          }
+        ],
+        "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXPGAR3LEAD-THRC26"
+      }
+    ]
   }
 }

@@ -1,5 +1,357 @@
 {
-  "generated_at": "2026-11-20T11:23:57.252Z",
+  "generated_at": "2026-11-20T11:45:13.282Z",
   "source": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
-  "books": {}
+  "books": {
+    "KXTXERCOTPEAK-27JAN01-T93000": {
+      "yes_dollars": [],
+      "no_dollars": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTXERCOTPEAK-27JAN01-T93000/orderbook"
+    },
+    "KXWTIMAX-26DEC31-T130": {
+      "yes_dollars": [
+        [
+          "0.0410",
+          "4065.04"
+        ],
+        [
+          "0.0400",
+          "4166.66"
+        ],
+        [
+          "0.0390",
+          "4273.50"
+        ]
+      ],
+      "no_dollars": [
+        [
+          "0.9550",
+          "3703.70"
+        ],
+        [
+          "0.9540",
+          "3623.18"
+        ],
+        [
+          "0.9530",
+          "3546.09"
+        ]
+      ],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIMAX-26DEC31-T130/orderbook"
+    },
+    "KXTXERCOTPEAK-27JAN01-T91500": {
+      "yes_dollars": [],
+      "no_dollars": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTXERCOTPEAK-27JAN01-T91500/orderbook"
+    },
+    "KXPRESNOMD-28-GPLA": {
+      "yes_dollars": [],
+      "no_dollars": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-GPLA/orderbook"
+    },
+    "KXPRESNOMD-28-JP": {
+      "yes_dollars": [
+        [
+          "0.0100",
+          "1.00"
+        ]
+      ],
+      "no_dollars": [
+        [
+          "0.0580",
+          "468.37"
+        ],
+        [
+          "0.0570",
+          "1262.00"
+        ],
+        [
+          "0.0560",
+          "896.00"
+        ],
+        [
+          "0.0550",
+          "1099.00"
+        ],
+        [
+          "0.0540",
+          "1053.00"
+        ],
+        [
+          "0.0530",
+          "1052.00"
+        ],
+        [
+          "0.0520",
+          "904.00"
+        ],
+        [
+          "0.0510",
+          "1045.00"
+        ],
+        [
+          "0.0500",
+          "1143.00"
+        ],
+        [
+          "0.0490",
+          "1029.00"
+        ],
+        [
+          "0.0480",
+          "1002.00"
+        ],
+        [
+          "0.0470",
+          "1092.00"
+        ]
+      ],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-JP/orderbook"
+    },
+    "KXPRESNOMD-28-HCLI": {
+      "yes_dollars": [
+        [
+          "0.0010",
+          "16.00"
+        ]
+      ],
+      "no_dollars": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-HCLI/orderbook"
+    },
+    "KXOSCARPIC-27-ODY": {
+      "yes_dollars": [],
+      "no_dollars": [
+        [
+          "0.0100",
+          "8113.63"
+        ]
+      ],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-ODY/orderbook"
+    },
+    "KXOSCARPIC-27-BLA": {
+      "yes_dollars": [
+        [
+          "0.0100",
+          "20.00"
+        ]
+      ],
+      "no_dollars": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-BLA/orderbook"
+    },
+    "KXOSCARPIC-27-YOU": {
+      "yes_dollars": [
+        [
+          "0.2000",
+          "1666.66"
+        ],
+        [
+          "0.1900",
+          "1754.38"
+        ],
+        [
+          "0.1800",
+          "1851.84"
+        ],
+        [
+          "0.0100",
+          "80.00"
+        ]
+      ],
+      "no_dollars": [
+        [
+          "0.7900",
+          "1587.30"
+        ],
+        [
+          "0.7800",
+          "1515.14"
+        ],
+        [
+          "0.7700",
+          "1449.26"
+        ]
+      ],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXOSCARPIC-27-YOU/orderbook"
+    },
+    "KXBTCY-27JAN0100-B47500": {
+      "yes_dollars": [
+        [
+          "0.0500",
+          "9999.99"
+        ],
+        [
+          "0.0400",
+          "12499.98"
+        ],
+        [
+          "0.0300",
+          "16666.65"
+        ],
+        [
+          "0.0100",
+          "40.00"
+        ]
+      ],
+      "no_dollars": [
+        [
+          "0.9400",
+          "2777.77"
+        ],
+        [
+          "0.9300",
+          "7142.85"
+        ],
+        [
+          "0.9200",
+          "6249.99"
+        ],
+        [
+          "0.9100",
+          "3703.70"
+        ],
+        [
+          "0.0200",
+          "998905.98"
+        ],
+        [
+          "0.0100",
+          "1000006.00"
+        ]
+      ],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B47500/orderbook"
+    },
+    "KXBTCY-27JAN0100-B147500": {
+      "yes_dollars": [
+        [
+          "0.0200",
+          "200.00"
+        ]
+      ],
+      "no_dollars": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCY-27JAN0100-B147500/orderbook"
+    },
+    "KXETHY-27JAN0100-T4999.99": {
+      "yes_dollars": [],
+      "no_dollars": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHY-27JAN0100-T4999.99/orderbook"
+    },
+    "KXPGATOUR-THRC26-SSTR": {
+      "yes_dollars": [
+        [
+          "0.0220",
+          "549.00"
+        ],
+        [
+          "0.0210",
+          "7936.50"
+        ],
+        [
+          "0.0200",
+          "8333.33"
+        ],
+        [
+          "0.0190",
+          "8771.92"
+        ],
+        [
+          "0.0090",
+          "18518.51"
+        ],
+        [
+          "0.0080",
+          "249999.96"
+        ],
+        [
+          "0.0070",
+          "261904.72"
+        ],
+        [
+          "0.0060",
+          "305555.47"
+        ],
+        [
+          "0.0010",
+          "20.00"
+        ]
+      ],
+      "no_dollars": [
+        [
+          "0.9750",
+          "6521.31"
+        ],
+        [
+          "0.9740",
+          "6410.25"
+        ],
+        [
+          "0.9730",
+          "6172.83"
+        ],
+        [
+          "0.9720",
+          "226.00"
+        ]
+      ],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-SSTR/orderbook"
+    },
+    "KXPGATOUR-MAST27-MFIT": {
+      "yes_dollars": [],
+      "no_dollars": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-MAST27-MFIT/orderbook"
+    },
+    "KXPGATOUR-THRC26-MTHO": {
+      "yes_dollars": [
+        [
+          "0.1200",
+          "6944.40"
+        ],
+        [
+          "0.1100",
+          "7575.75"
+        ],
+        [
+          "0.1000",
+          "1666.66"
+        ],
+        [
+          "0.0300",
+          "5555.55"
+        ],
+        [
+          "0.0290",
+          "5747.12"
+        ],
+        [
+          "0.0280",
+          "5952.38"
+        ],
+        [
+          "0.0010",
+          "60.00"
+        ]
+      ],
+      "no_dollars": [
+        [
+          "0.8700",
+          "557.26"
+        ],
+        [
+          "0.8600",
+          "5441.42"
+        ],
+        [
+          "0.8500",
+          "9999.99"
+        ],
+        [
+          "0.8400",
+          "8333.28"
+        ],
+        [
+          "0.4300",
+          "134.71"
+        ]
+      ],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATOUR-THRC26-MTHO/orderbook"
+    }
+  }
 }
