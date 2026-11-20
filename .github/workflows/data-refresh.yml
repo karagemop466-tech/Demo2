@@ -1,0 +1,40 @@
+name: Refresh Kalshi data
+
+on:
+  schedule:
+    - cron: "23 */2 * * *"   # every 2 hours, off the top of the hour
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/fetch_data.py
+      - .github/workflows/data-refresh.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch official Kalshi demo API data
+        run: python3 scripts/fetch_data.py
+
+      - name: Commit refreshed data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "data: refresh from official Kalshi demo API"
+            git push
+          fi
