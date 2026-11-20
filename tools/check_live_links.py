@@ -21,7 +21,15 @@ HREF = re.compile(r'(?:href|src)\s*=\s*"([^"]+)"')
 # API path templates such as /markets/{ticker} are legitimate, so a brace
 # preceded by a slash or underscore is not treated as an unfinished placeholder.
 PLACEHOLDER = re.compile(r"(?<![/_])\{[A-Za-z_]+\}|TODO|FIXME|Lorem ipsum|XXXX")
-CODE_BLOCK = re.compile(r"<code>.*?</code>|<pre>.*?</pre>|<script\b.*?</script>", re.S)
+# Bodies of <script>, <code> and <pre> are not markup: template literals and code
+# samples there would otherwise look like broken links or unfinished placeholders.
+# The opening <script src="..."> tag is kept so asset references are still checked.
+CODE_BLOCK = re.compile(r"<code>.*?</code>|<pre>.*?</pre>", re.S)
+SCRIPT_BODY = re.compile(r"(<script\b[^>]*>).*?</script>", re.S)
+
+
+def strip_code(text: str) -> str:
+    return CODE_BLOCK.sub(" ", SCRIPT_BODY.sub(r"\1", text))
 
 
 class IdCollector(HTMLParser):
@@ -52,9 +60,11 @@ def main():
     for path in files:
         rel = path.relative_to(ROOT)
         text = path.read_text(encoding="utf-8")
-        checked += len(HREF.findall(text))
+        checked += len(HREF.findall(strip_code(text)))
 
-        m = PLACEHOLDER.search(CODE_BLOCK.sub(" ", text))
+        scan = strip_code(text)
+
+        m = PLACEHOLDER.search(scan)
         if m:
             problems.append(f"{rel}: unfinished placeholder {m.group(0)!r}")
 
@@ -63,7 +73,7 @@ def main():
         for d in parser.dupes:
             problems.append(f"{rel}: duplicate id {d!r}")
 
-        for href in HREF.findall(text):
+        for href in HREF.findall(scan):
             if href.startswith(("http://", "https://", "mailto:", "data:")):
                 continue
             if href.startswith("#"):
