@@ -75,6 +75,8 @@ tr.dim td{opacity:.55}
 .pill.flag{background:rgba(245,165,36,.14);border-color:#7a5410;color:#ffd28a}
 .pill.ok{background:rgba(0,195,137,.14);border-color:#0a7f5c;color:#5ef0bd}
 .pill.err{background:rgba(239,68,68,.14);border-color:#7f2323;color:#ff9b9b}
+.pill.up{background:rgba(0,195,137,.14);border-color:#0a7f5c;color:#5ef0bd}
+.pill.down{background:rgba(239,68,68,.14);border-color:#7f2323;color:#ff9b9b}
 
 /* ---------- controls ---------- */
 .row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}

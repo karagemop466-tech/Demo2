@@ -401,3 +401,20 @@ recording so another session does not repeat them:
 
 In both cases the Pages deploy itself was fine; only the consistency job was red. The site was never
 broken, and it is worth distinguishing the two when reading Actions.
+
+---
+
+## Session `arena/e36292f6` — branch `arena/e36292f6-demo2` (started 2026-11-20)
+
+**Branch:** `arena/e36292f6-demo2`, branched from `main` at `4c13151`. Scope: integration/final verification plus the sharp-jump price-movement feature (live chart markers + market links for moves ≥ $0.10 in either direction) and landing-page clarity. Non-overlapping with prior sessions — edits only to `COORDINATION.md` (this section), `assets/site.js` (sharp-jump detection + chart markers), `index.html` (landing clarity), `pages/verification.html` (sharp-jump verification row), `pages/flagged.html` (sharp-jump flag if unverifiable), and `pages/suggestions.html` (sharp-jump decision card).
+
+| # | Task | Status | Owner | Files touched |
+|---|------|--------|-------|---------------|
+| E-1 | Coordination claim + claim commit/push | done | e36292f6 | `COORDINATION.md` |
+| E-2 | Sharp-jump detection on live chart (≥ $0.10, either direction) with market links | done | e36292f6 | `assets/site.js`, `index.html`, `assets/style.css` |
+| E-3 | Verification row + flag for sharp-jump feature (cause not derivable from API) | done | e36292f6 | `pages/verification.html`, `pages/flagged.html` |
+| E-4 | Suggestion card for sharp-jump / live-interactivity | done | e36292f6 | `pages/suggestions.html` |
+| E-5 | Full re-verification: build, link checks, both checkers | done | e36292f6 | all site files (read-only) |
+| E-6 | PR from this branch to main, merge, Pages deploy confirm, record | in progress | e36292f6 | this section, PR record |
+
+Sources to verify against (official only): https://docs.kalshi.com/api-reference/market/get-market-candlesticks, https://docs.kalshi.com/api-reference/market/get-trades, https://docs.kalshi.com/api-reference/market/get-market-orderbook, https://docs.kalshi.com/getting_started/demo_env.
