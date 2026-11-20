@@ -290,13 +290,27 @@ def collect_scope(signer: Signer | None) -> dict:
     series_idx = load_series_index(signer)
     topic_cache = {t: series_topic(s) for t, s in series_idx.items()}
     events = paginate(DEMO_REST + "/events?status=open&with_nested_markets=true", "events", signer,
-                      max_pages=25)
+                      max_pages=50)
 
     rows: list[dict] = []
     unmapped_series: dict[str, int] = {}
+    enriched: set[str] = set()
     for ev in events:
         st = ev.get("series_ticker") or ""
         topic = topic_cache.get(st)
+        if topic is None and st and st not in enriched:
+            # The bare /series list response does not carry product_metadata (the
+            # field that classifies e.g. the AAA gasoline family via
+            # product_metadata.scope == "Gasoline"); GET /series/{ticker} does
+            # (verified live 2026-11-20). Enrich only the unmapped series that
+            # actually appear in in-scope events, then re-map. Official data only.
+            enriched.add(st)
+            j2, _ = get_json(f"{DEMO_REST}/series/{st}", signer)
+            full = (j2 or {}).get("series") or {}
+            if full:
+                series_idx[st] = full
+                topic = series_topic(full)
+                topic_cache[st] = topic
         if topic is None:
             # No official record => no topic. Record it instead of guessing, so the
             # Flagged page can show exactly which series could not be classified.

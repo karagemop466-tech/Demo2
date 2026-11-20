@@ -47,6 +47,11 @@ events_body = json.loads((RAW / "events_KXAAAGASD-28SEP16.json").read_text())["b
 series_gas = json.loads((RAW / "series_KXAAAGASD.json").read_text())["body"]["series"]
 series_wti = json.loads((RAW / "series_KXWTI.json").read_text())["body"]["series"]
 
+# The bare /series LIST response does not carry product_metadata (verified in the
+# 2026-11-20 14:10 live run: gas topic mapped only DIESEL/DIESELM). Simulate that:
+# the list serves SLIM records; GET /series/{ticker} serves the full record.
+series_gas_slim = {k: v for k, v in series_gas.items() if k != "product_metadata"}
+
 failures: list[str] = []
 
 
@@ -57,8 +62,10 @@ def check(cond: bool, msg: str) -> None:
 
 
 def fake_get_json(url, signer=None, retries=3):
+    if url.rstrip("/").endswith("/series/KXAAAGASD"):
+        return {"series": series_gas}, 200  # full record (with product_metadata)
     if "/series" in url and "candlesticks" not in url and "/markets" not in url:
-        return {"series": [series_gas, series_wti]}, 200
+        return {"series": [series_gas_slim, series_wti]}, 200  # slim list
     if "/events" in url:
         return events_body, 200
     return None, 404

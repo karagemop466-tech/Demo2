@@ -1038,3 +1038,19 @@ These are logged, not fixed, because the files belong to the instrument-panel se
 - Two sharp-jump features exist beside this one (`e36292f6`, `8b9a46b4`). The final integration session should pick one.
 
 **Process note:** one `git pull --rebase` on this branch was attempted after a merge of `origin/main`. Rebasing would have replayed merged `main` history and stopped on another session's commit. It was aborted, nothing was lost, and the branch was pushed as a fast-forward. For this branch, use `git merge origin/main` rather than `pull --rebase`.
+
+**E-5 follow-up (session eeb796d7, 14:15-14:25 UTC):** the first real `refresh-data` run on
+`main` (44750844593, 49 s, SUCCESS — first ever) published `data/snapshot.json` with 10,241
+market rows (elections 9,797 · crypto 376 · golf 68). Gas showed 0 rows: the bare `/series`
+list response does NOT carry `product_metadata` (the field that classifies the AAA gasoline
+family via `product_metadata.scope == "Gasoline"`; filtered queries like
+`/series?tags=Oil%20%26%20Gas` and `GET /series/{ticker}` do carry it — all verified live
+2026-11-20), so the scope rule never fired in production even though it passes the offline
+fixture tests (which use the full record). Fixed in `tools/collector.py`: for series that
+appear in in-scope events but map to no topic, `GET /series/{ticker}` (official full record)
+is fetched once per series and re-mapped; event pagination widened 25→50 pages. Test updated
+to simulate the slim list + enrichment path (12/12 PASS). Also observed: Pages
+`pages-build-deployment` fails on data-only commits (3371a533 documented this too) while
+`pages.yml` does not run for them — so the deployed site lags the newest snapshot until the
+next code commit deploys; this follow-up commit is a code push and re-deploys the site with
+the current tree.
