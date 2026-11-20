@@ -1,0 +1,58 @@
+name: Refresh Kalshi demo data
+
+on:
+  schedule:
+    # every 30 minutes, on the hour and half hour
+    - cron: '7,37 * * * *'
+  workflow_dispatch:
+    inputs:
+      max_market_pages:
+        description: 'Maximum pages of /markets to read (page size 1000)'
+        required: false
+        default: '60'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-data
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    name: Pull demo market data and commit the snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch the Kalshi demo snapshot
+        env:
+          KALSHI_BASE: https://external-api.demo.kalshi.co/trade-api/v2
+        run: |
+          set -euo pipefail
+          node scripts/refresh-data.mjs --base "$KALSHI_BASE" --out data
+          echo "--- snapshot summary ---"
+          node -e "const m=require('./data/meta.json');console.log(JSON.stringify({generated_at:m.generated_at,counts:m.counts,pagination:m.pagination},null,2))"
+
+      - name: Commit the snapshot if it changed
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "Snapshot unchanged — nothing to commit."
+            exit 0
+          fi
+          git commit -m "chore(data): refresh Kalshi demo snapshot"
+          git pull --rebase origin "${{ github.ref_name }}"
+          git push origin "HEAD:${{ github.ref_name }}"
+          echo "Snapshot committed."

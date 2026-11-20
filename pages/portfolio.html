@@ -1,7 +1,169 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Portfolio & Trading</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Portfolio & Trading</h1>
-<p>Portfolio and order placement use <b>your</b> demo API keys, signed in-browser (RSA-PSS/SHA-256 or Ed25519, ms timestamp, 30s tolerance) per <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Authenticated Requests</a> and <a href="https://docs.kalshi.com/getting_started/api_keys">API Keys</a>. Keys are stored only in this browser (localStorage) and sent only to <code>external-api.demo.kalshi.co</code>. Create keys at <a href="https://demo.kalshi.co/">demo.kalshi.co</a> → Account &amp; security → API Keys.</p>
-<div class="card"><label>Demo API Key ID</label><input id="apiKeyId" placeholder="e.g. a952bcbe-…"><label>Demo Private Key (PEM)</label><textarea id="apiPrivateKey" rows="6" placeholder="-----BEGIN PRIVATE KEY----- …"></textarea><div class="row" style="margin-top:8px"><button id="loadPortBtn">Load balance / positions / fills</button></div><div id="portfolioBox" style="margin-top:10px">No keys entered — portfolio stays blank (by design, no fabricated balances).</div></div>
-<div class="card" style="margin-top:14px"><h3>Place demo limit order</h3><label>Ticker</label><input id="orderTicker" placeholder="e.g. KX…"><div class="row"><div style="flex:1"><label>Side</label><select id="orderSide"><option value="yes">yes</option><option value="no">no</option></select></div><div style="flex:1"><label>Count</label><input id="orderCount" type="number" value="1"></div><div style="flex:1"><label>Price ($)</label><input id="orderPrice" type="number" step="0.01" value="0.50"></div></div><button id="placeOrderBtn" style="margin-top:10px">Place order (demo)</button><div id="orderResult" style="margin-top:8px"></div></div>
-<p class="muted">Endpoints: <code>GET /portfolio/balance</code>, <code>GET /portfolio/positions</code>, <code>GET /portfolio/fills</code>, <code>POST /portfolio/orders</code> — see <a href="https://docs.kalshi.com/getting_started/api_environments">API Environments</a> for base URLs.</p>
-<script src="../assets/app.js"></script>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portfolio &amp; trading — Kalshi demo account</title>
+<meta name="description" content="Read the Kalshi demo account balance, positions, fills and orders, place demo limit orders, and keep a local trade log for analysis.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div id="site-nav"></div>
+<main class="wrap">
+  <h1>Portfolio &amp; trading (demo account)</h1>
+  <p class="muted">
+    Everything on this page runs in your browser and talks directly to the Kalshi <b>demo</b> API. Your private key is used
+    only to sign requests — it is held in <code>sessionStorage</code> (cleared when the tab closes), is never uploaded, and is
+    never stored in this repository. Demo money has no value.
+  </p>
+
+  <div class="callout">
+    <b>How to get demo credentials.</b> Create a free account at
+    <a href="https://demo.kalshi.co" target="_blank" rel="noopener">demo.kalshi.co</a> → <b>Account &amp; security → API Keys → Create Key</b>.
+    You get an <b>API Key ID</b> and a <b>private key</b> (PEM). Demo keys only work against the demo hosts —
+    <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API Environments</a>.
+  </div>
+
+  <h2>1 · Credentials</h2>
+  <div class="card">
+    <div class="row" style="align-items:flex-start">
+      <div style="flex:1;min-width:250px">
+        <label for="apiKeyId">API Key ID</label>
+        <input id="apiKeyId" type="text" placeholder="a952bcbe-ec3b-4b5b-b8f9-11dae589608c" autocomplete="off">
+      </div>
+      <div style="flex:1;min-width:250px">
+        <label for="apiBase">API base URL</label>
+        <select id="apiBase">
+          <option value="https://external-api.demo.kalshi.co/trade-api/v2">external-api.demo.kalshi.co (recommended)</option>
+          <option value="https://demo-api.kalshi.co/trade-api/v2">demo-api.kalshi.co (also supported)</option>
+        </select>
+      </div>
+    </div>
+    <label for="apiPrivateKey">Private key (PEM, pasted as text — kept in this browser only)</label>
+    <textarea id="apiPrivateKey" rows="6" placeholder="-----BEGIN PRIVATE KEY-----&#10;…&#10;-----END PRIVATE KEY-----" autocomplete="off" spellcheck="false"></textarea>
+    <div class="row" style="margin-top:10px">
+      <button id="saveCredsBtn" class="secondary">Save to this session</button>
+      <button id="clearCredsBtn" class="secondary">Clear</button>
+      <button id="loadPortBtn">Load portfolio</button>
+      <span class="status" id="credsStatus"></span>
+    </div>
+    <p class="muted small">
+      Signing follows the official scheme: <code>timestamp + METHOD + path</code>, RSA-PSS with SHA-256 or Ed25519,
+      base64 signature in <code>KALSHI-ACCESS-SIGNATURE</code>, millisecond timestamp, 30-second tolerance —
+      <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">Authenticated Requests</a>.
+      The signed path never includes the query string.
+    </p>
+  </div>
+
+  <h2>2 · Portfolio</h2>
+  <div class="card">
+    <div id="portfolioOut"><span class="muted">Enter credentials above and press <b>Load portfolio</b>.</span></div>
+  </div>
+
+  <h2>3 · Place a demo order</h2>
+  <div class="grid two">
+    <div class="card">
+      <div class="row" style="align-items:flex-start">
+        <div style="flex:2;min-width:230px">
+          <label for="orderTicker">Market ticker</label>
+          <input id="orderTicker" type="text" placeholder="e.g. KXHIGHNY-24JAN01-T60" autocomplete="off">
+        </div>
+        <div style="flex:1;min-width:140px">
+          <label for="orderCount">Contracts</label>
+          <input id="orderCount" type="text" value="1" autocomplete="off">
+        </div>
+      </div>
+      <div class="row" style="align-items:flex-start">
+        <div style="flex:1;min-width:180px">
+          <label for="orderSide">Side</label>
+          <select id="orderSide">
+            <option value="buy_yes">Buy YES</option>
+            <option value="sell_yes">Sell YES</option>
+            <option value="buy_no">Buy NO</option>
+            <option value="sell_no">Sell NO</option>
+          </select>
+          <p class="muted small" id="sideHint">Buys YES at the price you enter (side = bid).</p>
+        </div>
+        <div style="flex:1;min-width:150px">
+          <label for="orderPrice">Price (dollars, YES leg)</label>
+          <input id="orderPrice" type="text" placeholder="0.4200" autocomplete="off">
+          <button id="prefillBtn" class="secondary" style="margin-top:6px">Use current YES bid</button>
+        </div>
+      </div>
+      <div class="row" style="align-items:flex-start">
+        <div style="flex:1;min-width:160px">
+          <label for="orderTif">Time in force</label>
+          <select id="orderTif">
+            <option value="good_till_canceled">good_till_canceled</option>
+            <option value="immediate_or_cancel">immediate_or_cancel</option>
+            <option value="fill_or_kill">fill_or_kill</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:160px">
+          <label for="orderStp">Self-trade prevention</label>
+          <select id="orderStp">
+            <option value="taker_at_cross">taker_at_cross</option>
+            <option value="maker">maker</option>
+          </select>
+        </div>
+        <div style="flex:0 0 150px">
+          <label for="orderPostOnly">Post only</label>
+          <input id="orderPostOnly" type="checkbox" style="width:auto;margin-top:10px">
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button id="placeOrderBtn">Place demo order</button>
+        <span class="muted small">Uses <code>POST /portfolio/events/orders</code> — <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a></span>
+      </div>
+      <div id="orderOut" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card">
+      <h3>How this maps to the official V2 request</h3>
+      <p class="muted small">
+        <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a> uses a
+        <b>single book</b> with a <code>bid</code>/<code>ask</code> side and fixed-point dollar prices.
+        <a href="https://docs.kalshi.com/getting_started/order_direction" target="_blank" rel="noopener">Order direction</a> maps
+        <code>bid ≡ yes</code> and <code>ask ≡ no</code>, and
+        <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a>
+        shows that a YES bid at $X is a NO ask at $(1 − X).
+      </p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>What you pick</th><th>side sent</th><th>price sent</th></tr></thead>
+          <tbody>
+            <tr><td>Buy YES at $0.42</td><td><code>bid</code></td><td><code>0.4200</code></td></tr>
+            <tr><td>Sell YES at $0.42</td><td><code>ask</code></td><td><code>0.4200</code></td></tr>
+            <tr><td>Buy NO at $0.40</td><td><code>ask</code></td><td><code>0.6000</code> (1 − 0.40)</td></tr>
+            <tr><td>Sell NO at $0.40</td><td><code>bid</code></td><td><code>0.6000</code> (1 − 0.40)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted small">
+        Prices are snapped to the market's own <code>price_ranges</code> grid, which the official fixed-point guide names as the
+        source of truth for valid prices —
+        <a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">Fixed-Point Representation</a>.
+        An off-grid price is rejected by the exchange with <code>invalid_price</code>.
+      </p>
+    </div>
+  </div>
+
+  <h2>4 · What happens to the trade record</h2>
+  <div class="card">
+    <p class="muted small">
+      Every order you place is written to this browser's local trade log, and every fill returned by
+      <code>GET /portfolio/fills</code> is categorised on the <a href="analysis.html">Trade analysis</a> page
+      (topic, outcome side, price band, hour of day, taker/maker) with results computed only from markets that have actually
+      settled. Strategies are never asserted unless the fills support them.
+    </p>
+    <p class="muted small">
+      <a href="analysis.html">Go to trade analysis →</a>
+    </p>
+  </div>
+</main>
+<div id="site-foot"></div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/common.js"></script>
+<script src="../assets/portfolio.js"></script>
+</body>
+</html>

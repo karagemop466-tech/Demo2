@@ -1,14 +1,188 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sources</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Sources</h1>
-<ul>
-<li><a href="https://docs.kalshi.com/welcome">Welcome / API Documentation</a></li>
-<li><a href="https://docs.kalshi.com/getting_started/demo_env">Demo Environment</a></li>
-<li><a href="https://docs.kalshi.com/getting_started/api_environments">API Environments and Endpoints</a></li>
-<li><a href="https://docs.kalshi.com/getting_started/making_your_first_request">Making Your First Request</a></li>
-<li><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">Quick Start: Market Data</a></li>
-<li><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">Quick Start: Authenticated Requests</a></li>
-<li><a href="https://docs.kalshi.com/getting_started/api_keys">API Keys</a></li>
-<li><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></li>
-<li><a href="https://demo.kalshi.co/">Kalshi Demo (demo.kalshi.co)</a></li>
-</ul>
-<p>Only official Kalshi documentation and the demo API are cited. No third-party values are used.</p>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sources — every official Kalshi reference used by this project</title>
+<meta name="description" content="The complete list of official Kalshi documentation pages and live API calls used by this dashboard, with what each one was used for.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div id="site-nav"></div>
+<main class="wrap">
+  <h1>Sources</h1>
+  <p class="muted">
+    Only official Kalshi sources are used: <code>docs.kalshi.com</code>, <code>demo.kalshi.co</code> and the demo Trade API
+    itself. Every table row elsewhere on this site links to one of the pages below.
+  </p>
+
+  <h2>1 · Environment and access</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Source</th><th>What was taken from it</th><th>Where it is used on this site</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API Environments and Endpoints</a></td>
+          <td>Recommended and also-supported REST and WebSocket base URLs for production and demo; the rule that the signed path never includes the query string.</td>
+          <td>Executive summary, Portfolio &amp; trading, Methodology, Verification</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Test In The Demo Environment</a></td>
+          <td>The demo endpoints list and the warning that demo prices and behaviour may not reflect real markets.</td>
+          <td>Every page header, Executive summary, Methodology, Flagged for review</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">Quick Start: Market Data</a></td>
+          <td>Public market data can be read without authentication (browser <code>fetch</code> examples).</td>
+          <td>Dashboard, Verification (V4)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">Quick Start: Authenticated Requests</a></td>
+          <td>Header names, the <code>timestamp + METHOD + path</code> signing string, RSA-PSS/SHA-256 and Ed25519, millisecond timestamps, 30-second tolerance.</td>
+          <td>Portfolio &amp; trading, Verification (V5, V6)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/api_keys" target="_blank" rel="noopener">API Keys</a></td>
+          <td>How a key is created, that the private key cannot be retrieved later, and the scope model.</td>
+          <td>Portfolio &amp; trading, Questions (Q15)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate Limits and Tiers</a></td>
+          <td>Per-endpoint rate limits, including the separate bucket for balance reads.</td>
+          <td>Suggestions (S8), Questions (Q12)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/pagination" target="_blank" rel="noopener">Understanding Pagination</a></td>
+          <td>Cursor-based pagination used by the snapshot script.</td>
+          <td>Methodology, data pipeline</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>2 · Market data and events</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Source</th><th>What was taken from it</th><th>Where it is used on this site</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td>
+          <td>The market response schema: prices, <code>volume_fp</code>, <code>volume_24h_fp</code>, <code>open_interest_fp</code>,
+            <code>notional_value_dollars</code>, <code>result</code>, <code>settlement_value_dollars</code>, <code>settlement_ts</code>,
+            <code>price_ranges</code>; and the documented status filter values.</td>
+          <td>Dashboard, Resolution tracker, Trade analysis, Methodology, Verification (V14–V18)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/market/get-market" target="_blank" rel="noopener">Get Market</a></td>
+          <td>Single-market read used for the live tick feed and to validate a ticker before showing an order book.</td>
+          <td>Dashboard (seconds view), Resolution tracker</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a></td>
+          <td><code>orderbook_fp.yes_dollars</code> / <code>no_dollars</code> structure, ascending price order, bids only, the
+            <code>[price, contracts]</code> pair format, the reciprocal YES/NO relationship, best bid, implied ask and spread,
+            and the behaviour for empty or unknown tickers.</td>
+          <td>Dashboard (liquidity panel), Portfolio &amp; trading, Methodology</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Get Market Orderbook</a></td>
+          <td>The order-book endpoint and its <code>depth</code> parameter.</td>
+          <td>Dashboard, Methodology, Suggestions (S3)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td>
+          <td>Path <code>/series/{series_ticker}/markets/{ticker}/candlesticks</code>, the 1 / 60 / 1440-minute periods, the 5,000-period
+            request limit, seconds-only timestamps, and the OHLC fields used for the graph.</td>
+          <td>Dashboard (minutes / hours / days views), Methodology</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a></td>
+          <td>The series record: <code>category</code>, <code>tags</code>, <code>fee_type</code>, <code>fee_multiplier</code>,
+            <code>settlement_sources</code>, <code>contract_terms_url</code>.</td>
+          <td>Topic classification, Methodology, Suggestions (S5)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/market/get-series" target="_blank" rel="noopener">Get Series</a></td>
+          <td>Single-series read and the series’ settlement sources.</td>
+          <td>Resolution tracker</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a></td>
+          <td>The event record: <code>category</code>, <code>series_ticker</code>, <code>settlement_sources</code>, <code>strike_date</code>.</td>
+          <td>Topic classification, Methodology</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">Market Lifecycle</a></td>
+          <td>How a market moves from creation to settlement and which fields change on the way.</td>
+          <td>Resolution tracker, Questions (Q7)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a></td>
+          <td>$1 payout per winning contract, netting, and the fact that settlement timing varies.</td>
+          <td>Trade analysis, Resolution tracker, Verification (V19, V20)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">Fixed-Point Representation</a></td>
+          <td>Price/quantity field conventions (<code>*_dollars</code>, <code>*_fp</code>) and that <code>price_ranges</code> is the
+            source of truth for valid prices.</td>
+          <td>Methodology, Portfolio &amp; trading, Verification (V17)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noopener">Historical Data</a></td>
+          <td>Which data is archived and which endpoint serves it (<code>/historical/…</code>).</td>
+          <td>Flagged for review (F9)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/exchange/get-exchange-status" target="_blank" rel="noopener">Get Exchange Status</a></td>
+          <td><code>exchange_active</code> / <code>trading_active</code> flags.</td>
+          <td>Data pipeline, Suggestions (S7)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>3 · Trading and portfolio</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Source</th><th>What was taken from it</th><th>Where it is used on this site</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a></td>
+          <td>Path <code>POST /portfolio/events/orders</code>, the request schema and its required fields, the response
+            (<code>order_id</code>, <code>fill_count</code>, <code>remaining_count</code>), the note that a <code>201</code> means accepted
+            rather than resting, and that the legacy write endpoints now return <code>410 Gone</code>.</td>
+          <td>Portfolio &amp; trading, Verification (V7, V8)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/orders/get-orders" target="_blank" rel="noopener">Get Orders</a></td>
+          <td>The <code>Order</code> schema and the order status vocabulary.</td>
+          <td>Portfolio &amp; trading, Trade analysis</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/order_direction" target="_blank" rel="noopener">Order direction</a></td>
+          <td><code>outcome_side</code> / <code>book_side</code> and the equivalence <code>bid ≡ yes</code>, <code>ask ≡ no</code>.</td>
+          <td>Portfolio &amp; trading, Verification (V9)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/quick_start_create_order" target="_blank" rel="noopener">Quick Start: Create your first order</a></td>
+          <td>A working order example including <code>client_order_id</code> and the rule that a <code>201</code> does not mean the order is resting.</td>
+          <td>Portfolio &amp; trading</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/order_errors" target="_blank" rel="noopener">Order Errors</a></td>
+          <td>The HTTP status codes and error codes an order can fail with.</td>
+          <td>Portfolio &amp; trading error handling</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">Get Balance</a></td>
+          <td><code>balance</code> (cents), <code>balance_dollars</code>, <code>portfolio_value</code> (cents), <code>updated_ts</code>,
+            and the separate rate-limit bucket for balance reads.</td>
+          <td>Portfolio &amp; trading, Verification (V22)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-positions" target="_blank" rel="noopener">Get Positions</a></td>
+          <td>The positions response and its per-position fields.</td>
+          <td>Portfolio &amp; trading</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Get Fills</a></td>
+          <td>The fill schema: <code>ticker</code>, <code>outcome_side</code>, <code>book_side</code>, <code>count_fp</code>,
+            <code>yes_price_dollars</code>, <code>no_price_dollars</code>, <code>is_taker</code>, <code>fee_cost</code>, <code>created_time</code>.</td>
+          <td>Portfolio &amp; trading, Trade analysis, Verification (V23)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">Quick Start: WebSockets</a></td>
+          <td>The signed handshake requirement, the channel list, and the message envelope (<code>type</code> / <code>msg</code>).</td>
+          <td>Verification (V27), Flagged for review (F4)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/account/get-account-api-limits" target="_blank" rel="noopener">Get Account API Limits</a></td>
+          <td>The account’s usage tier and token-bucket limits.</td>
+          <td>Suggestions (S8)</td></tr>
+        <tr><td><a href="https://docs.kalshi.com/api-reference/orders/get-queue-positions-for-orders" target="_blank" rel="noopener">Get Queue Positions for Orders</a></td>
+          <td>Queue position for resting orders.</td>
+          <td>Suggestions (S9)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>4 · Exact live requests used to produce the committed snapshot</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Request</th><th>Parameters</th><th>Why</th><th>Official reference</th></tr></thead>
+      <tbody>
+        <tr><td><code>GET /exchange/status</code></td><td>—</td><td>Exchange health, recorded in the snapshot metadata.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/exchange/get-exchange-status" target="_blank" rel="noopener">Get Exchange Status</a></td></tr>
+        <tr><td><code>GET /series</code></td><td><code>limit=200</code>, cursor pagination</td><td>Official category and tags for every series — the primary topic signal.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a></td></tr>
+        <tr><td><code>GET /events</code></td><td><code>status=open</code>, <code>limit=200</code>, cursor pagination</td><td>Event category, series link and settlement sources.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a></td></tr>
+        <tr><td><code>GET /markets</code></td><td><code>status=open</code>, <code>limit=1000</code>, cursor pagination</td><td>Prices, volume, open interest, close times.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+        <tr><td><code>GET /markets</code></td><td><code>status=settled</code>, <code>limit=1000</code>, cursor pagination</td><td>Resolution outcomes (<code>result</code>) and settlement values.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+        <tr><td><code>GET /markets/{ticker}/orderbook</code></td><td><code>depth=20</code></td><td>Resting liquidity and the depth-notional metric, for the leading markets of each topic.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">Get Market Orderbook</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>5 · Source of the published files</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>File</th><th>Written by</th><th>Contains</th></tr></thead>
+      <tbody>
+        <tr><td><code>data/markets.json</code></td><td><code>scripts/refresh-data.mjs</code> (run by <code>.github/workflows/refresh-data.yml</code>)</td><td>In-scope open markets with every published metric and its source links.</td></tr>
+        <tr><td><code>data/resolved.json</code></td><td>same</td><td>In-scope settled markets with their yes/no result and settlement value.</td></tr>
+        <tr><td><code>data/series.json</code></td><td>same</td><td>The in-scope series catalogue with official category and tags.</td></tr>
+        <tr><td><code>data/meta.json</code></td><td>same</td><td>Generation time, endpoints used, counts, pagination and truncation flags.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+<div id="site-foot"></div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/common.js"></script>
+</body>
+</html>

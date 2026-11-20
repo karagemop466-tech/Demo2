@@ -1,10 +1,189 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Flagged for Review</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Flagged for Review</h1>
-<table><tr><th>#</th><th>Irregularity / gap</th><th>Impact</th><th>What we did</th><th>Source</th></tr>
-<tr><td>F1</td><td>Sandbox cannot reach Kalshi API (TLS SSL_ERROR_SYSCALL). Live data unverified from sandbox.</td><td>Dashboard fetches in visitor browser; sandbox preview shows fetch errors.</td><td>No values fabricated; empty/error states shown.</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td></tr>
-<tr><td>F2</td><td>“Highest dollar amount” has no single API field.</td><td>Ranking is a proxy.</td><td>Use volume×last price, labeled everywhere. Awaiting Q1 answer.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td></tr>
-<tr><td>F3</td><td>Topic mapping is keyword heuristic, not series_ticker allowlist.</td><td>Some in-scope markets may be missed/mislabeled.</td><td>Documented on each category page; Suggestion S1 proposes allowlist.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">quick_start</a></td></tr>
-<tr><td>F4</td><td>Demo prices not reflective of real markets.</td><td>Strategies from demo may not transfer.</td><td>Warning on every page; no real-money claims.</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td></tr>
-<tr><td>F5</td><td>Browser CORS to demo API not confirmed from sandbox.</td><td>Live tables may fail in some browsers.</td><td>Error states + Suggestion S3 (proxy) for review.</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">quick_start</a></td></tr>
-<tr><td>F6</td><td>No demo API keys in repo (by design).</td><td>Portfolio/trading blank until user pastes keys locally.</td><td>Secure in-browser signing; keys never committed.</td><td><a href="https://docs.kalshi.com/getting_started/api_keys">api_keys</a></td></tr>
-</table>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flagged for review — unverified and uncertain items</title>
+<meta name="description" content="Every item on this site that could not be confirmed from an official Kalshi source, with the source links needed to review it.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div id="site-nav"></div>
+<main class="wrap">
+  <h1>Flagged for review</h1>
+  <p class="muted">
+    Everything the build could not confirm from an official source is listed here with the links needed to check it. None of
+    these items blocks the site, and none of them is silently presented as fact elsewhere on the site: unconfirmed values are
+    shown as “—”.
+  </p>
+
+  <h2>1 · Items that could not be verified in this build</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Item</th><th>What is unverified</th><th>Why it matters</th><th>How to review it</th><th>Severity</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>F1</td>
+          <td>Browser access to the demo API (CORS)</td>
+          <td>The build sandbox cannot open a TLS connection to <code>external-api.demo.kalshi.co</code> from a shell, so it could
+            not be confirmed whether a browser on a normal network may call the demo API directly.</td>
+          <td>Decides whether the dashboard can refresh live in the visitor’s browser or must rely on the committed snapshot.</td>
+          <td>Open the published dashboard and press <b>Go live</b>. The status line reports the exact error if it is blocked.
+            Cross-check against <a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">Market Data</a>,
+            which shows browser <code>fetch</code> examples.</td>
+          <td><span class="badge-no">high</span></td>
+        </tr>
+        <tr>
+          <td>F2</td>
+          <td>Meaning of <code>notional_value_dollars</code></td>
+          <td>The field is present on every market and is <code>1.0000</code> on ordinary binary demo markets, but the official
+            reference does not describe what it represents.</td>
+          <td>It is the only field in the market response whose name contains “notional”, so a reader may assume it is market notional.</td>
+          <td>Search the official <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>
+            schema and the glossary for a definition. Until then the site labels it as an unexplained API field and does not rank by it.</td>
+          <td><span class="badge-open">medium</span></td>
+        </tr>
+        <tr>
+          <td>F3</td>
+          <td>Price convention for NO-side orders</td>
+          <td>The V2 reference describes a “single-book bid/ask side” but does not restate, on the same page, which leg the
+            <code>price</code> field is quoted in. The site converts NO prices as <code>1 − price</code> and shows the conversion.</td>
+          <td>If the convention differs, a NO order would rest at the wrong level.</td>
+          <td>Place one resting (non-crossing) demo order and compare <code>GET /portfolio/orders</code> with
+            <code>GET /markets/{ticker}/orderbook</code>. Sources:
+            <a href="https://docs.kalshi.com/getting_started/order_direction" target="_blank" rel="noopener">Order direction</a>,
+            <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a>.</td>
+          <td><span class="badge-no">high</span></td>
+        </tr>
+        <tr>
+          <td>F4</td>
+          <td>Whether the signed WebSocket can be used from a static page</td>
+          <td>The docs require signed headers for the handshake and do not state whether query-parameter or sub-protocol
+            authentication is supported.</td>
+          <td>Decides whether a seconds-granularity tick feed is possible without running a proxy.</td>
+          <td>Check the <a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">WebSocket quick start</a>
+            and the WebSocket reference for an alternative authentication transport.</td>
+          <td><span class="badge-open">medium</span></td>
+        </tr>
+        <tr>
+          <td>F5</td>
+          <td>Completeness of the topic universe</td>
+          <td>The classifier uses official categories and tags plus title words. A market whose series has no matching tag and a
+            title outside the word list is out of scope even if a human would call it in scope (for example a music or celebrity
+            market with a neutral title).</td>
+          <td>Determines whether a “culture” or “golf” market is missing from the dashboard.</td>
+          <td>Compare the <code>series.json</code> catalogue in <code>data/</code> with the series you expect, and adjust the rule
+            list published on the <a href="methodology.html">Methodology</a> page. Every row shows the rule that matched.</td>
+          <td><span class="badge-open">medium</span></td>
+        </tr>
+        <tr>
+          <td>F6</td>
+          <td>Demo account track record</td>
+          <td>No demo API credentials were available in the build environment, so no authenticated call could be executed or verified
+            end-to-end, and no trade was placed by the build.</td>
+          <td>The portfolio and analysis pages are implemented from the documented schema but have not been exercised against the live demo account.</td>
+          <td>Create a demo key at <a href="https://demo.kalshi.co" target="_blank" rel="noopener">demo.kalshi.co</a> and load the
+            <a href="portfolio.html">Portfolio &amp; trading</a> page. Sources:
+            <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">Authenticated Requests</a>,
+            <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a>.</td>
+          <td><span class="badge-no">high</span></td>
+        </tr>
+        <tr>
+          <td>F7</td>
+          <td>Demo market data is synthetic</td>
+          <td>Observed markets named “Demo BTC at or above …” with demo-only rules text, and multivariate events created minutes before
+            the request.</td>
+          <td>Any conclusion drawn from demo prices or outcomes is about the simulator, not about the real world.</td>
+          <td>Read the demo-environment warning:
+            <a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Test In The Demo Environment</a>.</td>
+          <td><span class="badge-open">medium</span></td>
+        </tr>
+        <tr>
+          <td>F8</td>
+          <td>Status field vocabulary</td>
+          <td>The documented status <em>filter</em> values are <code>unopened, open, closed, settled</code>, while live demo markets
+            returned <code>status: "active"</code> and <code>status: "finalized"</code>.</td>
+          <td>Filters are applied as documented; the site does not branch on the field value, but a reader might expect them to match.</td>
+          <td>Compare the filter documentation with the live payload:
+            <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>.</td>
+          <td><span class="badge-open">low</span></td>
+        </tr>
+        <tr>
+          <td>F9</td>
+          <td>Price-history coverage for old markets</td>
+          <td>Markets that settled before Kalshi’s historical cutoff are not served by the live candlestick endpoint.</td>
+          <td>The minute/hour graphs of long-settled markets would come back empty.</td>
+          <td>Use <code>GET /historical/markets/{ticker}/candlesticks</code> —
+            <a href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noopener">Historical Data</a>.</td>
+          <td><span class="badge-open">low</span></td>
+        </tr>
+        <tr>
+          <td>F10</td>
+          <td>Snapshot freshness</td>
+          <td>The committed snapshot is only as fresh as the last successful CI run; the schedule is every 30 minutes.</td>
+          <td>A reader may treat snapshot numbers as live.</td>
+          <td>Every page shows the snapshot timestamp; the dashboard’s <b>Go live</b> button bypasses the snapshot.</td>
+          <td><span class="badge-open">low</span></td>
+        </tr>
+        <tr>
+          <td>F11</td>
+          <td>“Trades executed on events”</td>
+          <td>Trades are executed on the <b>demo</b> exchange only, by the visitor, using their own demo credentials. The build itself
+            placed no trades and holds no account.</td>
+          <td>The requirement to “execute trades” is satisfied by the implemented, verified-schema order entry, not by the build having traded.</td>
+          <td>Place a demo order on the <a href="portfolio.html">Portfolio &amp; trading</a> page; the request body and the raw response
+            are shown on the page.</td>
+          <td><span class="badge-no">high</span></td>
+        </tr>
+        <tr>
+          <td>F12</td>
+          <td>Historical strategy performance</td>
+          <td>No historical fills exist for the demo account, so no strategy can be stated from data yet; the analysis page states this
+            explicitly rather than inventing a rule.</td>
+          <td>Without fills, the “categorise trades and create strategies” requirement is implemented but not yet populated.</td>
+          <td>Place several demo orders across at least three price bands or topics, let them settle, and revisit
+            <a href="analysis.html">Trade analysis</a>.</td>
+          <td><span class="badge-open">medium</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>2 · Observed but unexplained</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Observation</th><th>Where it came from</th><th>What is still unknown</th><th>How to review</th></tr></thead>
+      <tbody>
+        <tr><td>O1</td><td>The demo API returns markets from many official categories (Elections, Entertainment, Sports, Financials,
+          Mentions, World …) with live-looking prices, plus explicitly synthetic “Demo …” markets.</td>
+          <td>Live calls L1–L4</td>
+          <td>Which of those markets a demo account can actually trade and settle.</td>
+          <td>Try one per category on the <a href="portfolio.html">Portfolio &amp; trading</a> page and read the exchange’s error codes —
+            <a href="https://docs.kalshi.com/getting_started/order_errors" target="_blank" rel="noopener">Order Errors</a>.</td></tr>
+        <tr><td>O2</td><td>Volume figures on demo markets are frequently round numbers (for example 150.00 contracts per 1-minute candle).</td>
+          <td>Live candle response L5</td>
+          <td>Whether volume is simulated rather than generated by actual trades.</td>
+          <td>Compare several markets’ candle volume series; Kalshi does not document demo data generation.</td></tr>
+        <tr><td>O3</td><td>The order-book endpoint returns <code>200</code> with empty arrays for a ticker that does not exist, rather than
+          <code>404</code>.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a> (“Empty and Unknown Markets”)</td>
+          <td>Nothing — this is documented behaviour.</td>
+          <td>The site therefore validates a ticker with <code>GET /markets/{ticker}</code> before showing an order book.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>3 · How to propose a change</h2>
+  <div class="card">
+    <p class="muted small">
+      Anything that would close one of these items belongs on the <a href="suggestions.html">Suggestions</a> board with its
+      evidence, so the change can be accepted before it is made. Questions that need an answer first are listed on the
+      <a href="questions.html">Questions</a> page.
+    </p>
+  </div>
+</main>
+<div id="site-foot"></div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/common.js"></script>
+</body>
+</html>

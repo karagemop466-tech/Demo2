@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Methodology — how every number on this site is produced</title>
+<meta name="description" content="Exact rules used to scope the five topics, compute dollar metrics, draw price graphs, derive liquidity and measure trade results.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div id="site-nav"></div>
+<main class="wrap">
+  <h1>Methodology</h1>
+  <p class="muted">
+    Every figure on this site comes from the Kalshi <b>demo</b> API, either read live in your browser or from the snapshot that
+    the scheduled CI job writes into <code>data/</code>. This page states exactly how each number is produced, so any row can
+    be checked against its source.
+  </p>
+
+  <h2>1 · Where the data comes from</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Step</th><th>Call</th><th>Authentication</th><th>Official documentation</th></tr></thead>
+      <tbody>
+        <tr><td>Exchange state</td><td><code>GET /exchange/status</code></td><td>none</td>
+          <td><a href="https://docs.kalshi.com/api-reference/exchange/get-exchange-status" target="_blank" rel="noopener">Get Exchange Status</a></td></tr>
+        <tr><td>Series metadata (category, tags, fee fields)</td><td><code>GET /series</code></td><td>none</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a></td></tr>
+        <tr><td>Event metadata (category, series link, settlement sources)</td><td><code>GET /events?status=open</code></td><td>none</td>
+          <td><a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a></td></tr>
+        <tr><td>Open markets</td><td><code>GET /markets?status=open</code></td><td>none</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+        <tr><td>Settled markets</td><td><code>GET /markets?status=settled</code></td><td>none</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
+        <tr><td>Order books</td><td><code>GET /markets/{ticker}/orderbook?depth=20</code></td><td>none</td>
+          <td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a></td></tr>
+        <tr><td>Price history</td><td><code>GET /series/{series_ticker}/markets/{ticker}/candlesticks</code></td><td>none</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td></tr>
+        <tr><td>Account data</td><td><code>GET /portfolio/balance</code>, <code>/portfolio/positions</code>, <code>/portfolio/fills</code>, <code>/portfolio/orders</code></td><td>signed</td>
+          <td><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">Get Balance</a></td></tr>
+        <tr><td>Trading</td><td><code>POST /portfolio/events/orders</code>, <code>DELETE /portfolio/events/orders/{order_id}</code></td><td>signed</td>
+          <td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted small">
+    The snapshot is produced by <code>scripts/refresh-data.mjs</code>, run by
+    <code>.github/workflows/refresh-data.yml</code> on a schedule and on demand. It writes
+    <code>data/markets.json</code>, <code>data/resolved.json</code>, <code>data/series.json</code> and <code>data/meta.json</code>.
+    Each file records <code>generated_at</code>, the endpoints used, the page counts and whether pagination was truncated.
+    A live read in the browser overrides the snapshot for the same fields.
+  </p>
+
+  <h2>2 · How the five topics are selected</h2>
+  <p class="muted">
+    Kalshi does not publish a “gas prices / culture / golf” taxonomy, so this project defines one and records the rule that
+    matched for every row. For each market the rules are applied in this order, and the first match wins:
+  </p>
+  <ol class="muted">
+    <li><b>Official category.</b> The series’ <code>category</code> (or the event’s <code>category</code>) is compared with the topic’s category list.</li>
+    <li><b>Official tag.</b> The series’ <code>tags</code> array is searched for one of the topic’s tag words.</li>
+    <li><b>Series title,</b> then <b>event title,</b> then <b>market title</b> word matches.</li>
+  </ol>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Topic</th><th>Official categories</th><th>Official tags</th><th>Title words</th></tr></thead>
+      <tbody>
+        <tr><td>Gas prices</td><td>—</td><td>gas, gasoline, diesel, crude, oil, petroleum, fuel, heating oil, jet fuel, energy</td>
+          <td>gas price, gasoline, diesel, crude oil, oil price, petrol, heating oil, jet fuel, refinery</td></tr>
+        <tr><td>Elections</td><td>Elections</td><td>elections, election, primary, polling, republican, democrat, ballot</td>
+          <td>election, president, senate, house, governor, mayor, primary, ballot, vote, congress, parliament, referendum</td></tr>
+        <tr><td>Culture</td><td>Entertainment, Culture, Media, Mentions, Awards, Pop Culture</td>
+          <td>movies, film, music, album, tv, television, box office, awards, oscar, grammy, emmy, celebrity, entertainment, books</td>
+          <td>movie, film, music, album, grammy, oscar, emmy, box office, celebrity, actor, actress, singer, tv show, netflix, spotify, billboard, met gala, super bowl halftime</td></tr>
+        <tr><td>Crypto</td><td>Crypto</td><td>crypto, bitcoin, btc, ethereum, eth, solana, doge, dogecoin, xrp, ripple, coin</td>
+          <td>bitcoin, btc, ethereum, eth, solana, dogecoin, doge, xrp, crypto</td></tr>
+        <tr><td>Golf</td><td>—</td><td>golf, pga, lpga, masters, ryder cup, open championship, golf tour, us open golf</td>
+          <td>golf, pga, lpga, masters, ryder cup, open championship, bogey, birdie, eagle</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted small">
+    The same rule list is implemented twice — once in <code>scripts/refresh-data.mjs</code> (server side) and once in
+    <code>assets/common.js</code> (browser side) — so a live read and the snapshot classify identically. Every published row
+    carries its own <code>topic_rule</code> string, shown in the “Topic &amp; why” column of the dashboard table.
+  </p>
+
+  <h2>3 · The “highest dollar amount” metrics</h2>
+  <p class="muted">
+    The market response has contract counts and dollar prices but <b>no single dollar-volume field</b>
+    (<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> schema).
+    Four dollar measures are therefore published, each computed from documented fields, and the dashboard lets you rank by any
+    of them:
+  </p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Metric</th><th>Formula</th><th>API fields used</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Turnover $</td><td><code>volume_fp × last_price_dollars</code></td><td><code>volume_fp</code>, <code>last_price_dollars</code></td>
+          <td>Lifetime traded notional at the last traded price — an approximation, because trades happened at many different prices.</td></tr>
+        <tr><td>24 h $</td><td><code>volume_24h_fp × last_price_dollars</code></td><td><code>volume_24h_fp</code>, <code>last_price_dollars</code></td>
+          <td>Same idea over the last 24 hours — the most “live” of the four.</td></tr>
+        <tr><td>OI value $</td><td><code>open_interest_fp × last_price_dollars</code></td><td><code>open_interest_fp</code>, <code>last_price_dollars</code></td>
+          <td>Mark-to-market value of contracts still open.</td></tr>
+        <tr><td>Resting $</td><td><code>Σ (price × contracts)</code> over order-book levels, YES bids + NO bids</td>
+          <td>order-book levels from <code>GET /markets/{ticker}/orderbook</code></td>
+          <td>Liquidity available at the current book — the executability measure. Computed for the top markets of each topic only, because it needs one request per market.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted small">
+    The API’s own <code>notional_value_dollars</code> field is also carried through verbatim for reference, but it is
+    reported as <code>1.0000</code> on ordinary binary markets in the demo environment, so it is <b>not</b> used as the
+    ranking metric. That observation is recorded on the <a href="flagged.html">Flagged for Review</a> page.
+    Prices and counts are fixed-point strings (<code>*_dollars</code> / <code>*_fp</code>) —
+    <a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">Fixed-Point Representation</a>.
+  </p>
+
+  <h2>4 · The price graph</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Time scale</th><th>Data source</th><th>Endpoint</th><th>Limitation</th></tr></thead>
+      <tbody>
+        <tr><td>Seconds</td><td>Live REST snapshots taken in your browser every 3 seconds</td><td><code>GET /markets/{ticker}</code></td>
+          <td>History exists only for the current browser session — it is a local observation, not an official series.</td></tr>
+        <tr><td>Minutes</td><td>Official 1-minute candles</td><td><code>…/candlesticks?period_interval=1</code></td>
+          <td>Candles can be a few seconds behind the newest trades (stated by Kalshi).</td></tr>
+        <tr><td>Hours</td><td>Official 1-hour candles</td><td><code>…/candlesticks?period_interval=60</code></td>
+          <td>At most 5,000 periods per request; one request covers about 208 days at 1-hour resolution.</td></tr>
+        <tr><td>Days</td><td>Official 1-day candles</td><td><code>…/candlesticks?period_interval=1440</code></td>
+          <td>Same 5,000-period limit (about 13.7 years).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted small">
+    X axis = time, Y axis = contract price in dollars. The candle endpoint requires the <b>series ticker</b>, so a market whose
+    series is unknown cannot be charted at minute granularity; the dashboard says so instead of guessing.
+    Markets that settled before Kalshi’s historical cutoff are only available through
+    <code>GET /historical/markets/{ticker}/candlesticks</code> —
+    <a href="https://docs.kalshi.com/getting_started/historical_data" target="_blank" rel="noopener">Historical Data</a>.
+  </p>
+
+  <h2>5 · Liquidity, spread and implied ask</h2>
+  <p class="muted">
+    The order-book endpoint returns bids only, because in a binary market a YES bid at $X <i>is</i> a NO ask at $(1 − X).
+    The dashboard therefore shows:
+  </p>
+  <ul class="muted">
+    <li><b>Best YES bid</b> — the highest price in <code>orderbook_fp.yes_dollars</code>.</li>
+    <li><b>Implied YES ask</b> — <code>1 − (highest price in orderbook_fp.no_dollars)</code>.</li>
+    <li><b>Spread</b> — implied ask minus best bid.</li>
+    <li><b>Contracts available at each price</b> — each level with its contract count, cumulative contracts and cumulative dollars.</li>
+  </ul>
+  <p class="muted small">Source: <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a>.</p>
+
+  <h2>6 · Resolution and trade results</h2>
+  <ul class="muted">
+    <li>A market settles to <b>yes</b> or <b>no</b>; holders of the winning outcome receive $1 per contract
+      (<a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a>).</li>
+    <li>Settlement timing varies with market type and data availability, so the tracker keeps polling until the API reports a result.</li>
+    <li>P&amp;L for a resolved fill = <code>contracts × (1 − entry price)</code> for a winning YES fill,
+      <code>contracts × (0 − entry price)</code> for a losing YES fill, and the mirrored form for NO fills.
+      Fees are taken from the exchange’s own <code>fee_cost</code> field on each fill.</li>
+    <li>A strategy is only written down when a segment contains at least three fills in settled markets.</li>
+  </ul>
+
+  <h2>7 · What this methodology deliberately does not do</h2>
+  <ul class="muted">
+    <li>It does not infer, estimate or fill in any value. If the API does not return a field, the cell shows “—”.</li>
+    <li>It does not mix demo data with production data, and it never uses real funds.</li>
+    <li>It does not claim that demo outcomes predict real ones — Kalshi warns that demo prices and behaviour “may not be
+      reflective of those in real markets” (<a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">demo environment</a>).</li>
+    <li>It does not back-test on a market universe that was chosen after the fact.</li>
+  </ul>
+</main>
+<div id="site-foot"></div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/common.js"></script>
+</body>
+</html>

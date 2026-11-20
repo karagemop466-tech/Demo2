@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resolution tracker — Kalshi demo events until they resolve yes or no</title>
+<meta name="description" content="Watch Kalshi demo markets until they settle, and record whether each one resolved yes or no, with the official settlement value and timestamp.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div id="site-nav"></div>
+<main class="wrap">
+  <h1>Resolution tracker</h1>
+  <p class="muted">
+    Markets added with <b>Watch</b> on the <a href="../index.html">dashboard</a> are polled here every 30 seconds.
+    When the demo API reports a settlement, the outcome (<b>yes</b> or <b>no</b>), the settlement value and the settlement
+    timestamp are recorded in this browser. Sources:
+    <a href="https://docs.kalshi.com/api-reference/market/get-market" target="_blank" rel="noopener">Get Market</a> ·
+    <a href="https://docs.kalshi.com/getting_started/market_lifecycle" target="_blank" rel="noopener">Market Lifecycle</a> ·
+    <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a>.
+  </p>
+
+  <h2>1 · Markets being watched (<span id="watchCount">0</span>)</h2>
+  <div class="card">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Market</th><th>Topic</th><th>Status</th><th class="num">Last $</th><th>Close (UTC)</th>
+          <th>Resolution</th><th class="num">Settlement $</th><th>Settled at (UTC)</th><th>Source</th><th></th></tr></thead>
+        <tbody id="watchRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2>2 · Resolved in this browser (<span id="historyCount">0</span>)</h2>
+  <div class="card">
+    <div class="row" style="margin-bottom:8px">
+      <button id="clearHistoryBtn" class="secondary">Clear local history</button>
+      <span class="muted small">Stored in this browser only (localStorage). Nothing is sent anywhere.</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Market</th><th>Topic</th><th>Resolved</th><th class="num">Settlement $</th>
+          <th>Settled at (UTC)</th><th>Recorded at</th><th>Source</th></tr></thead>
+        <tbody id="historyRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2>3 · Recently resolved in-scope demo markets (<span id="recentCount">—</span>)</h2>
+  <div class="card">
+    <p class="muted small">From the CI snapshot of <code>GET /markets?status=settled</code>, filtered to the five in-scope topics.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Market</th><th>Topic</th><th>Resolved</th><th class="num">Settlement $</th>
+          <th>Settled at (UTC)</th><th>Source</th></tr></thead>
+        <tbody id="recentRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2>4 · How resolution works on this exchange</h2>
+  <div class="card">
+    <ul class="muted">
+      <li>A market has a <code>status</code>, a <code>close_time</code> / <code>expected_expiration_time</code> and, once settled, a
+        <code>result</code> of <code>yes</code> or <code>no</code> plus <code>settlement_value_dollars</code> and <code>settlement_ts</code>
+        — all documented on <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>.</li>
+      <li>Resolution is not always immediate after the close time: the demo API reports
+        <code>settlement_timer_seconds</code> and the market may show as finalized later, so this tracker keeps polling rather
+        than assuming an outcome at close.</li>
+      <li>The settlement source for each market is listed in the official series record
+        (<a href="https://docs.kalshi.com/api-reference/market/get-series" target="_blank" rel="noopener">Get Series</a>) — the
+        demo environment uses its own sources, which is one more reason demo outcomes do not predict real ones.</li>
+    </ul>
+  </div>
+</main>
+<div id="site-foot"></div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/common.js"></script>
+<script src="../assets/resolution.js"></script>
+</body>
+</html>

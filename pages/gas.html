@@ -1,9 +1,66 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gas Prices</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Gas Prices</h1>
-<p>Live markets whose title/ticker matches: <b>gas, gasoline, diesel, oil price, crude</b>. Ranking and prices are live from the <a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> endpoint (demo base <a href="https://docs.kalshi.com/getting_started/demo_env">external-api.demo.kalshi.co</a>). Use the <a href="../index.html">Dashboard</a> filter — the dashboard applies this keyword map and sorts by notional. No values are pre-filled here; blank means “live only”.</p>
-<table><tr><th>Item</th><th>Value</th><th>Source</th></tr>
-<tr><td>Open markets in scope</td><td>Live — see Dashboard</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></td></tr>
-<tr><td>Top market by notional</td><td>Live — see Dashboard</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a></td></tr>
-<tr><td>Resolution (yes/no)</td><td>Live — see Dashboard resolved table</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets (settled)</a></td></tr>
-</table>
-<p class="muted">Keyword mapping is a heuristic (titles vary). Unmapped markets are excluded, not mislabeled. See <a href="flagged.html">Flagged for Review</a>.</p>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gas prices — Kalshi demo markets</title>
+<meta name="description" content="Every Kalshi demo market in the Gas prices scope with dollar turnover, prices, liquidity and official source links.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body data-topic="Gas prices">
+<div id="site-nav"></div>
+<main class="wrap">
+  <h1>Gas prices</h1>
+  <p class="muted">Scope: Kalshi demo markets whose official series record refers to gasoline, diesel, crude oil, jet fuel, heating oil, petrol, refinery or oil prices — matched on the official series category, series tags and series title, in that order.</p>
+  <p class="muted small">Classification rules and every metric formula are published on the
+    <a href="methodology.html">Methodology</a> page. Source of record:
+    <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>,
+    <a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a>.</p>
+
+  <div class="card">
+    <div class="row"><span class="status" id="catStatus">Loading…</span></div>
+    <div class="grid" style="margin-top:12px">
+      <div class="card"><div class="kpi-label">In-scope markets</div><div class="kpi" id="statCount">—</div></div>
+      <div class="card"><div class="kpi-label">Aggregate turnover $</div><div class="kpi" id="statTurnover">—</div></div>
+      <div class="card"><div class="kpi-label">Median market turnover $</div><div class="kpi" id="statMedian">—</div></div>
+      <div class="card"><div class="kpi-label">Top-3 share of turnover</div><div class="kpi" id="statTop3">—</div></div>
+      <div class="card"><div class="kpi-label">Distinct series</div><div class="kpi" id="statSeries">—</div></div>
+    </div>
+  </div>
+
+  <h2>All in-scope Gas prices markets</h2>
+  <div class="card">
+    <p class="muted small">Turnover = volume_fp × last_price_dollars (computed). OI value = open_interest_fp × last_price_dollars (computed).
+      Resting $ = sum of price × contracts over the order-book levels (computed). Click <b>Chart</b> to open the price graph and order book
+      for that market on the <a href="../index.html">dashboard</a>.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>#</th><th>Market</th><th>Ticker / Event</th><th>Series / Category</th>
+          <th class="num">Last $</th><th class="num">Turnover $</th><th class="num">24 h $</th>
+          <th class="num">OI value $</th><th class="num">Resting $</th>
+          <th>YES bid / ask</th><th>Close (UTC)</th><th>Result</th><th>Source</th><th></th>
+        </tr></thead>
+        <tbody id="catRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2>Findings for Gas prices</h2>
+  <div class="card">
+    <p class="muted small">Every figure below is computed from the snapshot (which itself comes from the official demo API) and is
+      shown with the endpoint it was read from. Nothing is estimated.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Finding</th><th class="num">Value</th><th>How it was computed / what it means</th><th>Source</th></tr></thead>
+        <tbody id="findingsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+<div id="site-foot"></div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/common.js"></script>
+<script src="../assets/category.js"></script>
+</body>
+</html>

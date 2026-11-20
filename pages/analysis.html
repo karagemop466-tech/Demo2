@@ -1,10 +1,102 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trade Analysis & Strategies</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Trade Analysis & Strategies</h1>
-<p>Analysis is computed <b>only</b> from your demo fills (Portfolio page → Load). Categories: topic (gas/elections/culture/crypto/golf/other), side (yes/no), and outcome once settled (win/loss vs <code>result</code>). Strategies are generated from observed patterns only; with no fills the correct output is “no strategy”.</p>
-<table><tr><th>Analysis</th><th>Method</th><th>Source</th></tr>
-<tr><td>Fill count by topic</td><td>Keyword map on fill ticker/title</td><td>Your fills via <a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">portfolio/fills</a></td></tr>
-<tr><td>Win rate by topic/side</td><td>Join fills to settled <code>result</code></td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets (settled)</a></td></tr>
-<tr><td>P&amp;L</td><td>Settlement value − entry price × count</td><td>Your fills + settled markets</td></tr>
-<tr><td>Strategy candidates</td><td>Only if ≥5 fills in a category; else “insufficient data”</td><td>Derived — no external source</td></tr>
-</table>
-<p class="muted">No backtest or strategy is shown until real demo fills exist. See <a href="questions.html">Questions</a> for what data is still missing.</p>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trade analysis — Kalshi demo fills, categories and strategies</title>
+<meta name="description" content="Categorise Kalshi demo fills by topic, outcome side, price band, hour of day and taker/maker role, measure results against settled markets, and derive strategies only where the evidence supports them.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div id="site-nav"></div>
+<main class="wrap">
+  <h1>Trade analysis</h1>
+  <p class="muted">
+    Results are only computed for fills in markets that have <b>actually settled</b>. The settlement outcome comes from the
+    official <code>result</code> field of the demo API
+    (<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> with
+    <code>status=settled</code>), so a win or loss here is a fact about the demo market, not an estimate.
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <button id="loadFillsApi" class="secondary">Load fills from the API</button>
+      <button id="loadFillsLog" class="secondary">Use cached fills in this browser</button>
+      <span class="status" id="anStatus"></span>
+    </div>
+    <p class="muted small" style="margin-top:8px">
+      “Load fills from the API” needs demo credentials saved on the
+      <a href="portfolio.html">Portfolio &amp; trading</a> page (they stay in this browser’s session only).
+    </p>
+  </div>
+
+  <div class="grid" style="margin-top:14px">
+    <div class="card"><div class="kpi-label">Fills analysed</div><div class="kpi" id="kFills">—</div></div>
+    <div class="card"><div class="kpi-label">Fills in settled markets</div><div class="kpi" id="kResolved">—</div></div>
+    <div class="card"><div class="kpi-label">Win rate (resolved fills)</div><div class="kpi" id="kWin">—</div></div>
+    <div class="card"><div class="kpi-label">Realised P&amp;L</div><div class="kpi" id="kPnl">—</div></div>
+    <div class="card"><div class="kpi-label">Fees paid</div><div class="kpi" id="kFees">—</div></div>
+  </div>
+
+  <div class="callout" id="anEmpty" style="display:none">
+    No fills to analyse yet. Place a demo order on the <a href="portfolio.html">Portfolio &amp; trading</a> page, then come back.
+  </div>
+
+  <h2>1 · Fills by category</h2>
+  <div class="grid two">
+    <div class="card"><h3>By topic</h3><div class="tbl-wrap"><table><tbody id="byTopic"></tbody></table></div></div>
+    <div class="card"><h3>By outcome side</h3><div class="tbl-wrap"><table><tbody id="bySide"></tbody></table></div></div>
+    <div class="card"><h3>By price band</h3><div class="tbl-wrap"><table><tbody id="byBucket"></tbody></table></div></div>
+    <div class="card"><h3>By hour of day (UTC)</h3><div class="tbl-wrap"><table><tbody id="byHour"></tbody></table></div></div>
+    <div class="card"><h3>By liquidity role</h3><div class="tbl-wrap"><table><tbody id="byMaker"></tbody></table></div></div>
+  </div>
+
+  <h2>2 · Every fill, with its resolution</h2>
+  <div class="card">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Time (UTC)</th><th>Market</th><th>Topic</th><th>Outcome</th><th>Book side</th>
+          <th class="num">Contracts</th><th class="num">YES price</th><th>Price band</th><th>Resolved</th><th class="num">P&amp;L</th></tr></thead>
+        <tbody id="tradesBody"></tbody>
+      </table>
+    </div>
+    <p class="muted small">
+      P&amp;L per resolved fill = contracts × (1 − entry price) when a YES fill resolves YES, contracts × (0 − entry price)
+      when it resolves NO, and the mirrored formula for NO fills. Fees are reported separately above and are taken from the
+      API’s own <code>fee_cost</code> field.
+    </p>
+  </div>
+
+  <h2>3 · Strategies derived from the observed data</h2>
+  <div class="card">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Dimension</th><th>Segment</th><th class="num">Fills</th><th class="num">Resolved</th>
+          <th class="num">Win rate</th><th class="num">Avg P&amp;L</th><th>Statement supported by the data</th></tr></thead>
+        <tbody id="strategyBody"></tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <b>Rule used here.</b> A segment is only written up as a strategy when it contains at least
+      <b>three fills in settled markets</b>. Below that threshold the row is left empty on purpose — a pattern drawn from
+      one or two trades is noise, and presenting it as a rule would be a guess.
+    </div>
+  </div>
+
+  <h2>4 · What this analysis does not cover</h2>
+  <div class="card">
+    <ul class="muted">
+      <li>No comparison with a benchmark (no Kalshi index or market-average benchmark is published for the demo environment).</li>
+      <li>No slippage or fee-model projection beyond the fee the exchange itself reports per fill.</li>
+      <li>No attribution to “why” a market moved — the demo API does not publish a causal feed for price changes.</li>
+      <li>Demo fills happen against synthetic liquidity, so execution quality measured here does not transfer to the live exchange.</li>
+    </ul>
+  </div>
+</main>
+<div id="site-foot"></div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/common.js"></script>
+<script src="../assets/portfolio.js"></script>
+<script src="../assets/analysis.js"></script>
+</body>
+</html>

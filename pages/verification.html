@@ -1,15 +1,217 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Verification — Line by Line</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Verification — Line by Line</h1>
-<p>Every factual claim below was checked against the linked official page on 2026-11-20. Live market values are <b>not</b> listed here (they change); they appear only on the Dashboard from the live API.</p>
-<table><tr><th>Claim</th><th>Value</th><th>Official source</th><th>Status</th></tr>
-<tr><td>Recommended demo REST base</td><td>https://external-api.demo.kalshi.co/trade-api/v2</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td><td>Verified</td></tr>
-<tr><td>Also-supported demo REST</td><td>https://demo-api.kalshi.co/trade-api/v2</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td><td>Verified</td></tr>
-<tr><td>Recommended demo WS</td><td>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</td><td><a href="https://docs.kalshi.com/getting_started/api_environments">api_environments</a></td><td>Verified</td></tr>
-<tr><td>Demo uses mock funds; prices may not reflect real markets</td><td>—</td><td><a href="https://docs.kalshi.com/getting_started/demo_env">demo_env</a></td><td>Verified</td></tr>
-<tr><td>Public market-data endpoints need no auth</td><td>—</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">quick_start_market_data</a></td><td>Verified</td></tr>
-<tr><td>Get Markets fields incl. volume_fp, last_price_dollars, result</td><td>—</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a></td><td>Verified</td></tr>
-<tr><td>Orderbook: yes_dollars/no_dollars [price, count]</td><td>—</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data">quick_start_market_data</a></td><td>Verified</td></tr>
-<tr><td>Auth headers + signing (timestamp+method+path, RSA-PSS/SHA-256 or Ed25519, base64)</td><td>—</td><td><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests">quick_start_authenticated</a></td><td>Verified</td></tr>
-<tr><td>Timestamp tolerance 30s; sign path without query</td><td>—</td><td><a href="https://docs.kalshi.com/getting_started/api_keys">api_keys</a></td><td>Verified</td></tr>
-<tr><td>Live market values (prices, volumes, results)</td><td>(blank — live only)</td><td>Dashboard live fetch</td><td>Unverified by design — never hard-coded</td></tr>
-</table>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verification — line-by-line check of every published claim</title>
+<meta name="description" content="Every claim published on this site listed with the official Kalshi source, the exact check that was run, and the result.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div id="site-nav"></div>
+<main class="wrap">
+  <h1>Verification log</h1>
+  <p class="muted">
+    Rule for this project: <b>a value is published only if it can be traced to an official Kalshi source</b>. Each row below
+    states the claim as it appears on the site, how it was checked, the official source, and the result. Rows with a
+    “not confirmed” result are either omitted from the site or shown as “—” and listed on the
+    <a href="flagged.html">Flagged for Review</a> page.
+  </p>
+
+  <h2>1 · Live calls made from the build environment (2026-11-20)</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Request</th><th>Result</th><th>What it confirmed</th></tr></thead>
+      <tbody>
+        <tr><td>L1</td><td><code>GET https://external-api.demo.kalshi.co/trade-api/v2/markets?limit=2</code></td>
+          <td>HTTP 200 — two markets returned with the full documented field set
+            (<code>last_price_dollars</code>, <code>volume_fp</code>, <code>volume_24h_fp</code>, <code>open_interest_fp</code>,
+            <code>notional_value_dollars</code>, <code>yes_bid_dollars</code>, <code>result</code>, <code>price_ranges</code> …).</td>
+          <td>The demo REST base works and returns the documented schema.</td></tr>
+        <tr><td>L2</td><td><code>GET …/markets?status=settled&amp;limit=1</code></td>
+          <td>HTTP 200 — a market with <code>result: "yes"</code>, <code>settlement_value_dollars: "1.0000"</code>,
+            <code>settlement_ts: "2026-11-20T11:01:19.613451Z"</code>, <code>status: "finalized"</code>.</td>
+          <td>Settled markets expose an explicit yes/no result and settlement value — this is what the resolution tracker records.</td></tr>
+        <tr><td>L3</td><td><code>GET …/events?limit=1&amp;status=open</code></td>
+          <td>HTTP 200 — an event with <code>category: "World"</code>, <code>series_ticker: "KXELONMARS"</code> and a
+            <code>settlement_sources</code> array of named URLs.</td>
+          <td>Events carry the official category and the link to a series, which is what the topic rules use first.</td></tr>
+        <tr><td>L4</td><td><code>GET …/series?limit=200</code></td>
+          <td>HTTP 200 — series records with <code>category</code> (for example <code>Elections</code>, <code>Entertainment</code>,
+            <code>Sports</code>, <code>Financials</code>, <code>Mentions</code>), <code>tags</code> arrays and
+            <code>settlement_sources</code>.</td>
+          <td>The official category/tag taxonomy exists and is rich enough to classify on — no guessing needed for most rows.</td></tr>
+        <tr><td>L5</td><td><code>GET …/series/KXDEMOFUTHOURLY/markets/KXDEMOFUTHOURLY-26NOV20H11-UP/candlesticks?start_ts=1795086000&amp;end_ts=1795172400&amp;period_interval=1</code></td>
+          <td>HTTP 200 — 1-minute candles with <code>price.close_dollars</code>, <code>price.open/high/low/mean</code>,
+            <code>volume_fp</code>, <code>open_interest_fp</code>, <code>yes_bid</code> / <code>yes_ask</code> OHLC.</td>
+          <td>Real price history is available for the graph, in the official units the site plots.</td></tr>
+        <tr><td>L6</td><td>Shell egress test to <code>external-api.demo.kalshi.co:443</code> and <code>docs.kalshi.com:443</code></td>
+          <td>TLS handshake failed (<code>SSL_ERROR_SYSCALL</code>) from the sandbox shell, while the document-fetch tool reached the
+            same hosts successfully.</td>
+          <td>The build sandbox has restricted egress. It does <b>not</b> prove anything about a normal visitor’s browser — that is
+            listed as unverified.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>2 · Claim-by-claim verification</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Claim published on this site</th><th>How it was verified</th><th>Official source</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>V1</td><td>The demo REST base is <code>https://external-api.demo.kalshi.co/trade-api/v2</code></td>
+          <td>Read the endpoint table on the official environment page; then called it live (L1).</td>
+          <td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API Environments and Endpoints</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V2</td><td><code>https://demo-api.kalshi.co/trade-api/v2</code> is also supported</td>
+          <td>Same endpoint table.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API Environments and Endpoints</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V3</td><td>Demo WebSocket bases are <code>wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2</code> and <code>wss://demo-api.kalshi.co/trade-api/ws/v2</code></td>
+          <td>Same endpoint table.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API Environments and Endpoints</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V4</td><td>Public market data needs no authentication</td>
+          <td>The market-data quick start is titled “access real-time market data without authentication”; the order-book guide states
+            “No authentication is required for this endpoint”; and the unauthenticated live calls L1–L5 succeeded.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/quick_start_market_data" target="_blank" rel="noopener">Market Data</a> ·
+            <a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V5</td><td>Authenticated calls sign <code>timestamp + METHOD + path</code> with RSA-PSS/SHA-256 or Ed25519, timestamp in
+          milliseconds, 30-second tolerance</td>
+          <td>Read the signing section and the “Common Issues” table of the official authentication guide.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">Authenticated Requests</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V6</td><td>The query string is excluded from the signed path</td>
+          <td>Stated twice: in the authentication guide and in the environments page (“sign the full request path from the API root, without query parameters”).</td>
+          <td><a href="https://docs.kalshi.com/getting_started/quick_start_authenticated_requests" target="_blank" rel="noopener">Authenticated Requests</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V7</td><td>Orders are created with <code>POST /portfolio/events/orders</code> and the legacy <code>/portfolio/orders</code>
+          write endpoints return <code>410 Gone</code></td>
+          <td>Read the OpenAPI block on the official reference page, which shows the path and the deprecation note.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V8</td><td>The order body is <code>ticker, side (bid|ask), count, price, time_in_force, self_trade_prevention_type</code> with
+          optional <code>client_order_id, post_only, expiration_time, subaccount, exchange_index</code></td>
+          <td>Read the <code>CreateOrderV2Request</code> schema, including its required-field list and enums.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V9</td><td><code>bid ≡ yes</code> and <code>ask ≡ no</code></td>
+          <td>Read the “Order direction” mapping table (legacy action/side → outcome_side/book_side).</td>
+          <td><a href="https://docs.kalshi.com/getting_started/order_direction" target="_blank" rel="noopener">Order direction</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V10</td><td>A YES bid at $X equals a NO ask at $(1 − X), so the implied YES ask is <code>1 − best NO bid</code></td>
+          <td>Read the reciprocal-relationship table and the worked spread example in the order-book guide.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V11</td><td>The order book returns bids only, as <code>[price, contracts]</code> pairs in ascending price order</td>
+          <td>Same guide — response structure section and “Understanding the Arrays”.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V12</td><td>Candlestick periods are 1, 60 or 1440 minutes and a request may span at most 5,000 periods</td>
+          <td>Read the parameter description on the official reference page.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V13</td><td>Candlesticks need the series ticker in the path</td>
+          <td>The documented path is <code>/series/{series_ticker}/markets/{ticker}/candlesticks</code>; the live call L5 used it successfully.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V14</td><td>The market response has <code>volume_fp</code>, <code>volume_24h_fp</code>, <code>open_interest_fp</code>,
+          <code>last_price_dollars</code>, <code>notional_value_dollars</code>, <code>result</code>, <code>price_ranges</code></td>
+          <td>Read the response schema and confirmed each field against the live payload in L1 and L2.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V15</td><td>There is no single dollar-volume field in the market response</td>
+          <td>Reviewed the complete response schema in the reference and the live payloads; only contract counts, dollar prices and
+            <code>notional_value_dollars</code> are present.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V16</td><td><code>notional_value_dollars</code> is reported as <code>1.0000</code> on ordinary binary demo markets</td>
+          <td>Observed on every live market returned in L1 and L2 (three separate markets, including a multivariate one).</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> (field list only — the
+            <b>meaning</b> of the field is not defined in the official description, so the site does not assert one)</td>
+          <td><span class="badge-open">observed, semantics unconfirmed</span></td></tr>
+        <tr><td>V17</td><td>Valid prices come from the market’s own <code>price_ranges</code> grid</td>
+          <td>Read the “Price Level Structures” section of the fixed-point guide, which calls <code>price_ranges</code> “the source of truth for valid prices”.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">Fixed-Point Representation</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V18</td><td>Settled markets expose <code>result</code> (yes/no), <code>settlement_value_dollars</code> and <code>settlement_ts</code></td>
+          <td>Documented in the Get Markets schema and observed live in L2.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V19</td><td>Yes holders receive $1 per contract on a yes outcome</td>
+          <td>Read the “How It Works” list in the settlement guide.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V20</td><td>Settlement timing varies and is not immediate after close</td>
+          <td>Read the “Settlement Timing” paragraph, and observed a market whose <code>close_time</code> preceded its <code>settlement_ts</code>.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V21</td><td>Demo prices and behaviour may not reflect real markets</td>
+          <td>Read the warning on the official demo-environment page.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/demo_env" target="_blank" rel="noopener">Test In The Demo Environment</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V22</td><td>Balance is returned as cents (<code>balance</code>), as <code>balance_dollars</code>, and as
+          <code>portfolio_value</code> in cents, plus <code>updated_ts</code></td>
+          <td>Read the <code>GetBalanceResponse</code> schema.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/portfolio/get-balance" target="_blank" rel="noopener">Get Balance</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V23</td><td>Fills carry <code>ticker</code>, <code>outcome_side</code>, <code>book_side</code>, <code>count_fp</code>,
+          <code>yes_price_dollars</code>, <code>no_price_dollars</code>, <code>is_taker</code>, <code>fee_cost</code></td>
+          <td>Read the fill schema in the reference.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/portfolio/get-fills" target="_blank" rel="noopener">Get Fills</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V24</td><td>Orders expose <code>order_id</code>, <code>client_order_id</code>, <code>outcome_side</code>,
+          <code>book_side</code>, <code>status</code>, <code>yes_price_dollars</code>, <code>fill_count_fp</code>,
+          <code>remaining_count_fp</code></td>
+          <td>Read the <code>Order</code> schema in the reference.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/orders/get-orders" target="_blank" rel="noopener">Get Orders</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V25</td><td>Series carry <code>category</code>, <code>tags</code>, <code>fee_type</code>, <code>fee_multiplier</code> and
+          <code>settlement_sources</code></td>
+          <td>Read the series schema and confirmed the fields live in L4.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V26</td><td>Events carry <code>category</code>, <code>series_ticker</code> and <code>settlement_sources</code></td>
+          <td>Read the event schema and confirmed the fields live in L3.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/events/get-events" target="_blank" rel="noopener">Get Events</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V27</td><td>The WebSocket handshake requires signed API-key headers</td>
+          <td>Read the “Authentication” section of the WebSocket quick start, including the signed path <code>/trade-api/ws/v2</code>.</td>
+          <td><a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">Quick Start: WebSockets</a></td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V28</td><td>A browser cannot attach custom headers to a WebSocket handshake</td>
+          <td>Standard browser behaviour (the <code>WebSocket</code> constructor accepts no headers parameter). No Kalshi statement needed.</td>
+          <td>Web platform standard — MDN <code>WebSocket()</code> constructor</td>
+          <td><span class="badge-yes">confirmed</span></td></tr>
+        <tr><td>V29</td><td>The demo API returns <code>status</code> values such as <code>active</code> and <code>finalized</code> in
+          addition to the documented filter values</td>
+          <td>Observed in L1 (<code>"status":"active"</code>) and L2 (<code>"status":"finalized"</code>), while the documented
+            <em>filter</em> values are <code>unopened, open, closed, settled</code>.</td>
+          <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> (filter values) ·
+            live payload (field values)</td>
+          <td><span class="badge-open">observed</span></td></tr>
+        <tr><td>V30</td><td>The demo environment contains synthetic demo markets alongside production-shaped ones</td>
+          <td>Observed in L2: a market titled “Demo BTC at or above 61580.32 USD” with demo-only rules text, and in L1 a multivariate
+            event created minutes before the request.</td>
+          <td>Live demo payload (L1, L2)</td>
+          <td><span class="badge-open">observed</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>3 · Repeatable verification</h2>
+  <div class="card">
+    <p class="muted small">
+      The checks above were made from a build session. They are repeated automatically: the workflow
+      <code>.github/workflows/refresh-data.yml</code> calls the same demo endpoints on a schedule, records every URL, page count
+      and error in <code>data/meta.json</code>, and the workflow log is the audit trail. The script that performs the calls is
+      <code>scripts/refresh-data.mjs</code> in this repository — read it to check exactly what is requested.
+    </p>
+  </div>
+</main>
+<div id="site-foot"></div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/common.js"></script>
+</body>
+</html>

@@ -1,17 +1,197 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Suggestions — Review & Choose</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><div class="brand">Kalshi <span>Demo</span> Dashboard</div><nav class="main"><a href="../index.html">Dashboard</a><a href="executive-summary.html">Executive Summary</a><a href="gas.html">Gas</a><a href="elections.html">Elections</a><a href="culture.html">Culture</a><a href="crypto.html">Crypto</a><a href="golf.html">Golf</a><a href="portfolio.html">Portfolio &amp; Trading</a><a href="analysis.html">Analysis</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="verification.html">Verification</a><a href="flagged.html">Flagged for Review</a><a href="sources.html">Sources</a></nav></header><div class="wrap"><h1>Suggestions — Review & Choose</h1>
-<p>Review each suggestion, then mark <b>Choose</b> (best path) or <b>Defer</b>. Choices persist in your browser only and do not change code until you approve. Nothing here is implemented automatically.</p>
-<div id="sugList"></div>
-<script>
-const SUGS=[
- {id:"s1",t:"Add series-ticker allowlist",d:"Replace keyword matching with explicit series_ticker filters per topic (e.g. gas series) for exact scoping. Needs series discovery via Get Series.",s:"https://docs.kalshi.com/getting_started/quick_start_market_data"},
- {id:"s2",t:"WebSocket-first streaming",d:"Use wss demo feed for tick/orderbook updates instead of 15s polling; keep REST fallback.",s:"https://docs.kalshi.com/getting_started/api_environments"},
- {id:"s3",t:"Server-side proxy for CORS",d:"If browser CORS blocks the API, add a small proxy that forwards demo REST/WS. Requires hosting decision.",s:"https://docs.kalshi.com/getting_started/demo_env"},
- {id:"s4",t:"Paper-trade simulator",d:"Clearly-labeled simulator when no API keys exist, so analysis UI can be tested without claiming real trades.",s:"https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"},
- {id:"s5",t:"Resolution alerts",d:"Notify when a tracked market settles and record yes/no outcome automatically.",s:"https://docs.kalshi.com/api-reference/market/get-markets"},
- {id:"s6",t:"Export CSV of fills + outcomes",d:"One-click export for offline review; no new data collection.",s:"https://docs.kalshi.com/getting_started/quick_start_authenticated_requests"}
-];
-const saved=JSON.parse(localStorage.getItem("sugVotes")||"{}");
-document.getElementById("sugList").innerHTML=SUGS.map(s=>"<div class='card' style='margin-bottom:10px'><h3>"+s.t+"</h3><p>"+s.d+"</p><p class='muted'>Source: <a href='"+s.s+"'>"+s.s+"</a></p><div class='row'><button data-id='"+s.id+"' data-v='choose'>Choose as best path</button><button class='secondary' data-id='"+s.id+"' data-v='defer'>Defer</button><span>"+(saved[s.id]||"No decision yet")+"</span></div></div>").join("");
-document.querySelectorAll("button[data-id]").forEach(b=>b.onclick=()=>{saved[b.dataset.id]=b.dataset.v;localStorage.setItem("sugVotes",JSON.stringify(saved));location.reload();});
-</script>
-</div><footer>Demo only. See <a href="sources.html">Sources</a> and <a href="verification.html">Verification</a>.</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Suggestions — review board for improving the Kalshi demo dashboard</title>
+<meta name="description" content="Improvement proposals for the Kalshi demo dashboard with evidence, impact, effort and a review board so nothing is implemented before it is accepted.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div id="site-nav"></div>
+<main class="wrap">
+  <h1>Suggestions — review board</h1>
+  <p class="muted">
+    Every proposal below is recorded with the evidence behind it and a link to the official Kalshi documentation that
+    supports it. <b>Nothing here has been implemented.</b> The board exists so a reviewer can accept, defer or reject each
+    item before any change is made. Decisions are stored in this browser only (localStorage) and can be printed or copied.
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <button id="resetBtn" class="secondary">Reset all decisions</button>
+      <button id="printBtn" class="secondary">Print / export as PDF</button>
+      <span class="status" id="sugStatus"></span>
+    </div>
+    <p class="muted small" style="margin-top:8px" id="sugSummary"></p>
+  </div>
+
+  <h2>Proposal register</h2>
+  <div class="card">
+    <div class="tbl-wrap">
+      <table id="sugTable">
+        <thead>
+          <tr><th>#</th><th>Area</th><th>Proposal</th><th>Evidence / official source</th><th>Expected impact</th>
+            <th>Effort</th><th>Risk if done</th><th>Decision</th></tr>
+        </thead>
+        <tbody>
+          <tr data-id="S1">
+            <td>S1</td><td>Live feed</td>
+            <td>Add a signed WebSocket feed for the <code>ticker</code> channel instead of 3-second REST polling.</td>
+            <td>The WebSocket handshake <i>requires</i> signed headers, and a browser <code>WebSocket</code> cannot set custom
+              headers — <a href="https://docs.kalshi.com/getting_started/quick_start_websockets" target="_blank" rel="noopener">Quick Start: WebSockets</a>.
+              Fix: a 20-line signed proxy, or keep REST polling.</td>
+            <td>Lower latency and far fewer REST calls; seconds-scale graphs become tick-accurate.</td>
+            <td>Medium</td>
+            <td>A proxy holds a signing key — it must never be a public, unauthenticated service.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+          <tr data-id="S2">
+            <td>S2</td><td>Charts</td>
+            <td>Persist candle history in the CI snapshot so a multi-day graph survives a page reload and works offline.</td>
+            <td>The official endpoint already returns OHLC history —
+              <a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">Get Market Candlesticks</a>
+              (1 / 60 / 1440-minute periods, max 5,000 periods per request).</td>
+            <td>Removes the “history is this browser session only” limitation.</td>
+            <td>Low</td>
+            <td>Larger repository; snapshot size must be capped.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+          <tr data-id="S3">
+            <td>S3</td><td>Order book</td>
+            <td>Add a “spread and depth within N cents” column to the ranking table, computed from live order books.</td>
+            <td><a href="https://docs.kalshi.com/getting_started/orderbook_responses" target="_blank" rel="noopener">Orderbook Responses</a>
+              defines best bid, implied ask, spread and depth; the REST endpoint supports a <code>depth</code> parameter.</td>
+            <td>Turns the ranking into an executability measure, not just a size measure.</td>
+            <td>Medium</td>
+            <td>One order-book request per market is expensive; needs a short list or sampling.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+          <tr data-id="S4">
+            <td>S4</td><td>Resolution</td>
+            <td>Add a “resolves next” calendar built from <code>close_time</code> / <code>expected_expiration_time</code>.</td>
+            <td>Both fields are on the official market response —
+              <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a> —
+              and settlement timing is described in
+              <a href="https://docs.kalshi.com/getting_started/market_settlement" target="_blank" rel="noopener">Market Settlement</a>.</td>
+            <td>Makes “track until resolved” actionable rather than passive.</td>
+            <td>Low</td>
+            <td>Close times shift, so the view must always re-read the API.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+          <tr data-id="S5">
+            <td>S5</td><td>Costs</td>
+            <td>Show the fee schedule (<code>fee_type</code>, <code>fee_multiplier</code>) for each series before a trade is placed.</td>
+            <td>Both fields are on the official series record —
+              <a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a>;
+              rounding is described in
+              <a href="https://docs.kalshi.com/getting_started/fixed_point_migration" target="_blank" rel="noopener">Fixed-Point Representation</a>.</td>
+            <td>Turns “is this price good?” into “is this price good after fees?”.</td>
+            <td>Low</td>
+            <td>Fee schedules change; always read them live.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+          <tr data-id="S6">
+            <td>S6</td><td>Analysis</td>
+            <td>Add a strategy lab that back-tests a rule over the snapshot’s settled markets (not over the user’s fills).</td>
+            <td>The snapshot already carries settled markets with their official <code>result</code> —
+              <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>.</td>
+            <td>Shows what a rule would have done before risking anything.</td>
+            <td>Medium</td>
+            <td>Overfitting to demo data; results must be labelled as demo-only.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+          <tr data-id="S7">
+            <td>S7</td><td>Reliability</td>
+            <td>Add a CI data-quality gate: fail the build if the snapshot contains zero in-scope markets, or if the fetch reports errors.</td>
+            <td><code>GET /exchange/status</code> exposes <code>exchange_active</code> and <code>trading_active</code> —
+              <a href="https://docs.kalshi.com/api-reference/exchange/get-exchange-status" target="_blank" rel="noopener">Get Exchange Status</a>.</td>
+            <td>Prevents a silent classifier regression from publishing an empty site.</td>
+            <td>Low</td>
+            <td>A strict gate could block the site during a demo outage.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+          <tr data-id="S8">
+            <td>S8</td><td>Operations</td>
+            <td>Show the account’s API usage tier and remaining budget next to the trade ticket.</td>
+            <td><code>GET /account/api/limits</code> is documented —
+              <a href="https://docs.kalshi.com/api-reference/account/get-account-api-limits" target="_blank" rel="noopener">Get Account API Limits</a> —
+              and rate limits are described in
+              <a href="https://docs.kalshi.com/getting_started/rate_limits" target="_blank" rel="noopener">Rate Limits and Tiers</a>.</td>
+            <td>Prevents accidental throttling during polling.</td>
+            <td>Low</td>
+            <td>None material.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+          <tr data-id="S9">
+            <td>S9</td><td>Execution</td>
+            <td>Show queue position for resting orders so the user can judge whether an order is likely to fill.</td>
+            <td><code>GET /portfolio/orders/queue_positions</code> is documented —
+              <a href="https://docs.kalshi.com/api-reference/orders/get-queue-positions-for-orders" target="_blank" rel="noopener">Get Queue Positions for Orders</a>.</td>
+            <td>Improves order placement decisions.</td>
+            <td>Low</td>
+            <td>Queue position is informational only.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+          <tr data-id="S10">
+            <td>S10</td><td>Research</td>
+            <td>Decide on one external probability source per topic and add an “implied probability vs external estimate” panel.</td>
+            <td>No Kalshi endpoint publishes an outside probability estimate, so a source must be chosen and cited —
+              see the open items on the <a href="questions.html">Questions</a> page.</td>
+            <td>Turns the dashboard from a monitor into an edge-detection tool.</td>
+            <td>High</td>
+            <td>Licensing, staleness and false-precision risk; the panel must show the source and timestamp.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+          <tr data-id="S11">
+            <td>S11</td><td>Portability</td>
+            <td>Add a one-click switch between the two documented demo hosts to compare behaviour.</td>
+            <td>Both hosts are officially supported:
+              <code>external-api.demo.kalshi.co</code> (recommended) and <code>demo-api.kalshi.co</code> —
+              <a href="https://docs.kalshi.com/getting_started/api_environments" target="_blank" rel="noopener">API Environments and Endpoints</a>.</td>
+            <td>Useful if one host is degraded or geo-restricted for the user.</td>
+            <td>Low</td>
+            <td>None material.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+          <tr data-id="S12">
+            <td>S12</td><td>Usability</td>
+            <td>Add a “paper mode” that replays the snapshot to simulate fills so strategy ideas can be tested without an API key.</td>
+            <td>Simulation only — it must be labelled as not a real fill. Order semantics come from
+              <a href="https://docs.kalshi.com/api-reference/orders/create-order-v2" target="_blank" rel="noopener">Create Order (V2)</a>.</td>
+            <td>Lets a reviewer explore without credentials.</td>
+            <td>Medium</td>
+            <td>Simulated results must never be mixed with real fill data in the analysis page.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+          <tr data-id="S13">
+            <td>S13</td><td>Scheduling</td>
+            <td>Move the CI refresh to a shorter interval for the in-scope subset only, and publish the age of the data on every page.</td>
+            <td>Each dataset already records <code>generated_at</code>; the schedule lives in
+              <code>.github/workflows/refresh-data.yml</code>.</td>
+            <td>Keeps the “live” claim honest for the topics that matter.</td>
+            <td>Low</td>
+            <td>More CI minutes; GitHub Actions quotas apply.</td>
+            <td class="dec"><span class="badge-open">pending</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2>How a decision is recorded</h2>
+  <div class="card">
+    <p class="muted small">
+      Each row can be marked <b>accept</b>, <b>defer</b> or <b>reject</b> with a short note. A rejected item stays on the
+      register with its reason, so the reasoning survives. Because the site is static, decisions live in this browser; to make
+      them permanent, copy the notes into the repository’s
+      <a href="https://github.com/karagemop466-tech/Demo2" target="_blank" rel="noopener">COORDINATION.md</a>.
+    </p>
+  </div>
+</main>
+<div id="site-foot"></div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/common.js"></script>
+<script src="../assets/suggestions.js"></script>
+</body>
+</html>
