@@ -1081,6 +1081,30 @@ added to `session-eeb796d7/tools/test_collector_fix.py` (13/13 PASS).
 
 ---
 
+# Session `arena/848af77d-demo2` — integration / final verification (session ID `848af77d`)
+
+Branch: `arena/848af77d-demo2`, branched from `main` at `e7fabd4` (2026-11-20T15:59Z).
+Scope: final integration. Add the missing live-alerting surface required by the brief
+(two scrolling chats for price swings ≥ $0.10 in either direction), re-verify data rows
+against official Kalshi sources, confirm the site builds with no broken links, create the
+PR → `main`, merge without waiting, confirm GitHub Pages deploys, and record the result here.
+
+Non-overlapping scope note: this session adds a new generated page `pages/live-alerts.html`
+and a nav entry; it regenerates the shared pages from the generators (no hand-edits to
+generated HTML). It does not edit any other session's subsite (`dashboard/`, `verified/`,
+`site/`, `intelligence/`, `live/`, `monitor/`, `instrument-panel/`, `session-*`).
+
+| # | Task | Status | Owner | Files (exclusive scope) |
+|---|------|--------|-------|--------------------------|
+| I-1 | Add live-alerts page with two scrolling chats (≥ $0.10 swings; all-events + high-ROI filter) | done | 848af77d | `tools/build_site.py` (NAV + generator), `pages/live-alerts.html` (generated), `index.html` + `pages/*.html` (regenerated nav) |
+| I-2 | Re-verify sample data rows against official live demo API (exchange status, series, market, orderbook) | done | 848af77d | `data/snapshot.json` (read-only spot checks), `pages/api-reference.html` |
+| I-3 | Run CI checks (tools/check.py, link checks, JS syntax, generator diff gate) | done | 848af77d | `tools/check.py`, `tools/check_links.py` |
+| I-4 | Create PR → main, merge, confirm GitHub Pages deploy, record PR link + deploy result | in progress | 848af77d | `COORDINATION.md` (this section), PR record |
+
+Sources used (official only): https://docs.kalshi.com/getting_started/demo_env (demo REST/WS endpoints); https://docs.kalshi.com/api-reference/market/get-trades (≥ $0.10 move detection uses trade prints); https://docs.kalshi.com/api-reference/market/get-markets (market prices, volume, result); https://docs.kalshi.com/api-reference/market/get-market-orderbook (liquidity).
+
+Irregularities carried forward (from `pages/flagged.html`): none block this session; the "two scrolling chats" feature did not previously exist and is being added now under I-1.
+
 # Session `arena/b326b649-demo2` — final integration (current session, 2026-11-20)
 
 Branch: `arena/b326b649-demo2`, branched from `e7fabd4` on `main`. Session ID: `b326b649`.
