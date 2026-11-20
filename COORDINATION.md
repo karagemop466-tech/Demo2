@@ -1141,3 +1141,23 @@ endpoint `GET /trade-api/v2/markets/{ticker}`. All matched exactly; nothing infe
 - Sandbox bash egress to `*.kalshi.co` is blocked (TLS handshake fails — flagged F1); live source
   checks above were done with the fetch tool, which can reach the demo host and docs. GitHub
   Actions runners have normal egress, so the collection workflows run there.
+
+---
+
+# Session 8bf20958 (branch `arena/8bf20958-demo2`) — claimed 2026-11-20 ~19:50 UTC
+
+## Claim (written and pushed before any other edit, per the claim-first rule)
+
+| # | Task | Status | Owner | Files |
+|---|------|--------|-------|-------|
+| 8B-1 | **Two scrolling chat feeds on the dashboard** — the brief's live alerting system: (a) one chat with *all* in-scope events showing every ≥ $0.10 swing in either direction, (b) a second chat filtered to events our high-ROI model rates attractive. Seeded from `data/jumps.json` (217 sourced trade-print moves), then fed live by browser polling the official demo `GET /markets/trades` (verified reachable, unauthenticated, CORS reflects the Pages origin). Every message carries market API + trades API source links and the labelled "possible context" news-search link. High-ROI criteria are explicit, thresholded on official fields only, and printed on the page — heuristic, not claimed performance. | claimed | 8bf20958 | `tools/build_site.py` (dashboard section + script), `index.html` (regenerated), `COORDINATION.md` |
+| 8B-2 | **Data-pipeline size fix (GH001)** — scheduled `Refresh Kalshi demo data` is failing *right now*: run 44800417665 pushed `data/snapshot.json` = 111.97 MB (> GitHub's 100 MB hard limit) and `data/topic-elections.json` = 52.01 MB; three recent runs failed the same way, so every 10-minute refresh has been dead. Root cause: `snapshot.json` stores every market row twice (`markets` + unread `by_topic`) plus fields no page renders. Fix = drop `by_topic`, slim rows to exactly the fields the pages/checkers read, and add a pre-push size guard so failure is loud and early instead of a 6× rejected push. **Takeover (60-min rule):** task-13 scope `tools/collector.py`, `.github/workflows/refresh-data.yml`, `data/` — e88eb254 (done), eeb796d7 last commit 15:55Z, 6332d7d3 PR #44 last commit 14:16Z with failing checks; all >60 min stale, handoff logged here. | claimed (takeover) | 8bf20958 | `tools/collector.py`, `.github/workflows/refresh-data.yml`, `data/snapshot.json`, `data/topic-*.json` |
+| 8B-3 | **Resolution feed is empty** — `data/resolutions.json` count = 0 and `snapshot.resolutions` = [], so the Resolutions page and "Tracked until resolution" section show nothing, although pipeline B's `data/resolved.json` holds 200 sourced settled markets and the brief requires tracking every event to a yes/no result. Fix `collect_resolutions` in the same takeover files (live-diagnose the settled pagination/topic mapping first). | claimed (takeover, same files as 8B-2) | 8bf20958 | `tools/collector.py`, `data/resolutions.json` |
+| 8B-4 | Feature PR `arena/8bf20958-demo2` → `main`, merge, confirm GitHub Pages deploy, record PR link + merge here. | claimed | 8bf20958 | `COORDINATION.md`, PR |
+
+### Coordination notes for this session
+
+- Session **b326b649** owns final integration (I-1…I-5, active as of 19:40Z). This session does **not** touch `.github/workflows/pages.yml` and does **not** claim I-4/I-5; 8B-4 is only this branch's own feature PR, matching the per-session PR pattern used all day (…#52, #53).
+- Open PRs **#34 / #36 / #40 / #44** are all >60 min stale (last commits 13:33–14:16Z). PR #44 (6332d7d3) rewrites `tools/collector.py` but its checks fail; this session applies a *minimal* size + resolutions fix to `tools/collector.py` on main instead — #44 should be rebased or closed as superseded **for that file only**; its other files are untouched here.
+- `COORDINATION.md` edits from this session are append-only sections; on merge conflict keep both sides (union).
+- Tasks 8B-1…8B-4 deliberately do not overlap b326b649's I-4/I-5 or any active session's claimed files; the only files taken over are the stale ones listed above.
