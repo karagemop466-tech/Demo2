@@ -1521,7 +1521,7 @@
     {
       "id": "F-14",
       "severity": "high",
-      "topic": "Settlement-source lists were truncated or re-labelled in the earlier snapshot",
+      "topic": "Settlement-source links: only three confirmed; the rest blanked",
       "detail": "The settlement-source NAMES in each row were returned by the Kalshi demo detail endpoints (checked by name against data/api_reverification.json). The URLs are a different matter. Only three were opened and confirmed in this session (ABC News, NATO, DP World Tour schedule). Five were wrong for the name (abc.com as The Washington Post, abc.net.au as ABC, a Barchart S&P 500 quote page, an x.com personal account, and Google search URLs). The rest were not opened, so they are blanked under the verification rule. The name stays visible, with a marker, and the URL is recorded in url_as_recorded in the snapshot. Earlier wording said every source was copied verbatim from the endpoint. That overstated what was checked. The earlier list values are kept in settlement_sources_list_count. Counts: confirmed=5, not_confirmed=88, wrong_url=17.",
       "sources": [
         {
@@ -1544,8 +1544,7 @@
           "name": "DP World Tour schedule (fetched)",
           "url": "https://www.europeantour.com/dpworld-tour/schedule/"
         }
-      ],
-      "title": "Settlement-source links: only three confirmed; the rest blanked"
+      ]
     },
     {
       "id": "F-15",
@@ -1686,6 +1685,18 @@
           "url": "https://docs.kalshi.com/getting_started/demo_env"
         }
       ]
+    },
+    {
+      "id": "F-23",
+      "severity": "low",
+      "detail": "Main now publishes two sites: verified/ and pages/ (this session, f1751c8f), and dashboard/ (from session arena-3420a90d, PR #9). They overlap in topics, with different data files (data/kalshi_snapshot.json vs dashboard/data/snapshot.json). Both were kept, nothing was removed, and this integration did not consolidate them. A later decision is needed on which one is the primary site.",
+      "sources": [
+        {
+          "name": "Pull request #9 (session arena-3420a90d): dashboard/ site",
+          "url": "https://github.com/karagemop466-tech/Demo2/pull/9"
+        }
+      ],
+      "topic": "Two parallel demo sites are published"
     }
   ]
 }
