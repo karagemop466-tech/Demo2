@@ -1802,3 +1802,22 @@ and the Actions collector.
   secrets `KALSHI_DEMO_API_KEY_ID` + `KALSHI_DEMO_PRIVATE_KEY` and variable
   `KALSHI_TRADING_ENABLED=1` (`pages/questions.html` Q4). Three collectors write `data/`
   on different schedules — see audit above. Repo-growth cadence (K-F1) still open.
+## Session 74946c6c — 2026-11-21 integration audit
+
+Current branch is fixed by Arena: `arena/74946c6c-demo2` (not creating session branches).
+Prior paper-trading ownership (a984e8f4, last recorded 2026-11-20) is >60 minutes old;
+this session takes over only the narrow missing-quote valuation defect below. Existing
+parallel dashboards and collectors will be preserved, not duplicated.
+
+| Task | Status | Owner | File scope |
+|---|---|---|---|
+| V1 Missing paper quotes must remain unknown, never marked at cost or zero by inference; regression tests | in progress | 74946c6c | `tools/paper_trade.py`, `tests/test_paper_trade.py` |
+| V2 Current executive summary + explicit verification limitations and source-linked audit report | in progress | 74946c6c | `docs/SESSION_74946c6c.md`, `audit-74946c6c.html`, README append only |
+| V3 Local verification, PR, merge, Pages confirmation | in progress | 74946c6c | `COORDINATION.md` |
+
+Initial evidence: all 10,673 internal references across 124 HTML files resolve.
+GitHub Pages API reports legacy build, status built. Official demo environment,
+Get Markets and Get Market Orderbook documentation fetched this session. No claim
+is made that all historical verification statements in this board were rechecked.
+
+
