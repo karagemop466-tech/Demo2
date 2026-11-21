@@ -22,8 +22,8 @@ Disclosed limits (also flagged on the site as F23):
   - fees are NOT modeled (fee schedule not verified here -> left at zero, blank not
     guessed); real results would be lower
   - fills are assumed at the quoted ask with no slippage and no partial fills
-  - marks use the quoted bid; when a side is blank in the API response the position
-    is marked at cost and labelled "mark blank"
+  - marks use the quoted bid; when a side is blank in the API response its mark
+    and aggregate equity/P&L remain unknown (JSON null)
   - this is a simulation over demo-environment prices, which the official demo page
     warns may not reflect real markets (docs: getting_started/demo_env)
 """
@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import math
 import os
 import sys
 from pathlib import Path
@@ -58,7 +59,7 @@ def f(x) -> float | None:
         v = float(x)
     except (TypeError, ValueError):
         return None
-    return v
+    return v if math.isfinite(v) else None
 
 
 def now_iso() -> str:
@@ -161,8 +162,7 @@ def main() -> int:
                 "type": "SIMULATED paper trading. No orders are sent anywhere; no API key is used.",
                 "fees": "NOT modeled (left at zero — flagged F23, never guessed).",
                 "fills": "assumed at the quoted ask, no slippage, no partial fills.",
-                "marks": "mark-to-market at the quoted bid; when a side is blank the position "
-                         "is marked at cost and labelled 'mark blank'.",
+                "marks": "quoted bid only; missing quotes leave marks and aggregate equity/P&L unknown.",
                 "settlement": f"official result field: yes -> YES pays $1/contract, no -> NO pays $1/contract ({DOCS_SETTLEMENT})",
                 "environment": f"demo prices may not reflect real markets ({DOCS_DEMO})",
                 "strategies": {
@@ -178,6 +178,10 @@ def main() -> int:
     led.setdefault("positions", [])
     led.setdefault("settled", [])
     led.setdefault("history", [])
+    led.setdefault("definitions", {})["marks"] = (
+        "Quoted bid only; missing, nonfinite or out-of-range quotes leave marks and "
+        "aggregate equity/P&L unknown. A reported zero is retained, not inferred."
+    )
     led["generated_at_utc"] = now_iso()
     led["source_snapshot_generated_at"] = snap.get("generated_at_utc") or ""
 
@@ -232,10 +236,10 @@ def main() -> int:
     for p in led["positions"]:
         m = by_ticker.get(p["ticker"]) or {}
         bid = f(m.get("yes_bid_dollars")) if p["side"] == "yes" else f(m.get("no_bid_dollars"))
-        if bid is None:
-            p["mark_price_dollars"] = p["entry_price_dollars"]
-            p["mark_note"] = "mark blank — bid missing in API response; marked at cost"
-            p["unrealized_pnl_dollars"] = 0.0
+        if bid is None or not 0 <= bid <= 1:
+            p["mark_price_dollars"] = None
+            p["mark_note"] = "unverified — usable bid missing; no valuation inferred"
+            p["unrealized_pnl_dollars"] = None
         else:
             p["mark_price_dollars"] = round(bid, 4)
             p["mark_note"] = ""
@@ -264,12 +268,15 @@ def main() -> int:
     led["strategy_stats"] = stats
 
     # 5) equity + bounded history
-    unrealized = round(sum(marks.values()), 4)
+    unpriced = sum(v is None for v in marks.values())
+    unrealized = None if unpriced else round(sum(marks.values()), 4)
     settled_pnl = round(sum(s["realized_pnl_dollars"] for s in led["settled"]), 4)
-    equity = round(led["cash_dollars"] + sum(p["count"] * p["mark_price_dollars"] for p in led["positions"]), 4)
+    equity = None if unpriced else round(led["cash_dollars"] + sum(
+        p["count"] * p["mark_price_dollars"] for p in led["positions"]), 4)
     led["totals"] = {
         "cash_dollars": round(led["cash_dollars"], 4),
         "equity_dollars": equity,
+        "unpriced_positions": unpriced,
         "realized_pnl_dollars": settled_pnl,
         "unrealized_pnl_dollars": unrealized,
         "trades_total": len(led["trades"]),
@@ -287,7 +294,8 @@ def main() -> int:
 
     DATA.mkdir(exist_ok=True)
     ledger_path.write_text(json.dumps(led, indent=1) + "\n")
-    print(f"paper portfolio: equity={equity:.2f} cash={led['cash_dollars']:.2f} "
+    equity_label = "unverified" if equity is None else f"{equity:.2f}"
+    print(f"paper portfolio: equity={equity_label} cash={led['cash_dollars']:.2f} "
           f"open={len(led['positions'])} settled={len(led['settled'])} new_trades={new_trades}")
     return 0
 
