@@ -1719,20 +1719,143 @@ No other session's implementation code is edited. Open PRs #59 (`arena/441151f5-
 - Build-and-check CI on the merge commit: **success** (run 44876440290).
 - Pages deploy on the merge commit: **success** (run 44876439996, 23s). Site: https://karagemop466-tech.github.io/Demo2/
 - Task E-1: **done**.
+## Session e29ebc3a — branch `arena/e29ebc3a-demo2` (claimed 2026-11-21)
+
+Session owner: `e29ebc3a`. Scope (exclusive): `tools/collector.py` (culture scope mapping +
+resolutions union fix), `tools/test_series_topic.py` (new offline test), this file's section.
+No other session has claimed these files. Shared outputs (`index.html`, `pages/*`, `data/*`)
+are NOT edited by hand — they regenerate via `tools/build_site.py` / `tools/build_content.py`
+and the Actions collector.
+
+| Task | Status | Owner | Files touched |
+|---|---|---|---|
+| E1 Audit repo vs requirements (line by line, official sources) | in progress | e29ebc3a | this file |
+| E2 Fix Culture scope mapping (Entertainment category + vetted culture tags, priority-ordered) | in progress | e29ebc3a | `tools/collector.py` |
+| E3 Fix empty Resolutions (union settled fetch with in-scope rows carrying official results) | in progress | e29ebc3a | `tools/collector.py` |
+| E4 Offline unit test for `series_topic` (synthetic official-shaped records) | in progress | e29ebc3a | `tools/test_series_topic.py` |
+| E5 Regenerate site, run `tools/check.py` + link check, PR, merge, verify Pages | pending | e29ebc3a | generated pages, this file |
+
+### Audit findings (2026-11-21, evidence in repo)
+
+- **Culture = 0 markets (bug).** `data/snapshot.json` `counts.per_topic.culture = 0` while
+  `series_inventory.categories` shows `Entertainment: 2630` series and `tags_top` shows
+  `Music: 804, Awards: 493, Movies: 271, Television: 242`. `series_topic()` in
+  `tools/collector.py` only maps tag `culture` / category `culture`, so all Entertainment
+  series are unmapped. `unmapped_series` proves live culture events were skipped:
+  `KXOSCARS (10), KXMOVIECAST (8), KXMUSICREPORT (7), KXALBUMRELEASEDATE (6),
+  KXPERFORMROLE007 (6)`. Fix E2 maps Entertainment/Culture categories + vetted culture tags
+  to `culture`, checked AFTER gas/elections/crypto/golf so specific topics win.
+- **Resolutions page empty (bug).** `data/resolutions.json` = `{"count": 0, "resolutions": []}`
+  and `pages/resolutions.html` reads exactly that file, yet `data/snapshot.json` markets
+  contain 33 finalized in-scope markets with official results (21 `yes`, 12 `no`).
+  `collect_resolutions()` only uses the separate `GET /markets?status=settled` fetch and
+  re-derives the series from `event_ticker.split("-")[0]`; the demo settled feed is dominated
+  by synthetic series (e.g. `KXDEMOFUTHOURLY`, 20/20 rows in `data/markets_settled.json`)
+  that are not in the in-scope index, so the fetch contributes 0. Fix E3 unions the settled
+  fetch with in-scope rows already carrying official `result` values.
+- **Portfolio / real demo execution: not configured (owner action, not a bug).**
+  `data/portfolio.json` = `authenticated: false` ("No demo API key configured");
+  `data/analysis.json` verdict `insufficient_data` (0 fills). Paper trading works:
+  `data/paper_portfolio.json` (3 simulated trades, cash 79.49 of 100.00). Enabling real demo
+  orders needs repo secrets `KALSHI_DEMO_API_KEY_ID` + `KALSHI_DEMO_PRIVATE_KEY` and
+  variable `KALSHI_TRADING_ENABLED=1` — see `pages/questions.html` Q4. Flagged, not blocking.
+- **Three collectors write `data/` on different schedules** (`refresh-data.yml` →
+  `tools/collector.py`, `collect.yml` → `tools/collect_kalshi.py`, `data-refresh.yml` →
+  `scripts/fetch_data.py`). They write mostly disjoint files but share `data/` and push to
+  `main`; `desk-verify.yml` already shares concurrency key `kalshi-data-writers` with one of
+  them. Not changed in this session (other sessions' workflows); flagged for the owner.
+- **Live site verified:** Pages API `status: built`, `build_type: legacy`, source `main /`;
+  latest `pages build and deployment` runs succeed (e.g. run 44861186297). One older
+  `Deploy GitHub Pages` failure (44852384694) predates the latest successful builds.
+  Sandbox cannot reach `github.io` or Kalshi (egress blocked), so live-page checks rely on
+  Actions runs + `gh` API, recorded here.
+- **Official docs re-verified 2026-11-21 (fetch, not recall):**
+  demo REST/WS roots + mock-funds warning (demo_env); Get Markets `status` values
+  unopened/open/closed/settled + `result`/`settlement_value_dollars`/`settlement_ts` fields;
+  Get Market Orderbook `depth` 0–100 + `orderbook_fp.yes_dollars/no_dollars` [price, count]
+  pairs; Create Order (V2) `POST /portfolio/events/orders` body shape. All match the repo's
+  `pages/api-reference.html` claims.
+
+### E1–E5 results (2026-11-21, session e29ebc3a)
+
+- **E2 done:** `series_topic()` now maps Entertainment/Culture categories + vetted culture
+  tags (Movies, Music, Awards, Television, Oscars, Grammys, Rotten Tomatoes, Video games,
+  People, …) to `culture`, checked after gas/elections/crypto/golf so specific topics win.
+  Broad tags (Food, Art, Views, Achievements, Collectibles) stay unmapped by design.
+  Takes effect on the next `Refresh Kalshi demo data` Actions run (sandbox has no Kalshi
+  egress, so the live run happens in CI). Evidence for the tag list:
+  `data/snapshot.json` `series_inventory.tags_top`.
+- **E3 done:** `merge_scope_resolutions()` unions the settled feed with in-scope rows
+  carrying official `result` yes/no. Settled rows win on duplicate ticker; scope-only rows
+  keep settlement fields blank (None, not guessed). Next collector run will populate
+  `data/resolutions.json` (expect ≥ 33 rows from the current snapshot's finalized markets)
+  and the Resolutions page.
+- **E4 done:** `tools/test_series_topic.py` — 39/39 PASS offline (specific topics unchanged,
+  culture expansion, priority ordering, resolutions union). Run: `python3 tools/test_series_topic.py`.
+- **E5 done:** `tools/build_site.py` + `tools/build_content.py` regenerated (only
+  `pages/live-alerts.html` timestamp changed); `tools/check.py` clean (links/nav/data/
+  secrets/js ok); `scripts/check_links.py` clean (10,673 refs, 0 broken).
+- **Cross-scope request (not edited):** owner of `.github/workflows/ci.yml` — consider
+  adding `python3 tools/test_series_topic.py` to the CI gate so the scope mapping is
+  regression-tested on every push. File left untouched per coordination rules.
+- **Flagged (not blocking, owner action):** real demo portfolio/execution needs repo
+  secrets `KALSHI_DEMO_API_KEY_ID` + `KALSHI_DEMO_PRIVATE_KEY` and variable
+  `KALSHI_TRADING_ENABLED=1` (`pages/questions.html` Q4). Three collectors write `data/`
+  on different schedules — see audit above. Repo-growth cadence (K-F1) still open.
+
+## 74946c6c — urgent publication race repair
+
+Taking over >60-minute-old workflow retry scope `.github/workflows/{refresh-data,
+paper-trade,desk-verify}.yml`: commit 433aabd soft-reset retry reverted PR #65's
+unrelated source, report and tests. Claim: restore only lost PR #65 files (not data),
+replace soft-reset/recommit with conflict-safe rebase, regenerate pages, verify and
+republish. Evidence: `git show --stat 433aabd`; successful Pages build alone did not
+prove the changes remained present. Session files are recoverable from e44b644.
+
+PR #65 https://github.com/karagemop466-tech/Demo2/pull/65 merged at e44b644,
+2026-11-21T06:44:48Z. Build and paper-trading workflow passed. Subsequent data
+commit 433aabd reverted unrelated changes via `git reset --soft`; this follow-up
+restores code/reports/tests ONLY, retains latest data, and changes three workflows
+to rebase on push rejection (conflicts fail safely instead of overwriting main).
+40 paper assertions and canonical checks pass again. Live endpoint cannot be fetched
+from this sandbox; deployment verification uses GitHub Pages build API plus checking
+that the deployed commit still contains the report and fix, not ancestry alone.
 
 ---
 
 ## Session `1409dce9` — defect resolution, live verification & final integration (2026-11-21)
 
-Session ID: `1409dce9` (branch `arena/1409dce9-demo2`, rebased on `2adf781` of `main`).
-All prior claims in this file are either `done` or >9 hours stale with no commits (PR #59 updated 2026-11-20T20:52Z, PR #61 updated 2026-11-20T21:00Z — eligible for handoff under the 60-minute rule; their branches are left intact). Task 21 (demo API key secrets) remains owner-only.
+Branch: `arena/1409dce9-demo2` (branched from `main` at `ddadabe`, merged `origin/main` at `64e271a`).
 
-| # | Task | Status | Owner | Files (exclusive scope) |
-|---|------|--------|-------|-------------------------|
-| J-1 | Fix `collect_resolutions` returning 0 (`min_settled_ts` + `mve_filter=exclude` + longest-prefix series mapping + settled paper-position lookup) | in progress | 1409dce9 | `tools/collector.py`, `tests/test_collector_output.py` |
-| J-2 | Fix `alerts.js` live polling (`GET /markets?tickers=…` instead of page-1 `status=open` which matched 0/39), `KR.detectJumps` float `$0.10` precision, `pages/live-alerts.html` generator-drift elimination, `pages/gas.html` blurb, and live dashboard candlestick/orderbook refresh | in progress | 1409dce9 | `assets/alerts.js`, `assets/site.js`, `tools/build_site.py`, `tools/build_content.py`, generated `index.html`, `alerts.html`, `pages/*.html` |
-| J-3 | Fix `paper_trade.py` horizon allocation so near-term closing markets also enter simulated positions and settle yes/no | in progress | 1409dce9 | `tools/paper_trade.py`, `tests/test_paper_trade.py` |
-| J-4 | Fix `server/kalshiClient.js` + `server/index.js` Create Order V2 (`POST /portfolio/events/orders`) and cursor pagination for `GET /events` (answering f75410bb cross-scope R1/R2) | in progress | 1409dce9 | `server/kalshiClient.js`, `server/index.js`, `tests/app.test.js` |
-| J-5 | Fix workflow push-retry `--mixed` reset (handoff of stale PR #61) and remove colliding `deploy-pages@v4` vs legacy `pages-build-deployment` | in progress | 1409dce9 | `.github/workflows/refresh-data.yml`, `.github/workflows/paper-trade.yml`, `.github/workflows/pages.yml` |
-| J-6 | Line-by-line verification, full test/link/render gates, PR → `main`, merge, confirm Pages deploy + workflow runs, record results | in progress | 1409dce9 | `COORDINATION.md`, PR operations |
+### Task table
+
+| # | Task | Status | Owner | Files |
+|---|------|--------|-------|-------|
+| J-1 | Fix `collect_resolutions` (`min_settled_ts`, `mve_filter=exclude`, `limit=1000`, longest-prefix `resolve_series_ticker`, reuse `series_idx`/`topic_cache`, paper-portfolio ticker fallback, combined with `merge_scope_resolutions`) | done | 1409dce9 | `tools/collector.py`, `tests/test_collector_output.py` |
+| J-2 | Fix `alerts.js` live quote/settlement polling (`GET /markets?tickers=…` batches), `KR.detectJumps` 4-dp float rounding, `index.html` quick topic/alert nav + live browser candlestick/orderbook refresh, `pages/gas.html` blurb, `pages/live-alerts.html` dynamic `#jumpsAsOf` to stop generator drift, `tools/build_content.py` verification/flagged updates (`orderbook_fp` dollar-string literal fix, 2026-11-21 status) | done | 1409dce9 | `assets/alerts.js`, `assets/site.js`, `tools/build_site.py`, `tools/build_content.py`, `index.html`, `pages/*` |
+| J-3 | Fix `paper_trade.py` 4-dp `history_move` precision + `NEAR_TERM_RESERVE = 6` (`<= 7d` close) slot reservation while keeping `74946c6c` unknown-valuation safety | done | 1409dce9 | `tools/paper_trade.py`, `tests/test_paper_trade.py` |
+| J-4 | Fix `server/kalshiClient.js` + `server/index.js` Create Order V2 (`POST /portfolio/events/orders`, full `/trade-api/v2/...` signing pathname, V2 payload + `order_direction` mapping), Cancel Order V2 (`DELETE /portfolio/events/orders/{id}?market_ticker=…`), `GET /portfolio/orders`, `getAllEvents` cursor pagination, and `orderbook` dollar spread (`1 - (yes + no)`) | done | 1409dce9 | `server/kalshiClient.js`, `server/index.js`, `tests/app.test.js` |
+| J-5 | Fix workflow push-retry (`git reset --mixed origin/main` + stage only each workflow's own files so concurrent runs never conflict or revert unrelated commits), remove colliding `actions/deploy-pages@v4` vs legacy `pages-build-deployment`, and wire Python + Node test suites into `ci.yml` | done | 1409dce9 | `.github/workflows/{refresh-data,paper-trade,desk-verify,pages,ci}.yml` |
+| J-6 | Full verification gates, PR to `main`, merge without waiting, confirm CI + GitHub Pages deploy, record PR & run URLs | in progress | 1409dce9 | `COORDINATION.md`, PR operations |
+
+### Official sources verified directly (2026-11-21)
+
+- `https://docs.kalshi.com/getting_started/demo_env` — demo REST/WS roots (`https://external-api.demo.kalshi.co/trade-api/v2`, `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2`) and demo price disclaimer.
+- `https://docs.kalshi.com/api-reference/market/get-markets` — `limit <= 1000`, `min_settled_ts` sorting by settlement time, `mve_filter=exclude`, `tickers=<list>`, `cursor` pagination.
+- `https://docs.kalshi.com/api-reference/events/get-events` — `limit <= 200`, `cursor` pagination.
+- `https://docs.kalshi.com/api-reference/market/get-market-orderbook` — `orderbook_fp.{yes_dollars, no_dollars}` `[price_dollars, count_fp]` bid-only pairs.
+- `https://docs.kalshi.com/api-reference/market/get-trades` — `GET /markets/trades?min_ts=…&limit=1000`.
+- `https://docs.kalshi.com/api-reference/orders/create-order-v2` & `https://docs.kalshi.com/getting_started/order_direction` — `POST /portfolio/events/orders`, `bid ≡ yes`, `ask ≡ no`, unified YES-leg price scale, fixed-point `count` (`2dp`) and `price` (`4dp`).
+- `https://docs.kalshi.com/getting_started/quick_start_websockets` — signed handshake headers required.
+
+### Pre-PR verification gates (all passing on merged tree)
+
+- `python3 tests/test_collector_output.py`: 54/54 PASS
+- `python3 tests/test_paper_trade.py`: 41/41 PASS
+- `python3 tools/test_series_topic.py`: 39/39 PASS
+- `python3 session-eeb796d7/tools/test_collector_fix.py`: 13/13 PASS
+- `npm test` (`tests/app.test.js`): 11/11 PASS
+- `python3 tools/check.py`: 125 HTML files, 20 generated pages, links/nav/data/secrets/js clean (108 non-2xx API log entries surfaced on `pages/verification.html` per policy)
+- `python3 scripts/check_links.py`: 11,231 references across 125 HTML files, 0 broken
+- `node scripts/render_check.mjs`: 5/5 pages rendered with data, 0 errors
 
