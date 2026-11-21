@@ -1505,7 +1505,7 @@ Live responses read this session: `/exchange/status` (trading_active true),
 CI. It covers topic mapping from official fields, verbatim value copying (an absent field stays
 absent), 24-hour dollars from trade prints, order-book normalisation, rolling-log persistence,
 and that a rate-limited series reports "0 markets AND 1 failed series".
-=======
+---
 # Session `arena/a984e8f4-demo2` — gap-fill + integration (CLAIM, 2026-11-20 19:47 UTC)
 
 Branch: `arena/a984e8f4-demo2`, branched from `main` at `e7fabd4` (merged `origin/main` at
@@ -1642,7 +1642,6 @@ The claim does not authorize edits to other sessions' implementation code (`serv
 | F-5 | Audit the deployed Live Alerts page's real browser request paths and publish any live-only failure | done | f75410bb | `session-f75410bb/review.html`, `COORDINATION.md`, `tools/build_content.py`, generated `pages/flagged.html` |
 
 **F-5 live-browser finding (2026-11-20):** the deployed `https://karagemop466-tech.github.io/Demo2/pages/live-alerts.html?cb=1` rendered “Could not load alert data: 503.” The live page source calls `fetch('data/snapshot.json')` / `fetch('data/jumps.json')` from a `/pages/` URL, which targets `/pages/data/...`; the actual published files at `/data/...` are available. Logged as R9 and added to the canonical Flagged for Review generator/page. **Cross-scope request:** owner of `tools/build_site.py` / Live Alerts (session 848af77d) please fix the generated fetch paths (for project pages, `../data/...`) and verify live browser loading; source code is not edited in this audit. Kalshi endpoint docs: https://docs.kalshi.com/api-reference/market/get-markets and https://docs.kalshi.com/api-reference/market/get-trades.
->>>>>>> origin/main
 
 ---
 
@@ -1820,6 +1819,80 @@ to rebase on push rejection (conflicts fail safely instead of overwriting main).
 40 paper assertions and canonical checks pass again. Live endpoint cannot be fetched
 from this sandbox; deployment verification uses GitHub Pages build API plus checking
 that the deployed commit still contains the report and fix, not ancestry alone.
+## Session 74946c6c — 2026-11-21 integration audit
+
+Current branch is fixed by Arena: `arena/74946c6c-demo2` (not creating session branches).
+Prior paper-trading ownership (a984e8f4, last recorded 2026-11-20) is >60 minutes old;
+this session takes over only the narrow missing-quote valuation defect below. Existing
+parallel dashboards and collectors will be preserved, not duplicated.
+
+| Task | Status | Owner | File scope |
+|---|---|---|---|
+| V1 Missing paper quotes must remain unknown, never marked at cost or zero by inference; regression tests | in progress | 74946c6c | `tools/paper_trade.py`, `tests/test_paper_trade.py` |
+| V2 Current executive summary + explicit verification limitations and source-linked audit report | in progress | 74946c6c | `docs/SESSION_74946c6c.md`, `audit-74946c6c.html`, README append only |
+| V3 Local verification, PR, merge, Pages confirmation | in progress | 74946c6c | `COORDINATION.md` |
+
+Initial evidence: all 10,673 internal references across 124 HTML files resolve.
+GitHub Pages API reports legacy build, status built. Official demo environment,
+Get Markets and Get Market Orderbook documentation fetched this session. No claim
+is made that all historical verification statements in this board were rechecked.
+
+
+V3 integration scope extension: regeneration found pre-existing drift in
+`pages/live-alerts.html` only (generated jump counts/data). Taking over the stale
+final-integration scope (>60 minutes, prior day) for that generated output and
+`tools/build_content.py` / generated `pages/flagged.html` solely to link the new
+audit from the canonical review page. No collector or alternate backend edits.
+Cross-scope request to server owner: correct `/orders` to documented V2 route/body,
+correct ticker-scoped trade requests to `/markets/trades?ticker=...`, fix signing
+path-prefix coverage and test against official schemas before enabling execution.
+
+### Verification results — 74946c6c
+
+V1 done: 40 paper regression assertions pass; quote absence/nonfinite/out-of-range
+leaves null marks and null aggregate equity/P&L, explicit zero remains valid.
+V2 done: `audit-74946c6c.html` is a source-linked executive summary and clearly
+labelled Flagged for Review page, linked from canonical `pages/flagged.html` and
+README. Official docs fetched: demo_env, get-markets, get-market-orderbook,
+get-trades, create-order-v2, websocket-connection (all on docs.kalshi.com).
+V3 local gates: Node 8/8, monitor 15 pages, instrument offline checks, canonical
+links/nav/data/secrets/JS check, 5/5 jsdom page renders pass. Canonical checker
+warns of 149 non-2xx stored snapshot requests; not relabelled as verified data.
+Regeneration repaired one pre-existing timestamp drift in pages/live-alerts.html.
+No API credentials entered, no authenticated account access, no exchange orders.
+Claim push initially used nonexistent remote branch; retried rebase against main
+then pushed only current branch. Later autostash rebase preserved work; no conflict.
+
+Parallel integration reconciliation: PR #64 landed while this branch was being
+verified. Rebased onto main; append-only COORDINATION conflicts resolved by
+retaining both e303aead's full record and this session's full record. Their timestamp
+regeneration is identical to ours and was deduplicated by rebase. No work discarded.
+Final internal links: 10,694 references / 125 HTML pages pass; generator parity clean.
+PR: https://github.com/karagemop466-tech/Demo2/pull/65 (awaiting checks/merge).
+
+
+Second reconciliation: PR #66 and automated data refresh landed during the external
+link scan. Retained the complete e29ebc3a board records and all refreshed data;
+resolved append-only board conflicts without dropping either session's entries.
+Regenerated live-alert timestamp to match the newly collected jumps. Build/monitor
+checks passed on previous PR head; external scan is nonblocking by workflow design.
+
+### Post-merge regeneration (2026-11-21, session e29ebc3a)
+
+- PR #66 merged at `b1b10ca` (2026-11-21T06:41:44Z). Main CI (run 44876764167) failed on
+  generator drift: the instrument-panel data bot (`kalshi-dashboard-bot`) committed
+  `data/jumps.json` updates (`2adf781` 06:39Z, `d911443` 06:42Z) around the merge, and
+  `pages/live-alerts.html` embeds that timestamp ("Data as of 2026-11-21T01:49:13Z" →
+  "2026-11-21T06:40:18Z"). Pre-existing data-vs-CI race, not caused by E2/E3.
+- Fix: regenerated `pages/live-alerts.html` from current main data on this branch
+  (`tools/check.py` + `scripts/check_links.py` clean), PR #67 to follow.
+- **Flagged (owner / integration session):** the instrument-panel data bot does not share
+  the `kalshi-data-writers` concurrency group that `desk-verify.yml` uses, so its commits
+  keep racing the canonical CI generator check. Durable fix: put every data-writing
+  workflow in one concurrency group, or have the bot regenerate canonical pages too.
+  Also pre-existing literal `=======` / `>>>>>>> origin/main` text at COORDINATION.md
+  lines ~1508/~1645 (from an earlier bad merge, committed to main) — left untouched here
+  as other sessions' content; flagged for cleanup.
 
 ---
 
@@ -1858,4 +1931,3 @@ Branch: `arena/1409dce9-demo2` (branched from `main` at `ddadabe`, merged `origi
 - `python3 tools/check.py`: 125 HTML files, 20 generated pages, links/nav/data/secrets/js clean (108 non-2xx API log entries surfaced on `pages/verification.html` per policy)
 - `python3 scripts/check_links.py`: 11,231 references across 125 HTML files, 0 broken
 - `node scripts/render_check.mjs`: 5/5 pages rendered with data, 0 errors
-
