@@ -1900,3 +1900,9 @@ S-1 scope correction: actual client filename is `server/kalshiClient.js` (not no
 - PR/deploy: pending verification after this change. Latest existing Pages run at audit time succeeded: https://github.com/karagemop466-tech/Demo2/actions/runs/44861186297. Open PRs #59 and #61 belong to other sessions and were not modified.
 
 - Rebase handoff: `main` advanced during this work when session e303aead merged PR #64. The coordination append conflicted; both sessions’ sections were retained and the rebase completed. Their regenerated `pages/live-alerts.html` was already present upstream, so no overlapping change remains in this PR.
+
+| Task | Status | Owner | Exclusive files |
+|---|---|---|---|
+| S-3 | Correct demo workflow executor's YES-book NO-side conversion and cumulative cap with offline regression tests | in progress | 41cfd371 | `tools/execute_strategy.py`, new `tests/test_execute_strategy.py`, `COORDINATION.md` |
+
+S-3 handoff: task 17's executor scope was marked done by e88eb254 and has no recent owner PR. Its current plan declares `price` YES-denominated, but code complements it again when building an ask and accumulates the YES ask price rather than the NO purchase cost; the cap can therefore be understated. Source: https://docs.kalshi.com/api-reference/orders/create-order-v2. Until verified do not enable execution. A concurrent PR #65 owns changes to `tools/build_content.py` and `pages/flagged.html`; if overlap is encountered during integration, preserve both sets of flags and coordinate rather than discarding either.
