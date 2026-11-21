@@ -1775,3 +1775,30 @@ and the Actions collector.
   Get Market Orderbook `depth` 0–100 + `orderbook_fp.yes_dollars/no_dollars` [price, count]
   pairs; Create Order (V2) `POST /portfolio/events/orders` body shape. All match the repo's
   `pages/api-reference.html` claims.
+
+### E1–E5 results (2026-11-21, session e29ebc3a)
+
+- **E2 done:** `series_topic()` now maps Entertainment/Culture categories + vetted culture
+  tags (Movies, Music, Awards, Television, Oscars, Grammys, Rotten Tomatoes, Video games,
+  People, …) to `culture`, checked after gas/elections/crypto/golf so specific topics win.
+  Broad tags (Food, Art, Views, Achievements, Collectibles) stay unmapped by design.
+  Takes effect on the next `Refresh Kalshi demo data` Actions run (sandbox has no Kalshi
+  egress, so the live run happens in CI). Evidence for the tag list:
+  `data/snapshot.json` `series_inventory.tags_top`.
+- **E3 done:** `merge_scope_resolutions()` unions the settled feed with in-scope rows
+  carrying official `result` yes/no. Settled rows win on duplicate ticker; scope-only rows
+  keep settlement fields blank (None, not guessed). Next collector run will populate
+  `data/resolutions.json` (expect ≥ 33 rows from the current snapshot's finalized markets)
+  and the Resolutions page.
+- **E4 done:** `tools/test_series_topic.py` — 39/39 PASS offline (specific topics unchanged,
+  culture expansion, priority ordering, resolutions union). Run: `python3 tools/test_series_topic.py`.
+- **E5 done:** `tools/build_site.py` + `tools/build_content.py` regenerated (only
+  `pages/live-alerts.html` timestamp changed); `tools/check.py` clean (links/nav/data/
+  secrets/js ok); `scripts/check_links.py` clean (10,673 refs, 0 broken).
+- **Cross-scope request (not edited):** owner of `.github/workflows/ci.yml` — consider
+  adding `python3 tools/test_series_topic.py` to the CI gate so the scope mapping is
+  regression-tested on every push. File left untouched per coordination rules.
+- **Flagged (not blocking, owner action):** real demo portfolio/execution needs repo
+  secrets `KALSHI_DEMO_API_KEY_ID` + `KALSHI_DEMO_PRIVATE_KEY` and variable
+  `KALSHI_TRADING_ENABLED=1` (`pages/questions.html` Q4). Three collectors write `data/`
+  on different schedules — see audit above. Repo-growth cadence (K-F1) still open.
