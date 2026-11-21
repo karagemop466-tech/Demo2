@@ -1,0 +1,2069 @@
+{
+ "generated_at": "2026-11-21T03:26:45Z",
+ "threshold_dollars": 0.1,
+ "rule": "two consecutive official price points whose absolute difference is at least $0.10",
+ "markets_in_universe": 1699,
+ "markets_checked": 40,
+ "requests": 90,
+ "errors": [],
+ "jump_count": 76,
+ "source_api": "https://external-api.demo.kalshi.co/trade-api/v2",
+ "docs": {
+  "candlesticks": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
+  "trades": "https://docs.kalshi.com/api-reference/market/get-trades"
+ },
+ "jumps": [
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-21 02:00:00Z",
+   "epoch": 1795226400,
+   "from": 0.02,
+   "to": 0.99,
+   "delta": 0.97,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=60&start_ts=1794626783&end_ts=1795231583",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-03-31 22:44:35Z",
+   "epoch": 1774997075,
+   "from": 0.01,
+   "to": 0.97,
+   "delta": 0.96,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTCMINY-27JAN01-60000.00&limit=500",
+   "ticker": "KXBTCMINY-27JAN01-60000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $60000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-60000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-04-04 08:41:10Z",
+   "epoch": 1775292070,
+   "from": 0.97,
+   "to": 0.01,
+   "delta": -0.96,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTCMINY-27JAN01-60000.00&limit=500",
+   "ticker": "KXBTCMINY-27JAN01-60000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $60000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-60000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:58:00Z",
+   "epoch": 1795226280,
+   "from": 0.02,
+   "to": 0.7,
+   "delta": 0.68,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-04-22 10:36:04Z",
+   "epoch": 1776854164,
+   "from": 0.01,
+   "to": 0.62,
+   "delta": 0.61,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTCMINY-27JAN01-60000.00&limit=500",
+   "ticker": "KXBTCMINY-27JAN01-60000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $60000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-60000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-10-14 20:46:35Z",
+   "epoch": 1792010795,
+   "from": 0.62,
+   "to": 0.02,
+   "delta": -0.6,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTCMINY-27JAN01-60000.00&limit=500",
+   "ticker": "KXBTCMINY-27JAN01-60000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $60000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-60000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:57:42Z",
+   "epoch": 1795226262,
+   "from": 0.57,
+   "to": 0.02,
+   "delta": -0.55,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:57:55Z",
+   "epoch": 1795226275,
+   "from": 0.02,
+   "to": 0.56,
+   "delta": 0.54,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-20 21:32:00Z",
+   "epoch": 1795210320,
+   "from": 0.73,
+   "to": 0.2,
+   "delta": -0.53,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-45000.00/candlesticks?period_interval=1&start_ts=1795145181&end_ts=1795231581",
+   "ticker": "KXBTCMINY-27JAN01-45000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $45000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-45000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 22:00:00Z",
+   "epoch": 1795212000,
+   "from": 0.73,
+   "to": 0.2,
+   "delta": -0.53,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-45000.00/candlesticks?period_interval=60&start_ts=1794626782&end_ts=1795231582",
+   "ticker": "KXBTCMINY-27JAN01-45000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $45000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-45000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 20:00:00Z",
+   "epoch": 1795204800,
+   "from": 0.5,
+   "to": 0.99,
+   "delta": 0.49,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-60000.00/candlesticks?period_interval=60&start_ts=1794626786&end_ts=1795231586",
+   "ticker": "KXBTCMINY-27JAN01-60000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $60000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-60000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-20 19:56:47Z",
+   "epoch": 1795204607,
+   "from": 0.5,
+   "to": 0.98,
+   "delta": 0.48,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTCMINY-27JAN01-60000.00&limit=500",
+   "ticker": "KXBTCMINY-27JAN01-60000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $60000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-60000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-18 04:19:31Z",
+   "epoch": 1794975571,
+   "from": 0.11,
+   "to": 0.5,
+   "delta": 0.39,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTCMINY-27JAN01-60000.00&limit=500",
+   "ticker": "KXBTCMINY-27JAN01-60000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $60000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-60000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-18 05:00:00Z",
+   "epoch": 1794978000,
+   "from": 0.11,
+   "to": 0.5,
+   "delta": 0.39,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-60000.00/candlesticks?period_interval=60&start_ts=1794626786&end_ts=1795231586",
+   "ticker": "KXBTCMINY-27JAN01-60000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $60000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-60000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:50:00Z",
+   "epoch": 1795225800,
+   "from": 0.33,
+   "to": 0.72,
+   "delta": 0.39,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 17:00:00Z",
+   "epoch": 1795194000,
+   "from": 0.27,
+   "to": 0.65,
+   "delta": 0.38,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD/markets/KXAAAGASD-26NOV21-3.6600/candlesticks?period_interval=60&start_ts=1794626784&end_ts=1795231584",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-19 18:00:00Z",
+   "epoch": 1795111200,
+   "from": 0.13,
+   "to": 0.5,
+   "delta": 0.37,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-50000.00/candlesticks?period_interval=60&start_ts=1794626780&end_ts=1795231580",
+   "ticker": "KXBTCMINY-27JAN01-50000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $50000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-50000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-20 16:02:47Z",
+   "epoch": 1795190567,
+   "from": 0.65,
+   "to": 0.28,
+   "delta": -0.37,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASD-26NOV21-3.6600&limit=500",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-20 16:03:00Z",
+   "epoch": 1795190580,
+   "from": 0.28,
+   "to": 0.65,
+   "delta": 0.37,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD/markets/KXAAAGASD-26NOV21-3.6600/candlesticks?period_interval=1&start_ts=1795145183&end_ts=1795231583",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-20 16:26:40Z",
+   "epoch": 1795192000,
+   "from": 0.28,
+   "to": 0.65,
+   "delta": 0.37,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASD-26NOV21-3.6600&limit=500",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-20 16:26:49Z",
+   "epoch": 1795192009,
+   "from": 0.65,
+   "to": 0.29,
+   "delta": -0.36,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASD-26NOV21-3.6600&limit=500",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-20 16:27:00Z",
+   "epoch": 1795192020,
+   "from": 0.29,
+   "to": 0.65,
+   "delta": 0.36,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD/markets/KXAAAGASD-26NOV21-3.6600/candlesticks?period_interval=1&start_ts=1795145183&end_ts=1795231583",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-20 14:36:07Z",
+   "epoch": 1795185367,
+   "from": 0.31,
+   "to": 0.65,
+   "delta": 0.34,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASD-26NOV21-3.6600&limit=500",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-20 14:36:16Z",
+   "epoch": 1795185376,
+   "from": 0.65,
+   "to": 0.31,
+   "delta": -0.34,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASD-26NOV21-3.6600&limit=500",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-20 14:37:00Z",
+   "epoch": 1795185420,
+   "from": 0.31,
+   "to": 0.65,
+   "delta": 0.34,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD/markets/KXAAAGASD-26NOV21-3.6600/candlesticks?period_interval=1&start_ts=1795145183&end_ts=1795231583",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 15:00:00Z",
+   "epoch": 1795186800,
+   "from": 0.31,
+   "to": 0.65,
+   "delta": 0.34,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD/markets/KXAAAGASD-26NOV21-3.6600/candlesticks?period_interval=60&start_ts=1794626784&end_ts=1795231584",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-20 16:02:38Z",
+   "epoch": 1795190558,
+   "from": 0.31,
+   "to": 0.65,
+   "delta": 0.34,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASD-26NOV21-3.6600&limit=500",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 21:00:00Z",
+   "epoch": 1795208400,
+   "from": 0.39,
+   "to": 0.73,
+   "delta": 0.34,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-45000.00/candlesticks?period_interval=60&start_ts=1794626782&end_ts=1795231582",
+   "ticker": "KXBTCMINY-27JAN01-45000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $45000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-45000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 21:00:00Z",
+   "epoch": 1795208400,
+   "from": 0.39,
+   "to": 0.73,
+   "delta": 0.34,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-45000.00/candlesticks?period_interval=60&start_ts=1794626782&end_ts=1795231582",
+   "ticker": "KXBTCMINY-27JAN01-45000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $45000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-45000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:57:00Z",
+   "epoch": 1795226220,
+   "from": 0.31,
+   "to": 0.65,
+   "delta": 0.34,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 02:00:00Z",
+   "epoch": 1795226400,
+   "from": 0.65,
+   "to": 0.99,
+   "delta": 0.34,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-20 20:02:00Z",
+   "epoch": 1795204920,
+   "from": 0.39,
+   "to": 0.7,
+   "delta": 0.31,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-45000.00/candlesticks?period_interval=1&start_ts=1795145181&end_ts=1795231581",
+   "ticker": "KXBTCMINY-27JAN01-45000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $45000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-45000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-20 20:02:00Z",
+   "epoch": 1795204920,
+   "from": 0.39,
+   "to": 0.7,
+   "delta": 0.31,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-45000.00/candlesticks?period_interval=1&start_ts=1795145181&end_ts=1795231581",
+   "ticker": "KXBTCMINY-27JAN01-45000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $45000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-45000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:50:00Z",
+   "epoch": 1795225800,
+   "from": 0.38,
+   "to": 0.69,
+   "delta": 0.31,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 20:00:00Z",
+   "epoch": 1795204800,
+   "from": 0.09,
+   "to": 0.39,
+   "delta": 0.3,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-45000.00/candlesticks?period_interval=60&start_ts=1794626782&end_ts=1795231582",
+   "ticker": "KXBTCMINY-27JAN01-45000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $45000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-45000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:57:00Z",
+   "epoch": 1795226220,
+   "from": 0.35,
+   "to": 0.65,
+   "delta": 0.3,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:54:00Z",
+   "epoch": 1795226040,
+   "from": 0.31,
+   "to": 0.58,
+   "delta": 0.27,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 02:00:00Z",
+   "epoch": 1795226400,
+   "from": 0.72,
+   "to": 0.99,
+   "delta": 0.27,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 15:00:00Z",
+   "epoch": 1795186800,
+   "from": 0.5,
+   "to": 0.24,
+   "delta": -0.26,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-50000.00/candlesticks?period_interval=60&start_ts=1794626780&end_ts=1795231580",
+   "ticker": "KXBTCMINY-27JAN01-50000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $50000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-50000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-20 21:32:00Z",
+   "epoch": 1795210320,
+   "from": 0.48,
+   "to": 0.7,
+   "delta": 0.22,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-55000.00/candlesticks?period_interval=1&start_ts=1795145180&end_ts=1795231580",
+   "ticker": "KXBTCMINY-27JAN01-55000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $55000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-55000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-20 21:32:00Z",
+   "epoch": 1795210320,
+   "from": 0.48,
+   "to": 0.7,
+   "delta": 0.22,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-55000.00/candlesticks?period_interval=1&start_ts=1795145180&end_ts=1795231580",
+   "ticker": "KXBTCMINY-27JAN01-55000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $55000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-55000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 22:00:00Z",
+   "epoch": 1795212000,
+   "from": 0.48,
+   "to": 0.7,
+   "delta": 0.22,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-55000.00/candlesticks?period_interval=60&start_ts=1794626781&end_ts=1795231581",
+   "ticker": "KXBTCMINY-27JAN01-55000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $55000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-55000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 22:00:00Z",
+   "epoch": 1795212000,
+   "from": 0.48,
+   "to": 0.7,
+   "delta": 0.22,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-55000.00/candlesticks?period_interval=60&start_ts=1794626781&end_ts=1795231581",
+   "ticker": "KXBTCMINY-27JAN01-55000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $55000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-55000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:57:17Z",
+   "epoch": 1795226237,
+   "from": 0.69,
+   "to": 0.47,
+   "delta": -0.22,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:56:00Z",
+   "epoch": 1795226160,
+   "from": 0.52,
+   "to": 0.31,
+   "delta": -0.21,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:59:00Z",
+   "epoch": 1795226340,
+   "from": 0.48,
+   "to": 0.68,
+   "delta": 0.2,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:49:25Z",
+   "epoch": 1795225765,
+   "from": 0.42,
+   "to": 0.61,
+   "delta": 0.19,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:51:00Z",
+   "epoch": 1795225860,
+   "from": 0.49,
+   "to": 0.68,
+   "delta": 0.19,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:54:00Z",
+   "epoch": 1795226040,
+   "from": 0.59,
+   "to": 0.41,
+   "delta": -0.18,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:56:00Z",
+   "epoch": 1795226160,
+   "from": 0.31,
+   "to": 0.49,
+   "delta": 0.18,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:54:12Z",
+   "epoch": 1795226052,
+   "from": 0.41,
+   "to": 0.58,
+   "delta": 0.17,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:55:34Z",
+   "epoch": 1795226134,
+   "from": 0.49,
+   "to": 0.33,
+   "delta": -0.16,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:59:04Z",
+   "epoch": 1795226344,
+   "from": 0.72,
+   "to": 0.88,
+   "delta": 0.16,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-20 22:41:00Z",
+   "epoch": 1795214460,
+   "from": 0.07,
+   "to": 0.21,
+   "delta": 0.14,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD/markets/KXAAAGASD-26NOV21-3.6600/candlesticks?period_interval=1&start_ts=1795145183&end_ts=1795231583",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 23:00:00Z",
+   "epoch": 1795215600,
+   "from": 0.07,
+   "to": 0.21,
+   "delta": 0.14,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD/markets/KXAAAGASD-26NOV21-3.6600/candlesticks?period_interval=60&start_ts=1794626784&end_ts=1795231584",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:55:01Z",
+   "epoch": 1795226101,
+   "from": 0.52,
+   "to": 0.38,
+   "delta": -0.14,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:53:13Z",
+   "epoch": 1795225993,
+   "from": 0.58,
+   "to": 0.45,
+   "delta": -0.13,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:53:31Z",
+   "epoch": 1795226011,
+   "from": 0.44,
+   "to": 0.31,
+   "delta": -0.13,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:56:31Z",
+   "epoch": 1795226191,
+   "from": 0.48,
+   "to": 0.61,
+   "delta": 0.13,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 03:00:37Z",
+   "epoch": 1795230037,
+   "from": 0.85,
+   "to": 0.98,
+   "delta": 0.13,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXDIESELD-26NOV21-T5.860&limit=500",
+   "ticker": "KXDIESELD-26NOV21-T5.860",
+   "series_ticker": "KXDIESELD",
+   "event_ticker": "KXDIESELD-26NOV21",
+   "title": "Will Diesel Price on November 21, 2026 be above $5.860?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDIESELD-26NOV21-T5.860",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDIESELD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDIESELD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 03:01:00Z",
+   "epoch": 1795230060,
+   "from": 0.85,
+   "to": 0.98,
+   "delta": 0.13,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDIESELD/markets/KXDIESELD-26NOV21-T5.860/candlesticks?period_interval=1&start_ts=1795145184&end_ts=1795231584",
+   "ticker": "KXDIESELD-26NOV21-T5.860",
+   "series_ticker": "KXDIESELD",
+   "event_ticker": "KXDIESELD-26NOV21",
+   "title": "Will Diesel Price on November 21, 2026 be above $5.860?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDIESELD-26NOV21-T5.860",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXDIESELD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXDIESELD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-19 23:00:00Z",
+   "epoch": 1795129200,
+   "from": 0.28,
+   "to": 0.4,
+   "delta": 0.12,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-55000.00/candlesticks?period_interval=60&start_ts=1794626781&end_ts=1795231581",
+   "ticker": "KXBTCMINY-27JAN01-55000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $55000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-55000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-20 22:40:43Z",
+   "epoch": 1795214443,
+   "from": 0.09,
+   "to": 0.21,
+   "delta": 0.12,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASD-26NOV21-3.6600&limit=500",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:48:00Z",
+   "epoch": 1795225680,
+   "from": 0.37,
+   "to": 0.49,
+   "delta": 0.12,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:50:34Z",
+   "epoch": 1795225834,
+   "from": 0.61,
+   "to": 0.49,
+   "delta": -0.12,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 22:00:00Z",
+   "epoch": 1795212000,
+   "from": 0.27,
+   "to": 0.38,
+   "delta": 0.11,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-50000.00/candlesticks?period_interval=60&start_ts=1794626780&end_ts=1795231580",
+   "ticker": "KXBTCMINY-27JAN01-50000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $50000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-50000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 7 days, 60 minute candles",
+   "ts": "2026-11-20 22:00:00Z",
+   "epoch": 1795212000,
+   "from": 0.27,
+   "to": 0.38,
+   "delta": 0.11,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY/markets/KXBTCMINY-27JAN01-50000.00/candlesticks?period_interval=60&start_ts=1794626780&end_ts=1795231580",
+   "ticker": "KXBTCMINY-27JAN01-50000.00",
+   "series_ticker": "KXBTCMINY",
+   "event_ticker": "KXBTCMINY-27JAN01",
+   "title": "Will Bitcoin be below $50000.00 by Jan 1, 2027 at 12:00am ET?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-50000.00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTCMINY-27JAN01",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTCMINY",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/data/indices/BRTI?ref=blog.cfbenchmarks.com"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:48:57Z",
+   "epoch": 1795225737,
+   "from": 0.49,
+   "to": 0.38,
+   "delta": -0.11,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:49:00Z",
+   "epoch": 1795225740,
+   "from": 0.49,
+   "to": 0.38,
+   "delta": -0.11,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:49:25Z",
+   "epoch": 1795225765,
+   "from": 0.61,
+   "to": 0.5,
+   "delta": -0.11,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:49:26Z",
+   "epoch": 1795225766,
+   "from": 0.5,
+   "to": 0.61,
+   "delta": 0.11,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:55:00Z",
+   "epoch": 1795226100,
+   "from": 0.41,
+   "to": 0.52,
+   "delta": 0.11,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-21 01:58:10Z",
+   "epoch": 1795226290,
+   "from": 0.59,
+   "to": 0.48,
+   "delta": -0.11,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXBTC15M-26NOV202100-00&limit=500",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "trade to trade",
+   "window": "trade prints",
+   "ts": "2026-11-20 22:03:40Z",
+   "epoch": 1795212220,
+   "from": 0.19,
+   "to": 0.09,
+   "delta": -0.1,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/trades?ticker=KXAAAGASD-26NOV21-3.6600&limit=500",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "close to close",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-20 22:04:00Z",
+   "epoch": 1795212240,
+   "from": 0.19,
+   "to": 0.09,
+   "delta": -0.1,
+   "direction": "down",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD/markets/KXAAAGASD-26NOV21-3.6600/candlesticks?period_interval=1&start_ts=1795145183&end_ts=1795231583",
+   "ticker": "KXAAAGASD-26NOV21-3.6600",
+   "series_ticker": "KXAAAGASD",
+   "event_ticker": "KXAAAGASD-26NOV21",
+   "title": "Will average **gas prices** be above $3.6600?",
+   "topic": "gas",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXAAAGASD-26NOV21-3.6600",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXAAAGASD-26NOV21",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXAAAGASD",
+   "settlement_sources": [
+    {
+     "name": "AAA",
+     "url": "https://gasprices.aaa.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  },
+  {
+   "kind": "high to low inside one candle",
+   "window": "last 24 hours, 1 minute candles",
+   "ts": "2026-11-21 01:47:00Z",
+   "epoch": 1795225620,
+   "from": 0.36,
+   "to": 0.46,
+   "delta": 0.1,
+   "direction": "up",
+   "source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M/markets/KXBTC15M-26NOV202100-00/candlesticks?period_interval=1&start_ts=1795145182&end_ts=1795231582",
+   "ticker": "KXBTC15M-26NOV202100-00",
+   "series_ticker": "KXBTC15M",
+   "event_ticker": "KXBTC15M-26NOV202100",
+   "title": "BTC price up in next 15 mins?",
+   "topic": "crypto",
+   "market_source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTC15M-26NOV202100-00",
+   "event_source": "https://external-api.demo.kalshi.co/trade-api/v2/events/KXBTC15M-26NOV202100",
+   "series_source": "https://external-api.demo.kalshi.co/trade-api/v2/series/KXBTC15M",
+   "settlement_sources": [
+    {
+     "name": "CF Benchmarks",
+     "url": "https://www.cfbenchmarks.com/"
+    }
+   ],
+   "cause": "",
+   "cause_note": "Kalshi publishes no news feed in the Trade API, so no official source can confirm what caused this move."
+  }
+ ]
+}

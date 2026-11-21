@@ -1,8 +1,8 @@
 {
- "generated_at": "2026-11-20T21:13:16Z",
+ "generated_at": "2026-11-21T03:26:45Z",
  "api_base": "https://external-api.demo.kalshi.co/trade-api/v2",
  "api_docs": "https://docs.kalshi.com/getting_started/demo_env",
- "mode": "static only (no egress)",
+ "mode": "static and live re-check",
  "row_coverage": [
   {
    "file": "data/analysis.json",
@@ -62,8 +62,8 @@
   },
   {
    "file": "data/dashboard_instrument.json",
-   "rows": 2916,
-   "with_source": 2916,
+   "rows": 3312,
+   "with_source": 3312,
    "missing_source": 0,
    "not_official": 0,
    "note": ""
@@ -126,16 +126,16 @@
   },
   {
    "file": "data/markets_open.json",
-   "rows": 369,
-   "with_source": 369,
+   "rows": 87,
+   "with_source": 87,
    "missing_source": 0,
    "not_official": 0,
    "note": ""
   },
   {
    "file": "data/markets_settled.json",
-   "rows": 21,
-   "with_source": 21,
+   "rows": 20,
+   "with_source": 20,
    "missing_source": 0,
    "not_official": 0,
    "note": ""
@@ -214,8 +214,8 @@
   },
   {
    "file": "data/snapshot.json",
-   "rows": 20482,
-   "with_source": 20482,
+   "rows": 2563,
+   "with_source": 2563,
    "missing_source": 0,
    "not_official": 0,
    "note": ""
@@ -238,8 +238,8 @@
   },
   {
    "file": "data/topic-crypto.json",
-   "rows": 376,
-   "with_source": 376,
+   "rows": 1065,
+   "with_source": 1065,
    "missing_source": 0,
    "not_official": 0,
    "note": ""
@@ -254,24 +254,24 @@
   },
   {
    "file": "data/topic-elections.json",
-   "rows": 9797,
-   "with_source": 9797,
+   "rows": 1200,
+   "with_source": 1200,
    "missing_source": 0,
    "not_official": 0,
    "note": ""
   },
   {
    "file": "data/topic-gas.json",
-   "rows": 0,
-   "with_source": 0,
+   "rows": 3,
+   "with_source": 3,
    "missing_source": 0,
    "not_official": 0,
    "note": ""
   },
   {
    "file": "data/topic-golf.json",
-   "rows": 68,
-   "with_source": 68,
+   "rows": 295,
+   "with_source": 295,
    "missing_source": 0,
    "not_official": 0,
    "note": ""
@@ -294,6 +294,14 @@
   },
   {
    "file": "desk/data/irregularities.json",
+   "rows": 0,
+   "with_source": 0,
+   "missing_source": 0,
+   "not_official": 0,
+   "note": ""
+  },
+  {
+   "file": "desk/data/jumps.json",
    "rows": 0,
    "with_source": 0,
    "missing_source": 0,
@@ -357,8 +365,8 @@
    "note": ""
   }
  ],
- "rows_checked": 35887,
- "rows_with_official_source": 35887,
+ "rows_checked": 10403,
+ "rows_with_official_source": 10403,
  "rows_missing_source": 0,
  "rows_not_official": 0,
  "missing_examples": [],
@@ -366,18 +374,235 @@
  "markdown_documentation_links": 7,
  "rows_sourced_through_a_file_level_identifier": 9,
  "live_rechecks": {
-  "attempted": 0,
-  "ok": 0,
+  "attempted": 24,
+  "ok": 24,
   "failed": 0,
-  "details": [],
-  "note": "skipped: this run had no route to the demo API"
+  "details": [
+   {
+    "ticker": "KXTXERCOTPEAK-27JAN01-T93000",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.9000",
+    "live": "active /  / 0.9000",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTXERCOTPEAK-27JAN01-T93000"
+   },
+   {
+    "ticker": "KXTXERCOTPEAK-27JAN01-T91500",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0500",
+    "live": "active /  / 0.0500",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTXERCOTPEAK-27JAN01-T91500"
+   },
+   {
+    "ticker": "KXTXERCOTPEAK-27JAN01-T92500",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0400",
+    "live": "active /  / 0.0400",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTXERCOTPEAK-27JAN01-T92500"
+   },
+   {
+    "ticker": "KXTXERCOTPEAK-27JAN01-T96000",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0300",
+    "live": "active /  / 0.0300",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTXERCOTPEAK-27JAN01-T96000"
+   },
+   {
+    "ticker": "KXTXERCOTPEAK-27JAN01-T94000",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0300",
+    "live": "active /  / 0.0300",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTXERCOTPEAK-27JAN01-T94000"
+   },
+   {
+    "ticker": "KXTXERCOTPEAK-27JAN01-T98000",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0300",
+    "live": "active /  / 0.0300",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXTXERCOTPEAK-27JAN01-T98000"
+   },
+   {
+    "ticker": "KXSENATELA-26-D",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0600",
+    "live": "active /  / 0.0600",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSENATELA-26-D"
+   },
+   {
+    "ticker": "KXSENATELA-26-R",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0700",
+    "live": "active /  / 0.0700",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSENATELA-26-R"
+   },
+   {
+    "ticker": "KXCLOSESTHOUSE-27JAN03-TN04",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0000",
+    "live": "active /  / 0.0000",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXCLOSESTHOUSE-27JAN03-TN04"
+   },
+   {
+    "ticker": "KXCLOSESTHOUSE-27JAN03-NC05",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0000",
+    "live": "active /  / 0.0000",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXCLOSESTHOUSE-27JAN03-NC05"
+   },
+   {
+    "ticker": "KXCLOSESTHOUSE-27JAN03-NC03",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0000",
+    "live": "active /  / 0.0000",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXCLOSESTHOUSE-27JAN03-NC03"
+   },
+   {
+    "ticker": "KXPRESNOMD-28-MHEA",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0000",
+    "live": "active /  / 0.0000",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-MHEA"
+   },
+   {
+    "ticker": "KXBTCMINY-27JAN01-55000.00",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.7000",
+    "live": "active /  / 0.7000",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-55000.00"
+   },
+   {
+    "ticker": "KXBTCMINY-27JAN01-45000.00",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.2000",
+    "live": "active /  / 0.2000",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-45000.00"
+   },
+   {
+    "ticker": "KXBTCMINY-27JAN01-50000.00",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.3700",
+    "live": "active /  / 0.3800",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-50000.00"
+   },
+   {
+    "ticker": "KXBTCMINY-27JAN01-40000.00",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0700",
+    "live": "active /  / 0.0700",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMINY-27JAN01-40000.00"
+   },
+   {
+    "ticker": "KXBTCMAXMON-BTC-26NOV30-8000000",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.7900",
+    "live": "active /  / 0.7900",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMAXMON-BTC-26NOV30-8000000"
+   },
+   {
+    "ticker": "KXBTCMAXMON-BTC-26NOV30-9250000",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0300",
+    "live": "active /  / 0.0300",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCMAXMON-BTC-26NOV30-9250000"
+   },
+   {
+    "ticker": "KXPGATIGER-26",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.9000",
+    "live": "active /  / 0.9000",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGATIGER-26"
+   },
+   {
+    "ticker": "KXLIVCOMPETE-27APR-JRAH",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.4500",
+    "live": "active /  / 0.4500",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXLIVCOMPETE-27APR-JRAH"
+   },
+   {
+    "ticker": "KXPGAR1LEAD-MAST27-HENG",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0530",
+    "live": "active /  / 0.0530",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR1LEAD-MAST27-HENG"
+   },
+   {
+    "ticker": "KXPGARYDER-RC27-USA",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.9000",
+    "live": "active /  / 0.9000",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGARYDER-RC27-USA"
+   },
+   {
+    "ticker": "KXLIVCOMPETE-27APR-THAT",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.9000",
+    "live": "active /  / 0.9000",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXLIVCOMPETE-27APR-THAT"
+   },
+   {
+    "ticker": "KXPGAR1LEAD-MAST27-RGER",
+    "field": "status / result / last price",
+    "snapshot": "active /  / 0.0200",
+    "live": "active /  / 0.0200",
+    "match": true,
+    "note": "moved since the snapshot (expected for an open market)",
+    "source": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPGAR1LEAD-MAST27-RGER"
+   }
+  ]
  },
  "endpoint_probe": {
   "url": "https://external-api.demo.kalshi.co/trade-api/v2/exchange/status",
-  "http_status": null,
-  "note": "skipped: offline"
+  "http_status": 200,
+  "exchange_active": true,
+  "trading_active": true
  },
  "status": "pass",
  "violations": [],
- "summary": "35887 rows checked across 44 data files; 35887 carry an official Kalshi source; 0 of 0 live re-checks matched; 0 violation(s)."
+ "summary": "10403 rows checked across 45 data files; 10403 carry an official Kalshi source; 24 of 24 live re-checks matched; 0 violation(s)."
 }
