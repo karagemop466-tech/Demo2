@@ -139,7 +139,14 @@ DASH_BODY = r"""
 elections, culture, crypto, golf</b>. Ranked by <i>estimated</i> dollar volume, charted by
 contract price over time, with order-book liquidity at each price, tracked until the market
 resolves <b>yes</b> or <b>no</b>.</p>
-<p class="lead" style="font-size:.95em">All sections: <a href="rankings.html">Dollar Rankings</a> ·
+<p class="lead" style="font-size:.95em">Topics: <a href="pages/gas.html">Gas</a> ·
+<a href="pages/elections.html">Elections</a> · <a href="pages/culture.html">Culture</a> ·
+<a href="pages/crypto.html">Crypto</a> · <a href="pages/golf.html">Golf</a> ·
+<a href="alerts.html"><b>Live Alert Chats (≥ $0.10)</b></a> ·
+<a href="pages/resolutions.html">Resolutions</a> ·
+<a href="pages/portfolio.html">Portfolio &amp; Simulated Lab</a> ·
+<a href="pages/analysis.html">Analysis</a></p>
+<p class="lead" style="font-size:.9em">All sections: <a href="rankings.html">Dollar Rankings</a> ·
 <a href="verified/index.html">Verified rows</a> · <a href="dashboard/index.html">Dashboard</a> ·
 <a href="site/index.html">Site</a> · <a href="intelligence/index.html">Intelligence</a> ·
 <a href="analysis.html">Analysis (root)</a> · <a href="portfolio.html">Portfolio status (root)</a> ·
@@ -256,7 +263,8 @@ DASH_JS = r"""
 <script>
 (async function(){
   const $ = id => document.getElementById(id);
-  let state = { window: 3600, field: 'mid', ticker: null, snap:null, filtered:[] };
+  const DEMO_API = 'https://external-api.demo.kalshi.co/trade-api/v2';
+  let state = { window: 3600, field: 'mid', ticker: null, snap:null, filtered:[], liveCandles:{}, liveBooks:{} };
 
   try{
     const snap = await KR.snapshot();
@@ -329,18 +337,7 @@ DASH_JS = r"""
     ], r.slice(0,200), 'No markets match this filter in the current snapshot.');
   }
 
-  async function drawChart(){
-    if(!state.ticker) return;
-    const snap = state.snap;
-    const per = (snap.candles||{})[state.ticker] || {};
-    let intervalKey = '1m';
-    if(state.window > 3600) intervalKey = '1h';
-    if(state.window > 86400) intervalKey = '1d';
-    // pick the candle set whose period best matches the window
-    if(state.window <= 3600) intervalKey='1m'; else if(state.window<=86400) intervalKey='1h'; else intervalKey='1d';
-    const cset = (per[intervalKey]||{}).candles || [];
-    let hist = [];
-    try{ const h = await KR.history(); hist = ((h.points||{})[state.ticker]||[]); }catch(e){}
+  function paintChart(cset, hist, intervalKey, liveSrc){
     const fieldMap = {mid:'derived_mid', close:'close_dollars', yes_bid_close:'yes_bid_close', yes_ask_close:'yes_ask_close'};
     const candles = cset.map(c=>({ts:c.ts, close_dollars:c.close, yes_bid_close:c.yes_bid_close,
                                   yes_ask_close:c.yes_ask_close, derived_mid:c.derived_mid}));
@@ -351,7 +348,7 @@ DASH_JS = r"""
       spanSeconds: state.window,
       jumps: jumps,
       emptyMessage: state.window<=300
-        ? 'No ticks inside this window yet. The collector samples every 10 minutes, so a 60-second or 5-minute window only fills when a run has just completed.'
+        ? 'No ticks inside this window yet. The collector samples every 10 minutes, so a 60-second or 5-minute window only fills when a trade or sample lands inside it.'
         : 'No price points in this window. Candlestick price objects are empty in periods with no trade - try the quoted-mid series or a longer window.'
     });
     const srcCount = series.filter(p=>p.src==='candle').length, tickCount = series.length-srcCount;
@@ -359,7 +356,7 @@ DASH_JS = r"""
       : state.field==='close' ? 'last traded price - empty in periods with no trade'
       : state.field==='yes_bid_close' ? 'yes bid close' : 'yes ask close';
     $('chartNote').innerHTML = `${series.length} points · ${tickCount} collector ticks + ${srcCount} candlesticks `
-      + `(period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`
+      + `(period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}${liveSrc?', live API':''}) · plotting <b>${label}</b>`
       + (jumps.length ? ` · ${jumps.length} sharp move${jumps.length!==1?'s':''} ≥ $0.10` : '');
 
     const m = (state.snap.markets||[]).find(x=>x.market_ticker===state.ticker) || {};
@@ -375,22 +372,77 @@ DASH_JS = r"""
     ], jumps, 'No sharp moves (≥ $0.10 between consecutive points) in this window. A blank table means the price moved in smaller steps — nothing is inferred.');
   }
 
-  async function renderLiquidity(){
-    const snap = state.snap, ob = (snap.orderbooks||{})[state.ticker];
-    if(!ob || ob.error){ $('liqSummary').innerHTML=''; $('liqBid').innerHTML='<div class="empty">No order book in this snapshot.</div>'; $('liqAsk').innerHTML=''; $('liqNote').textContent = ob&&ob.error?('Order book request failed: '+ob.error):''; return; }
+  async function drawChart(){
+    if(!state.ticker) return;
+    const ticker = state.ticker;
+    const snap = state.snap;
+    const per = (snap.candles||{})[ticker] || {};
+    let intervalKey = '1m';
+    if(state.window <= 3600) intervalKey='1m'; else if(state.window<=86400) intervalKey='1h'; else intervalKey='1d';
+    const liveKey = ticker + '|' + intervalKey;
+    const liveCset = state.liveCandles[liveKey];
+    const cset = liveCset || (per[intervalKey]||{}).candles || [];
+    let hist = [];
+    try{ const h = await KR.history(); hist = ((h.points||{})[ticker]||[]); }catch(e){}
+    paintChart(cset, hist, intervalKey, !!liveCset);
+
+    const m = (snap.markets||[]).find(x=>x.market_ticker===ticker);
+    if(!liveCset && m && m.series_ticker && typeof fetch === 'function' && !location.protocol.startsWith('file')){
+      const period = intervalKey==='1m' ? 1 : intervalKey==='1h' ? 60 : 1440;
+      const span = Math.max(state.window, intervalKey==='1m' ? 21600 : intervalKey==='1h' ? 86400*20 : 86400*120);
+      const nowS = Math.floor(Date.now()/1000);
+      const url = `${DEMO_API}/series/${encodeURIComponent(m.series_ticker)}/markets/${encodeURIComponent(ticker)}/candlesticks?start_ts=${nowS - span}&end_ts=${nowS}&period_interval=${period}`;
+      fetch(url, {headers:{Accept:'application/json'}, cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{
+        if(!j || !Array.isArray(j.candlesticks)) return;
+        const norm = j.candlesticks.map(c=>{
+          const price = c.price||{};
+          const bid = (c.yes_bid||{}).close_dollars;
+          const ask = (c.yes_ask||{}).close_dollars;
+          const mid = (bid!==undefined && bid!=='' && ask!==undefined && ask!=='') ? Math.round(((Number(bid)+Number(ask))/2)*1e4)/1e4 : null;
+          return {ts:c.end_period_ts, close:price.close_dollars, yes_bid_close:bid, yes_ask_close:ask, derived_mid:mid};
+        });
+        state.liveCandles[liveKey] = norm;
+        if(state.ticker === ticker) paintChart(norm, hist, intervalKey, true);
+      }).catch(()=>{});
+    }
+  }
+
+  function paintLiquidity(ob, live){
+    if(!ob || ob.error){ $('liqSummary').innerHTML=''; $('liqBid').innerHTML='<div class="empty">No order book in this snapshot. Live depth loads when the demo API is reachable.</div>'; $('liqAsk').innerHTML=''; $('liqNote').textContent = ob&&ob.error?('Order book request failed: '+ob.error):''; return; }
     $('liqSummary').innerHTML = `
-      <div class="kpi-card"><div class="k">Best yes bid</div><div class="v">${KR.usd(ob.best_yes_bid,2)}</div><div class="s">raw field</div></div>
+      <div class="kpi-card"><div class="k">Best yes bid</div><div class="v">${KR.usd(ob.best_yes_bid,2)}</div><div class="s">raw field${live?' · live':''}</div></div>
       <div class="kpi-card"><div class="k">Best yes ask</div><div class="v">${KR.usd(ob.best_yes_ask_derived,2)}</div><div class="s">derived from no bids</div></div>
       <div class="kpi-card"><div class="k">Spread</div><div class="v">${KR.usd(ob.spread_derived,3)}</div><div class="s">ask − bid</div></div>`;
-    const fmt = a => KR.renderTable(null, [], []) || '';
-    KR.renderTable($('liqBid'), [
-      {label:'Price', num:true, get:r=>KR.usd(r[0],2)},
-      {label:'Contracts', num:true, get:r=>KR.num(r[1],2)}
-    ], (ob.yes_bids||[]).slice(0,12).map(r=>({0:r[0],1:r[1],_r:r})).map(x=>({...x, 0:x[0],1:x[1]})), 'No bids.');
-    // simple manual render to keep array access obvious
     $('liqBid').innerHTML = tableOf('Yes bid', ob.yes_bids||[], 'No bids resting.');
     $('liqAsk').innerHTML = tableOf('Yes ask (derived)', ob.derived_yes_asks||[], 'No asks (no NO bids resting).');
     $('liqNote').innerHTML = `Total resting: <b>${KR.num(ob.yes_bid_contracts,2)}</b> contracts bid · <b>${KR.num(ob.derived_ask_contracts,2)}</b> offered. Request: <code>${KR.esc(ob.raw_request||'')}</code>`;
+  }
+
+  async function renderLiquidity(){
+    const ticker = state.ticker;
+    const snap = state.snap, ob = state.liveBooks[ticker] || (snap.orderbooks||{})[ticker];
+    paintLiquidity(ob, !!state.liveBooks[ticker]);
+    if(ticker && typeof fetch === 'function' && !location.protocol.startsWith('file')){
+      const reqUrl = `${DEMO_API}/markets/${encodeURIComponent(ticker)}/orderbook?depth=25`;
+      fetch(reqUrl, {headers:{Accept:'application/json'}, cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{
+        if(!j || !j.orderbook_fp) return;
+        const fp = j.orderbook_fp;
+        const yes = (fp.yes_dollars||[]).map(lv=>[Number(lv[0]), Number(lv[1])]).sort((a,b)=>b[0]-a[0]);
+        const no = (fp.no_dollars||[]).map(lv=>[Number(lv[0]), Number(lv[1])]).sort((a,b)=>b[0]-a[0]);
+        const asks = no.map(lv=>[Math.round((1-lv[0])*1e4)/1e4, lv[1]]).sort((a,b)=>a[0]-b[0]);
+        const liveOb = {
+          yes_bids: yes, no_bids: no, derived_yes_asks: asks,
+          best_yes_bid: yes.length ? yes[0][0] : null,
+          best_yes_ask_derived: asks.length ? asks[0][0] : null,
+          yes_bid_contracts: Math.round(yes.reduce((s,lv)=>s+lv[1],0)*100)/100,
+          derived_ask_contracts: Math.round(asks.reduce((s,lv)=>s+lv[1],0)*100)/100,
+          spread_derived: (yes.length && asks.length) ? Math.round((asks[0][0]-yes[0][0])*1e4)/1e4 : null,
+          raw_request: reqUrl,
+        };
+        state.liveBooks[ticker] = liveOb;
+        if(state.ticker === ticker) paintLiquidity(liveOb, true);
+      }).catch(()=>{});
+    }
   }
   function tableOf(label, arr, empty){
     if(!arr.length) return `<div class="empty">${empty}</div>`;
@@ -769,15 +821,15 @@ def build_live_pages() -> None:
 
     category_page(
         "gas", "Gas prices",
-        "Fuel-price markets on the Kalshi demo exchange. The in-scope series are the ones tagged "
-        "<code>Gas</code>. <b>Verified on 2026-11-20:</b> the demo environment lists "
-        "<code>DIESEL</code> (weekly diesel price) and <code>DIESELM</code> (monthly diesel price), "
-        "both settled against U.S. Energy Information Administration data, but has <b>no open events "
-        "or markets</b> for either series &mdash; so this page shows series, not live prices. That is "
-        "a property of the demo exchange, not a gap in the data; the page fills in automatically "
-        "when those markets are listed.",
-        'tags include <code>Gas</code>; categories are <code>Economics</code> — so category alone '
-        'would not find these, which is why the tag is used')
+        "Fuel-price markets on the Kalshi demo exchange. Scope is identified strictly from "
+        "official series records: <code>tags</code> containing <code>Gas</code> (<code>DIESEL</code>, "
+        "<code>DIESELM</code>, settled against U.S. Energy Information Administration data) and "
+        "<code>product_metadata.scope == \"Gasoline\"</code> (<code>KXAAAGASD</code>, AAA national "
+        "retail gasoline averages). <b>Note:</b> <code>DIESEL</code> and <code>DIESELM</code> "
+        "currently have no open demo events, whereas <code>KXAAAGASD</code> surfaces live gas-price "
+        "contracts when active; crude oil (<code>KXWTI</code>) is excluded because it is not retail gas.",
+        'tags include <code>Gas</code> or <code>product_metadata.scope == "Gasoline"</code>; '
+        'categories are <code>Economics</code>/<code>Other</code>, so category alone is insufficient')
     category_page(
         "elections", "Elections",
         "Election markets: primaries, seat control, party control and international votes. "
@@ -1037,7 +1089,7 @@ def build_alerts_page(snap: dict) -> None:
     var thr=parseFloat(thrInp.value)||THRESHOLD_DEFAULT;
     var minv=parseFloat(volInp.value)||MINVOL_DEFAULT;
     var roi=allRows.filter(function(r){
-      var d=Math.abs(parseFloat(r.delta)||0);
+      var d=Math.round(Math.abs(parseFloat(r.delta)||0)*1e4)/1e4;
       var raw=(r.est_vol||'').toString().replace(/[^0-9.]/g,'');
       var known=raw!=='';
       var e=parseFloat(raw||'0');
@@ -1057,6 +1109,8 @@ def build_alerts_page(snap: dict) -> None:
     fetch('../data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
   ]).then(function(res){
     var snap=res[0], jdata=res[1];
+    var asOf=(jdata.generated_from&&jdata.generated_from.snapshot_generated_at)||jdata.generated_at_utc||'';
+    var asOfEl=$('jumpsAsOf'); if(asOfEl&&asOf) asOfEl.textContent=asOf;
     var markets=(snap.markets||[]);
     var mktByTicker={};
     markets.forEach(function(m){if(m.market_ticker)mktByTicker[m.market_ticker]=m;});
@@ -1121,7 +1175,7 @@ why a move happened.</p>
 <a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>). Market links point to the
 Kalshi series page pattern (checked against the live site); cause is never inferred — each row links to the
 market's own trade/market API responses and is flagged <span class="pill flag">cause unverified</span>.
-Data as of {jumps_gen or "not collected yet"}; the collector runs every 10 minutes via
+Data as of <span id="jumpsAsOf">not collected yet</span>; the collector runs every 10 minutes via
 <a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>.</p>
 """
     page(path="pages/live-alerts.html", title="Live Alerts", active="alerts", body=body, extra_js=js,

@@ -9,7 +9,7 @@
  *
  * Data sources (all official; no value is invented):
  *   GET /markets/trades?min_ts=<unix s>&limit=1000   — trade tape (get-trades docs)
- *   GET /markets?status=open&limit=1000              — current quotes (get-markets docs)
+ *   GET /markets?tickers=<tracked tickers>           — exact tracked quotes + settlements (get-markets docs)
  *   GET /markets/{ticker}/orderbook?depth=10         — liquidity on selection
  * plus the committed data/snapshot.json + data/history.json as the labelled fallback.
  * Verified request shapes: docs.kalshi.com/api-reference/market/get-trades,
@@ -356,24 +356,36 @@
         handleTape(trades.slice().sort(function (a, b) { return String(a.created_time).localeCompare(String(b.created_time)); }));
       }
     }).catch(function (e) { throw { src: "trades", e: e }; }));
-    // 2. current quotes (one page; tracked markets are the largest, they are on page 1-2)
-    jobs.push(getJSON(API + "/markets?status=open&limit=1000").then(function (j) {
-      var seen = 0;
-      (j.markets || []).forEach(function (m) {
-        if (!S.idx.has(m.ticker)) return;
-        seen++;
-        notePrice(m.ticker, {
-          last: m.last_price_dollars != null ? Number(m.last_price_dollars) : null,
-          yes_bid: m.yes_bid_dollars != null ? Number(m.yes_bid_dollars) : null,
-          yes_ask: m.yes_ask_dollars != null ? Number(m.yes_ask_dollars) : null,
-          volume_fp: m.volume_fp, open_interest_fp: m.open_interest_fp,
-          status: m.status, result: m.result || "",
+    // 2. current quotes for the exact tracked tickers (batches of 50; omits status=open so
+    //    newly settled markets still return with result='yes'/'no' — docs: get-markets)
+    var trackedTickers = Array.from(S.idx.keys());
+    var batches = [];
+    for (var bi = 0; bi < trackedTickers.length; bi += 50) {
+      batches.push(trackedTickers.slice(bi, bi + 50));
+    }
+    if (batches.length) {
+      jobs.push(Promise.all(batches.map(function (b) {
+        return getJSON(API + "/markets?tickers=" + encodeURIComponent(b.join(",")));
+      })).then(function (pages) {
+        var seen = 0;
+        pages.forEach(function (j) {
+          (j.markets || []).forEach(function (m) {
+            if (!S.idx.has(m.ticker)) return;
+            seen++;
+            notePrice(m.ticker, {
+              last: m.last_price_dollars != null ? Number(m.last_price_dollars) : null,
+              yes_bid: m.yes_bid_dollars != null ? Number(m.yes_bid_dollars) : null,
+              yes_ask: m.yes_ask_dollars != null ? Number(m.yes_ask_dollars) : null,
+              volume_fp: m.volume_fp, open_interest_fp: m.open_interest_fp,
+              status: m.status, result: m.result || "",
+            });
+            if (m.result === "yes" || m.result === "no") resolutionEntry(m.ticker, m.result);
+          });
         });
-        if (m.result === "yes" || m.result === "no") resolutionEntry(m.ticker, m.result);
-      });
-      var st = $("fetchStatus");
-      if (st) st.textContent = "last poll " + new Date().toLocaleTimeString() + " · " + seen + "/" + S.idx.size + " tracked markets on page 1";
-    }).catch(function (e) { throw { src: "markets", e: e }; }));
+        var st = $("fetchStatus");
+        if (st) st.textContent = "last poll " + new Date().toLocaleTimeString() + " · " + seen + "/" + S.idx.size + " tracked markets updated";
+      }).catch(function (e) { throw { src: "markets", e: e }; }));
+    }
 
     Promise.all(jobs.map(function (p) { return p.catch(function (err) { return err; }); })).then(function (res) {
       var fails = res.filter(function (r) { return r && r.e; });
