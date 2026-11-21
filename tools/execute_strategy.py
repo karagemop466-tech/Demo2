@@ -12,7 +12,7 @@ Required body fields per the documented schema:
   self_trade_prevention_type (taker_at_cross|maker)
   side: bid = buy YES, ask = sell YES (BookSide is quoted from the YES leg only,
   per the Get Fills / BookSide definition).
-  i.e. betting NO is done as `ask` at (1 - yes_price).
+  i.e. buying NO at (1 - yes_price) is an `ask` at the YES price.
 
 Safety, non-negotiable:
   - demo environment only; the base URL is hard-coded to the demo host
@@ -25,6 +25,7 @@ Safety, non-negotiable:
 from __future__ import annotations
 
 import datetime as dt
+from decimal import Decimal, InvalidOperation
 import json
 import os
 import sys
@@ -74,26 +75,35 @@ def main() -> int:
 
     plan = json.loads(plan_path.read_text())
     limits = plan.get("run_limits") or {}
-    max_notional = DEFAULT_MAX_NOTIONAL
+    # A plan or environment may tighten, but must never raise the default cap.
+    max_notional = Decimal(str(DEFAULT_MAX_NOTIONAL))
     if limits.get("max_notional_usd") is not None:
-        max_notional = float(limits["max_notional_usd"])
-    # the environment may only tighten the cap
-    max_notional = min(max_notional, float(os.environ.get("KALSHI_MAX_NOTIONAL_USD", max_notional)))
-    max_orders = int(limits.get("max_orders_per_run") or 10)
+        max_notional = min(max_notional, Decimal(str(limits["max_notional_usd"])))
+    max_notional = min(max_notional, Decimal(str(os.environ.get("KALSHI_MAX_NOTIONAL_USD", max_notional))))
+    if not max_notional.is_finite() or max_notional < 0:
+        raise ValueError("max notional must be finite and nonnegative")
+    max_orders = min(10, int(limits.get("max_orders_per_run", 10)))
+    if max_orders < 0:
+        raise ValueError("max orders must be nonnegative")
     snap_path = DATA / "snapshot.json"
     snap = json.loads(snap_path.read_text()) if snap_path.exists() else {}
     in_scope = {m["market_ticker"]: m for m in snap.get("markets") or []}
 
     signer = signer_from_env()
     results: list[dict] = []
-    spent = 0.0
+    spent = Decimal("0")
+    submitted = 0
     seen: set[str] = set()
 
     for intent in plan.get("orders") or []:
         ticker = intent.get("ticker", "")
-        side = intent.get("side", "yes")            # user-facing: yes | no
-        count = float(intent.get("count", 0))
+        side = intent.get("side")                   # user-facing: yes | no, never guessed
         price = intent.get("price")                 # YES-denominated price
+        try:
+            count = Decimal(str(intent.get("count", 0)))
+            yes_px = Decimal(str(price))
+        except (InvalidOperation, ValueError):
+            count, yes_px = Decimal("NaN"), Decimal("NaN")
         note = {}
 
         # global kill switch: execution is enabled only when the repo owner opts in
@@ -105,27 +115,28 @@ def main() -> int:
             note = {"skipped": "ticker not in the collector's in-scope market set"}
         elif ticker in seen:
             note = {"skipped": "duplicate ticker in one run"}
-        elif count <= 0:
-            note = {"skipped": "count must be positive"}
-        elif len([r for r in results if r.get("mode") == "live_demo"]) >= max_orders:
+        elif side not in ("yes", "no"):
+            note = {"skipped": "side must be yes or no"}
+        elif not count.is_finite() or count <= 0 or count > Decimal("250000") or count != count.quantize(Decimal("0.01")):
+            note = {"skipped": "count must be positive, no greater than 250000, with at most two decimal places"}
+        elif not yes_px.is_finite() or not Decimal("0") < yes_px < Decimal("1") or yes_px != yes_px.quantize(Decimal("0.0001")):
+            note = {"skipped": "YES price must be between 0 and 1 with at most four decimal places"}
+        elif submitted >= max_orders:
             note = {"skipped": f"max_orders_per_run ({max_orders}) reached"}
-        elif price is None:
-            note = {"skipped": "no price supplied"}
         else:
-            yes_px = float(price)
-            notional = count * (yes_px if side == "yes" else 1 - yes_px)
+            notional = count * (yes_px if side == "yes" else Decimal("1") - yes_px)
             if spent + notional > max_notional:
                 note = {"skipped": f"run notional cap ${max_notional} would be exceeded",
-                        "notional": round(notional, 4)}
+                        "notional": float(notional)}
 
         if note:
-            results.append({"ticker": ticker, "side": side, "count": count, "price": price,
+            results.append({"ticker": ticker, "side": side, "count": float(count) if count.is_finite() else None, "price": price,
                             "mode": "dry_run" if DRY_RUN else "live_demo", **note})
             continue
 
         # side: bid = buy YES ; ask = sell YES (economically buy NO at 1-price)
         book_side = "bid" if side == "yes" else "ask"
-        order_price = yes_px if side == "yes" else round(1 - yes_px, 4)
+        order_price = yes_px
         body = {
             "ticker": ticker,
             "side": book_side,
@@ -134,16 +145,17 @@ def main() -> int:
             "time_in_force": "immediate_or_cancel",   # never rest a demo order unattended
             "self_trade_prevention_type": "taker_at_cross",
         }
-        spent += count * order_price
+        spent += notional
+        submitted += 1
         seen.add(ticker)
 
         if DRY_RUN:
-            results.append({"ticker": ticker, "side": side, "count": count, "price": price,
+            results.append({"ticker": ticker, "side": side, "count": float(count) if count.is_finite() else None, "price": price,
                             "mode": "dry_run", "request": body,
                             "note": "validated, not sent (KALSHI_DRY_RUN=1)"})
         else:
             res = post_order(signer, body)
-            res.update({"ticker": ticker, "side": side, "count": count, "price": price,
+            res.update({"ticker": ticker, "side": side, "count": float(count) if count.is_finite() else None, "price": price,
                         "mode": "live_demo"})
             results.append(res)
 
@@ -152,9 +164,9 @@ def main() -> int:
         "mode": "dry_run" if DRY_RUN else "live_demo",
         "endpoint": DEMO_REST + "/portfolio/events/orders",
         "endpoint_doc": "https://docs.kalshi.com/api-reference/orders/create-order-v2.md",
-        "run_notional_cap_usd": max_notional,
+        "run_notional_cap_usd": float(max_notional),
         "max_orders_per_run": max_orders,
-        "planned_notional_usd": round(spent, 4),
+        "planned_notional_usd": float(spent),
         "results": results,
     }
     (DATA / "executions.json").write_text(json.dumps(out, indent=1) + "\n")

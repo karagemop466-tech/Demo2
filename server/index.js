@@ -241,21 +241,10 @@ app.post('/api/track/events', (req, res) => {
 // ---------------------------------------------------------------------------
 // Portfolio & trades (authenticated)
 // ---------------------------------------------------------------------------
-app.get('/api/portfolio', async (_req, res) => {
-  try {
-    const balance = await client.getPortfolioBalance();
-    const positions = await client.getPortfolioPositions();
-    res.json({ balance, positions, source: KALSHI.restBaseUrl + '/portfolio/balance' });
-  } catch (err) {
-    res.status(client.enabled ? 502 : 401).json({
-      error: err.message,
-      unverified: true,
-      authRequired: !client.enabled,
-      note: client.enabled
-        ? 'Kalshi call failed.'
-        : 'No Kalshi API key configured; portfolio requires authentication.',
-    });
-  }
+// This server has no application authentication or authorization. Do not expose
+// an authenticated account's private portfolio to anonymous callers.
+app.get('/api/portfolio', (_req, res) => {
+  res.status(503).json({ error: 'Portfolio access disabled: the server has no user authentication.', unverified: true });
 });
 
 app.get('/api/trades/records', (_req, res) => {
@@ -267,43 +256,10 @@ app.get('/api/trades/records', (_req, res) => {
   });
 });
 
-app.post('/api/trades/execute', async (req, res) => {
-  const { market_ticker, side, price, count, action } = req.body || {};
-  if (!market_ticker || !side || !price || !count) {
-    return res.status(400).json({ error: 'market_ticker, side, price, count required' });
-  }
-  if (!client.enabled) {
-    return res.status(401).json({
-      error: 'No Kalshi API key configured; trade execution requires authentication.',
-      unverified: true,
-    });
-  }
-  try {
-    // V2 order shape: side is 'buy'/'sell', outcome_side 'yes'/'no', price in dollars.
-    const order = {
-      market_ticker,
-      side: action === 'sell' ? 'sell' : 'buy',
-      outcome_side: side === 'no' ? 'no' : 'yes',
-      price_dollars: String(price),
-      count: String(count),
-      type: 'gtc',
-    };
-    const result = await client.createOrder(order);
-    const trade = store.recordTrade({
-      market_ticker,
-      side,
-      price,
-      count,
-      action,
-      title: req.body.title || '',
-      topic: categorizeTopic(`${req.body.title || ''} ${market_ticker}`),
-      order_id: result?.order?.order_id || result?.order_id,
-      status: result?.order?.status || 'submitted',
-    });
-    res.json({ ok: true, kalshi: result, trade });
-  } catch (err) {
-    res.status(502).json({ error: err.message, unverified: true });
-  }
+// Fail closed even if demo keys are configured: an unauthenticated HTTP endpoint
+// must not be able to place orders. Use the separately gated Actions executor.
+app.post('/api/trades/execute', (_req, res) => {
+  res.status(503).json({ error: 'Order execution disabled: the server has no user authentication or CSRF protection.', unverified: true });
 });
 
 // ---------------------------------------------------------------------------

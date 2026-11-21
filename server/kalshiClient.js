@@ -24,11 +24,10 @@ function signText(privateKeyPem, text) {
     return cryptoSign(null, message, key);
   }
   // RSA-PSS with SHA-256, salt length = digest length (32).
-  return cryptoSign('rsa-pss', message, {
+  return cryptoSign('sha256', message, {
     key,
-    padding: constants.RSA_PSS_PADDING,
+    padding: constants.RSA_PKCS1_PSS_PADDING,
     saltLength: 32,
-    digest: 'sha256',
   });
 }
 
@@ -59,9 +58,15 @@ export class KalshiClient {
         if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, String(v));
       }
     }
-    const pathWithoutQuery = path; // signing strips the query (path excludes query here)
+    // Authenticated requests must never send demo credentials to an arbitrary host.
+    if (auth && this.enabled && (url.protocol !== 'https:' || url.port ||
+        !['external-api.demo.kalshi.co', 'demo-api.kalshi.co'].includes(url.hostname))) {
+      throw new KalshiError('Authenticated requests are restricted to official demo hosts');
+    }
+    if (auth && !this.enabled) throw new KalshiError('Demo authentication is not configured');
+    // Kalshi signs the full URL path (including /trade-api/v2), not the query.
     const headers = { Accept: 'application/json' };
-    const ah = auth ? this._authHeaders(method, pathWithoutQuery) : {};
+    const ah = auth ? this._authHeaders(method, url.pathname) : {};
     Object.assign(headers, ah);
     let payload;
     if (body !== undefined) {
@@ -183,8 +188,15 @@ export class KalshiClient {
     });
   }
 
+  // This low-level V2 client is not exposed through the public HTTP server.
+  // Callers must provide the documented YES-book bid/ask V2 body explicitly.
   createOrder(order) {
-    return this.request('POST', '/orders', { auth: true, body: order });
+    if (!order || typeof order.ticker !== 'string' || !order.ticker ||
+        !['bid', 'ask'].includes(order.side) || typeof order.count !== 'string' ||
+        typeof order.price !== 'string' || !order.time_in_force || !order.self_trade_prevention_type) {
+      throw new KalshiError('Invalid V2 order body');
+    }
+    return this.request('POST', '/portfolio/events/orders', { auth: true, body: order });
   }
 
   cancelOrder({ orderId, marketTicker }) {
