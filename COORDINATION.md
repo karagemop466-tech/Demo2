@@ -1730,7 +1730,25 @@ Checked open PRs #65 (`tools/paper_trade.py`, `tools/build_content.py`, `pages/f
 
 | # | Task | Status | Owner | Files (exclusive scope) |
 |---|---|---|---|---|
-| D-1 | Fix `assets/alerts.js` live bugs observed on deployed site (`0/39 tracked markets on page 1` via `/markets?tickers=…` instead of `status=open&limit=1000`, live candlestick fetch for markets outside top 8, `previous_price_dollars` + seeded ≥$0.10 detection, 4dp rounding for exact $0.10, resolution tracking via unfiltered `tickers` query, official `settlement_sources` links) | in progress | d9fcbb2a | `assets/alerts.js` |
-| D-2 | Enhance `tools/build_site.py` (`index.html`, `alerts.html` + generator outputs): topic-at-a-glance cards, group-by-topic/event view toggle, live candlestick & orderbook fallback fetch for all 80 markets, official `settlement_sources` in sharp-jump table | in progress | d9fcbb2a | `tools/build_site.py`, `index.html`, `alerts.html`, generator-owned `pages/*.html` |
-| D-3 | Repair `pages/causes.html` broken data loaders (`dashboard_meta.json` 404 + `series_index.json` shape mismatch) to surface official `settlement_sources` from `data/snapshot.json` | in progress | d9fcbb2a | `pages/causes.html` |
+| D-1 | Fix `assets/alerts.js` live bugs observed on deployed site (`0/39 tracked markets on page 1` via `/markets?tickers=…` instead of `status=open&limit=1000`, live candlestick fetch for markets outside top 8, `previous_price_dollars` + seeded ≥$0.10 detection, 4dp rounding for exact $0.10, resolution tracking via unfiltered `tickers` query, official `settlement_sources` links) | done | d9fcbb2a | `assets/alerts.js` |
+| D-2 | Enhance `tools/build_site.py` (`index.html`, `alerts.html` + generator outputs): topic-at-a-glance cards, group-by-topic/event view toggle, live candlestick & orderbook fallback fetch for all 80 markets, official `settlement_sources` in sharp-jump table | done | d9fcbb2a | `tools/build_site.py`, `index.html`, `alerts.html`, generator-owned `pages/*.html` |
+| D-3 | Repair `pages/causes.html` broken data loaders (`dashboard_meta.json` 404 + `series_index.json` shape mismatch) to surface official `settlement_sources` from `data/snapshot.json` | done | d9fcbb2a | `pages/causes.html` |
 | D-4 | Offline regression suite (`tests/live_client.test.js`, `package.json`), full verification against official docs, PR to `main`, merge, confirm Pages deploy | in progress | d9fcbb2a | `tests/live_client.test.js`, `package.json`, `COORDINATION.md` |
+
+### Verification performed (Session `d9fcbb2a`, 2026-11-21)
+
+- Official Kalshi documentation verified directly:
+  - Demo environment: REST `https://external-api.demo.kalshi.co/trade-api/v2` and `https://demo-api.demo.kalshi.co/trade-api/v2` (and `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` / `wss://demo-api.kalshi.co/trade-api/ws/v2`) — https://docs.kalshi.com/getting_started/demo_env
+  - `GET /markets?tickers=...` (when `tickers` is the sole filter, returns all matching markets regardless of status, enabling live quotes, `previous_price_dollars`, and `result` `yes`/`no` settlements) — https://docs.kalshi.com/api-reference/market/get-markets
+  - `GET /series/{series_ticker}/markets/{ticker}/candlesticks` (`start_ts`, `end_ts`, `period_interval` in `1`/`60`/`1440`) — https://docs.kalshi.com/api-reference/market/get-market-candlesticks
+  - `GET /markets/{ticker}/orderbook` (`orderbook_fp.{yes_dollars,no_dollars}`) — https://docs.kalshi.com/api-reference/market/get-market-orderbook
+  - `GET /markets/trades` (`min_ts`, `limit`) — https://docs.kalshi.com/api-reference/market/get-trades
+- Test & validation results:
+  - `npm test`: 13/13 passed (`tests/app.test.js` 8/8 + `tests/live_client.test.js` 5/5).
+  - `python3 tools/check.py`: 20 pages checked, links/nav/data/secrets/JS clean (existing warning: non-2xx API log entries in `data/snapshot.json`, documented on Verification page).
+  - `python3 scripts/check_links.py`: 11,201 references across 124 HTML files — all links OK.
+  - `python3 tools/check_live_links.py`: 110 HTML files, 10,640 href/src attributes — zero broken internal links, zero duplicate IDs, zero placeholders.
+  - `python3 tests/test_collector_output.py` (52/52 assertions), `python3 tests/test_paper_trade.py` (20/20 assertions), `python3 instrument-panel/tests_smoke.py` (all offline checks passed).
+- Irregularity noted for Pages deploy workflow:
+  - GitHub Pages repo config uses `build_type: "legacy"` (`main`/`/`), while `.github/workflows/pages.yml` uses `actions/deploy-pages@v4` (already flagged in prior `COORDINATION.md` entries; `legacy` Pages build serves `main` directly on merge).
+

@@ -26,6 +26,14 @@ Series List</a>). Those are the publications the exchange itself names as author
 contract, which makes them the right places to look first. They come from
 <a href="https://external-api.demo.kalshi.co/trade-api/v2/series?category=Crypto&amp;limit=5" target="_blank" rel="noopener">the
 API</a> — not from a keyword search.</p>
+<div class="row" style="margin:8px 0">
+  <div><label for="causeTopicFilter">Topic</label>
+    <select id="causeTopicFilter"><option value="">All in-scope</option>
+      <option value="gas">Gas</option><option value="elections">Elections</option>
+      <option value="culture">Culture</option><option value="crypto">Crypto</option>
+      <option value="golf">Golf</option></select></div>
+  <div><label for="causeQuery">Filter text</label><input id="causeQuery" placeholder="series or source name"></div>
+</div>
 <div id="srcTable"></div>
 
 <h2>2. How to line a move up against the news</h2>
@@ -69,63 +77,80 @@ stays a checklist. See <a href="suggestions.html">Suggestions</a> and
 <script>
 (async function(){
   const $ = id => document.getElementById(id);
-  try{
-    const meta = await KR.getJSON("data/dashboard_meta.json");
-    const cat = meta.topic_catalog || {};
-    $('scopeNote') && ($('scopeNote').textContent = Object.keys(cat).length + " topics in scope");
-  }catch(e){}
+  const topics = ["gas","elections","culture","crypto","golf"];
+  let allRows = [];
 
-  // 1. settlement sources per in-scope series, read from the collector's snapshot
-  try{
-    const s = await KR.getJSON("data/series_index.json");
-    const topics = ["gas","elections","culture","crypto","golf"];
-    const rows = [];
-    const seen = new Set();
-    for(const [ticker, series] of Object.entries(s.series || {})){
-      const topic = series._topic || series.topic;
-      if(!topics.includes(topic)) continue;
-      for(const src of (series.settlement_sources || [])){
-        const key = ticker + "|" + (src.name||"");
-        if(seen.has(key)) continue;
-        seen.add(key);
-        rows.push({ticker, topic, name: src.name, url: src.url, title: series.title});
-      }
-    }
-    rows.sort((a,b)=> (a.topic.localeCompare(b.topic)) || String(a.name).localeCompare(String(b.name)));
+  function renderSources(){
+    const tf = $('causeTopicFilter') ? $('causeTopicFilter').value : '';
+    const q = $('causeQuery') ? $('causeQuery').value.trim().toLowerCase() : '';
+    const filtered = allRows.filter(r =>
+      (!tf || r.topic === tf) &&
+      (!q || (r.ticker + ' ' + (r.title||'') + ' ' + (r.name||'')).toLowerCase().includes(q))
+    );
     KR.renderTable($('srcTable'), [
       {label:'Topic', get:r=>KR.topicPill(r.topic)},
-      {label:'Series', get:r=>`<b>${KR.esc(r.title||r.ticker)}</b><br><span class="muted small">${KR.esc(r.ticker)}</span>`},
+      {label:'Series / Market', get:r=>`<b>${KR.esc(r.title||r.ticker)}</b><br><span class="muted small">${KR.esc(r.ticker)}</span>`},
       {label:'Settlement source named by Kalshi', get:r=>KR.esc(r.name||'—')},
-      {label:'Link', get:r=>r.url?KR.link(r.url,'open'):'— <span class="pill flag">no URL in API</span>'},
-      {label:'Source', get:r=>KR.esc(`GET ${KR.DEMO_REST}/series/${r.ticker}`)}
-    ], rows.slice(0,400), 'No settlement sources in the snapshot yet.');
-  }catch(e){
-    $('srcTable').innerHTML = `<div class="notice bad">data/series_index.json could not be loaded: ${KR.esc(e.message)}</div>`;
+      {label:'Link', get:r=>r.url && /^https?:\/\//i.test(r.url) ? KR.link(r.url,'open') : '— <span class="pill flag">no URL in API</span>'},
+      {label:'Source', get:r=>`${r.marketUrl ? KR.link(r.marketUrl,'Market API') + ' · ' : ''}<code>GET /series/${KR.esc(r.ticker)}</code>`}
+    ], filtered.slice(0,400), 'No settlement sources match this filter in the current snapshot.');
   }
 
-  // 3. generic news channels named by Kalshi as settlement sources, most frequent first
   try{
-    const s = await KR.getJSON("data/series_index.json");
-    const counts = new Map();
-    for(const series of Object.values(s.series || {})){
-      for(const src of (series.settlement_sources || [])){
-        if(!src.url || !src.name) continue;
-        if(!/^https?:/.test(src.url)) continue;
-        const k = src.name + "|" + src.url;
-        counts.set(k, (counts.get(k)||0) + 1);
+    const snap = await KR.snapshot();
+    const cat = snap.topic_catalog || {};
+    $('scopeNote') && ($('scopeNote').textContent = Object.keys(cat).length + " topics in scope");
+
+    // 1. settlement sources per in-scope series, read from snapshot.json markets
+    const seen = new Set();
+    const channelSeries = new Map();
+    for(const m of (snap.markets || [])){
+      const topic = m.topic;
+      if(!topics.includes(topic)) continue;
+      const ticker = m.series_ticker || m.market_ticker;
+      if(!ticker) continue;
+      for(const src of (m.settlement_sources || [])){
+        const name = (src && src.name ? String(src.name) : '').trim();
+        const url = (src && src.url ? String(src.url) : '').trim();
+        if(!name && !url) continue;
+        const key = topic + "|" + ticker + "|" + name;
+        if(!seen.has(key)){
+          seen.add(key);
+          allRows.push({
+            ticker,
+            topic,
+            name: name || url,
+            url,
+            title: m.event_title || m.market_title || ticker,
+            marketUrl: m.market_url || ''
+          });
+        }
+        if(url && name && /^https?:\/\//i.test(url)){
+          const ck = name + "|" + url;
+          if(!channelSeries.has(ck)) channelSeries.set(ck, new Set());
+          channelSeries.get(ck).add(ticker);
+        }
       }
     }
-    const rows = [...counts.entries()]
-      .map(([k,n])=>{const [name,url]=k.split("|"); return {name,url,n};})
-      .sort((a,b)=>b.n-a.n);
+    allRows.sort((a,b)=> a.topic.localeCompare(b.topic) || String(a.name).localeCompare(String(b.name)));
+    renderSources();
+    if($('causeTopicFilter')) $('causeTopicFilter').addEventListener('change', renderSources);
+    if($('causeQuery')) $('causeQuery').addEventListener('input', renderSources);
+
+    // 3. generic news channels named by Kalshi as settlement sources, most frequent first
+    const newsRows = [...channelSeries.entries()]
+      .map(([k, set])=>{ const idx = k.indexOf('|'); return {name: k.slice(0,idx), url: k.slice(idx+1), n: set.size}; })
+      .sort((a,b)=> b.n - a.n || a.name.localeCompare(b.name));
     KR.renderTable($('newsTable'), [
       {label:'Channel', get:r=>`<b>${KR.esc(r.name)}</b>`},
       {label:'Link', get:r=>KR.link(r.url,'open')},
       {label:'Named as a settlement source by Kalshi for', num:true, get:r=>r.n + ' series'},
       {label:'Source', get:r=>`<a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">settlement_sources</a>`}
-    ], rows.slice(0,60), 'No settlement sources in the snapshot yet.');
+    ], newsRows.slice(0,60), 'No settlement sources in the snapshot yet.');
   }catch(e){
-    $('newsTable').innerHTML = `<div class="notice bad">data/series_index.json could not be loaded: ${KR.esc(e.message)}</div>`;
+    const msg = `<div class="notice bad">data/snapshot.json could not be loaded: ${KR.esc(e.message)}</div>`;
+    $('srcTable').innerHTML = msg;
+    $('newsTable').innerHTML = msg;
   }
 })();
 </script>
