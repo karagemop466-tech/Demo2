@@ -2049,3 +2049,16 @@ Live-data commits (`kalshi-dashboard-bot`, snapshots `07:58Z`) merged cleanly. L
 re-run on the post-merge tree before pushing (see the 07:35 UTC record above; the data-only delta
 does not affect them). CI on the merge commit will be observed; the deploy record is completed in
 the follow-up PR.
+
+### PR / deploy record — session 45072e88 (final)
+
+- **PR #75:** https://github.com/karagemop466-tech/Demo2/pull/75 — **merged** at
+  `f2dca2f455cdaf480288e0a9670a56dbc5f7a76b` (`f2dca2f`, 2026-11-21T08:13:46Z).
+- **Build and check the site** on `f2dca2f` (run 44883883004): **success**.
+- **pages build and deployment** on `f2dca2f` (run 44883882265): **success**.
+- **Deploy GitHub Pages** on `f2dca2f` (run 44883883006): **success** (completed ~08:22Z).
+- Live site re-fetched after deploy: https://karagemop466-tech.github.io/Demo2/ renders — snapshot
+  2026-11-21 07:17:28Z stamp, 28,704 in-scope markets, 494 tracked resolutions, all sections and
+  topic filters present. Site is up and serving the merged state.
+- **450-1…450-4: done.** Flagged for Review page on the live site remains the canonical list of
+  irregularities; task 21 (demo API key secrets) remains owner action.
