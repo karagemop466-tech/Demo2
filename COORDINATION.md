@@ -1802,3 +1802,60 @@ and the Actions collector.
   secrets `KALSHI_DEMO_API_KEY_ID` + `KALSHI_DEMO_PRIVATE_KEY` and variable
   `KALSHI_TRADING_ENABLED=1` (`pages/questions.html` Q4). Three collectors write `data/`
   on different schedules — see audit above. Repo-growth cadence (K-F1) still open.
+## Session 74946c6c — 2026-11-21 integration audit
+
+Current branch is fixed by Arena: `arena/74946c6c-demo2` (not creating session branches).
+Prior paper-trading ownership (a984e8f4, last recorded 2026-11-20) is >60 minutes old;
+this session takes over only the narrow missing-quote valuation defect below. Existing
+parallel dashboards and collectors will be preserved, not duplicated.
+
+| Task | Status | Owner | File scope |
+|---|---|---|---|
+| V1 Missing paper quotes must remain unknown, never marked at cost or zero by inference; regression tests | in progress | 74946c6c | `tools/paper_trade.py`, `tests/test_paper_trade.py` |
+| V2 Current executive summary + explicit verification limitations and source-linked audit report | in progress | 74946c6c | `docs/SESSION_74946c6c.md`, `audit-74946c6c.html`, README append only |
+| V3 Local verification, PR, merge, Pages confirmation | in progress | 74946c6c | `COORDINATION.md` |
+
+Initial evidence: all 10,673 internal references across 124 HTML files resolve.
+GitHub Pages API reports legacy build, status built. Official demo environment,
+Get Markets and Get Market Orderbook documentation fetched this session. No claim
+is made that all historical verification statements in this board were rechecked.
+
+
+V3 integration scope extension: regeneration found pre-existing drift in
+`pages/live-alerts.html` only (generated jump counts/data). Taking over the stale
+final-integration scope (>60 minutes, prior day) for that generated output and
+`tools/build_content.py` / generated `pages/flagged.html` solely to link the new
+audit from the canonical review page. No collector or alternate backend edits.
+Cross-scope request to server owner: correct `/orders` to documented V2 route/body,
+correct ticker-scoped trade requests to `/markets/trades?ticker=...`, fix signing
+path-prefix coverage and test against official schemas before enabling execution.
+
+### Verification results — 74946c6c
+
+V1 done: 40 paper regression assertions pass; quote absence/nonfinite/out-of-range
+leaves null marks and null aggregate equity/P&L, explicit zero remains valid.
+V2 done: `audit-74946c6c.html` is a source-linked executive summary and clearly
+labelled Flagged for Review page, linked from canonical `pages/flagged.html` and
+README. Official docs fetched: demo_env, get-markets, get-market-orderbook,
+get-trades, create-order-v2, websocket-connection (all on docs.kalshi.com).
+V3 local gates: Node 8/8, monitor 15 pages, instrument offline checks, canonical
+links/nav/data/secrets/JS check, 5/5 jsdom page renders pass. Canonical checker
+warns of 149 non-2xx stored snapshot requests; not relabelled as verified data.
+Regeneration repaired one pre-existing timestamp drift in pages/live-alerts.html.
+No API credentials entered, no authenticated account access, no exchange orders.
+Claim push initially used nonexistent remote branch; retried rebase against main
+then pushed only current branch. Later autostash rebase preserved work; no conflict.
+
+Parallel integration reconciliation: PR #64 landed while this branch was being
+verified. Rebased onto main; append-only COORDINATION conflicts resolved by
+retaining both e303aead's full record and this session's full record. Their timestamp
+regeneration is identical to ours and was deduplicated by rebase. No work discarded.
+Final internal links: 10,694 references / 125 HTML pages pass; generator parity clean.
+PR: https://github.com/karagemop466-tech/Demo2/pull/65 (awaiting checks/merge).
+
+
+Second reconciliation: PR #66 and automated data refresh landed during the external
+link scan. Retained the complete e29ebc3a board records and all refreshed data;
+resolved append-only board conflicts without dropping either session's entries.
+Regenerated live-alert timestamp to match the newly collected jumps. Build/monitor
+checks passed on previous PR head; external scan is nonblocking by workflow design.
