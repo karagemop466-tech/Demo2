@@ -1719,3 +1719,20 @@ No other session's implementation code is edited. Open PRs #59 (`arena/441151f5-
 - Build-and-check CI on the merge commit: **success** (run 44876440290).
 - Pages deploy on the merge commit: **success** (run 44876439996, 23s). Site: https://karagemop466-tech.github.io/Demo2/
 - Task E-1: **done**.
+
+---
+
+## Session `1409dce9` — defect resolution, live verification & final integration (2026-11-21)
+
+Session ID: `1409dce9` (branch `arena/1409dce9-demo2`, rebased on `2adf781` of `main`).
+All prior claims in this file are either `done` or >9 hours stale with no commits (PR #59 updated 2026-11-20T20:52Z, PR #61 updated 2026-11-20T21:00Z — eligible for handoff under the 60-minute rule; their branches are left intact). Task 21 (demo API key secrets) remains owner-only.
+
+| # | Task | Status | Owner | Files (exclusive scope) |
+|---|------|--------|-------|-------------------------|
+| J-1 | Fix `collect_resolutions` returning 0 (`min_settled_ts` + `mve_filter=exclude` + longest-prefix series mapping + settled paper-position lookup) | in progress | 1409dce9 | `tools/collector.py`, `tests/test_collector_output.py` |
+| J-2 | Fix `alerts.js` live polling (`GET /markets?tickers=…` instead of page-1 `status=open` which matched 0/39), `KR.detectJumps` float `$0.10` precision, `pages/live-alerts.html` generator-drift elimination, `pages/gas.html` blurb, and live dashboard candlestick/orderbook refresh | in progress | 1409dce9 | `assets/alerts.js`, `assets/site.js`, `tools/build_site.py`, `tools/build_content.py`, generated `index.html`, `alerts.html`, `pages/*.html` |
+| J-3 | Fix `paper_trade.py` horizon allocation so near-term closing markets also enter simulated positions and settle yes/no | in progress | 1409dce9 | `tools/paper_trade.py`, `tests/test_paper_trade.py` |
+| J-4 | Fix `server/kalshiClient.js` + `server/index.js` Create Order V2 (`POST /portfolio/events/orders`) and cursor pagination for `GET /events` (answering f75410bb cross-scope R1/R2) | in progress | 1409dce9 | `server/kalshiClient.js`, `server/index.js`, `tests/app.test.js` |
+| J-5 | Fix workflow push-retry `--mixed` reset (handoff of stale PR #61) and remove colliding `deploy-pages@v4` vs legacy `pages-build-deployment` | in progress | 1409dce9 | `.github/workflows/refresh-data.yml`, `.github/workflows/paper-trade.yml`, `.github/workflows/pages.yml` |
+| J-6 | Line-by-line verification, full test/link/render gates, PR → `main`, merge, confirm Pages deploy + workflow runs, record results | in progress | 1409dce9 | `COORDINATION.md`, PR operations |
+
