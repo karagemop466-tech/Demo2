@@ -1719,3 +1719,30 @@ No other session's implementation code is edited. Open PRs #59 (`arena/441151f5-
 - Build-and-check CI on the merge commit: **success** (run 44876440290).
 - Pages deploy on the merge commit: **success** (run 44876439996, 23s). Site: https://karagemop466-tech.github.io/Demo2/
 - Task E-1: **done**.
+
+---
+
+## Session d5905246 — final integration and usability fix (2026-11-21 06:50 UTC)
+
+Session ID: `d5905246` (branch `arena/d5905246-demo2`, base `ddadabe` → rebased onto `3310d0b`).
+This session runs after `e303aead`'s merge (#64) and does **not** touch their output.
+
+| # | Task | Status | Owner | Files (exclusive scope) |
+|---|------|--------|-------|--------------------------|
+| D-1 | Dashboard chart defect: the default selected market is the top-ranked row by estimate, which has no history/candles, so the chart renders **0 points** on load. Fix default selection + add a 30 s live poll of the selected market from the official public `GET /markets/{ticker}` with explicit live/stale/error states. | in progress | d5905246 | `tools/build_site.py` (DASH_JS), `assets/site.js` (append helpers), `assets/style.css` (append), generated `index.html`, new `tests/chart_live.test.js` |
+| D-2 | Resolution coverage: the canonical collector returns **0** resolutions (`data/resolutions.json` count 0) while the parallel pipeline's `data/resolved.json` holds 200 official settled crypto markets. Fix the collect query/derivation and show every official settled row with provenance; never infer a result. | in progress | d5905246 | `tools/collector.py` (`collect_resolutions` only), `tools/build_site.py` (RES_JS/build), generated `pages/resolutions.html` |
+| D-3 | Navigation simplification: one grouped nav (Dashboard · Alerts · Topics · Portfolio · Verification · Archive) instead of 24 flat links; every existing page keeps its link. | in progress | d5905246 | `tools/build_site.py` (`NAV`/`nav_html`), all generated pages, `assets/style.css` (append) |
+| D-4 | Verify line by line, run all gates, PR → main, merge, confirm Pages deploy, record sources + irregularities here. | in progress | d5905246 | this section, PR record |
+
+Scope exclusions: `pages/live-alerts.html` and its generator are owned by `e303aead`/`848af77d`;
+`server/`, `live/`, `monitor/`, `intelligence/`, `site/`, `dashboard/`, `verified/` are other
+sessions' subsites. Open PR #59 and #61 are other sessions' work and are not merged or closed here.
+
+### Sources this session verifies against (official only)
+
+- https://docs.kalshi.com/getting_started/demo_env
+- https://docs.kalshi.com/api-reference/market/get-markets (status, ticker, result, settlement fields, cursor)
+- https://docs.kalshi.com/api-reference/market/get-market
+- https://docs.kalshi.com/api-reference/market/get-market-orderbook
+- https://docs.kalshi.com/getting_started/market_settlement
+- https://docs.kalshi.com/getting_started/historical_data
