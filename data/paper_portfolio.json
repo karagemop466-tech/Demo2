@@ -410,9 +410,9 @@
    "opened_ts": "2026-11-21T02:51:57+00:00",
    "strategy": "momentum",
    "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESPERSON-28-GABB",
-   "mark_price_dollars": 0.0,
+   "mark_price_dollars": 0.002,
    "mark_note": "",
-   "unrealized_pnl_dollars": -8.04
+   "unrealized_pnl_dollars": -8.02
   },
   {
    "ticker": "KXPRESNOMD-28-RW",
@@ -704,13 +704,19 @@
    "equity_dollars": 91.52,
    "cash_dollars": 79.49,
    "open_positions": 20
+  },
+  {
+   "ts": "2026-11-21T06:51:42+00:00",
+   "equity_dollars": 91.54,
+   "cash_dollars": 79.49,
+   "open_positions": 20
   }
  ],
  "definitions": {
   "type": "SIMULATED paper trading. No orders are sent anywhere; no API key is used.",
   "fees": "NOT modeled (left at zero \u2014 flagged F23, never guessed).",
   "fills": "assumed at the quoted ask, no slippage, no partial fills.",
-  "marks": "mark-to-market at the quoted bid; when a side is blank the position is marked at cost and labelled 'mark blank'.",
+  "marks": "Quoted bid only; missing, nonfinite or out-of-range quotes leave marks and aggregate equity/P&L unknown. A reported zero is retained, not inferred.",
   "settlement": "official result field: yes -> YES pays $1/contract, no -> NO pays $1/contract (https://docs.kalshi.com/getting_started/market_settlement)",
   "environment": "demo prices may not reflect real markets (https://docs.kalshi.com/getting_started/demo_env)",
   "strategies": {
@@ -720,8 +726,8 @@
    "favorite": "buy YES at ask when last >= $0.90 and spread <= $0.05"
   }
  },
- "generated_at_utc": "2026-11-21T02:51:57+00:00",
- "source_snapshot_generated_at": "2026-11-21T00:53:18+00:00",
+ "generated_at_utc": "2026-11-21T06:51:42+00:00",
+ "source_snapshot_generated_at": "2026-11-21T06:47:00+00:00",
  "strategy_stats": {
   "longshot": {
    "trades": 18,
@@ -753,9 +759,10 @@
  },
  "totals": {
   "cash_dollars": 79.49,
-  "equity_dollars": 91.52,
+  "equity_dollars": 91.54,
+  "unpriced_positions": 0,
   "realized_pnl_dollars": 0,
-  "unrealized_pnl_dollars": -8.48,
+  "unrealized_pnl_dollars": -8.46,
   "trades_total": 20,
   "open_positions": 20,
   "settled_positions": 0,
