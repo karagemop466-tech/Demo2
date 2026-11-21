@@ -1,6 +1,6 @@
 {
-  "collected_at": "2026-11-20T20:38:53Z",
-  "collected_at_utc": "2026-11-20T20:38:53Z",
+  "collected_at": "2026-11-21T03:18:08Z",
+  "collected_at_utc": "2026-11-21T03:18:08Z",
   "collector": "tools/collect_kalshi.py",
   "environment": "Kalshi DEMO",
   "api_base": "https://external-api.demo.kalshi.co/trade-api/v2",
@@ -19,12 +19,12 @@
     "open_markets_returned": 6000,
     "settled_markets_returned": 4000,
     "events_returned": 600,
-    "series_returned": 16647,
-    "in_scope_open": 369,
-    "in_scope_settled": 21,
+    "series_returned": 16653,
+    "in_scope_open": 87,
+    "in_scope_settled": 20,
     "in_scope_events": 444,
-    "in_scope_series": 7150,
-    "orderbooks": 369,
+    "in_scope_series": 7151,
+    "orderbooks": 87,
     "candlesticks": 0
   },
   "scope": {

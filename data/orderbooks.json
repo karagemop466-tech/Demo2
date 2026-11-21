@@ -1,14 +1,14 @@
 {
-  "collected_at": "2026-11-20T20:38:53Z",
+  "collected_at": "2026-11-21T03:18:08Z",
   "rows": {
-    "KXDEMOFUTHOURLY-26NOV20H21-UP": {
-      "ticker": "KXDEMOFUTHOURLY-26NOV20H21-UP",
-      "title": "Demo BTC at or above 58471.84 USD",
+    "KXDEMOFUTHOURLY-26NOV21H04-UP": {
+      "ticker": "KXDEMOFUTHOURLY-26NOV21H04-UP",
+      "title": "Demo BTC at or above 58492.07 USD",
       "topic": "crypto",
       "yes": [
         [
           "0.0100",
-          "11.00"
+          "465.19"
         ]
       ],
       "no": [
@@ -17,3036 +17,720 @@
           "1.00"
         ]
       ],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEMOFUTHOURLY-26NOV20H21-UP/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXDEMOFUTHOURLY-26NOV21H04-UP/orderbook"
     },
-    "KXBTCDIFFEOY-31DEC27-T17500": {
-      "ticker": "KXBTCDIFFEOY-31DEC27-T17500",
-      "title": "Bitcoin mining difficulty above 175.00 T at the end of 2027?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCDIFFEOY-31DEC27-T17500/orderbook"
-    },
-    "KXBTCDIFFEOY-31DEC27-T20000": {
-      "ticker": "KXBTCDIFFEOY-31DEC27-T20000",
-      "title": "Bitcoin mining difficulty above 200.00 T at the end of 2027?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCDIFFEOY-31DEC27-T20000/orderbook"
-    },
-    "KXBTCDIFFEOY-31DEC27-T22500": {
-      "ticker": "KXBTCDIFFEOY-31DEC27-T22500",
-      "title": "Bitcoin mining difficulty above 225.00 T at the end of 2027?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCDIFFEOY-31DEC27-T22500/orderbook"
-    },
-    "KXBTCDIFFEOY-31DEC27-T25000": {
-      "ticker": "KXBTCDIFFEOY-31DEC27-T25000",
-      "title": "Bitcoin mining difficulty above 250.00 T at the end of 2027?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCDIFFEOY-31DEC27-T25000/orderbook"
-    },
-    "KXBTCDIFFEOY-31DEC27-T27500": {
-      "ticker": "KXBTCDIFFEOY-31DEC27-T27500",
-      "title": "Bitcoin mining difficulty above 275.00 T at the end of 2027?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCDIFFEOY-31DEC27-T27500/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T5500000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T5500000",
-      "title": "Will Bitcoin be above $55000 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T5500000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T5550000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T5550000",
-      "title": "Will Bitcoin be above $55500 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T5550000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T5600000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T5600000",
-      "title": "Will Bitcoin be above $56000 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T5600000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T5650000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T5650000",
-      "title": "Will Bitcoin be above $56500 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T5650000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T5700000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T5700000",
-      "title": "Will Bitcoin be above $57000 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T5700000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T5750000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T5750000",
-      "title": "Will Bitcoin be above $57500 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T5750000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T5800000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T5800000",
-      "title": "Will Bitcoin be above $58000 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T5800000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T5850000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T5850000",
-      "title": "Will Bitcoin be above $58500 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T5850000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T5900000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T5900000",
-      "title": "Will Bitcoin be above $59000 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T5900000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T5950000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T5950000",
-      "title": "Will Bitcoin be above $59500 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T5950000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T6000000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T6000000",
-      "title": "Will Bitcoin be above $60000 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T6000000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T6050000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T6050000",
-      "title": "Will Bitcoin be above $60500 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T6050000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T6100000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T6100000",
-      "title": "Will Bitcoin be above $61000 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T6100000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T6150000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T6150000",
-      "title": "Will Bitcoin be above $61500 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T6150000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T6200000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T6200000",
-      "title": "Will Bitcoin be above $62000 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T6200000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T6250000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T6250000",
-      "title": "Will Bitcoin be above $62500 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T6250000/orderbook"
-    },
-    "KXBTCEVENT-04DEC261100-T6300000": {
-      "ticker": "KXBTCEVENT-04DEC261100-T6300000",
-      "title": "Will Bitcoin be above $63000 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-04DEC261100-T6300000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T5500000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T5500000",
-      "title": "Will Bitcoin be above $55000 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T5500000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T5550000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T5550000",
-      "title": "Will Bitcoin be above $55500 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T5550000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T5600000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T5600000",
-      "title": "Will Bitcoin be above $56000 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T5600000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T5650000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T5650000",
-      "title": "Will Bitcoin be above $56500 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T5650000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T5700000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T5700000",
-      "title": "Will Bitcoin be above $57000 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T5700000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T5750000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T5750000",
-      "title": "Will Bitcoin be above $57500 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T5750000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T5800000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T5800000",
-      "title": "Will Bitcoin be above $58000 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T5800000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T5850000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T5850000",
-      "title": "Will Bitcoin be above $58500 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T5850000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T5900000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T5900000",
-      "title": "Will Bitcoin be above $59000 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T5900000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T5950000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T5950000",
-      "title": "Will Bitcoin be above $59500 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T5950000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T6000000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T6000000",
-      "title": "Will Bitcoin be above $60000 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T6000000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T6050000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T6050000",
-      "title": "Will Bitcoin be above $60500 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T6050000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T6100000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T6100000",
-      "title": "Will Bitcoin be above $61000 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T6100000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T6150000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T6150000",
-      "title": "Will Bitcoin be above $61500 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T6150000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T6200000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T6200000",
-      "title": "Will Bitcoin be above $62000 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T6200000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T6250000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T6250000",
-      "title": "Will Bitcoin be above $62500 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T6250000/orderbook"
-    },
-    "KXBTCEVENT-24NOV261100-T6300000": {
-      "ticker": "KXBTCEVENT-24NOV261100-T6300000",
-      "title": "Will Bitcoin be above $63000 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-24NOV261100-T6300000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T5500000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T5500000",
-      "title": "Will Bitcoin be above $55000 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T5500000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T5550000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T5550000",
-      "title": "Will Bitcoin be above $55500 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T5550000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T5600000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T5600000",
-      "title": "Will Bitcoin be above $56000 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T5600000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T5650000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T5650000",
-      "title": "Will Bitcoin be above $56500 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T5650000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T5700000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T5700000",
-      "title": "Will Bitcoin be above $57000 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T5700000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T5750000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T5750000",
-      "title": "Will Bitcoin be above $57500 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T5750000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T5800000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T5800000",
-      "title": "Will Bitcoin be above $58000 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T5800000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T5850000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T5850000",
-      "title": "Will Bitcoin be above $58500 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T5850000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T5900000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T5900000",
-      "title": "Will Bitcoin be above $59000 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T5900000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T5950000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T5950000",
-      "title": "Will Bitcoin be above $59500 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T5950000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T6000000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T6000000",
-      "title": "Will Bitcoin be above $60000 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T6000000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T6050000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T6050000",
-      "title": "Will Bitcoin be above $60500 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T6050000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T6100000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T6100000",
-      "title": "Will Bitcoin be above $61000 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T6100000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T6150000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T6150000",
-      "title": "Will Bitcoin be above $61500 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T6150000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T6200000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T6200000",
-      "title": "Will Bitcoin be above $62000 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T6200000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T6250000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T6250000",
-      "title": "Will Bitcoin be above $62500 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T6250000/orderbook"
-    },
-    "KXBTCEVENT-25NOV261430-T6300000": {
-      "ticker": "KXBTCEVENT-25NOV261430-T6300000",
-      "title": "Will Bitcoin be above $63000 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXBTCEVENT-25NOV261430-T6300000/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T142500": {
-      "ticker": "KXETHEVENT-04DEC261100-T142500",
-      "title": "Will Ethereum be above $1425 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T142500/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T145000": {
-      "ticker": "KXETHEVENT-04DEC261100-T145000",
-      "title": "Will Ethereum be above $1450 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T145000/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T147500": {
-      "ticker": "KXETHEVENT-04DEC261100-T147500",
-      "title": "Will Ethereum be above $1475 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T147500/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T150000": {
-      "ticker": "KXETHEVENT-04DEC261100-T150000",
-      "title": "Will Ethereum be above $1500 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T150000/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T152500": {
-      "ticker": "KXETHEVENT-04DEC261100-T152500",
-      "title": "Will Ethereum be above $1525 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T152500/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T155000": {
-      "ticker": "KXETHEVENT-04DEC261100-T155000",
-      "title": "Will Ethereum be above $1550 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T155000/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T157500": {
-      "ticker": "KXETHEVENT-04DEC261100-T157500",
-      "title": "Will Ethereum be above $1575 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T157500/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T160000": {
-      "ticker": "KXETHEVENT-04DEC261100-T160000",
-      "title": "Will Ethereum be above $1600 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T160000/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T162500": {
-      "ticker": "KXETHEVENT-04DEC261100-T162500",
-      "title": "Will Ethereum be above $1625 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T162500/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T165000": {
-      "ticker": "KXETHEVENT-04DEC261100-T165000",
-      "title": "Will Ethereum be above $1650 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T165000/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T167500": {
-      "ticker": "KXETHEVENT-04DEC261100-T167500",
-      "title": "Will Ethereum be above $1675 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T167500/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T170000": {
-      "ticker": "KXETHEVENT-04DEC261100-T170000",
-      "title": "Will Ethereum be above $1700 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T170000/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T172500": {
-      "ticker": "KXETHEVENT-04DEC261100-T172500",
-      "title": "Will Ethereum be above $1725 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T172500/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T175000": {
-      "ticker": "KXETHEVENT-04DEC261100-T175000",
-      "title": "Will Ethereum be above $1750 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T175000/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T177500": {
-      "ticker": "KXETHEVENT-04DEC261100-T177500",
-      "title": "Will Ethereum be above $1775 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T177500/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T180000": {
-      "ticker": "KXETHEVENT-04DEC261100-T180000",
-      "title": "Will Ethereum be above $1800 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T180000/orderbook"
-    },
-    "KXETHEVENT-04DEC261100-T182500": {
-      "ticker": "KXETHEVENT-04DEC261100-T182500",
-      "title": "Will Ethereum be above $1825 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-04DEC261100-T182500/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T142500": {
-      "ticker": "KXETHEVENT-24NOV261100-T142500",
-      "title": "Will Ethereum be above $1425 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T142500/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T145000": {
-      "ticker": "KXETHEVENT-24NOV261100-T145000",
-      "title": "Will Ethereum be above $1450 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T145000/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T147500": {
-      "ticker": "KXETHEVENT-24NOV261100-T147500",
-      "title": "Will Ethereum be above $1475 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T147500/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T150000": {
-      "ticker": "KXETHEVENT-24NOV261100-T150000",
-      "title": "Will Ethereum be above $1500 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T150000/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T152500": {
-      "ticker": "KXETHEVENT-24NOV261100-T152500",
-      "title": "Will Ethereum be above $1525 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T152500/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T155000": {
-      "ticker": "KXETHEVENT-24NOV261100-T155000",
-      "title": "Will Ethereum be above $1550 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T155000/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T157500": {
-      "ticker": "KXETHEVENT-24NOV261100-T157500",
-      "title": "Will Ethereum be above $1575 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T157500/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T160000": {
-      "ticker": "KXETHEVENT-24NOV261100-T160000",
-      "title": "Will Ethereum be above $1600 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T160000/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T162500": {
-      "ticker": "KXETHEVENT-24NOV261100-T162500",
-      "title": "Will Ethereum be above $1625 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T162500/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T165000": {
-      "ticker": "KXETHEVENT-24NOV261100-T165000",
-      "title": "Will Ethereum be above $1650 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T165000/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T167500": {
-      "ticker": "KXETHEVENT-24NOV261100-T167500",
-      "title": "Will Ethereum be above $1675 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T167500/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T170000": {
-      "ticker": "KXETHEVENT-24NOV261100-T170000",
-      "title": "Will Ethereum be above $1700 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T170000/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T172500": {
-      "ticker": "KXETHEVENT-24NOV261100-T172500",
-      "title": "Will Ethereum be above $1725 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T172500/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T175000": {
-      "ticker": "KXETHEVENT-24NOV261100-T175000",
-      "title": "Will Ethereum be above $1750 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T175000/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T177500": {
-      "ticker": "KXETHEVENT-24NOV261100-T177500",
-      "title": "Will Ethereum be above $1775 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T177500/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T180000": {
-      "ticker": "KXETHEVENT-24NOV261100-T180000",
-      "title": "Will Ethereum be above $1800 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T180000/orderbook"
-    },
-    "KXETHEVENT-24NOV261100-T182500": {
-      "ticker": "KXETHEVENT-24NOV261100-T182500",
-      "title": "Will Ethereum be above $1825 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-24NOV261100-T182500/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T142500": {
-      "ticker": "KXETHEVENT-25NOV261430-T142500",
-      "title": "Will Ethereum be above $1425 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T142500/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T145000": {
-      "ticker": "KXETHEVENT-25NOV261430-T145000",
-      "title": "Will Ethereum be above $1450 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T145000/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T147500": {
-      "ticker": "KXETHEVENT-25NOV261430-T147500",
-      "title": "Will Ethereum be above $1475 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T147500/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T150000": {
-      "ticker": "KXETHEVENT-25NOV261430-T150000",
-      "title": "Will Ethereum be above $1500 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T150000/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T152500": {
-      "ticker": "KXETHEVENT-25NOV261430-T152500",
-      "title": "Will Ethereum be above $1525 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T152500/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T155000": {
-      "ticker": "KXETHEVENT-25NOV261430-T155000",
-      "title": "Will Ethereum be above $1550 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T155000/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T157500": {
-      "ticker": "KXETHEVENT-25NOV261430-T157500",
-      "title": "Will Ethereum be above $1575 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T157500/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T160000": {
-      "ticker": "KXETHEVENT-25NOV261430-T160000",
-      "title": "Will Ethereum be above $1600 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T160000/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T162500": {
-      "ticker": "KXETHEVENT-25NOV261430-T162500",
-      "title": "Will Ethereum be above $1625 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T162500/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T165000": {
-      "ticker": "KXETHEVENT-25NOV261430-T165000",
-      "title": "Will Ethereum be above $1650 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T165000/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T167500": {
-      "ticker": "KXETHEVENT-25NOV261430-T167500",
-      "title": "Will Ethereum be above $1675 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T167500/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T170000": {
-      "ticker": "KXETHEVENT-25NOV261430-T170000",
-      "title": "Will Ethereum be above $1700 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T170000/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T172500": {
-      "ticker": "KXETHEVENT-25NOV261430-T172500",
-      "title": "Will Ethereum be above $1725 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T172500/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T175000": {
-      "ticker": "KXETHEVENT-25NOV261430-T175000",
-      "title": "Will Ethereum be above $1750 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T175000/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T177500": {
-      "ticker": "KXETHEVENT-25NOV261430-T177500",
-      "title": "Will Ethereum be above $1775 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T177500/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T180000": {
-      "ticker": "KXETHEVENT-25NOV261430-T180000",
-      "title": "Will Ethereum be above $1800 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T180000/orderbook"
-    },
-    "KXETHEVENT-25NOV261430-T182500": {
-      "ticker": "KXETHEVENT-25NOV261430-T182500",
-      "title": "Will Ethereum be above $1825 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXETHEVENT-25NOV261430-T182500/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T6100": {
-      "ticker": "KXSOLEVENT-04DEC261100-T6100",
-      "title": "Will Solana be above $61 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T6100/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T6200": {
-      "ticker": "KXSOLEVENT-04DEC261100-T6200",
-      "title": "Will Solana be above $62 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T6200/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T6300": {
-      "ticker": "KXSOLEVENT-04DEC261100-T6300",
-      "title": "Will Solana be above $63 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T6300/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T6400": {
-      "ticker": "KXSOLEVENT-04DEC261100-T6400",
-      "title": "Will Solana be above $64 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T6400/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T6500": {
-      "ticker": "KXSOLEVENT-04DEC261100-T6500",
-      "title": "Will Solana be above $65 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T6500/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T6600": {
-      "ticker": "KXSOLEVENT-04DEC261100-T6600",
-      "title": "Will Solana be above $66 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T6600/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T6700": {
-      "ticker": "KXSOLEVENT-04DEC261100-T6700",
-      "title": "Will Solana be above $67 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T6700/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T6800": {
-      "ticker": "KXSOLEVENT-04DEC261100-T6800",
-      "title": "Will Solana be above $68 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T6800/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T6900": {
-      "ticker": "KXSOLEVENT-04DEC261100-T6900",
-      "title": "Will Solana be above $69 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T6900/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T7000": {
-      "ticker": "KXSOLEVENT-04DEC261100-T7000",
-      "title": "Will Solana be above $70 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T7000/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T7100": {
-      "ticker": "KXSOLEVENT-04DEC261100-T7100",
-      "title": "Will Solana be above $71 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T7100/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T7200": {
-      "ticker": "KXSOLEVENT-04DEC261100-T7200",
-      "title": "Will Solana be above $72 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T7200/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T7300": {
-      "ticker": "KXSOLEVENT-04DEC261100-T7300",
-      "title": "Will Solana be above $73 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T7300/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T7400": {
-      "ticker": "KXSOLEVENT-04DEC261100-T7400",
-      "title": "Will Solana be above $74 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T7400/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T7500": {
-      "ticker": "KXSOLEVENT-04DEC261100-T7500",
-      "title": "Will Solana be above $75 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T7500/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T7600": {
-      "ticker": "KXSOLEVENT-04DEC261100-T7600",
-      "title": "Will Solana be above $76 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T7600/orderbook"
-    },
-    "KXSOLEVENT-04DEC261100-T7700": {
-      "ticker": "KXSOLEVENT-04DEC261100-T7700",
-      "title": "Will Solana be above $77 on Dec 4 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-04DEC261100-T7700/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T6100": {
-      "ticker": "KXSOLEVENT-24NOV261100-T6100",
-      "title": "Will Solana be above $61 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T6100/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T6200": {
-      "ticker": "KXSOLEVENT-24NOV261100-T6200",
-      "title": "Will Solana be above $62 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T6200/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T6300": {
-      "ticker": "KXSOLEVENT-24NOV261100-T6300",
-      "title": "Will Solana be above $63 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T6300/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T6400": {
-      "ticker": "KXSOLEVENT-24NOV261100-T6400",
-      "title": "Will Solana be above $64 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T6400/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T6500": {
-      "ticker": "KXSOLEVENT-24NOV261100-T6500",
-      "title": "Will Solana be above $65 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T6500/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T6600": {
-      "ticker": "KXSOLEVENT-24NOV261100-T6600",
-      "title": "Will Solana be above $66 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T6600/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T6700": {
-      "ticker": "KXSOLEVENT-24NOV261100-T6700",
-      "title": "Will Solana be above $67 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T6700/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T6800": {
-      "ticker": "KXSOLEVENT-24NOV261100-T6800",
-      "title": "Will Solana be above $68 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T6800/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T6900": {
-      "ticker": "KXSOLEVENT-24NOV261100-T6900",
-      "title": "Will Solana be above $69 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T6900/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T7000": {
-      "ticker": "KXSOLEVENT-24NOV261100-T7000",
-      "title": "Will Solana be above $70 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T7000/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T7100": {
-      "ticker": "KXSOLEVENT-24NOV261100-T7100",
-      "title": "Will Solana be above $71 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T7100/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T7200": {
-      "ticker": "KXSOLEVENT-24NOV261100-T7200",
-      "title": "Will Solana be above $72 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T7200/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T7300": {
-      "ticker": "KXSOLEVENT-24NOV261100-T7300",
-      "title": "Will Solana be above $73 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T7300/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T7400": {
-      "ticker": "KXSOLEVENT-24NOV261100-T7400",
-      "title": "Will Solana be above $74 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T7400/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T7500": {
-      "ticker": "KXSOLEVENT-24NOV261100-T7500",
-      "title": "Will Solana be above $75 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T7500/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T7600": {
-      "ticker": "KXSOLEVENT-24NOV261100-T7600",
-      "title": "Will Solana be above $76 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T7600/orderbook"
-    },
-    "KXSOLEVENT-24NOV261100-T7700": {
-      "ticker": "KXSOLEVENT-24NOV261100-T7700",
-      "title": "Will Solana be above $77 on Nov 24 at 11:00am ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-24NOV261100-T7700/orderbook"
-    },
-    "KXSOLEVENT-25NOV261430-T6100": {
-      "ticker": "KXSOLEVENT-25NOV261430-T6100",
-      "title": "Will Solana be above $61 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T6100/orderbook"
-    },
-    "KXSOLEVENT-25NOV261430-T6200": {
-      "ticker": "KXSOLEVENT-25NOV261430-T6200",
-      "title": "Will Solana be above $62 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T6200/orderbook"
-    },
-    "KXSOLEVENT-25NOV261430-T6300": {
-      "ticker": "KXSOLEVENT-25NOV261430-T6300",
-      "title": "Will Solana be above $63 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T6300/orderbook"
-    },
-    "KXSOLEVENT-25NOV261430-T6400": {
-      "ticker": "KXSOLEVENT-25NOV261430-T6400",
-      "title": "Will Solana be above $64 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T6400/orderbook"
-    },
-    "KXSOLEVENT-25NOV261430-T6500": {
-      "ticker": "KXSOLEVENT-25NOV261430-T6500",
-      "title": "Will Solana be above $65 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T6500/orderbook"
-    },
-    "KXSOLEVENT-25NOV261430-T6600": {
-      "ticker": "KXSOLEVENT-25NOV261430-T6600",
-      "title": "Will Solana be above $66 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T6600/orderbook"
-    },
-    "KXSOLEVENT-25NOV261430-T6700": {
-      "ticker": "KXSOLEVENT-25NOV261430-T6700",
-      "title": "Will Solana be above $67 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T6700/orderbook"
-    },
-    "KXSOLEVENT-25NOV261430-T6800": {
-      "ticker": "KXSOLEVENT-25NOV261430-T6800",
-      "title": "Will Solana be above $68 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T6800/orderbook"
-    },
-    "KXSOLEVENT-25NOV261430-T6900": {
-      "ticker": "KXSOLEVENT-25NOV261430-T6900",
-      "title": "Will Solana be above $69 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T6900/orderbook"
-    },
-    "KXSOLEVENT-25NOV261430-T7000": {
-      "ticker": "KXSOLEVENT-25NOV261430-T7000",
-      "title": "Will Solana be above $70 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T7000/orderbook"
-    },
-    "KXSOLEVENT-25NOV261430-T7100": {
-      "ticker": "KXSOLEVENT-25NOV261430-T7100",
-      "title": "Will Solana be above $71 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T7100/orderbook"
-    },
-    "KXSOLEVENT-25NOV261430-T7200": {
-      "ticker": "KXSOLEVENT-25NOV261430-T7200",
-      "title": "Will Solana be above $72 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
+    "KXCHIJOHNSONBALLOT-27FEB23-BJOH": {
+      "ticker": "KXCHIJOHNSONBALLOT-27FEB23-BJOH",
+      "title": "Will Brandon Johnson qualify for Chicago's mayoral ballot?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T7200/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXCHIJOHNSONBALLOT-27FEB23-BJOH/orderbook"
     },
-    "KXSOLEVENT-25NOV261430-T7300": {
-      "ticker": "KXSOLEVENT-25NOV261430-T7300",
-      "title": "Will Solana be above $73 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
+    "KXCLOSESTHOUSE-27JAN03-NC03": {
+      "ticker": "KXCLOSESTHOUSE-27JAN03-NC03",
+      "title": "Will NC-03 have the smallest margin of victory in the November 3, 2026 U.S. House general elections?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T7300/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXCLOSESTHOUSE-27JAN03-NC03/orderbook"
     },
-    "KXSOLEVENT-25NOV261430-T7400": {
-      "ticker": "KXSOLEVENT-25NOV261430-T7400",
-      "title": "Will Solana be above $74 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
+    "KXCLOSESTHOUSE-27JAN03-NC05": {
+      "ticker": "KXCLOSESTHOUSE-27JAN03-NC05",
+      "title": "Will NC-05 have the smallest margin of victory in the November 3, 2026 U.S. House general elections?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T7400/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXCLOSESTHOUSE-27JAN03-NC05/orderbook"
     },
-    "KXSOLEVENT-25NOV261430-T7500": {
-      "ticker": "KXSOLEVENT-25NOV261430-T7500",
-      "title": "Will Solana be above $75 on Nov 25 at 2:30pm ET?",
-      "topic": "crypto",
+    "KXCLOSESTHOUSE-27JAN03-TN04": {
+      "ticker": "KXCLOSESTHOUSE-27JAN03-TN04",
+      "title": "Will TN-04 have the smallest margin of victory in the November 3, 2026 U.S. House general elections?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T7500/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXCLOSESTHOUSE-27JAN03-TN04/orderbook"
     },
-    "KXSOLEVENT-25NOV261430-T7600": {
-      "ticker": "KXSOLEVENT-25NOV261430-T7600",
-      "title": "Will Solana be above $76 on Nov 25 at 2:30pm ET?",
+    "KXCRYPTOLEAD15M-26NOV211630-BTC": {
+      "ticker": "KXCRYPTOLEAD15M-26NOV211630-BTC",
+      "title": "Which of these cryptocurrencies will have the highest return from Nov 21 - 4:15PM EST to 4:30PM EST?",
       "topic": "crypto",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T7600/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXCRYPTOLEAD15M-26NOV211630-BTC/orderbook"
     },
-    "KXSOLEVENT-25NOV261430-T7700": {
-      "ticker": "KXSOLEVENT-25NOV261430-T7700",
-      "title": "Will Solana be above $77 on Nov 25 at 2:30pm ET?",
+    "KXCRYPTOLEAD15M-26NOV211630-XRP": {
+      "ticker": "KXCRYPTOLEAD15M-26NOV211630-XRP",
+      "title": "Which of these cryptocurrencies will have the highest return from Nov 21 - 4:15PM EST to 4:30PM EST?",
       "topic": "crypto",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSOLEVENT-25NOV261430-T7700/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXCRYPTOLEAD15M-26NOV211630-XRP/orderbook"
     },
-    "KXWTIH-26NOV2219-T82.89": {
-      "ticker": "KXWTIH-26NOV2219-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 22, 2026 at 7:00 PM ET?",
-      "topic": "gas-prices",
+    "KXLIGAMXGOAL-26NOV20PUEASL-ASLOMACIA21-1": {
+      "ticker": "KXLIGAMXGOAL-26NOV20PUEASL-ASLOMACIA21-1",
+      "title": "Oscar Macias: 1+ goals",
+      "topic": "culture",
       "yes": [
         [
-          "0.3600",
-          "5.00"
+          "0.0100",
+          "400.00"
         ]
       ],
-      "no": [
-        [
-          "0.2600",
-          "5.00"
-        ]
-      ],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T82.89/orderbook"
+      "no": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXLIGAMXGOAL-26NOV20PUEASL-ASLOMACIA21-1/orderbook"
     },
-    "KXWTIH-26NOV2219-T82.99": {
-      "ticker": "KXWTIH-26NOV2219-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 22, 2026 at 7:00 PM ET?",
-      "topic": "gas-prices",
+    "KXLIGAMXGOAL-26NOV20PUEASL-ASLOMACIA21-2": {
+      "ticker": "KXLIGAMXGOAL-26NOV20PUEASL-ASLOMACIA21-2",
+      "title": "Oscar Macias: 2+ goals",
+      "topic": "culture",
       "yes": [
         [
-          "0.3500",
-          "5.00"
+          "0.0100",
+          "410.00"
         ]
       ],
-      "no": [
-        [
-          "0.2600",
-          "5.00"
-        ]
-      ],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T82.99/orderbook"
+      "no": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXLIGAMXGOAL-26NOV20PUEASL-ASLOMACIA21-2/orderbook"
     },
-    "KXWTIH-26NOV2219-T83.09": {
-      "ticker": "KXWTIH-26NOV2219-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 22, 2026 at 7:00 PM ET?",
-      "topic": "gas-prices",
+    "KXLIGAMXGOAL-26NOV20PUEASL-PUEOVILLA15-1": {
+      "ticker": "KXLIGAMXGOAL-26NOV20PUEASL-PUEOVILLA15-1",
+      "title": "Oscar Villa: 1+ goals",
+      "topic": "culture",
       "yes": [
         [
-          "0.3500",
-          "5.00"
+          "0.0100",
+          "440.00"
         ]
       ],
-      "no": [
-        [
-          "0.2700",
-          "5.00"
-        ]
-      ],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T83.09/orderbook"
+      "no": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXLIGAMXGOAL-26NOV20PUEASL-PUEOVILLA15-1/orderbook"
     },
-    "KXWTIH-26NOV2219-T83.19": {
-      "ticker": "KXWTIH-26NOV2219-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 22, 2026 at 7:00 PM ET?",
-      "topic": "gas-prices",
+    "KXPRESNOMD-28-ASCH": {
+      "ticker": "KXPRESNOMD-28-ASCH",
+      "title": "Will Adam Schiff be the nominee for the Presidency for the Democratic party?",
+      "topic": "elections",
+      "yes": [],
+      "no": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-ASCH/orderbook"
+    },
+    "KXPRESNOMD-28-KHOC": {
+      "ticker": "KXPRESNOMD-28-KHOC",
+      "title": "Will Kathy Hochul be the nominee for the Presidency for the Democratic party?",
+      "topic": "elections",
+      "yes": [],
+      "no": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-KHOC/orderbook"
+    },
+    "KXPRESNOMD-28-MHEA": {
+      "ticker": "KXPRESNOMD-28-MHEA",
+      "title": "Will Maura Healey be the nominee for the Presidency for the Democratic party?",
+      "topic": "elections",
       "yes": [
         [
-          "0.3400",
-          "5.00"
-        ],
-        [
-          "0.4200",
+          "0.0100",
           "10.00"
         ]
       ],
-      "no": [
-        [
-          "0.2800",
-          "5.00"
-        ],
-        [
-          "0.3500",
-          "10.00"
-        ]
-      ],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T83.19/orderbook"
+      "no": [],
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-MHEA/orderbook"
     },
-    "KXWTIH-26NOV2219-T83.29": {
-      "ticker": "KXWTIH-26NOV2219-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 22, 2026 at 7:00 PM ET?",
-      "topic": "gas-prices",
+    "KXPRESNOMR-28-DBON": {
+      "ticker": "KXPRESNOMR-28-DBON",
+      "title": "Will Dan Bongino be the nominee for the Presidency for the Republican party?",
+      "topic": "elections",
       "yes": [
         [
-          "0.3400",
-          "5.00"
-        ],
-        [
-          "0.4000",
-          "10.00"
+          "0.0100",
+          "8.00"
         ]
       ],
-      "no": [
-        [
-          "0.3600",
-          "10.00"
-        ]
-      ],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2219-T83.39": {
-      "ticker": "KXWTIH-26NOV2219-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 22, 2026 at 7:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [
-        [
-          "0.2900",
-          "5.00"
-        ]
-      ],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2219-T83.49": {
-      "ticker": "KXWTIH-26NOV2219-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 22, 2026 at 7:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [
-        [
-          "0.3300",
-          "5.00"
-        ],
-        [
-          "0.3900",
-          "10.00"
-        ]
-      ],
-      "no": [
-        [
-          "0.3000",
-          "5.00"
-        ],
-        [
-          "0.3800",
-          "10.00"
-        ]
-      ],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2219-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2220-T82.89": {
-      "ticker": "KXWTIH-26NOV2220-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 22, 2026 at 8:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2220-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2220-T82.99": {
-      "ticker": "KXWTIH-26NOV2220-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 22, 2026 at 8:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2220-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2220-T83.09": {
-      "ticker": "KXWTIH-26NOV2220-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 22, 2026 at 8:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2220-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2220-T83.19": {
-      "ticker": "KXWTIH-26NOV2220-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 22, 2026 at 8:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2220-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2220-T83.29": {
-      "ticker": "KXWTIH-26NOV2220-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 22, 2026 at 8:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2220-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2220-T83.39": {
-      "ticker": "KXWTIH-26NOV2220-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 22, 2026 at 8:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2220-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2220-T83.49": {
-      "ticker": "KXWTIH-26NOV2220-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 22, 2026 at 8:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2220-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2221-T82.89": {
-      "ticker": "KXWTIH-26NOV2221-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 22, 2026 at 9:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2221-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2221-T82.99": {
-      "ticker": "KXWTIH-26NOV2221-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 22, 2026 at 9:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2221-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2221-T83.09": {
-      "ticker": "KXWTIH-26NOV2221-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 22, 2026 at 9:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2221-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2221-T83.19": {
-      "ticker": "KXWTIH-26NOV2221-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 22, 2026 at 9:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2221-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2221-T83.29": {
-      "ticker": "KXWTIH-26NOV2221-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 22, 2026 at 9:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2221-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2221-T83.39": {
-      "ticker": "KXWTIH-26NOV2221-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 22, 2026 at 9:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2221-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2221-T83.49": {
-      "ticker": "KXWTIH-26NOV2221-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 22, 2026 at 9:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2221-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2222-T82.89": {
-      "ticker": "KXWTIH-26NOV2222-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 22, 2026 at 10:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2222-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2222-T82.99": {
-      "ticker": "KXWTIH-26NOV2222-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 22, 2026 at 10:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2222-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2222-T83.09": {
-      "ticker": "KXWTIH-26NOV2222-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 22, 2026 at 10:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2222-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2222-T83.19": {
-      "ticker": "KXWTIH-26NOV2222-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 22, 2026 at 10:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2222-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2222-T83.29": {
-      "ticker": "KXWTIH-26NOV2222-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 22, 2026 at 10:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2222-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2222-T83.39": {
-      "ticker": "KXWTIH-26NOV2222-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 22, 2026 at 10:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2222-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2222-T83.49": {
-      "ticker": "KXWTIH-26NOV2222-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 22, 2026 at 10:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2222-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2223-T82.89": {
-      "ticker": "KXWTIH-26NOV2223-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 22, 2026 at 11:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2223-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2223-T82.99": {
-      "ticker": "KXWTIH-26NOV2223-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 22, 2026 at 11:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2223-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2223-T83.09": {
-      "ticker": "KXWTIH-26NOV2223-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 22, 2026 at 11:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2223-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2223-T83.19": {
-      "ticker": "KXWTIH-26NOV2223-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 22, 2026 at 11:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2223-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2223-T83.29": {
-      "ticker": "KXWTIH-26NOV2223-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 22, 2026 at 11:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2223-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2223-T83.39": {
-      "ticker": "KXWTIH-26NOV2223-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 22, 2026 at 11:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2223-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2223-T83.49": {
-      "ticker": "KXWTIH-26NOV2223-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 22, 2026 at 11:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2223-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2300-T82.89": {
-      "ticker": "KXWTIH-26NOV2300-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 12:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2300-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2300-T82.99": {
-      "ticker": "KXWTIH-26NOV2300-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 12:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2300-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2300-T83.09": {
-      "ticker": "KXWTIH-26NOV2300-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 12:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2300-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2300-T83.19": {
-      "ticker": "KXWTIH-26NOV2300-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 12:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2300-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2300-T83.29": {
-      "ticker": "KXWTIH-26NOV2300-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 12:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2300-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2300-T83.39": {
-      "ticker": "KXWTIH-26NOV2300-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 12:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2300-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2300-T83.49": {
-      "ticker": "KXWTIH-26NOV2300-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 12:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2300-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2301-T82.89": {
-      "ticker": "KXWTIH-26NOV2301-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 1:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2301-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2301-T82.99": {
-      "ticker": "KXWTIH-26NOV2301-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 1:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2301-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2301-T83.09": {
-      "ticker": "KXWTIH-26NOV2301-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 1:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2301-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2301-T83.19": {
-      "ticker": "KXWTIH-26NOV2301-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 1:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2301-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2301-T83.29": {
-      "ticker": "KXWTIH-26NOV2301-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 1:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2301-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2301-T83.39": {
-      "ticker": "KXWTIH-26NOV2301-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 1:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2301-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2301-T83.49": {
-      "ticker": "KXWTIH-26NOV2301-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 1:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2301-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2302-T82.89": {
-      "ticker": "KXWTIH-26NOV2302-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 2:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2302-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2302-T82.99": {
-      "ticker": "KXWTIH-26NOV2302-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 2:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2302-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2302-T83.09": {
-      "ticker": "KXWTIH-26NOV2302-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 2:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2302-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2302-T83.19": {
-      "ticker": "KXWTIH-26NOV2302-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 2:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2302-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2302-T83.29": {
-      "ticker": "KXWTIH-26NOV2302-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 2:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2302-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2302-T83.39": {
-      "ticker": "KXWTIH-26NOV2302-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 2:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2302-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2302-T83.49": {
-      "ticker": "KXWTIH-26NOV2302-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 2:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2302-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2303-T82.89": {
-      "ticker": "KXWTIH-26NOV2303-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 3:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2303-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2303-T82.99": {
-      "ticker": "KXWTIH-26NOV2303-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 3:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2303-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2303-T83.09": {
-      "ticker": "KXWTIH-26NOV2303-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 3:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2303-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2303-T83.19": {
-      "ticker": "KXWTIH-26NOV2303-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 3:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2303-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2303-T83.29": {
-      "ticker": "KXWTIH-26NOV2303-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 3:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2303-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2303-T83.39": {
-      "ticker": "KXWTIH-26NOV2303-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 3:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2303-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2303-T83.49": {
-      "ticker": "KXWTIH-26NOV2303-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 3:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2303-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2304-T82.89": {
-      "ticker": "KXWTIH-26NOV2304-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 4:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2304-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2304-T82.99": {
-      "ticker": "KXWTIH-26NOV2304-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 4:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2304-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2304-T83.09": {
-      "ticker": "KXWTIH-26NOV2304-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 4:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2304-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2304-T83.19": {
-      "ticker": "KXWTIH-26NOV2304-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 4:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2304-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2304-T83.29": {
-      "ticker": "KXWTIH-26NOV2304-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 4:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2304-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2304-T83.39": {
-      "ticker": "KXWTIH-26NOV2304-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 4:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2304-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2304-T83.49": {
-      "ticker": "KXWTIH-26NOV2304-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 4:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2304-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2305-T82.89": {
-      "ticker": "KXWTIH-26NOV2305-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 5:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2305-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2305-T82.99": {
-      "ticker": "KXWTIH-26NOV2305-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 5:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2305-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2305-T83.09": {
-      "ticker": "KXWTIH-26NOV2305-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 5:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2305-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2305-T83.19": {
-      "ticker": "KXWTIH-26NOV2305-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 5:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2305-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2305-T83.29": {
-      "ticker": "KXWTIH-26NOV2305-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 5:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2305-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2305-T83.39": {
-      "ticker": "KXWTIH-26NOV2305-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 5:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2305-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2305-T83.49": {
-      "ticker": "KXWTIH-26NOV2305-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 5:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2305-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2306-T82.89": {
-      "ticker": "KXWTIH-26NOV2306-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 6:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2306-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2306-T82.99": {
-      "ticker": "KXWTIH-26NOV2306-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 6:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2306-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2306-T83.09": {
-      "ticker": "KXWTIH-26NOV2306-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 6:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2306-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2306-T83.19": {
-      "ticker": "KXWTIH-26NOV2306-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 6:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2306-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2306-T83.29": {
-      "ticker": "KXWTIH-26NOV2306-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 6:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2306-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2306-T83.39": {
-      "ticker": "KXWTIH-26NOV2306-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 6:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2306-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2306-T83.49": {
-      "ticker": "KXWTIH-26NOV2306-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 6:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2306-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2307-T82.89": {
-      "ticker": "KXWTIH-26NOV2307-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 7:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2307-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2307-T82.99": {
-      "ticker": "KXWTIH-26NOV2307-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 7:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2307-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2307-T83.09": {
-      "ticker": "KXWTIH-26NOV2307-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 7:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2307-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2307-T83.19": {
-      "ticker": "KXWTIH-26NOV2307-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 7:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2307-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2307-T83.29": {
-      "ticker": "KXWTIH-26NOV2307-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 7:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2307-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2307-T83.39": {
-      "ticker": "KXWTIH-26NOV2307-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 7:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2307-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2307-T83.49": {
-      "ticker": "KXWTIH-26NOV2307-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 7:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2307-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2308-T82.89": {
-      "ticker": "KXWTIH-26NOV2308-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 8:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2308-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2308-T82.99": {
-      "ticker": "KXWTIH-26NOV2308-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 8:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2308-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2308-T83.09": {
-      "ticker": "KXWTIH-26NOV2308-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 8:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2308-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2308-T83.19": {
-      "ticker": "KXWTIH-26NOV2308-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 8:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2308-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2308-T83.29": {
-      "ticker": "KXWTIH-26NOV2308-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 8:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2308-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2308-T83.39": {
-      "ticker": "KXWTIH-26NOV2308-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 8:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2308-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2308-T83.49": {
-      "ticker": "KXWTIH-26NOV2308-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 8:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2308-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2309-T82.89": {
-      "ticker": "KXWTIH-26NOV2309-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 9:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2309-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2309-T82.99": {
-      "ticker": "KXWTIH-26NOV2309-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 9:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2309-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2309-T83.09": {
-      "ticker": "KXWTIH-26NOV2309-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 9:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2309-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2309-T83.19": {
-      "ticker": "KXWTIH-26NOV2309-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 9:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2309-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2309-T83.29": {
-      "ticker": "KXWTIH-26NOV2309-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 9:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2309-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2309-T83.39": {
-      "ticker": "KXWTIH-26NOV2309-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 9:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2309-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2309-T83.49": {
-      "ticker": "KXWTIH-26NOV2309-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 9:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2309-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2310-T82.89": {
-      "ticker": "KXWTIH-26NOV2310-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 10:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2310-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2310-T82.99": {
-      "ticker": "KXWTIH-26NOV2310-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 10:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2310-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2310-T83.09": {
-      "ticker": "KXWTIH-26NOV2310-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 10:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2310-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2310-T83.19": {
-      "ticker": "KXWTIH-26NOV2310-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 10:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2310-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2310-T83.29": {
-      "ticker": "KXWTIH-26NOV2310-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 10:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2310-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2310-T83.39": {
-      "ticker": "KXWTIH-26NOV2310-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 10:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2310-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2310-T83.49": {
-      "ticker": "KXWTIH-26NOV2310-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 10:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2310-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2311-T82.89": {
-      "ticker": "KXWTIH-26NOV2311-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 11:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2311-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2311-T82.99": {
-      "ticker": "KXWTIH-26NOV2311-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 11:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2311-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2311-T83.09": {
-      "ticker": "KXWTIH-26NOV2311-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 11:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2311-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2311-T83.19": {
-      "ticker": "KXWTIH-26NOV2311-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 11:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2311-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2311-T83.29": {
-      "ticker": "KXWTIH-26NOV2311-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 11:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2311-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2311-T83.39": {
-      "ticker": "KXWTIH-26NOV2311-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 11:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2311-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2311-T83.49": {
-      "ticker": "KXWTIH-26NOV2311-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 11:00 AM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2311-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2312-T82.89": {
-      "ticker": "KXWTIH-26NOV2312-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 12:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2312-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2312-T82.99": {
-      "ticker": "KXWTIH-26NOV2312-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 12:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2312-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2312-T83.09": {
-      "ticker": "KXWTIH-26NOV2312-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 12:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2312-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2312-T83.19": {
-      "ticker": "KXWTIH-26NOV2312-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 12:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2312-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2312-T83.29": {
-      "ticker": "KXWTIH-26NOV2312-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 12:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2312-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2312-T83.39": {
-      "ticker": "KXWTIH-26NOV2312-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 12:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2312-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2312-T83.49": {
-      "ticker": "KXWTIH-26NOV2312-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 12:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2312-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2313-T82.89": {
-      "ticker": "KXWTIH-26NOV2313-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 1:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2313-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2313-T82.99": {
-      "ticker": "KXWTIH-26NOV2313-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 1:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2313-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2313-T83.09": {
-      "ticker": "KXWTIH-26NOV2313-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 1:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2313-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2313-T83.19": {
-      "ticker": "KXWTIH-26NOV2313-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 1:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2313-T83.19/orderbook"
-    },
-    "KXWTIH-26NOV2313-T83.29": {
-      "ticker": "KXWTIH-26NOV2313-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 1:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2313-T83.29/orderbook"
-    },
-    "KXWTIH-26NOV2313-T83.39": {
-      "ticker": "KXWTIH-26NOV2313-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 1:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2313-T83.39/orderbook"
-    },
-    "KXWTIH-26NOV2313-T83.49": {
-      "ticker": "KXWTIH-26NOV2313-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 1:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2313-T83.49/orderbook"
-    },
-    "KXWTIH-26NOV2314-T82.89": {
-      "ticker": "KXWTIH-26NOV2314-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 2:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2314-T82.89/orderbook"
-    },
-    "KXWTIH-26NOV2314-T82.99": {
-      "ticker": "KXWTIH-26NOV2314-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 2:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2314-T82.99/orderbook"
-    },
-    "KXWTIH-26NOV2314-T83.09": {
-      "ticker": "KXWTIH-26NOV2314-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 2:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
-      "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2314-T83.09/orderbook"
-    },
-    "KXWTIH-26NOV2314-T83.19": {
-      "ticker": "KXWTIH-26NOV2314-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 2:00 PM ET?",
-      "topic": "gas-prices",
-      "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2314-T83.19/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-DBON/orderbook"
     },
-    "KXWTIH-26NOV2314-T83.29": {
-      "ticker": "KXWTIH-26NOV2314-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 2:00 PM ET?",
-      "topic": "gas-prices",
+    "KXPRESNOMR-28-KPAT": {
+      "ticker": "KXPRESNOMR-28-KPAT",
+      "title": "Will Kash Patel be the nominee for the Presidency for the Republican party?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2314-T83.29/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-KPAT/orderbook"
     },
-    "KXWTIH-26NOV2314-T83.39": {
-      "ticker": "KXWTIH-26NOV2314-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 2:00 PM ET?",
-      "topic": "gas-prices",
+    "KXPRESNOMR-28-SBES": {
+      "ticker": "KXPRESNOMR-28-SBES",
+      "title": "Will Scott Bessent be the nominee for the Presidency for the Republican party?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2314-T83.39/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-SBES/orderbook"
     },
-    "KXWTIH-26NOV2314-T83.49": {
-      "ticker": "KXWTIH-26NOV2314-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 2:00 PM ET?",
-      "topic": "gas-prices",
+    "KXPRESNOMR-28-THOM": {
+      "ticker": "KXPRESNOMR-28-THOM",
+      "title": "Will Tom Homan be the nominee for the Presidency for the Republican party?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2314-T83.49/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMR-28-THOM/orderbook"
     },
-    "KXWTIH-26NOV2315-T82.89": {
-      "ticker": "KXWTIH-26NOV2315-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 3:00 PM ET?",
-      "topic": "gas-prices",
+    "KXSCHUMERBACKERS-27JAN03-APAD": {
+      "ticker": "KXSCHUMERBACKERS-27JAN03-APAD",
+      "title": "Will it be confirmed that Alex Padilla publicly backs Chuck Schumer for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2315-T82.89/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSCHUMERBACKERS-27JAN03-APAD/orderbook"
     },
-    "KXWTIH-26NOV2315-T82.99": {
-      "ticker": "KXWTIH-26NOV2315-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 3:00 PM ET?",
-      "topic": "gas-prices",
+    "KXSCHUMERBACKERS-27JAN03-ASCH": {
+      "ticker": "KXSCHUMERBACKERS-27JAN03-ASCH",
+      "title": "Will it be confirmed that Adam Schiff publicly backs Chuck Schumer for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2315-T82.99/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSCHUMERBACKERS-27JAN03-ASCH/orderbook"
     },
-    "KXWTIH-26NOV2315-T83.09": {
-      "ticker": "KXWTIH-26NOV2315-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 3:00 PM ET?",
-      "topic": "gas-prices",
+    "KXSCHUMERBACKERS-27JAN03-BLUJ": {
+      "ticker": "KXSCHUMERBACKERS-27JAN03-BLUJ",
+      "title": "Will it be confirmed that Ben Ray Luj\u00e1n publicly backs Chuck Schumer for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2315-T83.09/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSCHUMERBACKERS-27JAN03-BLUJ/orderbook"
     },
-    "KXWTIH-26NOV2315-T83.19": {
-      "ticker": "KXWTIH-26NOV2315-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 3:00 PM ET?",
-      "topic": "gas-prices",
+    "KXSCHUMERBACKERS-27JAN03-MBEN": {
+      "ticker": "KXSCHUMERBACKERS-27JAN03-MBEN",
+      "title": "Will it be confirmed that Michael Bennet publicly backs Chuck Schumer for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2315-T83.19/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSCHUMERBACKERS-27JAN03-MBEN/orderbook"
     },
-    "KXWTIH-26NOV2315-T83.29": {
-      "ticker": "KXWTIH-26NOV2315-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 3:00 PM ET?",
-      "topic": "gas-prices",
+    "KXSCHUMERBACKERS-27JAN03-RWYD": {
+      "ticker": "KXSCHUMERBACKERS-27JAN03-RWYD",
+      "title": "Will it be confirmed that Ron Wyden publicly backs Chuck Schumer for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2315-T83.29/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXSCHUMERBACKERS-27JAN03-RWYD/orderbook"
     },
-    "KXWTIH-26NOV2315-T83.39": {
-      "ticker": "KXWTIH-26NOV2315-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 3:00 PM ET?",
-      "topic": "gas-prices",
+    "KXVANHOLLENBACKERS-27JAN03-APAD": {
+      "ticker": "KXVANHOLLENBACKERS-27JAN03-APAD",
+      "title": "Will it be confirmed that Alex Padilla publicly backs Chris Van Hollen for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2315-T83.39/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXVANHOLLENBACKERS-27JAN03-APAD/orderbook"
     },
-    "KXWTIH-26NOV2315-T83.49": {
-      "ticker": "KXWTIH-26NOV2315-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 3:00 PM ET?",
-      "topic": "gas-prices",
+    "KXVANHOLLENBACKERS-27JAN03-ASCH": {
+      "ticker": "KXVANHOLLENBACKERS-27JAN03-ASCH",
+      "title": "Will it be confirmed that Adam Schiff publicly backs Chris Van Hollen for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2315-T83.49/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXVANHOLLENBACKERS-27JAN03-ASCH/orderbook"
     },
-    "KXWTIH-26NOV2316-T82.89": {
-      "ticker": "KXWTIH-26NOV2316-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 4:00 PM ET?",
-      "topic": "gas-prices",
+    "KXVANHOLLENBACKERS-27JAN03-BLUJ": {
+      "ticker": "KXVANHOLLENBACKERS-27JAN03-BLUJ",
+      "title": "Will it be confirmed that Ben Ray Luj\u00e1n publicly backs Chris Van Hollen for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2316-T82.89/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXVANHOLLENBACKERS-27JAN03-BLUJ/orderbook"
     },
-    "KXWTIH-26NOV2316-T82.99": {
-      "ticker": "KXWTIH-26NOV2316-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 4:00 PM ET?",
-      "topic": "gas-prices",
+    "KXVANHOLLENBACKERS-27JAN03-CCOO": {
+      "ticker": "KXVANHOLLENBACKERS-27JAN03-CCOO",
+      "title": "Will it be confirmed that Chris Coons publicly backs Chris Van Hollen for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2316-T82.99/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXVANHOLLENBACKERS-27JAN03-CCOO/orderbook"
     },
-    "KXWTIH-26NOV2316-T83.09": {
-      "ticker": "KXWTIH-26NOV2316-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 4:00 PM ET?",
-      "topic": "gas-prices",
+    "KXVANHOLLENBACKERS-27JAN03-JTUR": {
+      "ticker": "KXVANHOLLENBACKERS-27JAN03-JTUR",
+      "title": "Will it be confirmed that Josh Turek publicly backs Chris Van Hollen for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2316-T83.09/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXVANHOLLENBACKERS-27JAN03-JTUR/orderbook"
     },
-    "KXWTIH-26NOV2316-T83.19": {
-      "ticker": "KXWTIH-26NOV2316-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 4:00 PM ET?",
-      "topic": "gas-prices",
+    "KXVANHOLLENBACKERS-27JAN03-MBEN": {
+      "ticker": "KXVANHOLLENBACKERS-27JAN03-MBEN",
+      "title": "Will it be confirmed that Michael Bennet publicly backs Chris Van Hollen for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2316-T83.19/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXVANHOLLENBACKERS-27JAN03-MBEN/orderbook"
     },
-    "KXWTIH-26NOV2316-T83.29": {
-      "ticker": "KXWTIH-26NOV2316-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 4:00 PM ET?",
-      "topic": "gas-prices",
+    "KXVANHOLLENBACKERS-27JAN03-PMUR": {
+      "ticker": "KXVANHOLLENBACKERS-27JAN03-PMUR",
+      "title": "Will it be confirmed that Patty Murray publicly backs Chris Van Hollen for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2316-T83.29/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXVANHOLLENBACKERS-27JAN03-PMUR/orderbook"
     },
-    "KXWTIH-26NOV2316-T83.39": {
-      "ticker": "KXWTIH-26NOV2316-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 4:00 PM ET?",
-      "topic": "gas-prices",
+    "KXVANHOLLENBACKERS-27JAN03-RWYD": {
+      "ticker": "KXVANHOLLENBACKERS-27JAN03-RWYD",
+      "title": "Will it be confirmed that Ron Wyden publicly backs Chris Van Hollen for Senate Democratic leader when the caucus votes, or says by the end of the next day that they voted for him?",
+      "topic": "elections",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2316-T83.39/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXVANHOLLENBACKERS-27JAN03-RWYD/orderbook"
     },
-    "KXWTIH-26NOV2316-T83.49": {
-      "ticker": "KXWTIH-26NOV2316-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 4:00 PM ET?",
+    "KXWTI-26NOV2414-T75.49": {
+      "ticker": "KXWTI-26NOV2414-T75.49",
+      "title": "Will the WTI crude oil settlement price be above 75.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2316-T83.49/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T75.49/orderbook"
     },
-    "KXWTIH-26NOV2317-T82.89": {
-      "ticker": "KXWTIH-26NOV2317-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 5:00 PM ET?",
+    "KXWTI-26NOV2414-T75.99": {
+      "ticker": "KXWTI-26NOV2414-T75.99",
+      "title": "Will the WTI crude oil settlement price be above 75.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2317-T82.89/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T75.99/orderbook"
     },
-    "KXWTIH-26NOV2317-T82.99": {
-      "ticker": "KXWTIH-26NOV2317-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 5:00 PM ET?",
+    "KXWTI-26NOV2414-T76.49": {
+      "ticker": "KXWTI-26NOV2414-T76.49",
+      "title": "Will the WTI crude oil settlement price be above 76.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2317-T82.99/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T76.49/orderbook"
     },
-    "KXWTIH-26NOV2317-T83.09": {
-      "ticker": "KXWTIH-26NOV2317-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 5:00 PM ET?",
+    "KXWTI-26NOV2414-T76.99": {
+      "ticker": "KXWTI-26NOV2414-T76.99",
+      "title": "Will the WTI crude oil settlement price be above 76.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2317-T83.09/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T76.99/orderbook"
     },
-    "KXWTIH-26NOV2317-T83.19": {
-      "ticker": "KXWTIH-26NOV2317-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 5:00 PM ET?",
+    "KXWTI-26NOV2414-T77.49": {
+      "ticker": "KXWTI-26NOV2414-T77.49",
+      "title": "Will the WTI crude oil settlement price be above 77.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2317-T83.19/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T77.49/orderbook"
     },
-    "KXWTIH-26NOV2317-T83.29": {
-      "ticker": "KXWTIH-26NOV2317-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 5:00 PM ET?",
+    "KXWTI-26NOV2414-T77.99": {
+      "ticker": "KXWTI-26NOV2414-T77.99",
+      "title": "Will the WTI crude oil settlement price be above 77.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2317-T83.29/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T77.99/orderbook"
     },
-    "KXWTIH-26NOV2317-T83.39": {
-      "ticker": "KXWTIH-26NOV2317-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 5:00 PM ET?",
+    "KXWTI-26NOV2414-T78.49": {
+      "ticker": "KXWTI-26NOV2414-T78.49",
+      "title": "Will the WTI crude oil settlement price be above 78.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2317-T83.39/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T78.49/orderbook"
     },
-    "KXWTIH-26NOV2317-T83.49": {
-      "ticker": "KXWTIH-26NOV2317-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 5:00 PM ET?",
+    "KXWTI-26NOV2414-T78.99": {
+      "ticker": "KXWTI-26NOV2414-T78.99",
+      "title": "Will the WTI crude oil settlement price be above 78.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2317-T83.49/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T78.99/orderbook"
     },
-    "KXWTIH-26NOV2318-T82.89": {
-      "ticker": "KXWTIH-26NOV2318-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 6:00 PM ET?",
+    "KXWTI-26NOV2414-T79.49": {
+      "ticker": "KXWTI-26NOV2414-T79.49",
+      "title": "Will the WTI crude oil settlement price be above 79.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2318-T82.89/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T79.49/orderbook"
     },
-    "KXWTIH-26NOV2318-T82.99": {
-      "ticker": "KXWTIH-26NOV2318-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 6:00 PM ET?",
+    "KXWTI-26NOV2414-T79.99": {
+      "ticker": "KXWTI-26NOV2414-T79.99",
+      "title": "Will the WTI crude oil settlement price be above 79.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2318-T82.99/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T79.99/orderbook"
     },
-    "KXWTIH-26NOV2318-T83.09": {
-      "ticker": "KXWTIH-26NOV2318-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 6:00 PM ET?",
+    "KXWTI-26NOV2414-T80.49": {
+      "ticker": "KXWTI-26NOV2414-T80.49",
+      "title": "Will the WTI crude oil settlement price be above 80.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2318-T83.09/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T80.49/orderbook"
     },
-    "KXWTIH-26NOV2318-T83.19": {
-      "ticker": "KXWTIH-26NOV2318-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 6:00 PM ET?",
+    "KXWTI-26NOV2414-T80.99": {
+      "ticker": "KXWTI-26NOV2414-T80.99",
+      "title": "Will the WTI crude oil settlement price be above 80.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2318-T83.19/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T80.99/orderbook"
     },
-    "KXWTIH-26NOV2318-T83.29": {
-      "ticker": "KXWTIH-26NOV2318-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 6:00 PM ET?",
+    "KXWTI-26NOV2414-T81.49": {
+      "ticker": "KXWTI-26NOV2414-T81.49",
+      "title": "Will the WTI crude oil settlement price be above 81.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2318-T83.29/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T81.49/orderbook"
     },
-    "KXWTIH-26NOV2318-T83.39": {
-      "ticker": "KXWTIH-26NOV2318-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 6:00 PM ET?",
+    "KXWTI-26NOV2414-T81.99": {
+      "ticker": "KXWTI-26NOV2414-T81.99",
+      "title": "Will the WTI crude oil settlement price be above 81.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2318-T83.39/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T81.99/orderbook"
     },
-    "KXWTIH-26NOV2318-T83.49": {
-      "ticker": "KXWTIH-26NOV2318-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 6:00 PM ET?",
+    "KXWTI-26NOV2414-T82.49": {
+      "ticker": "KXWTI-26NOV2414-T82.49",
+      "title": "Will the WTI crude oil settlement price be above 82.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2318-T83.49/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T82.49/orderbook"
     },
-    "KXWTIH-26NOV2319-T82.89": {
-      "ticker": "KXWTIH-26NOV2319-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 7:00 PM ET?",
+    "KXWTI-26NOV2414-T82.99": {
+      "ticker": "KXWTI-26NOV2414-T82.99",
+      "title": "Will the WTI crude oil settlement price be above 82.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2319-T82.89/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T82.99/orderbook"
     },
-    "KXWTIH-26NOV2319-T82.99": {
-      "ticker": "KXWTIH-26NOV2319-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 7:00 PM ET?",
+    "KXWTI-26NOV2414-T83.49": {
+      "ticker": "KXWTI-26NOV2414-T83.49",
+      "title": "Will the WTI crude oil settlement price be above 83.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2319-T82.99/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T83.49/orderbook"
     },
-    "KXWTIH-26NOV2319-T83.09": {
-      "ticker": "KXWTIH-26NOV2319-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 7:00 PM ET?",
+    "KXWTI-26NOV2414-T83.99": {
+      "ticker": "KXWTI-26NOV2414-T83.99",
+      "title": "Will the WTI crude oil settlement price be above 83.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2319-T83.09/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T83.99/orderbook"
     },
-    "KXWTIH-26NOV2319-T83.19": {
-      "ticker": "KXWTIH-26NOV2319-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 7:00 PM ET?",
+    "KXWTI-26NOV2414-T84.49": {
+      "ticker": "KXWTI-26NOV2414-T84.49",
+      "title": "Will the WTI crude oil settlement price be above 84.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2319-T83.19/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T84.49/orderbook"
     },
-    "KXWTIH-26NOV2319-T83.29": {
-      "ticker": "KXWTIH-26NOV2319-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 7:00 PM ET?",
+    "KXWTI-26NOV2414-T84.99": {
+      "ticker": "KXWTI-26NOV2414-T84.99",
+      "title": "Will the WTI crude oil settlement price be above 84.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2319-T83.29/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T84.99/orderbook"
     },
-    "KXWTIH-26NOV2319-T83.39": {
-      "ticker": "KXWTIH-26NOV2319-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 7:00 PM ET?",
+    "KXWTI-26NOV2414-T85.49": {
+      "ticker": "KXWTI-26NOV2414-T85.49",
+      "title": "Will the WTI crude oil settlement price be above 85.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2319-T83.39/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T85.49/orderbook"
     },
-    "KXWTIH-26NOV2319-T83.49": {
-      "ticker": "KXWTIH-26NOV2319-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 7:00 PM ET?",
+    "KXWTI-26NOV2414-T85.99": {
+      "ticker": "KXWTI-26NOV2414-T85.99",
+      "title": "Will the WTI crude oil settlement price be above 85.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2319-T83.49/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T85.99/orderbook"
     },
-    "KXWTIH-26NOV2320-T82.89": {
-      "ticker": "KXWTIH-26NOV2320-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 8:00 PM ET?",
+    "KXWTI-26NOV2414-T86.49": {
+      "ticker": "KXWTI-26NOV2414-T86.49",
+      "title": "Will the WTI crude oil settlement price be above 86.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2320-T82.89/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T86.49/orderbook"
     },
-    "KXWTIH-26NOV2320-T82.99": {
-      "ticker": "KXWTIH-26NOV2320-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 8:00 PM ET?",
+    "KXWTI-26NOV2414-T86.99": {
+      "ticker": "KXWTI-26NOV2414-T86.99",
+      "title": "Will the WTI crude oil settlement price be above 86.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2320-T82.99/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T86.99/orderbook"
     },
-    "KXWTIH-26NOV2320-T83.09": {
-      "ticker": "KXWTIH-26NOV2320-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 8:00 PM ET?",
+    "KXWTI-26NOV2414-T87.49": {
+      "ticker": "KXWTI-26NOV2414-T87.49",
+      "title": "Will the WTI crude oil settlement price be above 87.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2320-T83.09/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T87.49/orderbook"
     },
-    "KXWTIH-26NOV2320-T83.19": {
-      "ticker": "KXWTIH-26NOV2320-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 8:00 PM ET?",
+    "KXWTI-26NOV2414-T87.99": {
+      "ticker": "KXWTI-26NOV2414-T87.99",
+      "title": "Will the WTI crude oil settlement price be above 87.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2320-T83.19/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T87.99/orderbook"
     },
-    "KXWTIH-26NOV2320-T83.29": {
-      "ticker": "KXWTIH-26NOV2320-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 8:00 PM ET?",
+    "KXWTI-26NOV2414-T88.49": {
+      "ticker": "KXWTI-26NOV2414-T88.49",
+      "title": "Will the WTI crude oil settlement price be above 88.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2320-T83.29/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T88.49/orderbook"
     },
-    "KXWTIH-26NOV2320-T83.39": {
-      "ticker": "KXWTIH-26NOV2320-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 8:00 PM ET?",
+    "KXWTI-26NOV2414-T88.99": {
+      "ticker": "KXWTI-26NOV2414-T88.99",
+      "title": "Will the WTI crude oil settlement price be above 88.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2320-T83.39/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T88.99/orderbook"
     },
-    "KXWTIH-26NOV2320-T83.49": {
-      "ticker": "KXWTIH-26NOV2320-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 8:00 PM ET?",
+    "KXWTI-26NOV2414-T89.49": {
+      "ticker": "KXWTI-26NOV2414-T89.49",
+      "title": "Will the WTI crude oil settlement price be above 89.49 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2320-T83.49/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T89.49/orderbook"
     },
-    "KXWTIH-26NOV2321-T82.89": {
-      "ticker": "KXWTIH-26NOV2321-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 9:00 PM ET?",
+    "KXWTI-26NOV2414-T89.99": {
+      "ticker": "KXWTI-26NOV2414-T89.99",
+      "title": "Will the WTI crude oil settlement price be above 89.99 USD/Bbl on Nov 24, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2321-T82.89/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTI-26NOV2414-T89.99/orderbook"
     },
-    "KXWTIH-26NOV2321-T82.99": {
-      "ticker": "KXWTIH-26NOV2321-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 9:00 PM ET?",
+    "KXWTIW-26NOV2714-B71.50": {
+      "ticker": "KXWTIW-26NOV2714-B71.50",
+      "title": "Will the WTI crude oil settlement price be between 71.00 and 71.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2321-T82.99/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B71.50/orderbook"
     },
-    "KXWTIH-26NOV2321-T83.09": {
-      "ticker": "KXWTIH-26NOV2321-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 9:00 PM ET?",
+    "KXWTIW-26NOV2714-B72.50": {
+      "ticker": "KXWTIW-26NOV2714-B72.50",
+      "title": "Will the WTI crude oil settlement price be between 72.00 and 72.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2321-T83.09/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B72.50/orderbook"
     },
-    "KXWTIH-26NOV2321-T83.19": {
-      "ticker": "KXWTIH-26NOV2321-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 9:00 PM ET?",
+    "KXWTIW-26NOV2714-B73.50": {
+      "ticker": "KXWTIW-26NOV2714-B73.50",
+      "title": "Will the WTI crude oil settlement price be between 73.00 and 73.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2321-T83.19/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B73.50/orderbook"
     },
-    "KXWTIH-26NOV2321-T83.29": {
-      "ticker": "KXWTIH-26NOV2321-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 9:00 PM ET?",
+    "KXWTIW-26NOV2714-B74.50": {
+      "ticker": "KXWTIW-26NOV2714-B74.50",
+      "title": "Will the WTI crude oil settlement price be between 74.00 and 74.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2321-T83.29/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B74.50/orderbook"
     },
-    "KXWTIH-26NOV2321-T83.39": {
-      "ticker": "KXWTIH-26NOV2321-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 9:00 PM ET?",
+    "KXWTIW-26NOV2714-B75.50": {
+      "ticker": "KXWTIW-26NOV2714-B75.50",
+      "title": "Will the WTI crude oil settlement price be between 75.00 and 75.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2321-T83.39/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B75.50/orderbook"
     },
-    "KXWTIH-26NOV2321-T83.49": {
-      "ticker": "KXWTIH-26NOV2321-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 9:00 PM ET?",
+    "KXWTIW-26NOV2714-B76.50": {
+      "ticker": "KXWTIW-26NOV2714-B76.50",
+      "title": "Will the WTI crude oil settlement price be between 76.00 and 76.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2321-T83.49/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B76.50/orderbook"
     },
-    "KXWTIH-26NOV2322-T82.89": {
-      "ticker": "KXWTIH-26NOV2322-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 10:00 PM ET?",
+    "KXWTIW-26NOV2714-B77.50": {
+      "ticker": "KXWTIW-26NOV2714-B77.50",
+      "title": "Will the WTI crude oil settlement price be between 77.00 and 77.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2322-T82.89/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B77.50/orderbook"
     },
-    "KXWTIH-26NOV2322-T82.99": {
-      "ticker": "KXWTIH-26NOV2322-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 10:00 PM ET?",
+    "KXWTIW-26NOV2714-B78.50": {
+      "ticker": "KXWTIW-26NOV2714-B78.50",
+      "title": "Will the WTI crude oil settlement price be between 78.00 and 78.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2322-T82.99/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B78.50/orderbook"
     },
-    "KXWTIH-26NOV2322-T83.09": {
-      "ticker": "KXWTIH-26NOV2322-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 10:00 PM ET?",
+    "KXWTIW-26NOV2714-B79.50": {
+      "ticker": "KXWTIW-26NOV2714-B79.50",
+      "title": "Will the WTI crude oil settlement price be between 79.00 and 79.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2322-T83.09/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B79.50/orderbook"
     },
-    "KXWTIH-26NOV2322-T83.19": {
-      "ticker": "KXWTIH-26NOV2322-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 10:00 PM ET?",
+    "KXWTIW-26NOV2714-B80.50": {
+      "ticker": "KXWTIW-26NOV2714-B80.50",
+      "title": "Will the WTI crude oil settlement price be between 80.00 and 80.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2322-T83.19/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B80.50/orderbook"
     },
-    "KXWTIH-26NOV2322-T83.29": {
-      "ticker": "KXWTIH-26NOV2322-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 10:00 PM ET?",
+    "KXWTIW-26NOV2714-B81.50": {
+      "ticker": "KXWTIW-26NOV2714-B81.50",
+      "title": "Will the WTI crude oil settlement price be between 81.00 and 81.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2322-T83.29/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B81.50/orderbook"
     },
-    "KXWTIH-26NOV2322-T83.39": {
-      "ticker": "KXWTIH-26NOV2322-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 10:00 PM ET?",
+    "KXWTIW-26NOV2714-B82.50": {
+      "ticker": "KXWTIW-26NOV2714-B82.50",
+      "title": "Will the WTI crude oil settlement price be between 82.00 and 82.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2322-T83.39/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B82.50/orderbook"
     },
-    "KXWTIH-26NOV2322-T83.49": {
-      "ticker": "KXWTIH-26NOV2322-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 10:00 PM ET?",
+    "KXWTIW-26NOV2714-B83.50": {
+      "ticker": "KXWTIW-26NOV2714-B83.50",
+      "title": "Will the WTI crude oil settlement price be between 83.00 and 83.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2322-T83.49/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B83.50/orderbook"
     },
-    "KXWTIH-26NOV2323-T82.89": {
-      "ticker": "KXWTIH-26NOV2323-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 23, 2026 at 11:00 PM ET?",
+    "KXWTIW-26NOV2714-B84.50": {
+      "ticker": "KXWTIW-26NOV2714-B84.50",
+      "title": "Will the WTI crude oil settlement price be between 84.00 and 84.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2323-T82.89/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B84.50/orderbook"
     },
-    "KXWTIH-26NOV2323-T82.99": {
-      "ticker": "KXWTIH-26NOV2323-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 23, 2026 at 11:00 PM ET?",
+    "KXWTIW-26NOV2714-B85.50": {
+      "ticker": "KXWTIW-26NOV2714-B85.50",
+      "title": "Will the WTI crude oil settlement price be between 85.00 and 85.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2323-T82.99/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B85.50/orderbook"
     },
-    "KXWTIH-26NOV2323-T83.09": {
-      "ticker": "KXWTIH-26NOV2323-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 23, 2026 at 11:00 PM ET?",
+    "KXWTIW-26NOV2714-B86.50": {
+      "ticker": "KXWTIW-26NOV2714-B86.50",
+      "title": "Will the WTI crude oil settlement price be between 86.00 and 86.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2323-T83.09/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B86.50/orderbook"
     },
-    "KXWTIH-26NOV2323-T83.19": {
-      "ticker": "KXWTIH-26NOV2323-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 23, 2026 at 11:00 PM ET?",
+    "KXWTIW-26NOV2714-B87.50": {
+      "ticker": "KXWTIW-26NOV2714-B87.50",
+      "title": "Will the WTI crude oil settlement price be between 87.00 and 87.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2323-T83.19/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B87.50/orderbook"
     },
-    "KXWTIH-26NOV2323-T83.29": {
-      "ticker": "KXWTIH-26NOV2323-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 23, 2026 at 11:00 PM ET?",
+    "KXWTIW-26NOV2714-B88.50": {
+      "ticker": "KXWTIW-26NOV2714-B88.50",
+      "title": "Will the WTI crude oil settlement price be between 88.00 and 88.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2323-T83.29/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B88.50/orderbook"
     },
-    "KXWTIH-26NOV2323-T83.39": {
-      "ticker": "KXWTIH-26NOV2323-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 23, 2026 at 11:00 PM ET?",
+    "KXWTIW-26NOV2714-B89.50": {
+      "ticker": "KXWTIW-26NOV2714-B89.50",
+      "title": "Will the WTI crude oil settlement price be between 89.00 and 89.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2323-T83.39/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B89.50/orderbook"
     },
-    "KXWTIH-26NOV2323-T83.49": {
-      "ticker": "KXWTIH-26NOV2323-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 23, 2026 at 11:00 PM ET?",
+    "KXWTIW-26NOV2714-B90.50": {
+      "ticker": "KXWTIW-26NOV2714-B90.50",
+      "title": "Will the WTI crude oil settlement price be between 90.00 and 90.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2323-T83.49/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B90.50/orderbook"
     },
-    "KXWTIH-26NOV2400-T82.89": {
-      "ticker": "KXWTIH-26NOV2400-T82.89",
-      "title": "Will the WTI Oil close price be above 82.89 USD/barrel on November 24, 2026 at 12:00 AM ET?",
+    "KXWTIW-26NOV2714-B91.50": {
+      "ticker": "KXWTIW-26NOV2714-B91.50",
+      "title": "Will the WTI crude oil settlement price be between 91.00 and 91.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2400-T82.89/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B91.50/orderbook"
     },
-    "KXWTIH-26NOV2400-T82.99": {
-      "ticker": "KXWTIH-26NOV2400-T82.99",
-      "title": "Will the WTI Oil close price be above 82.99 USD/barrel on November 24, 2026 at 12:00 AM ET?",
+    "KXWTIW-26NOV2714-B92.50": {
+      "ticker": "KXWTIW-26NOV2714-B92.50",
+      "title": "Will the WTI crude oil settlement price be between 92.00 and 92.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2400-T82.99/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B92.50/orderbook"
     },
-    "KXWTIH-26NOV2400-T83.09": {
-      "ticker": "KXWTIH-26NOV2400-T83.09",
-      "title": "Will the WTI Oil close price be above 83.09 USD/barrel on November 24, 2026 at 12:00 AM ET?",
+    "KXWTIW-26NOV2714-B93.50": {
+      "ticker": "KXWTIW-26NOV2714-B93.50",
+      "title": "Will the WTI crude oil settlement price be between 93.00 and 93.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2400-T83.09/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B93.50/orderbook"
     },
-    "KXWTIH-26NOV2400-T83.19": {
-      "ticker": "KXWTIH-26NOV2400-T83.19",
-      "title": "Will the WTI Oil close price be above 83.19 USD/barrel on November 24, 2026 at 12:00 AM ET?",
+    "KXWTIW-26NOV2714-B94.50": {
+      "ticker": "KXWTIW-26NOV2714-B94.50",
+      "title": "Will the WTI crude oil settlement price be between 94.00 and 94.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2400-T83.19/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B94.50/orderbook"
     },
-    "KXWTIH-26NOV2400-T83.29": {
-      "ticker": "KXWTIH-26NOV2400-T83.29",
-      "title": "Will the WTI Oil close price be above 83.29 USD/barrel on November 24, 2026 at 12:00 AM ET?",
+    "KXWTIW-26NOV2714-B95.50": {
+      "ticker": "KXWTIW-26NOV2714-B95.50",
+      "title": "Will the WTI crude oil settlement price be between 95.00 and 95.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2400-T83.29/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-B95.50/orderbook"
     },
-    "KXWTIH-26NOV2400-T83.39": {
-      "ticker": "KXWTIH-26NOV2400-T83.39",
-      "title": "Will the WTI Oil close price be above 83.39 USD/barrel on November 24, 2026 at 12:00 AM ET?",
+    "KXWTIW-26NOV2714-T71.00": {
+      "ticker": "KXWTIW-26NOV2714-T71.00",
+      "title": "Will the WTI crude oil settlement price be below 71.00 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2400-T83.39/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-T71.00/orderbook"
     },
-    "KXWTIH-26NOV2400-T83.49": {
-      "ticker": "KXWTIH-26NOV2400-T83.49",
-      "title": "Will the WTI Oil close price be above 83.49 USD/barrel on November 24, 2026 at 12:00 AM ET?",
+    "KXWTIW-26NOV2714-T95.99": {
+      "ticker": "KXWTIW-26NOV2714-T95.99",
+      "title": "Will the WTI crude oil settlement price be above 95.99 USD/Bbl on Nov 27, 2026?",
       "topic": "gas-prices",
       "yes": [],
       "no": [],
-      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIH-26NOV2400-T83.49/orderbook"
+      "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXWTIW-26NOV2714-T95.99/orderbook"
     }
   }
 }

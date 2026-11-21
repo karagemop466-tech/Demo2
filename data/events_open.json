@@ -4,7 +4,7 @@
     "https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=200&cursor=CgYI8MuXhwcSFEtYU0hFSU5CQVVNT1VULTI2T0NU",
     "https://external-api.demo.kalshi.co/trade-api/v2/events?status=open&limit=200&cursor=CgYI4I2G_QYSGktYU1RBVEVMRUdXVi0yOE5PVjA3V1ZTMDA5"
   ],
-  "collected_at": "2026-11-20T20:38:53Z",
+  "collected_at": "2026-11-21T03:18:08Z",
   "rows": [
     {
       "event_ticker": "KXNEWPOPE-70",
