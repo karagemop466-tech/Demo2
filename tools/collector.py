@@ -219,6 +219,17 @@ def paginate(url: str, key: str, signer: Signer | None = None, max_pages: int = 
 # Official discovery fields only (docs: Get Series List -> `categories`, `category`, `tags`).
 # Verified live 2026-11-20: tags=Gas -> DIESEL/DIESELM; tags=Golf -> KXPGATOUR etc.;
 # categories contain "Elections" and "Crypto". Both fields are matched case-insensitively.
+#
+# Culture expansion (2026-11-21, session e29ebc3a): the previous mapping only recognised
+# the literal tag/category "culture", so every Entertainment-category series was unmapped
+# even though the live inventory (data/snapshot.json series_inventory) shows 2630
+# Entertainment series and tags Music (804), Awards (493), Movies (271), Television (242).
+# Live culture events were being skipped (unmapped_series: KXOSCARS, KXMOVIECAST,
+# KXMUSICREPORT, KXALBUMRELEASEDATE, KXPERFORMROLE007). CULTURE_TAGS below is the vetted
+# movies/music/awards/TV subset; broad/ambiguous tags (Food, Art, Views, Achievements,
+# Collectibles) are deliberately excluded — those series stay unmapped and are published
+# in unmapped_series rather than guessed. Specific topics are checked BEFORE culture so a
+# series tagged for both (e.g. Golf + Entertainment) stays with the specific topic.
 TAG_TOPIC = {
     "gas": "gas",
     "gasoline": "gas",
@@ -226,13 +237,21 @@ TAG_TOPIC = {
     "golf": "golf",
     "elections": "elections",
     "election": "elections",
-    "culture": "culture",
     "crypto": "crypto",
     "bitcoin": "crypto",
+}
+CULTURE_TAGS = {
+    "culture", "movies", "music", "music charts", "awards", "television",
+    "rotten tomatoes", "grammys", "oscars", "people", "video games",
+    "live music", "reality tv", "critics choice awards", "golden globes",
+    "the game awards", "music streams", "movie charts", "tv charts",
+    "music industry", "dancing with the stars", "the voice", "pokémon",
+    "singles", "streamer awards", "new music",
 }
 CATEGORY_TOPIC = {
     "elections": "elections",
     "crypto": "crypto",
+    "entertainment": "culture",
     "culture": "culture",
 }
 
@@ -243,7 +262,10 @@ def series_topic(series: dict) -> str | None:
     Uses ONLY official fields returned by GET /series: `tags` (subject tags) and
     `categories`/`category` (discovery/primary category). `diesel` is not treated as
     gas on its own unless the tag "Gas" is also present, because a diesel series is a
-    fuel-price series but the tag is the authoritative signal.
+    fuel-price series but the tag is the authoritative signal. Priority: gasoline
+    product scope, then specific-topic tags, then culture tags, then categories
+    (elections/crypto before entertainment/culture), so specific topics always win
+    over culture when both signals are present.
     """
     if not series or not isinstance(series, dict):
         return None
@@ -259,17 +281,24 @@ def series_topic(series: dict) -> str | None:
     cats = [str(c).strip().lower() for c in (series.get("categories") or []) if c]
     primary = str(series.get("category") or "").strip().lower()
 
-    # 1) explicit tag matches (strongest signal)
+    # 1) explicit specific-topic tag matches (strongest signal)
     for tag in tags:
         mapped = TAG_TOPIC.get(tag)
         if mapped == "gas" and tag == "diesel":
             continue  # require the "Gas" tag itself
         if mapped:
             return mapped
-    # 2) discovery/primary category matches
+    # 1b) culture tag matches
+    for tag in tags:
+        if tag in CULTURE_TAGS:
+            return "culture"
+    # 2) discovery/primary category matches; specific topics win over culture
     for c in cats + [primary]:
-        if c in CATEGORY_TOPIC:
+        if c in ("elections", "crypto"):
             return CATEGORY_TOPIC[c]
+    for c in cats + [primary]:
+        if c in ("entertainment", "culture"):
+            return "culture"
     return None
 
 
@@ -566,6 +595,48 @@ def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list
     return out
 
 
+def merge_scope_resolutions(settled_rows: list[dict], scope_rows: list[dict]) -> list[dict]:
+    """Union settled-feed resolutions with in-scope rows carrying an official result.
+
+    Why this exists (2026-11-21, session e29ebc3a): the demo settled feed
+    (GET /markets?status=settled) is dominated by synthetic series outside the in-scope
+    index (verified: all 20 rows in data/markets_settled.json are KXDEMOFUTHOURLY), so
+    collect_resolutions() alone can return 0 rows while the events scan already holds
+    finalized in-scope markets with official `result` values (verified: 33 finalized,
+    21 yes / 12 no in data/snapshot.json, with data/resolutions.json empty and the
+    Resolutions page therefore blank). Settled-feed rows win on duplicate market_ticker
+    (they carry settlement_ts); scope-only rows are added with settlement fields left
+    None (blank, not guessed). Only official fields are copied; nothing is inferred.
+    """
+    by_ticker: dict[str, dict] = {r["market_ticker"]: r for r in settled_rows if r.get("market_ticker")}
+    for r in scope_rows:
+        if r.get("result") not in ("yes", "no"):
+            continue
+        t = r.get("market_ticker")
+        if not t or t in by_ticker:
+            continue
+        by_ticker[t] = {
+            "topic": r.get("topic"),
+            "series_ticker": r.get("series_ticker"),
+            "event_ticker": r.get("event_ticker"),
+            "market_ticker": t,
+            "status": r.get("status"),
+            "title": r.get("market_title"),
+            "result": r.get("result"),
+            "settlement_value_dollars": None,
+            "settlement_ts": None,
+            "close_time": r.get("close_time"),
+            "expiration_value": None,
+            "volume_fp": r.get("volume_fp"),
+            "open_interest_fp": r.get("open_interest_fp"),
+            "rules_primary_head": r.get("rules_primary_head"),
+            "market_url": r.get("market_url"),
+        }
+    out = list(by_ticker.values())
+    out.sort(key=lambda r: (r.get("settlement_ts") or r.get("close_time") or ""), reverse=True)
+    return out
+
+
 def exchange_status(signer: Signer | None) -> dict:
     j, status = get_json(DEMO_REST + "/exchange/status", signer)
     return {"http_status": status, "response": j}
@@ -642,7 +713,7 @@ def main() -> int:
 
     books = {} if args.scope_only else collect_orderbooks(rows, signer)
     candles = {} if args.scope_only else collect_candles(rows, signer)
-    resolutions = collect_resolutions(signer)
+    resolutions = merge_scope_resolutions(collect_resolutions(signer), rows)
 
     # Publish the largest markets per topic (product scope: "highest dollar amount
     # live events"). Full in-scope counts are kept; trimmed counts are recorded.
