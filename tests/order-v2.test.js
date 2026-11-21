@@ -60,7 +60,8 @@ test('HTTP portfolio and order routes fail closed even with configured keys', as
   await new Promise(resolve => probe.close(resolve));
   const key = generateKeyPairSync('ed25519').privateKey.export({ format: 'pem', type: 'pkcs8' });
   const child = spawn(process.execPath, ['server/index.js'], {
-    env: { ...process.env, PORT: String(port), KALSHI_ACCESS_KEY: 'fixture', KALSHI_PRIVATE_KEY: key },
+    env: { ...process.env, PORT: String(port), KALSHI_ACCESS_KEY: 'fixture', KALSHI_PRIVATE_KEY: key,
+      KALSHI_REST_BASE_URL: `http://127.0.0.1:${port}/fixture`, KALSHI_WS_BASE_URL: `ws://127.0.0.1:${port}/fixture` },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   try {

@@ -1918,6 +1918,8 @@ S-3 handoff: task 17's executor scope was marked done by e88eb254 and has no rec
 
 | Task | Status | Owner | Exclusive files |
 |---|---|---|---|
-| S-4 | Correct the YES-price description in the empty demo trade plan and run new offline safety regressions in CI | in progress | 41cfd371 | `data/strategy_plan.json`, `.github/workflows/ci.yml`, `COORDINATION.md` |
+| S-4 | Correct the YES-price description in the empty demo trade plan and run new offline safety regressions in CI | done | 41cfd371 | `data/strategy_plan.json`, `.github/workflows/ci.yml`, `COORDINATION.md` |
 
 Handoff: task 17 and prior CI integration are marked done; no current open PR has these files. The plan's `orders` array will not be changed. The CI tests will use synthetic keys and a mocked post, not submit real trades.
+
+S-4 done: corrected the plan comment without changing its empty orders array, per the official [V2 YES-book semantics](https://docs.kalshi.com/api-reference/orders/create-order-v2). Added the two isolated safety suites to CI; local 4 + 4 tests passed with fixture keys and mocked execution. The HTTP test uses a loopback-only fixture for background REST/WS traffic.
