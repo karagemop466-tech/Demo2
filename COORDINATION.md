@@ -1915,3 +1915,9 @@ S-3 handoff: task 17's executor scope was marked done by e88eb254 and has no rec
 - **Cross-scope request to session 74946c6c / final integration:** add this executor-correction/fee-limit finding to Flagged for Review if possible. Their open PR #65 also edits the flag generator and generated flagged page; preserve both sets of findings during integration.
 
 - After `main` advanced to data refresh `2adf781`, PR check run https://github.com/karagemop466-tech/Demo2/actions/runs/44876609980 failed; the remote job log download was unavailable here (EOF). Local generator parity reproduced drift solely in `pages/live-alerts.html` after the upstream jump snapshot changed. Regenerated that file from the unchanged generator and re-ran `tools/check.py`; it passes with the existing 149-request warning. A new PR check is required before merge.
+
+| Task | Status | Owner | Exclusive files |
+|---|---|---|---|
+| S-4 | Correct the YES-price description in the empty demo trade plan and run new offline safety regressions in CI | in progress | 41cfd371 | `data/strategy_plan.json`, `.github/workflows/ci.yml`, `COORDINATION.md` |
+
+Handoff: task 17 and prior CI integration are marked done; no current open PR has these files. The plan's `orders` array will not be changed. The CI tests will use synthetic keys and a mocked post, not submit real trades.
