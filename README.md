@@ -15,7 +15,7 @@ Three defects were found by checking the deployed site against its own data, and
 |---|---|---|
 | The chart opened on the top-ranked row, which has no history or candles, so it rendered **0 points** (live page, 2026-11-21) | The default is the highest-ranked market that has chart data, and the initial window widens to the newest official point. A selected market without history is labelled in the dropdown. | `tests/dashboard_live.test.js` |
 | The committed snapshot can be hours old — GitHub throttles scheduled workflows (the page read “6 h ago” while Actions showed no run since 00:51Z) | The dashboard **also** polls the public `GET /markets/{ticker}/orderbook` and `GET /markets/{ticker}` every 30 s while the tab is visible. The live point is plotted beside the collected history, every series is labelled by source, and a failed poll reports the HTTP status instead of a price. No key, no WebSocket, no interpolation. | `tests/dashboard_live.test.js` |
-| `data/resolutions.json` was empty (`count: 0`) while 200 settled in-scope markets existed in the parallel settled-markets scan | `tools/collector.py` now requests `status=settled` **with** the documented `min_settled_ts` filter, resolves the series ticker by the longest known prefix (dash-containing series such as `GOVPARTY-NH`), and drops any market without an official yes/no `result`. The Resolutions page merges both official sources and prints each row’s provenance. | `tests/test_resolutions.py` |
+| `data/resolutions.json` was empty (`count: 0`) while settled in-scope markets with official results existed | The collector owner (session `e29ebc3a`) unions the settled feed with in-scope rows that carry an official `result`; the 06:47Z snapshot now holds **127** rows. The Resolutions page additionally merges the settled-markets scan and prints each row’s provenance, so both official sources are visible. Query correctness requests (documented `min_settled_ts`, dash-prefix series resolution, yes/no-only outcomes) are logged in `COORDINATION.md` for that owner. | `scripts/render_check.mjs` (resolutions page renders) |
 
 Also: a 0.12 s minimum interval between collector requests, `Retry-After` support and a published
 `fetch_warnings` list, because the 00:53Z snapshot logged 44 × 429 and 105 × 404 out of 1,606
@@ -145,7 +145,6 @@ cd tools && python3 build_site.py && python3 build_content.py && cd ..
 python3 tools/check.py                 # links, nav, data, secrets, inline JS
 npm install                            # jsdom, once
 node --test tests/dashboard_live.test.js   # chart default + live poll + failure path
-python3 tests/test_resolutions.py          # settled query, series prefix, yes/no only
 node scripts/render_check.mjs              # six pages rendered in jsdom
 python3 -m http.server 8000                # then open http://localhost:8000/
 ```

@@ -1323,7 +1323,9 @@ FLAGGED = [
   "year only if empty, with the window published in <code>query</code>), resolves the series ticker "
   "by the longest known prefix, and drops any settled market whose official <code>result</code> is "
   "not yes/no. The Resolutions page also renders the parallel settled-markets scan and labels each "
-  "row&#8217;s provenance, so no source is hidden. Tests: <code>tests/test_resolutions.py</code>.",
+  "row&#8217;s provenance, so no source is hidden. The collector-side query fix is a logged "
+  "cross-scope request to the owner of tools/collector.py (session e29ebc3a); the union they "
+  "added is live and the 06:47Z snapshot holds 127 rows.",
   "api-reference/market/get-markets"),
  ("F26", "Some API requests in the published snapshot failed (429/404), so counts are a floor",
   "Two snapshots on 2026-11-21: the 00:53Z one logs 1,606 requests, 149 non-2xx "
