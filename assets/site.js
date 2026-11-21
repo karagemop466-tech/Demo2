@@ -149,7 +149,7 @@
     for (var i = 1; i < series.length; i++) {
       var a = series[i - 1], b = series[i];
       if (a.v === null || a.v === undefined || b.v === null || b.v === undefined) continue;
-      var change = b.v - a.v;
+      var change = Math.round((b.v - a.v) * 1e4) / 1e4;
       if (Math.abs(change) >= thr) {
         jumps.push({
           t: b.t, fromV: a.v, toV: b.v, change: change,

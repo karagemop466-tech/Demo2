@@ -42,10 +42,9 @@ why a move happened.</p>
 <a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>). Market links point to the
 Kalshi series page pattern (checked against the live site); cause is never inferred — each row links to the
 market's own trade/market API responses and is flagged <span class="pill flag">cause unverified</span>.
-Data as of <span id="alertDataAsOf">the collected jump file</span>; the collector runs on a
-schedule via <a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>, and
-GitHub may delay those runs.</p>
-
+Data as of <span id="jumpsAsOf">not collected yet</span>; the collector runs on a schedule via
+<a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>, and GitHub may
+delay those runs.</p>
 </div>
 <footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a> · <a href="../monitor/index.html">Read-only Monitor</a></div></div></footer>
 <script src="../assets/site.js"></script>
@@ -113,7 +112,7 @@ GitHub may delay those runs.</p>
     var thr=parseFloat(thrInp.value)||THRESHOLD_DEFAULT;
     var minv=parseFloat(volInp.value)||MINVOL_DEFAULT;
     var roi=allRows.filter(function(r){
-      var d=Math.abs(parseFloat(r.delta)||0);
+      var d=Math.round(Math.abs(parseFloat(r.delta)||0)*1e4)/1e4;
       var raw=(r.est_vol||'').toString().replace(/[^0-9.]/g,'');
       var known=raw!=='';
       var e=parseFloat(raw||'0');
@@ -134,10 +133,9 @@ GitHub may delay those runs.</p>
   ]).then(function(res){
     var snap=res[0], jdata=res[1];
     // Freshness is stated from the files actually loaded, not baked in at build time.
-    var asOf=(jdata.generated_from&&jdata.generated_from.snapshot_generated_at)||'';
-    if($('alertDataAsOf')) $('alertDataAsOf').textContent = asOf || 'the collected jump file (timestamp absent)';
-    if(window.KR&&KR.staleness) KR.staleness($('staleness'), asOf);
-    var markets=(snap.markets||[]);
+    var asOf=(jdata.generated_from&&jdata.generated_from.snapshot_generated_at)||jdata.generated_at_utc||'';
+    var asOfEl=$('jumpsAsOf'); if(asOfEl) asOfEl.textContent=asOf||'timestamp absent from the collected jump file';
+    if(window.KR&&KR.staleness) KR.staleness($('staleness'), asOf);    var markets=(snap.markets||[]);
     var mktByTicker={};
     markets.forEach(function(m){if(m.market_ticker)mktByTicker[m.market_ticker]=m;});
     var trades=(jdata.trade_print_moves||[]);

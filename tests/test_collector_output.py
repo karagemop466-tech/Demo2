@@ -51,6 +51,7 @@ def fake_get_json(url: str, signer=None, retries: int = 3):
 
 
 def fake_paginate(url: str, key: str, signer=None, max_pages: int = 30):
+    SEEN_URLS.append(url)
     if "events" in url:
         return EVENTS
     if "status=settled" in url:
@@ -58,8 +59,12 @@ def fake_paginate(url: str, key: str, signer=None, max_pages: int = 30):
     return []
 
 
+SEEN_URLS: list[str] = []
+
+
 SERIES = [
     {"ticker": "TSTELEC", "tags": ["Elections"], "category": "Elections"},
+    {"ticker": "GOVPARTY-NH", "tags": ["Elections"], "category": "Elections"},
     {"ticker": "TSTCRYPTO", "tags": ["Crypto"], "category": "Crypto"},
     {"ticker": "TSTGOLF", "tags": ["Golf"], "category": "Golf"},
     {"ticker": "TSTCULT", "tags": ["Culture"], "category": "Culture"},
@@ -123,6 +128,10 @@ SETTLED = [
      "title": "Test market 0 (golf)", "result": "no",
      "settlement_value_dollars": "0.0000", "settlement_ts": "2026-11-20T00:00:00Z",
      "close_time": "2026-11-19T23:59:59Z", "expiration_value": "no"},
+    {"ticker": "GOVPARTY-NH-26-D", "event_ticker": "GOVPARTY-NH-26", "status": "settled",
+     "title": "Test hyphenated series (elections)", "result": "yes",
+     "settlement_value_dollars": "1.0000", "settlement_ts": "2026-11-20T01:00:00Z",
+     "close_time": "2026-11-20T00:59:59Z", "expiration_value": "yes"},
 ]
 
 
@@ -186,7 +195,12 @@ def test_end_to_end() -> None:
     ok(c["markets_in_scope"] == 1300 + 20 + 5 + 3 + 4, "full in-scope count preserved")
     ok(c["markets_published"] == 1200 + 20 + 5 + 3 + 4, "elections trimmed to PUBLISH_PER_TOPIC")
     ok(c["markets_trimmed_per_topic"]["elections"] == 100, "trimmed count recorded, not silent")
-    ok(c["resolved_in_scope"] == 2, "resolutions counted")
+    ok(c["resolved_in_scope"] == 3, "resolutions counted (including hyphenated series)")
+    settled_urls = [u for u in SEEN_URLS if "status=settled" in u]
+    ok(any("min_settled_ts=" in u and "mve_filter=exclude" in u for u in settled_urls),
+       "resolutions query uses min_settled_ts and mve_filter=exclude")
+    ok(collector.resolve_series_ticker("GOVPARTY-NH-26", {s["ticker"]: s for s in SERIES}) == "GOVPARTY-NH",
+       "resolve_series_ticker matches longest hyphenated series prefix")
 
     ok(all(isinstance(v, list) and all(isinstance(t, str) for t in v)
            for v in snap["by_topic"].values()), "by_topic holds tickers only (no duplicated rows)")
@@ -213,7 +227,7 @@ def test_end_to_end() -> None:
         ok("count_in_scope" in tp and "trimmed_by_volume" in tp,
            f"topic-{t}: in-scope count and trimming recorded")
 
-    ok(len(snap["resolutions"]) == 2 and {r["result"] for r in snap["resolutions"]} == {"yes", "no"},
+    ok(len(snap["resolutions"]) == 3 and {r["result"] for r in snap["resolutions"]} == {"yes", "no"},
        "resolutions keep official yes/no results")
 
     # second run exercises the history append + bound

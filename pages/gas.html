@@ -9,7 +9,7 @@
 <div class="wrap">
 
 <h1>Gas prices</h1>
-<p class="lead">Fuel-price markets on the Kalshi demo exchange. The in-scope series are the ones tagged <code>Gas</code>. <b>Verified on 2026-11-20:</b> the demo environment lists <code>DIESEL</code> (weekly diesel price) and <code>DIESELM</code> (monthly diesel price), both settled against U.S. Energy Information Administration data, but has <b>no open events or markets</b> for either series &mdash; so this page shows series, not live prices. That is a property of the demo exchange, not a gap in the data; the page fills in automatically when those markets are listed.</p>
+<p class="lead">Fuel-price markets on the Kalshi demo exchange. Scope is identified strictly from official series records: <code>tags</code> containing <code>Gas</code> (<code>DIESEL</code>, <code>DIESELM</code>, settled against U.S. Energy Information Administration data) and <code>product_metadata.scope == "Gasoline"</code> (<code>KXAAAGASD</code>, AAA national retail gasoline averages). <b>Note:</b> <code>DIESEL</code> and <code>DIESELM</code> currently have no open demo events, whereas <code>KXAAAGASD</code> surfaces live gas-price contracts when active; crude oil (<code>KXWTI</code>) is excluded because it is not retail gas.</p>
 <div id="metaBar"><div class="card tight"><div class="status" id="staleness">Loading snapshot…</div></div></div>
 <div class="kpis" id="kpis"></div>
 <div class="card tight" style="margin-bottom:14px"><div class="status" id="catNote">Checking the series catalogue…</div></div>
@@ -18,7 +18,7 @@
 <p class="muted">Scope rule: a market is in this topic only if its <b>official</b> series record
 carries the matching <code>tags</code> or <code>categories</code> value from
 <a href="https://docs.kalshi.com/api-reference/market/get-series-list" target="_blank" rel="noopener">Get Series List</a>
-(tags include <code>Gas</code>; categories are <code>Economics</code> — so category alone would not find these, which is why the tag is used). Nothing is matched on free-text guessing; unmapped series are listed on
+(tags include <code>Gas</code> or <code>product_metadata.scope == "Gasoline"</code>; categories are <code>Economics</code>/<code>Other</code>, so category alone is insufficient). Nothing is matched on free-text guessing; unmapped series are listed on
 <a href="flagged.html">Flagged for Review</a> instead of being silently assigned.</p>
 <div id="liveTable"></div>
 

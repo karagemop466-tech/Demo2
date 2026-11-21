@@ -7,7 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { WebSocketServer, WebSocket } from 'ws';
 import { KALSHI, AUTH, TOPICS, PORT } from './config.js';
-import { KalshiClient, KalshiError } from './kalshiClient.js';
+import { KalshiClient, KalshiError, buildCreateOrderV2Payload } from './kalshiClient.js';
 import { store } from './store.js';
 import { categorizeTopic, classifyTrade, aggregatePerformance, suggestStrategies } from './strategies.js';
 import { SUGGESTIONS, FLAGGED } from './suggestionsData.js';
@@ -95,7 +95,7 @@ app.get('/api/health', async (_req, res) => {
 app.get('/api/events', async (req, res) => {
   try {
     const status = req.query.status === 'settled' ? 'settled' : 'open';
-    const data = await client.getEvents({
+    const data = await client.getAllEvents({
       status,
       withNestedMarkets: true,
       limit: 200,
@@ -134,7 +134,12 @@ app.get('/api/events', async (req, res) => {
         close_ts: ev.close_ts,
       });
     }
-    res.json({ count: events.length, events });
+    res.json({
+      count: events.length,
+      pages_fetched: data?.pagesFetched || 1,
+      truncated: Boolean(data?.truncated),
+      events,
+    });
   } catch (err) {
     res.status(502).json({ error: err.message, unverified: true });
   }
@@ -174,8 +179,8 @@ app.get('/api/orderbook', async (req, res) => {
         .filter((l) => l.price !== null && l.count !== null);
     const yes = toLevels(ob.yes_dollars);
     const no = toLevels(ob.no_dollars);
-    const bestYes = yes.length ? yes[yes.length - 1] : null; // best bid is last (ascending)
-    const bestNo = no.length ? no[no.length - 1] : null;
+    const bestYes = yes.length ? yes.reduce((a, b) => (b.price > a.price ? b : a), yes[0]) : null;
+    const bestNo = no.length ? no.reduce((a, b) => (b.price > a.price ? b : a), no[0]) : null;
     res.json({
       ticker,
       yes,
@@ -183,7 +188,7 @@ app.get('/api/orderbook', async (req, res) => {
       best_yes_bid: bestYes,
       best_no_bid: bestNo,
       spread:
-        bestYes && bestNo ? Math.round((100 - (bestNo.price + bestYes.price)) * 100) / 100 : null,
+        bestYes && bestNo ? Math.round((1 - (bestNo.price + bestYes.price)) * 1e4) / 1e4 : null,
     });
   } catch (err) {
     res.status(502).json({ error: err.message, unverified: true });
@@ -268,9 +273,37 @@ app.get('/api/trades/records', (_req, res) => {
 });
 
 app.post('/api/trades/execute', async (req, res) => {
-  const { market_ticker, side, price, count, action } = req.body || {};
-  if (!market_ticker || !side || !price || !count) {
-    return res.status(400).json({ error: 'market_ticker, side, price, count required' });
+  const {
+    market_ticker,
+    ticker,
+    side,
+    price,
+    price_dollars,
+    count,
+    action,
+    client_order_id,
+    time_in_force,
+    self_trade_prevention_type,
+  } = req.body || {};
+  const resolvedTicker = ticker || market_ticker;
+  const resolvedPrice = price ?? price_dollars;
+  if (!resolvedTicker || !side || resolvedPrice === undefined || !count) {
+    return res.status(400).json({ error: 'ticker/market_ticker, side, price, count required' });
+  }
+  let order;
+  try {
+    order = buildCreateOrderV2Payload({
+      ticker: resolvedTicker,
+      side,
+      action,
+      price: resolvedPrice,
+      count,
+      client_order_id,
+      time_in_force,
+      self_trade_prevention_type,
+    });
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
   }
   if (!client.enabled) {
     return res.status(401).json({
@@ -279,30 +312,24 @@ app.post('/api/trades/execute', async (req, res) => {
     });
   }
   try {
-    // V2 order shape: side is 'buy'/'sell', outcome_side 'yes'/'no', price in dollars.
-    const order = {
-      market_ticker,
-      side: action === 'sell' ? 'sell' : 'buy',
-      outcome_side: side === 'no' ? 'no' : 'yes',
-      price_dollars: String(price),
-      count: String(count),
-      type: 'gtc',
-    };
     const result = await client.createOrder(order);
     const trade = store.recordTrade({
-      market_ticker,
+      market_ticker: resolvedTicker,
       side,
-      price,
-      count,
+      price: Number(order.price),
+      count: Number(order.count),
       action,
       title: req.body.title || '',
-      topic: categorizeTopic(`${req.body.title || ''} ${market_ticker}`),
+      topic: categorizeTopic(`${req.body.title || ''} ${resolvedTicker}`),
       order_id: result?.order?.order_id || result?.order_id,
       status: result?.order?.status || 'submitted',
     });
     res.json({ ok: true, kalshi: result, trade });
   } catch (err) {
-    res.status(502).json({ error: err.message, unverified: true });
+    res.status(err instanceof KalshiError && err.status === 400 ? 400 : 502).json({
+      error: err.message,
+      unverified: true,
+    });
   }
 });
 
@@ -366,7 +393,7 @@ function broadcast(msg) {
 let pollTimer = null;
 async function pollAndBroadcast() {
   try {
-    const data = await client.getEvents({ status: 'open', withNestedMarkets: true, limit: 200 });
+    const data = await client.getAllEvents({ status: 'open', withNestedMarkets: true, limit: 200 });
     const events = (data?.events || []).filter((ev) => TOPICS.includes(topicForEvent(ev)));
     for (const ev of events) {
       for (const m of ev.markets || []) {
