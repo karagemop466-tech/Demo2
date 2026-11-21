@@ -1719,3 +1719,59 @@ No other session's implementation code is edited. Open PRs #59 (`arena/441151f5-
 - Build-and-check CI on the merge commit: **success** (run 44876440290).
 - Pages deploy on the merge commit: **success** (run 44876439996, 23s). Site: https://karagemop466-tech.github.io/Demo2/
 - Task E-1: **done**.
+## Session e29ebc3a — branch `arena/e29ebc3a-demo2` (claimed 2026-11-21)
+
+Session owner: `e29ebc3a`. Scope (exclusive): `tools/collector.py` (culture scope mapping +
+resolutions union fix), `tools/test_series_topic.py` (new offline test), this file's section.
+No other session has claimed these files. Shared outputs (`index.html`, `pages/*`, `data/*`)
+are NOT edited by hand — they regenerate via `tools/build_site.py` / `tools/build_content.py`
+and the Actions collector.
+
+| Task | Status | Owner | Files touched |
+|---|---|---|---|
+| E1 Audit repo vs requirements (line by line, official sources) | in progress | e29ebc3a | this file |
+| E2 Fix Culture scope mapping (Entertainment category + vetted culture tags, priority-ordered) | in progress | e29ebc3a | `tools/collector.py` |
+| E3 Fix empty Resolutions (union settled fetch with in-scope rows carrying official results) | in progress | e29ebc3a | `tools/collector.py` |
+| E4 Offline unit test for `series_topic` (synthetic official-shaped records) | in progress | e29ebc3a | `tools/test_series_topic.py` |
+| E5 Regenerate site, run `tools/check.py` + link check, PR, merge, verify Pages | pending | e29ebc3a | generated pages, this file |
+
+### Audit findings (2026-11-21, evidence in repo)
+
+- **Culture = 0 markets (bug).** `data/snapshot.json` `counts.per_topic.culture = 0` while
+  `series_inventory.categories` shows `Entertainment: 2630` series and `tags_top` shows
+  `Music: 804, Awards: 493, Movies: 271, Television: 242`. `series_topic()` in
+  `tools/collector.py` only maps tag `culture` / category `culture`, so all Entertainment
+  series are unmapped. `unmapped_series` proves live culture events were skipped:
+  `KXOSCARS (10), KXMOVIECAST (8), KXMUSICREPORT (7), KXALBUMRELEASEDATE (6),
+  KXPERFORMROLE007 (6)`. Fix E2 maps Entertainment/Culture categories + vetted culture tags
+  to `culture`, checked AFTER gas/elections/crypto/golf so specific topics win.
+- **Resolutions page empty (bug).** `data/resolutions.json` = `{"count": 0, "resolutions": []}`
+  and `pages/resolutions.html` reads exactly that file, yet `data/snapshot.json` markets
+  contain 33 finalized in-scope markets with official results (21 `yes`, 12 `no`).
+  `collect_resolutions()` only uses the separate `GET /markets?status=settled` fetch and
+  re-derives the series from `event_ticker.split("-")[0]`; the demo settled feed is dominated
+  by synthetic series (e.g. `KXDEMOFUTHOURLY`, 20/20 rows in `data/markets_settled.json`)
+  that are not in the in-scope index, so the fetch contributes 0. Fix E3 unions the settled
+  fetch with in-scope rows already carrying official `result` values.
+- **Portfolio / real demo execution: not configured (owner action, not a bug).**
+  `data/portfolio.json` = `authenticated: false` ("No demo API key configured");
+  `data/analysis.json` verdict `insufficient_data` (0 fills). Paper trading works:
+  `data/paper_portfolio.json` (3 simulated trades, cash 79.49 of 100.00). Enabling real demo
+  orders needs repo secrets `KALSHI_DEMO_API_KEY_ID` + `KALSHI_DEMO_PRIVATE_KEY` and
+  variable `KALSHI_TRADING_ENABLED=1` — see `pages/questions.html` Q4. Flagged, not blocking.
+- **Three collectors write `data/` on different schedules** (`refresh-data.yml` →
+  `tools/collector.py`, `collect.yml` → `tools/collect_kalshi.py`, `data-refresh.yml` →
+  `scripts/fetch_data.py`). They write mostly disjoint files but share `data/` and push to
+  `main`; `desk-verify.yml` already shares concurrency key `kalshi-data-writers` with one of
+  them. Not changed in this session (other sessions' workflows); flagged for the owner.
+- **Live site verified:** Pages API `status: built`, `build_type: legacy`, source `main /`;
+  latest `pages build and deployment` runs succeed (e.g. run 44861186297). One older
+  `Deploy GitHub Pages` failure (44852384694) predates the latest successful builds.
+  Sandbox cannot reach `github.io` or Kalshi (egress blocked), so live-page checks rely on
+  Actions runs + `gh` API, recorded here.
+- **Official docs re-verified 2026-11-21 (fetch, not recall):**
+  demo REST/WS roots + mock-funds warning (demo_env); Get Markets `status` values
+  unopened/open/closed/settled + `result`/`settlement_value_dollars`/`settlement_ts` fields;
+  Get Market Orderbook `depth` 0–100 + `orderbook_fp.yes_dollars/no_dollars` [price, count]
+  pairs; Create Order (V2) `POST /portfolio/events/orders` body shape. All match the repo's
+  `pages/api-reference.html` claims.
