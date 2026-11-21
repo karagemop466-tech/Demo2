@@ -112,9 +112,10 @@ empty candlestick trade prices; Gas topic catalogue-only in demo.
 
 ## PR / deploy record
 
-- PR: _to be recorded after `gh pr create`_
-- Merge result: _to be recorded_
-- Pages deploy: _to be recorded_
+- PR: https://github.com/karagemop466-tech/Demo2/pull/63 — **merged** at `003772d` (2026-11-21T06:37:44Z).
+- Build-and-check CI on the merge commit: **success** (run 44876440290).
+- Pages deploy on the merge commit: **success** (run 44876439996, 23s). Site: https://karagemop466-tech.github.io/Demo2/
+- Task E-1: **done**.
 - Data refresh run: _to be recorded_
 
 ## Other sessions' output preserved (no work discarded)
@@ -1714,6 +1715,7 @@ No other session's implementation code is edited. Open PRs #59 (`arena/441151f5-
 
 ### PR / deploy record (this session)
 
-- PR: _to be recorded after `gh pr create`_
-- Merge result: _to be recorded_
-- Pages deploy: _to be recorded_
+- PR: https://github.com/karagemop466-tech/Demo2/pull/63 — **merged** at `003772d` (2026-11-21T06:37:44Z).
+- Build-and-check CI on the merge commit: **success** (run 44876440290).
+- Pages deploy on the merge commit: **success** (run 44876439996, 23s). Site: https://karagemop466-tech.github.io/Demo2/
+- Task E-1: **done**.
