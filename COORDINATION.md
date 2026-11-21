@@ -2043,11 +2043,47 @@ Local gates, all green on this branch:
 
 ### Cross-scope requests (not edited by this session)
 
-1. Owner of `tools/collector.py` (`e29ebc3a`): consider `min_settled_ts` (30 days, widen to a year
-   once if empty) on the settled sweep, longest-known-prefix series resolution (dash-containing
-   series such as `GOVPARTY-NH`), a yes/no-only outcome filter, and a small request interval with
-   `Retry-After` support. Evidence and a working implementation are in commit `3bdf9e6` of this
-   branch; the offline test is `tests/test_resolutions.py` in that commit. Docs:
-   https://docs.kalshi.com/api-reference/market/get-markets · https://docs.kalshi.com/getting_started/rate_limits
+| # | Task | Status | Owner | Files |
+|---|------|--------|-------|-------|
+| J-1 | Fix `collect_resolutions` (`min_settled_ts`, `mve_filter=exclude`, `limit=1000`, longest-prefix `resolve_series_ticker`, reuse `series_idx`/`topic_cache`, paper-portfolio ticker fallback, combined with `merge_scope_resolutions`) | done | 1409dce9 | `tools/collector.py`, `tests/test_collector_output.py` |
+| J-2 | Fix `alerts.js` live quote/settlement polling (`GET /markets?tickers=…` batches), `KR.detectJumps` 4-dp float rounding, `index.html` quick topic/alert nav + live browser candlestick/orderbook refresh, `pages/gas.html` blurb, `pages/live-alerts.html` dynamic `#jumpsAsOf` to stop generator drift, `tools/build_content.py` verification/flagged updates (`orderbook_fp` dollar-string literal fix, 2026-11-21 status) | done | 1409dce9 | `assets/alerts.js`, `assets/site.js`, `tools/build_site.py`, `tools/build_content.py`, `index.html`, `pages/*` |
+| J-3 | Fix `paper_trade.py` 4-dp `history_move` precision + `NEAR_TERM_RESERVE = 6` (`<= 7d` close) slot reservation while keeping `74946c6c` unknown-valuation safety | done | 1409dce9 | `tools/paper_trade.py`, `tests/test_paper_trade.py` |
+| J-4 | Fix `server/kalshiClient.js` + `server/index.js` Create Order V2 (`POST /portfolio/events/orders`, full `/trade-api/v2/...` signing pathname, V2 payload + `order_direction` mapping), Cancel Order V2 (`DELETE /portfolio/events/orders/{id}?market_ticker=…`), `GET /portfolio/orders`, `getAllEvents` cursor pagination, and `orderbook` dollar spread (`1 - (yes + no)`) | done | 1409dce9 | `server/kalshiClient.js`, `server/index.js`, `tests/app.test.js` |
+| J-5 | Fix workflow push-retry (`git reset --mixed origin/main` + stage only each workflow's own files so concurrent runs never conflict or revert unrelated commits), remove colliding `actions/deploy-pages@v4` vs legacy `pages-build-deployment`, and wire Python + Node test suites into `ci.yml` | done | 1409dce9 | `.github/workflows/{refresh-data,paper-trade,desk-verify,pages,ci}.yml` |
+| J-6 | Full verification gates, PR to `main`, merge without waiting, confirm CI + GitHub Pages deploy, record PR & run URLs | done | 1409dce9 | `COORDINATION.md`, PR #71 operations |
+
+### PR & Deploy Record (2026-11-21)
+
+- **PR #71:** https://github.com/karagemop466-tech/Demo2/pull/71 — **merged** at `69049d69ef659655f87ca1016dc637ea9640f21e` (`69049d6`).
+- **PR #71 checks:** `Build and check the site` (`44878566843`) **success**; `Verify read-only monitor` (`44878566912`) **success**.
+- **Post-merge `main` workflows:** `Build and check the site` (`44878851903` on `69049d6`) **success**; `Paper trading simulation` (`44878851972` on `69049d6`) **success** (pushed `191f0c3`).
+- **GitHub Pages deploy:** `pages build and deployment` (`44878917671` on `191f0c3`) **ACTIVE / SUCCESS** → https://karagemop466-tech.github.io/Demo2/ (verified via GitHub GraphQL `deployments` API; note `pages.yml` collision removed cleanly so legacy Pages publishes without competing `actions/deploy-pages@v4`).
+
+### Official sources verified directly (2026-11-21)
+
+- `https://docs.kalshi.com/getting_started/demo_env` — demo REST/WS roots (`https://external-api.demo.kalshi.co/trade-api/v2`, `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2`) and demo price disclaimer.
+- `https://docs.kalshi.com/api-reference/market/get-markets` — `limit <= 1000`, `min_settled_ts` sorting by settlement time, `mve_filter=exclude`, `tickers=<list>`, `cursor` pagination.
+- `https://docs.kalshi.com/api-reference/events/get-events` — `limit <= 200`, `cursor` pagination.
+- `https://docs.kalshi.com/api-reference/market/get-market-orderbook` — `orderbook_fp.{yes_dollars, no_dollars}` `[price_dollars, count_fp]` bid-only pairs.
+- `https://docs.kalshi.com/api-reference/market/get-trades` — `GET /markets/trades?min_ts=…&limit=1000`.
+- `https://docs.kalshi.com/api-reference/orders/create-order-v2` & `https://docs.kalshi.com/getting_started/order_direction` — `POST /portfolio/events/orders`, `bid ≡ yes`, `ask ≡ no`, unified YES-leg price scale, fixed-point `count` (`2dp`) and `price` (`4dp`).
+- `https://docs.kalshi.com/getting_started/quick_start_websockets` — signed handshake headers required.
+
+### Pre-PR verification gates (all passing on merged tree)
+
+- `python3 tests/test_collector_output.py`: 54/54 PASS
+- `python3 tests/test_paper_trade.py`: 41/41 PASS
+- `python3 tools/test_series_topic.py`: 39/39 PASS
+- `python3 session-eeb796d7/tools/test_collector_fix.py`: 13/13 PASS
+- `npm test` (`tests/app.test.js`): 11/11 PASS
+- `python3 tools/check.py`: 125 HTML files, 20 generated pages, links/nav/data/secrets/js clean (108 non-2xx API log entries surfaced on `pages/verification.html` per policy)
+- `python3 scripts/check_links.py`: 11,231 references across 125 HTML files, 0 broken
+- `node scripts/render_check.mjs`: 5/5 pages rendered with data, 0 errors
+
+1. ~~`min_settled_ts` / longest-prefix series resolution / yes/no-only outcomes~~ —
+   **addressed by session `1409dce9` (J-1)**, which landed `min_settled_ts`, `mve_filter=exclude`,
+   `limit=1000`, longest-prefix `resolve_series_ticker` and the combined union in
+   `tools/collector.py`. The earlier working implementation (commit `3bdf9e6` of this branch) is
+   superseded and no longer carried.
 2. Owner of `tools/collector.py`: publish `fetch_warnings` when a paginated sweep stops early, so a
    truncated scan cannot look complete.
