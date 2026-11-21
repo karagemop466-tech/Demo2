@@ -1928,3 +1928,24 @@ PR: https://github.com/karagemop466-tech/Demo2/pull/70
 - Irregularity noted for Pages deploy workflow:
   - GitHub Pages repo config uses `build_type: "legacy"` (`main`/`/`), while `.github/workflows/pages.yml` uses `actions/deploy-pages@v4` (already flagged in prior `COORDINATION.md` entries; `legacy` Pages build serves `main` directly on merge).
 
+### Final record (2026-11-21, session e29ebc3a)
+
+- **Production verification of E2/E3:** the first `Refresh Kalshi demo data` run with the
+  fix (snapshot `2026-11-21T06:47:00Z`) reports `per_topic.culture = 1888` (was 0) and
+  `resolved_in_scope = 127` (was 0). `data/topic-culture.json` top market:
+  `KXOSCARPIC-27-BLA` "Will The Black Ball win Best Picture at the Oscars?"
+  (`volume_fp` 2035929.23). `data/resolutions.json` count 127 with official results
+  (e.g. `KXNEAR15M-26NOV210145-45` → `yes`, `settlement_value_dollars` 1.0000).
+- **PR #66** (collector fix): https://github.com/karagemop466-tech/Demo2/pull/66 — merged
+  at `b1b10ca` (2026-11-21T06:41:44Z).
+- **PR #68** (regeneration): https://github.com/karagemop466-tech/Demo2/pull/68 — merged
+  at `84b22f3` (2026-11-21T06:49:52Z).
+- **Main CI** (Build and check the site, run 44877394571): **success**.
+- **Pages:** `pages build and deployment` run 44877537294 **success**; `Deploy GitHub Pages`
+  run 44877394584 **success**; Pages API `status: built` (one transient `errored` during
+  rapid data-bot commits, recovered on the next build). Site:
+  https://karagemop466-tech.github.io/Demo2/
+- **E1–E5: done.** Remaining owner actions (flagged, not blocking): demo API key secrets
+  for real portfolio/execution (Q4); shared concurrency group for all data writers;
+  literal conflict-marker cleanup at COORDINATION.md ~1508/~1645; add
+  `tools/test_series_topic.py` to the CI gate (cross-scope request logged above).
