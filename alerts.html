@@ -118,8 +118,10 @@ chats and moves the row to <a href="pages/resolutions.html">Resolutions</a>.</p>
       <td><a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">Get Trades</a> · <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a></td></tr>
     <tr><td>Trade tape request</td><td><code>GET /markets/trades?limit=1000&amp;min_ts=&lt;unix s&gt;</code></td>
       <td><a href="https://docs.kalshi.com/api-reference/market/get-trades" target="_blank" rel="noopener">get-trades docs</a></td></tr>
-    <tr><td>Quote request</td><td><code>GET /markets?status=open&amp;limit=1000</code> (pagination limit verified)</td>
-      <td><a href="https://docs.kalshi.com/getting_started/pagination" target="_blank" rel="noopener">pagination docs</a></td></tr>
+    <tr><td>Quote request</td><td><code>GET /markets?tickers=&lt;watched_batch&gt;</code> (unfiltered by status so both open quotes, <code>previous_price_dollars</code>, and settled <code>result</code> yes/no outcomes are returned)</td>
+      <td><a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">get-markets docs</a></td></tr>
+    <tr><td>Live candlesticks fallback</td><td><code>GET /series/{series_ticker}/markets/{ticker}/candlesticks</code> when snapshot candlesticks are absent</td>
+      <td><a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks" target="_blank" rel="noopener">get-market-candlesticks docs</a></td></tr>
     <tr><td>Order book</td><td><code>GET /markets/{ticker}/orderbook?depth=10</code>; yes/no bids only, ask side derived as 1 − p and labelled</td>
       <td><a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook" target="_blank" rel="noopener">get-market-orderbook docs</a></td></tr>
     <tr><td>WebSocket not used in the browser</td><td>the WS handshake requires signed <code>KALSHI-ACCESS-*</code> headers, which a public static page cannot produce</td>
