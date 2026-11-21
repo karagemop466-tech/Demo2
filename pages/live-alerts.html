@@ -15,7 +15,7 @@ more in either direction appears in "All alerts"; "High ROI" shows the subset a 
 rule-based filter flags as higher-conviction (a larger move in a more liquid market). Thresholds
 are tunable on the page — this is a rule, not a predictive model, and nothing is inferred about
 why a move happened.</p>
-<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Snapshot 2026-11-21T06:47:00+00:00</div></div></div>
+<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Snapshot 2026-11-21T07:17:28+00:00</div></div></div>
 <div class="card tight" style="margin-top:8px">
   <div class="row" style="margin:0;gap:10px;align-items:flex-end;flex-wrap:wrap">
     <div><label for="roiThreshold">High-ROI move floor ($)</label>
@@ -42,7 +42,7 @@ why a move happened.</p>
 <a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>). Market links point to the
 Kalshi series page pattern (checked against the live site); cause is never inferred — each row links to the
 market's own trade/market API responses and is flagged <span class="pill flag">cause unverified</span>.
-Data as of 2026-11-21T06:37:53Z; the collector runs every 10 minutes via
+Data as of <span id="jumpsAsOf">not collected yet</span>; the collector runs every 10 minutes via
 <a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>.</p>
 
 </div>
@@ -112,7 +112,7 @@ Data as of 2026-11-21T06:37:53Z; the collector runs every 10 minutes via
     var thr=parseFloat(thrInp.value)||THRESHOLD_DEFAULT;
     var minv=parseFloat(volInp.value)||MINVOL_DEFAULT;
     var roi=allRows.filter(function(r){
-      var d=Math.abs(parseFloat(r.delta)||0);
+      var d=Math.round(Math.abs(parseFloat(r.delta)||0)*1e4)/1e4;
       var raw=(r.est_vol||'').toString().replace(/[^0-9.]/g,'');
       var known=raw!=='';
       var e=parseFloat(raw||'0');
@@ -132,6 +132,8 @@ Data as of 2026-11-21T06:37:53Z; the collector runs every 10 minutes via
     fetch('../data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
   ]).then(function(res){
     var snap=res[0], jdata=res[1];
+    var asOf=(jdata.generated_from&&jdata.generated_from.snapshot_generated_at)||jdata.generated_at_utc||'';
+    var asOfEl=$('jumpsAsOf'); if(asOfEl&&asOf) asOfEl.textContent=asOf;
     var markets=(snap.markets||[]);
     var mktByTicker={};
     markets.forEach(function(m){if(m.market_ticker)mktByTicker[m.market_ticker]=m;});

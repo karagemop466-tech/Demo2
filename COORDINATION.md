@@ -1642,6 +1642,7 @@ The claim does not authorize edits to other sessions' implementation code (`serv
 | F-5 | Audit the deployed Live Alerts page's real browser request paths and publish any live-only failure | done | f75410bb | `session-f75410bb/review.html`, `COORDINATION.md`, `tools/build_content.py`, generated `pages/flagged.html` |
 
 **F-5 live-browser finding (2026-11-20):** the deployed `https://karagemop466-tech.github.io/Demo2/pages/live-alerts.html?cb=1` rendered “Could not load alert data: 503.” The live page source calls `fetch('data/snapshot.json')` / `fetch('data/jumps.json')` from a `/pages/` URL, which targets `/pages/data/...`; the actual published files at `/data/...` are available. Logged as R9 and added to the canonical Flagged for Review generator/page. **Cross-scope request:** owner of `tools/build_site.py` / Live Alerts (session 848af77d) please fix the generated fetch paths (for project pages, `../data/...`) and verify live browser loading; source code is not edited in this audit. Kalshi endpoint docs: https://docs.kalshi.com/api-reference/market/get-markets and https://docs.kalshi.com/api-reference/market/get-trades.
+
 ---
 
 ## Reconciliation of parallel integrations — sessions `b7bc848c` × `a984e8f4` (2026-11-20 ~21:0x UTC)
@@ -1717,6 +1718,7 @@ No other session's implementation code is edited. Open PRs #59 (`arena/441151f5-
 - Build-and-check CI on the merge commit: **success** (run 44876440290).
 - Pages deploy on the merge commit: **success** (run 44876439996, 23s). Site: https://karagemop466-tech.github.io/Demo2/
 - Task E-1: **done**.
+
 ## Session e29ebc3a — branch `arena/e29ebc3a-demo2` (claimed 2026-11-21)
 
 Session owner: `e29ebc3a`. Scope (exclusive): `tools/collector.py` (culture scope mapping +
@@ -1895,6 +1897,105 @@ checks passed on previous PR head; external scan is nonblocking by workflow desi
 
 ---
 
+## Session `d9fcbb2a` — live alerts/dashboard client fixes & cause-channels repair (CLAIM, 2026-11-21)
+
+Session ID: `d9fcbb2a` (branch `arena/d9fcbb2a-demo2`, re-merged `origin/main` at `84b22f3`).
+Platform branch constraint: all work stays on `arena/d9fcbb2a-demo2`.
+PR: https://github.com/karagemop466-tech/Demo2/pull/70
+
+| # | Task | Status | Owner | Files (exclusive scope) |
+|---|---|---|---|---|
+| D-1 | Fix `assets/alerts.js` live bugs observed on deployed site (`0/39 tracked markets on page 1` via `/markets?tickers=…` instead of `status=open&limit=1000`, live candlestick fetch for markets outside top 8, `previous_price_dollars` + seeded ≥$0.10 detection, 4dp rounding for exact $0.10, resolution tracking via unfiltered `tickers` query, official `settlement_sources` links) | done | d9fcbb2a | `assets/alerts.js` |
+| D-2 | Enhance `tools/build_site.py` (`index.html`, `alerts.html` + generator outputs): topic-at-a-glance cards, group-by-topic/event view toggle, live candlestick & orderbook fallback fetch for all 80 markets, official `settlement_sources` in sharp-jump table | done | d9fcbb2a | `tools/build_site.py`, `index.html`, `alerts.html`, generator-owned `pages/*.html` |
+| D-3 | Repair `pages/causes.html` broken data loaders (`dashboard_meta.json` 404 + `series_index.json` shape mismatch) to surface official `settlement_sources` from `data/snapshot.json` | done | d9fcbb2a | `pages/causes.html` |
+| D-4 | Offline regression suite (`tests/live_client.test.js`, `package.json`), full verification against official docs, PR to `main`, merge, confirm Pages deploy | done | d9fcbb2a | `tests/live_client.test.js`, `package.json`, `COORDINATION.md` |
+
+### Verification performed (Session `d9fcbb2a`, 2026-11-21)
+
+- Official Kalshi documentation verified directly:
+  - Demo environment: REST `https://external-api.demo.kalshi.co/trade-api/v2` and `https://demo-api.demo.kalshi.co/trade-api/v2` (and `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2` / `wss://demo-api.kalshi.co/trade-api/ws/v2`) — https://docs.kalshi.com/getting_started/demo_env
+  - `GET /markets?tickers=...` (when `tickers` is the sole filter, returns all matching markets regardless of status, enabling live quotes, `previous_price_dollars`, and `result` `yes`/`no` settlements) — https://docs.kalshi.com/api-reference/market/get-markets
+  - `GET /series/{series_ticker}/markets/{ticker}/candlesticks` (`start_ts`, `end_ts`, `period_interval` in `1`/`60`/`1440`) — https://docs.kalshi.com/api-reference/market/get-market-candlesticks
+  - `GET /markets/{ticker}/orderbook` (`orderbook_fp.{yes_dollars,no_dollars}`) — https://docs.kalshi.com/api-reference/market/get-market-orderbook
+  - `GET /markets/trades` (`min_ts`, `limit`) — https://docs.kalshi.com/api-reference/market/get-trades
+- Test & validation results (post-merge against `origin/main` `84b22f3`):
+  - `npm test`: 13/13 passed (`tests/app.test.js` 8/8 + `tests/live_client.test.js` 5/5).
+  - `python3 tools/check.py`: 20 pages checked, links/nav/data/secrets/JS clean (existing warning: non-2xx API log entries in `data/snapshot.json`, documented on Verification page).
+  - `python3 scripts/check_links.py`: 11,201 references across 124 HTML files — all links OK.
+  - `python3 tools/check_live_links.py`: 110 HTML files, 10,640 href/src attributes — zero broken internal links, zero duplicate IDs, zero placeholders.
+  - `python3 tools/test_series_topic.py` (39/39), `python3 tests/test_collector_output.py` (52/52), `python3 tests/test_paper_trade.py` (20/20), `python3 instrument-panel/tests_smoke.py` (all offline checks passed).
+- Irregularity noted for Pages deploy workflow:
+  - GitHub Pages repo config uses `build_type: "legacy"` (`main`/`/`), while `.github/workflows/pages.yml` uses `actions/deploy-pages@v4` (already flagged in prior `COORDINATION.md` entries; `legacy` Pages build serves `main` directly on merge).
+
+### Final record (2026-11-21, session e29ebc3a)
+
+- **Production verification of E2/E3:** the first `Refresh Kalshi demo data` run with the
+  fix (snapshot `2026-11-21T06:47:00Z`) reports `per_topic.culture = 1888` (was 0) and
+  `resolved_in_scope = 127` (was 0). `data/topic-culture.json` top market:
+  `KXOSCARPIC-27-BLA` "Will The Black Ball win Best Picture at the Oscars?"
+  (`volume_fp` 2035929.23). `data/resolutions.json` count 127 with official results
+  (e.g. `KXNEAR15M-26NOV210145-45` → `yes`, `settlement_value_dollars` 1.0000).
+- **PR #66** (collector fix): https://github.com/karagemop466-tech/Demo2/pull/66 — merged
+  at `b1b10ca` (2026-11-21T06:41:44Z).
+- **PR #68** (regeneration): https://github.com/karagemop466-tech/Demo2/pull/68 — merged
+  at `84b22f3` (2026-11-21T06:49:52Z).
+- **Main CI** (Build and check the site, run 44877394571): **success**.
+- **Pages:** `pages build and deployment` run 44877537294 **success**; `Deploy GitHub Pages`
+  run 44877394584 **success**; Pages API `status: built` (one transient `errored` during
+  rapid data-bot commits, recovered on the next build). Site:
+  https://karagemop466-tech.github.io/Demo2/
+- **E1–E5: done.** Remaining owner actions (flagged, not blocking): demo API key secrets
+  for real portfolio/execution (Q4); shared concurrency group for all data writers;
+  literal conflict-marker cleanup at COORDINATION.md ~1508/~1645; add
+  `tools/test_series_topic.py` to the CI gate (cross-scope request logged above).
+
+---
+
+## Session `1409dce9` — defect resolution, live verification & final integration (2026-11-21)
+
+Branch: `arena/1409dce9-demo2` (branched from `main` at `ddadabe`, merged `origin/main` at `f6bb863` (including `d9fcbb2a` PR #70 + `e29ebc3a` PR #73)).
+
+### Task table
+
+| # | Task | Status | Owner | Files |
+|---|------|--------|-------|-------|
+| J-1 | Fix `collect_resolutions` (`min_settled_ts`, `mve_filter=exclude`, `limit=1000`, longest-prefix `resolve_series_ticker`, reuse `series_idx`/`topic_cache`, paper-portfolio ticker fallback, combined with `merge_scope_resolutions`) | done | 1409dce9 | `tools/collector.py`, `tests/test_collector_output.py` |
+| J-2 | Fix `alerts.js` live quote/settlement polling (`GET /markets?tickers=…` batches), `KR.detectJumps` 4-dp float rounding, `index.html` quick topic/alert nav + live browser candlestick/orderbook refresh, `pages/gas.html` blurb, `pages/live-alerts.html` dynamic `#jumpsAsOf` to stop generator drift, `tools/build_content.py` verification/flagged updates (`orderbook_fp` dollar-string literal fix, 2026-11-21 status) | done | 1409dce9 | `assets/alerts.js`, `assets/site.js`, `tools/build_site.py`, `tools/build_content.py`, `index.html`, `pages/*` |
+| J-3 | Fix `paper_trade.py` 4-dp `history_move` precision + `NEAR_TERM_RESERVE = 6` (`<= 7d` close) slot reservation while keeping `74946c6c` unknown-valuation safety | done | 1409dce9 | `tools/paper_trade.py`, `tests/test_paper_trade.py` |
+| J-4 | Fix `server/kalshiClient.js` + `server/index.js` Create Order V2 (`POST /portfolio/events/orders`, full `/trade-api/v2/...` signing pathname, V2 payload + `order_direction` mapping), Cancel Order V2 (`DELETE /portfolio/events/orders/{id}?market_ticker=…`), `GET /portfolio/orders`, `getAllEvents` cursor pagination, and `orderbook` dollar spread (`1 - (yes + no)`) | done | 1409dce9 | `server/kalshiClient.js`, `server/index.js`, `tests/app.test.js` |
+| J-5 | Fix workflow push-retry (`git reset --mixed origin/main` + stage only each workflow's own files so concurrent runs never conflict or revert unrelated commits), remove colliding `actions/deploy-pages@v4` vs legacy `pages-build-deployment`, and wire Python + Node test suites into `ci.yml` | done | 1409dce9 | `.github/workflows/{refresh-data,paper-trade,desk-verify,pages,ci}.yml` |
+| J-6 | Full verification gates, PR to `main`, merge without waiting, confirm CI + GitHub Pages deploy, record PR & run URLs | done | 1409dce9 | `COORDINATION.md`, PR #71 operations |
+
+### PR & Deploy Record (2026-11-21)
+
+- **PR #71:** https://github.com/karagemop466-tech/Demo2/pull/71 — **merged** at `69049d69ef659655f87ca1016dc637ea9640f21e` (`69049d6`).
+- **PR #71 checks:** `Build and check the site` (`44878566843`) **success**; `Verify read-only monitor` (`44878566912`) **success**.
+- **Post-merge `main` workflows:** `Build and check the site` (`44878851903` on `69049d6`) **success**; `Paper trading simulation` (`44878851972` on `69049d6`) **success** (pushed `191f0c3`).
+- **GitHub Pages deploy:** `pages build and deployment` (`44878917671` on `191f0c3`) **ACTIVE / SUCCESS** → https://karagemop466-tech.github.io/Demo2/ (verified via GitHub GraphQL `deployments` API; note `pages.yml` collision removed cleanly so legacy Pages publishes without competing `actions/deploy-pages@v4`).
+
+### Official sources verified directly (2026-11-21)
+
+- `https://docs.kalshi.com/getting_started/demo_env` — demo REST/WS roots (`https://external-api.demo.kalshi.co/trade-api/v2`, `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2`) and demo price disclaimer.
+- `https://docs.kalshi.com/api-reference/market/get-markets` — `limit <= 1000`, `min_settled_ts` sorting by settlement time, `mve_filter=exclude`, `tickers=<list>`, `cursor` pagination.
+- `https://docs.kalshi.com/api-reference/events/get-events` — `limit <= 200`, `cursor` pagination.
+- `https://docs.kalshi.com/api-reference/market/get-market-orderbook` — `orderbook_fp.{yes_dollars, no_dollars}` `[price_dollars, count_fp]` bid-only pairs.
+- `https://docs.kalshi.com/api-reference/market/get-trades` — `GET /markets/trades?min_ts=…&limit=1000`.
+- `https://docs.kalshi.com/api-reference/orders/create-order-v2` & `https://docs.kalshi.com/getting_started/order_direction` — `POST /portfolio/events/orders`, `bid ≡ yes`, `ask ≡ no`, unified YES-leg price scale, fixed-point `count` (`2dp`) and `price` (`4dp`).
+- `https://docs.kalshi.com/getting_started/quick_start_websockets` — signed handshake headers required.
+
+### Pre-PR verification gates (all passing on merged tree)
+
+- `python3 tests/test_collector_output.py`: 54/54 PASS
+- `python3 tests/test_paper_trade.py`: 41/41 PASS
+- `python3 tools/test_series_topic.py`: 39/39 PASS
+- `python3 session-eeb796d7/tools/test_collector_fix.py`: 13/13 PASS
+- `npm test` (`tests/app.test.js`): 11/11 PASS
+- `python3 tools/check.py`: 125 HTML files, 20 generated pages, links/nav/data/secrets/js clean (108 non-2xx API log entries surfaced on `pages/verification.html` per policy)
+- `python3 scripts/check_links.py`: 11,231 references across 125 HTML files, 0 broken
+- `node scripts/render_check.mjs`: 5/5 pages rendered with data, 0 errors
+
+---
+
 ## Session `45072e88` — claim (2026-11-21 06:58 UTC)
 
 Branch `arena/45072e88-demo2`, base `ddadabe` (fast-forwarded to `84b22f3`, the tip of `main` at
@@ -1969,3 +2070,32 @@ defect; no manual intervention taken to avoid racing the workflow.
 - `pages/resolutions.html` going from 0 → 494 resolved rows confirms the E2/E3 collector fix
   (merged in PR #66) is live.
 - Task 21 (demo API key secrets) remains owner action; R-06/R-08 stay blocked on it.
+
+### Reconciliation with `origin/main` mid-session (2026-11-21 ~07:35 UTC)
+
+While PR #75 was open, `main` advanced through `e537fa0` (merges #70 `d9fcbb2a` live
+alerts/dashboard client fixes, #71 `1409dce9` V2 order routes + **ci.yml now runs the Python and
+Node suites**, #73 `e29ebc3a` regeneration, #74 `1409dce9` record, plus data-bot commits).
+`git merge origin/main` conflicted in `COORDINATION.md` only, in two regions:
+
+1. The F-5/marker region — both sides kept (my 450-1 deletion of the `>>>>>>> origin/main` line,
+   main's pre-existing blank line folded into one `---` rule).
+2. The end-of-file append region — **both sessions' records kept**: main's `d9fcbb2a` /
+   `e29ebc3a` / `1409dce9` records first (they merged first), then this session's sections.
+   No record, claim or log from any session was removed.
+
+Post-merge re-verification on the merged tree (`e537fa0` + this branch):
+
+| Gate | Result |
+|---|---|
+| `npm test` | **16/16 pass** (app 11 + live_client 5) |
+| desk / series-topic / paper-trade / collector-output / collector-fix | **5/5 · 39/39 · 41/41 · 54/54 · all pass** |
+| `tools/check.py` | clean (20 pages; existing 108 non-2xx snapshot-request warning) |
+| `scripts/check_links.py` | **9,786 references across 140 HTML files — all OK** |
+| `scripts/render_check.mjs` | **5/5 pages rendered with data, 0 errors** |
+| Generator parity (`build_site.py` + `build_content.py`, then status check) | **clean** — regenerated output identical to the merged tree |
+| Stray conflict-marker scan | **none** |
+
+Note: 1409dce9's J-5 closed e29ebc3a's cross-scope request by wiring the test suites into
+`.github/workflows/ci.yml` — the gate the earlier note said was contested; it is now covered
+upstream. `pages/resolutions.html` live check (07:17Z) showing 494 tracked resolutions remains valid.

@@ -42,6 +42,8 @@ DATA = Path(os.environ.get("DATA_DIR") or (ROOT / "data"))
 
 START_CASH = 100.00
 MAX_OPEN = 20
+NEAR_TERM_RESERVE = 6
+NEAR_TERM_DAYS = 7
 COUNT_PER_TRADE = 10.0          # contracts
 LONGSHOT_MAX = 0.10
 FAVORITE_MIN = 0.90
@@ -86,7 +88,20 @@ def history_move(points: list[dict]) -> float | None:
     vals = [v for v in vals if v is not None]
     if len(vals) < 2:
         return None
-    return vals[-1] - vals[0]
+    return round(vals[-1] - vals[0], 4)
+
+
+def is_near_term(market: dict, ref_dt: dt.datetime, days: int = NEAR_TERM_DAYS) -> bool:
+    """True when close_time is within (0, days] of ref_dt."""
+    ct = market.get("close_time")
+    if not ct:
+        return False
+    try:
+        close_dt = dt.datetime.fromisoformat(str(ct).replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    delta = close_dt - ref_dt
+    return dt.timedelta(0) < delta <= dt.timedelta(days=days)
 
 
 def decide(market: dict, points: list[dict], held: set[str]) -> dict | None:
@@ -204,20 +219,29 @@ def main() -> int:
     led["positions"] = still_open
 
     # 2) evaluate strategies on the snapshot (deterministic order: est_dollar_volume desc, ticker)
-    #    settled tickers stay in `held` forever so a market is never re-bought after resolution
+    #    settled tickers stay in `held` forever so a market is never re-bought after resolution.
+    #    Reserve up to NEAR_TERM_RESERVE slots for markets closing within NEAR_TERM_DAYS so the
+    #    simulated portfolio exercises real settlements rather than locking every slot until 2028+.
     held = {p["ticker"] for p in led["positions"]} | {s["ticker"] for s in led["settled"]}
     points = (hist.get("points") or {})
     ordered = sorted(rows, key=lambda m: (-(m.get("est_dollar_volume") or 0), m.get("market_ticker") or ""))
+    try:
+        ref_dt = dt.datetime.fromisoformat(str(snap.get("generated_at_utc") or "").replace("Z", "+00:00"))
+    except ValueError:
+        ref_dt = dt.datetime.now(dt.timezone.utc)
+    near_candidates = [m for m in ordered if is_near_term(m, ref_dt)]
+    near_open_count = sum(1 for p in led["positions"] if is_near_term({"close_time": p.get("close_time")}, ref_dt))
+    near_budget = max(0, NEAR_TERM_RESERVE - near_open_count)
     new_trades = 0
-    for m in ordered:
-        if len(led["positions"]) >= MAX_OPEN:
-            break
+
+    def try_open(m: dict) -> bool:
+        nonlocal new_trades
         intent = decide(m, points.get(m.get("market_ticker"), []), held)
         if not intent:
-            continue
+            return False
         cost = round(intent["price_dollars"] * intent["count"], 4)
         if cost > led["cash_dollars"]:
-            continue
+            return False
         led["cash_dollars"] = round(led["cash_dollars"] - cost, 4)
         trade = {"ts": now_iso(), "cost_dollars": cost, **intent}
         led["trades"].append(trade)
@@ -225,10 +249,24 @@ def main() -> int:
             "ticker": intent["ticker"], "title": intent["title"], "topic": intent["topic"],
             "side": intent["side"], "entry_price_dollars": intent["price_dollars"],
             "count": intent["count"], "cost_dollars": cost, "opened_ts": trade["ts"],
+            "close_time": m.get("close_time") or "",
             "strategy": intent["strategy"], "source_url": intent["source_url"],
         })
         held.add(intent["ticker"])
         new_trades += 1
+        return True
+
+    near_added = 0
+    for m in near_candidates:
+        if len(led["positions"]) >= MAX_OPEN or near_added >= near_budget:
+            break
+        if try_open(m):
+            near_added += 1
+
+    for m in ordered:
+        if len(led["positions"]) >= MAX_OPEN:
+            break
+        try_open(m)
 
     # 3) mark to market
     by_ticker = {m.get("market_ticker"): m for m in rows}
