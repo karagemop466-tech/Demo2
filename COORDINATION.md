@@ -1821,3 +1821,12 @@ Get Markets and Get Market Orderbook documentation fetched this session. No clai
 is made that all historical verification statements in this board were rechecked.
 
 
+V3 integration scope extension: regeneration found pre-existing drift in
+`pages/live-alerts.html` only (generated jump counts/data). Taking over the stale
+final-integration scope (>60 minutes, prior day) for that generated output and
+`tools/build_content.py` / generated `pages/flagged.html` solely to link the new
+audit from the canonical review page. No collector or alternate backend edits.
+Cross-scope request to server owner: correct `/orders` to documented V2 route/body,
+correct ticker-scoped trade requests to `/markets/trades?ticker=...`, fix signing
+path-prefix coverage and test against official schemas before enabling execution.
+
