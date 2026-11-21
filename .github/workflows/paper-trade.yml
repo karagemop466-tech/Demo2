@@ -68,9 +68,13 @@ jobs:
             fi
             echo "::warning::push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -10 | tr '\n' '|' | cut -c1-1500)"
             git fetch origin main 2>&1 | tail -1
-            git reset --soft origin/main
+            git reset --mixed origin/main
             git add data/paper_portfolio.json
-            git commit --allow-empty -m "$MSG"
+            if git diff --cached --quiet; then
+              echo "no ledger changes after reset"
+              exit 0
+            fi
+            git commit -m "$MSG"
             sleep $((attempt * 5))
           done
           echo "::error::could not push the paper ledger after 6 attempts"

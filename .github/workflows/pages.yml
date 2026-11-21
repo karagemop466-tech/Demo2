@@ -21,8 +21,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages-and-data
@@ -50,16 +48,42 @@ jobs:
         run: python3 tools/build_jumps.py
       - name: Commit the snapshot and pages
         run: |
+          set +e
+          exec 2>&1
           git config user.name "kalshi-dashboard-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/dashboard_instrument.json data/history_instrument data/jumps.json instrument-panel/site jumps
           if git diff --cached --quiet; then
             echo "No data changes to commit."
-          else
-            git commit -m "data: Kalshi demo snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
-            git pull --rebase --autostash origin main
-            git push origin HEAD:main
+            exit 0
           fi
+          MSG="data: Kalshi demo snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+          git commit -m "$MSG"
+          rc=$?
+          if [ $rc -ne 0 ]; then
+            echo "::error::git commit failed rc=$rc"
+            exit 1
+          fi
+          for attempt in 1 2 3 4 5; do
+            out=$(git push origin HEAD:main 2>&1)
+            rc=$?
+            if [ $rc -eq 0 ]; then
+              echo "instrument snapshot pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "::warning::push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -15 | tr '\n' '|' | cut -c1-2000)"
+            git fetch origin main 2>&1 | tail -1
+            git reset --mixed origin/main
+            git add data/dashboard_instrument.json data/history_instrument data/jumps.json instrument-panel/site jumps
+            if git diff --cached --quiet; then
+              echo "No data changes after reset."
+              exit 0
+            fi
+            git commit -m "$MSG"
+            sleep $((attempt * 5))
+          done
+          echo "::error::could not push instrument snapshot after 5 attempts"
+          exit 1
       - name: Keep the collected snapshot as an artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -69,14 +93,17 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
 
-  deploy:
+  # GitHub Pages is configured in legacy branch-deploy mode (main /).
+  # Running actions/deploy-pages@v4 here races with GitHub's native
+  # pages-build-deployment workflow on main; this job verifies the tree so
+  # legacy Pages publishes a clean site without deployment collisions.
+  verify:
     needs: collect
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -86,9 +113,5 @@ jobs:
         run: python instrument-panel/tools/validate_data.py
       - name: Check instrument-panel links and anchors
         run: python instrument-panel/tools/check_site.py
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Check root site links, nav, data, secrets and scripts
+        run: python3 tools/check.py

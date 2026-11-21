@@ -123,10 +123,9 @@ jobs:
             exit 1
           fi
           # Small, frequent commits; several pipelines commit into data/ (F17), so a
-          # push can lose the race. No rebase: on rejection, soft-reset onto the new
-          # tip and re-commit OUR freshly collected files (pure outputs; newest wins).
-          # Every failure surfaces as a ::warning::/::error:: annotation with the real
-          # git output (session eeb796d7: run logs are unreachable this session).
+          # push can lose the race. No rebase: on rejection, mixed-reset onto the new
+          # tip so only OUR freshly collected files are staged (pure outputs; newest
+          # wins without reverting concurrent commits from other workflows).
           for attempt in 1 2 3 4 5 6; do
             out=$(git push origin HEAD:main 2>&1)
             rc=$?
@@ -136,9 +135,13 @@ jobs:
             fi
             echo "::warning::push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -25 | tr '\n' '|' | cut -c1-3500)"
             git fetch origin main 2>&1 | tail -1
-            git reset --soft origin/main
+            git reset --mixed origin/main
             git add data/snapshot.json data/topic-*.json data/resolutions.json data/history.json index.html alerts.html pages/
-            git commit --allow-empty -m "$MSG"
+            if git diff --cached --quiet; then
+              echo "no data changes after reset"
+              exit 0
+            fi
+            git commit -m "$MSG"
             sleep $((attempt * 5))
           done
           echo "::error::could not push snapshot after 6 attempts"

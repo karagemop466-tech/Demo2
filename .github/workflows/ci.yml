@@ -91,6 +91,14 @@ jobs:
       - name: Link, nav, data, secret and script checks
         run: python tools/check.py
 
+      - name: Python unit tests (collector & paper trader)
+        run: |
+          python3 tests/test_collector_output.py
+          python3 tests/test_paper_trade.py
+
+      - name: Node backend and monitor tests
+        run: npm test
+
       - name: Upload the built site
         uses: actions/upload-artifact@v4
         with:

@@ -76,8 +76,8 @@ jobs:
           fi
           MSG="desk: refresh verification, jump monitor and pages $(date -u +%Y-%m-%dT%H:%MZ)"
           git commit -m "$MSG"
-          # Push-retry pattern shared with refresh-data.yml (session eeb796d7):
-          # on rejection, soft-reset onto the new tip and re-commit our outputs.
+          # Push-retry pattern shared with refresh-data.yml: on rejection,
+          # mixed-reset onto the new tip and stage only desk/ so concurrent data commits are preserved.
           for attempt in 1 2 3 4; do
             out=$(git push origin HEAD:main 2>&1)
             rc=$?
@@ -87,9 +87,13 @@ jobs:
             fi
             echo "::warning::desk push attempt $attempt failed rc=$rc :: $(echo "$out" | tail -10 | tr '\n' '|')"
             git fetch origin main 2>&1 | tail -1
-            git reset --soft origin/main
+            git reset --mixed origin/main
             git add desk
-            git commit --allow-empty -m "$MSG"
+            if git diff --cached --quiet; then
+              echo "no desk changes after reset"
+              exit 0
+            fi
+            git commit -m "$MSG"
             sleep $((attempt * 5))
           done
           echo "::error::could not push desk refresh after 4 attempts"
