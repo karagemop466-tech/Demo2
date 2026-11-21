@@ -1846,3 +1846,16 @@ No API credentials entered, no authenticated account access, no exchange orders.
 Claim push initially used nonexistent remote branch; retried rebase against main
 then pushed only current branch. Later autostash rebase preserved work; no conflict.
 
+Parallel integration reconciliation: PR #64 landed while this branch was being
+verified. Rebased onto main; append-only COORDINATION conflicts resolved by
+retaining both e303aead's full record and this session's full record. Their timestamp
+regeneration is identical to ours and was deduplicated by rebase. No work discarded.
+Final internal links: 10,694 references / 125 HTML pages pass; generator parity clean.
+PR: https://github.com/karagemop466-tech/Demo2/pull/65 (awaiting checks/merge).
+
+
+Second reconciliation: PR #66 and automated data refresh landed during the external
+link scan. Retained the complete e29ebc3a board records and all refreshed data;
+resolved append-only board conflicts without dropping either session's entries.
+Regenerated live-alert timestamp to match the newly collected jumps. Build/monitor
+checks passed on previous PR head; external scan is nonblocking by workflow design.
