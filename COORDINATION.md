@@ -1889,3 +1889,5 @@ Handoff: previous `server/*` owner 406a2f21's scope was completed and audit sess
 | S-2 Integration verification, document limitations and publish review findings | in progress | 41cfd371 | `tools/build_content.py`, generated `pages/flagged.html` and other generator outputs only if required, `COORDINATION.md` |
 
 No other session's open PR will be modified. Sources and results will be logged below.
+
+S-1 scope correction: actual client filename is `server/kalshiClient.js` (not nonexistent `server/kalshi.js`); this replaces the latter in the claim. The backend's HTTP order endpoint has no application authentication or CSRF protection, and the base URL is configurable, so fixing the upstream request without first closing that endpoint would expose signed trading to arbitrary callers. It will fail closed; upstream schema and signatures will be covered offline.
