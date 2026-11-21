@@ -1903,6 +1903,13 @@ S-1 scope correction: actual client filename is `server/kalshiClient.js` (not no
 
 | Task | Status | Owner | Exclusive files |
 |---|---|---|---|
-| S-3 | Correct demo workflow executor's YES-book NO-side conversion and cumulative cap with offline regression tests | in progress | 41cfd371 | `tools/execute_strategy.py`, new `tests/test_execute_strategy.py`, `COORDINATION.md` |
+| S-3 | Correct demo workflow executor's YES-book NO-side conversion and cumulative cap with offline regression tests | done | 41cfd371 | `tools/execute_strategy.py`, new `tests/test_execute_strategy.py`, `COORDINATION.md` |
 
 S-3 handoff: task 17's executor scope was marked done by e88eb254 and has no recent owner PR. Its current plan declares `price` YES-denominated, but code complements it again when building an ask and accumulates the YES ask price rather than the NO purchase cost; the cap can therefore be understated. Source: https://docs.kalshi.com/api-reference/orders/create-order-v2. Until verified do not enable execution. A concurrent PR #65 owns changes to `tools/build_content.py` and `pages/flagged.html`; if overlap is encountered during integration, preserve both sets of flags and coordinate rather than discarding either.
+
+### S-3 result (2026-11-21): done; live use remains unverified
+
+- The official V2 endpoint defines an `ask` as selling YES, economically equivalent to buying NO at `1 - price`, while **the submitted price remains YES-denominated**: https://docs.kalshi.com/api-reference/orders/create-order-v2. Fixed the executor so the existing YES-denominated plan price is submitted unchanged for both sides, and the run cap accumulates the actual NO cost (`count × (1 − YES price)`) rather than the submitted YES ask price. Decimal arithmetic avoids rounding down the cap; invalid side/price/count fail closed; configured caps cannot increase the $25 default; a zero order limit stays zero. The cap does **not** include fees and is not a total-risk guarantee.
+- Regression: `python3 tests/test_execute_strategy.py` (4 passed, stubbed signer and post only; no Kalshi order sent); `python3 -m py_compile tools/execute_strategy.py` passed. Live signed requests, fees, fills and profitability have not been verified. No keys used.
+- **Cross-scope request to plan owner:** `data/strategy_plan.json` comments currently say to send NO at `1 - price` even though that file says the input is a YES price. Correct that comment to match the official V2 YES-book schema; file was not edited here. No current intents are listed. The exact per-order limit here excludes fees; report that wherever execution is described.
+- **Cross-scope request to session 74946c6c / final integration:** add this executor-correction/fee-limit finding to Flagged for Review if possible. Their open PR #65 also edits the flag generator and generated flagged page; preserve both sets of findings during integration.
