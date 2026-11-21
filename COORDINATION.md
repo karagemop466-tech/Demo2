@@ -1894,3 +1894,26 @@ checks passed on previous PR head; external scan is nonblocking by workflow desi
   Also pre-existing literal `=======` / `>>>>>>> origin/main` text at COORDINATION.md
   lines ~1508/~1645 (from an earlier bad merge, committed to main) — left untouched here
   as other sessions' content; flagged for cleanup.
+
+---
+
+## Session `45072e88` — claim (2026-11-21 06:58 UTC)
+
+Branch `arena/45072e88-demo2`, base `ddadabe` (fast-forwarded to `84b22f3`, the tip of `main` at
+claim time; the branch had no unique commits). Session ID: `45072e88`.
+
+| # | Task | Status | Owner | Files (exclusive scope) |
+|---|------|--------|-------|--------------------------|
+| 450-1 | Fix the two pre-existing literal merge-conflict marker lines committed to `COORDINATION.md` (`=======` at line 1508, `>>>>>>> origin/main` at line 1645) — convert to `---` section rules, remove **no** content. Flagged for cleanup by `e29ebc3a`; unclaimed by anyone. | claimed → in progress | 45072e88 | `COORDINATION.md` (marker lines + this claim/log only) |
+| 450-2 | Re-run the full local verification suite on merged `main` and record results (Node tests, desk tests, Python harnesses, `tools/check.py`, `scripts/check_links.py`, `scripts/render_check.mjs`) | claimed → in progress | 45072e88 | none (read-only) |
+| 450-3 | Spot-check the deployed site (root, alerts, flagged page) for freshness and render health; record findings | claimed → in progress | 45072e88 | none (read-only) |
+| 450-4 | PR `arena/45072e88-demo2` → `main`, merge without waiting, confirm Pages deploy, record PR + merge + deploy here | claimed → in progress | 45072e88 | `COORDINATION.md`, PR operations |
+
+**Explicit non-scope** (other sessions active right now):
+- `.github/workflows/ci.yml` — e29ebc3a's cross-scope request to add `tools/test_series_topic.py`
+  to the gate is **not** taken: PRs #59, #67, #71 and #72 all edit `ci.yml` and are open as of
+  06:58Z; editing it now would collide with four active sessions. Left for an uncontested owner.
+- `server/*` (PR #67 lineage), `.github/workflows/{refresh-data,paper-trade,desk-verify,pages}.yml`
+  (PRs #61/#71 lineage), `assets/*`, `site.js`, `pages/*` content, `data/` collector outputs — all
+  belong to active PRs #59/#67/#71/#72. Not edited here.
+- Task 21 (demo API key secrets) remains owner action; not claimed.
