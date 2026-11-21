@@ -1357,6 +1357,7 @@ def build_flagged() -> None:
              '<span class="pill flag">open for review</span>'] for f in FLAGGED]
     body = """
 <h1>Flagged for review</h1>
+<p class="notice"><a href="../audit-74946c6c.html">21 November executive audit and Flagged for Review</a>: missing-quote simulation valuation fix, backend route discrepancies and remaining verification limits.</p>
 <p class="lead">Irregularities, gaps and judgement calls found while building this site. None of
 these blocked publication; each is stated with its impact, the mitigation actually in place, and
 the official source that frames it. Review this page first if something on the dashboard looks
