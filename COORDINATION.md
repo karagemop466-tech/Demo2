@@ -1811,3 +1811,12 @@ unrelated source, report and tests. Claim: restore only lost PR #65 files (not d
 replace soft-reset/recommit with conflict-safe rebase, regenerate pages, verify and
 republish. Evidence: `git show --stat 433aabd`; successful Pages build alone did not
 prove the changes remained present. Session files are recoverable from e44b644.
+
+PR #65 https://github.com/karagemop466-tech/Demo2/pull/65 merged at e44b644,
+2026-11-21T06:44:48Z. Build and paper-trading workflow passed. Subsequent data
+commit 433aabd reverted unrelated changes via `git reset --soft`; this follow-up
+restores code/reports/tests ONLY, retains latest data, and changes three workflows
+to rebase on push rejection (conflicts fail safely instead of overwriting main).
+40 paper assertions and canonical checks pass again. Live endpoint cannot be fetched
+from this sandbox; deployment verification uses GitHub Pages build API plus checking
+that the deployed commit still contains the report and fix, not ancestry alone.
