@@ -1671,3 +1671,49 @@ Rule application notes: both sessions' claim rows stand as written (no claim was
 another session held it — the collision was concurrent final-integration work, taken over/merged
 under the 60-minute rule with this record). Every dropped artifact is reachable in branch
 history; no file was deleted from `main` that existed there before.
+
+---
+
+## Session e303aead — final integration verification (2026-11-21)
+
+Session ID: `e303aead` (branch `arena/e303aead-demo2`, base `ddadabe` on `main`).
+Prior sessions merged into this repository: `e88eb254`, `406a2f21`, `b7bc848c`, `a984e8f4`, `f75410bb`, `220913cb` and others listed above.
+
+| # | Task | Status | Owner | Files (exclusive scope) |
+|---|------|--------|-------|--------------------------|
+| E-1 | Final integration: verify site builds with no broken links, fix generator drift, PR to main, merge, confirm Pages deploy | in progress | e303aead | `pages/live-alerts.html` (regenerated), `COORDINATION.md` (this section) |
+
+Scope note: this session touches only generator-owned output (`pages/live-alerts.html`) and this file.
+No other session's implementation code is edited. Open PRs #59 (`arena/441151f5-demo2`) and #61
+(`arena/a984e8f4-demo2`) belong to other sessions and are left untouched.
+
+### Verification performed (this session)
+
+- Official docs re-read 2026-11-21: demo REST `https://external-api.demo.kalshi.co/trade-api/v2`
+  (also `https://demo-api.kalshi.co/trade-api/v2`), WS `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2`
+  (also `wss://demo-api.kalshi.co/trade-api/ws/v2`) — https://docs.kalshi.com/getting_started/demo_env
+- `GET /markets` shape (markets[] + cursor, `last_price_dollars`, `volume_fp`, `open_interest_fp`,
+  `result` yes/no, `status`) — https://docs.kalshi.com/api-reference/market/get-markets
+- `GET /markets/{ticker}/orderbook?depth=0-100` returns `orderbook_fp.{yes_dollars,no_dollars}` as
+  [price, count] pairs — https://docs.kalshi.com/api-reference/market/get-market-orderbook
+- `POST /portfolio/events/orders` (V2 body: ticker, client_order_id, side bid/ask, count, price) —
+  https://docs.kalshi.com/api-reference/orders/create-order-v2
+- Local checks: `tools/check.py` (20 pages, links/nav/data/secrets/js clean),
+  `tools/check_live_links.py` (110 HTML files, 10,113 href/src, 0 broken),
+  `npm test` (8/8), `desk/tests/desk.test.js` (5/5 after `npm install`).
+- Generator drift found and fixed: `pages/live-alerts.html` "Data as of" timestamp regenerated
+  (2026-11-20T21:30:13Z → 2026-11-21T01:49:13Z). CI fails on stale generated pages, so the
+  regenerated file is committed in this session.
+- R9 (fetch `data/...` from `/pages/` → 503) confirmed fixed: `pages/live-alerts.html` now fetches
+  `../data/snapshot.json` and `../data/jumps.json`.
+- Resolutions note: `data/resolutions.json` count is 0 in the 2026-11-21T00:53Z snapshot (strict
+  series-tag mapping per F9), while `data/markets_settled.json` (20 crypto, title-keyword mapping)
+  and `data/resolved.json` (200, unmapped topics) come from the parallel `scripts/fetch_data.py`
+  pipeline. Different methodologies, not a contradiction; the Resolutions page reads the strict
+  pipeline. Flagged for owner review, does not block merge.
+
+### PR / deploy record (this session)
+
+- PR: _to be recorded after `gh pr create`_
+- Merge result: _to be recorded_
+- Pages deploy: _to be recorded_
