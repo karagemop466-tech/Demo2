@@ -1915,3 +1915,57 @@ claim time; the branch had no unique commits). Session ID: `45072e88`.
   (PRs #61/#71 lineage), `assets/*`, `site.js`, `pages/*` content, `data/` collector outputs — all
   belong to active PRs #59/#67/#71/#72. Not edited here.
 - Task 21 (demo API key secrets) remains owner action; not claimed.
+
+## Session `45072e88` — verification results and integration (2026-11-21 07:25 UTC)
+
+Branch fast-forwarded to `84b22f3` (tip of `main` at claim time) before any edit; the branch had no
+unique commits, so nothing was rebased and no other session's work was replayed.
+
+### 450-2 — local verification on merged main (all run this session)
+
+| Gate | Result |
+|---|---|
+| `npm test` (Node test runner, `tests/app.test.js`) | **8/8 pass** |
+| `node desk/tests/desk.test.js` | **5/5 pass** |
+| `python3 tools/test_series_topic.py` | **39/39 pass** |
+| `python3 tests/test_paper_trade.py` | **40/40 assertions pass** |
+| `python3 tools/check.py` (links, nav, data, secrets, JS) | **clean** — pages checked: 20; pre-existing warning kept as-is: 108 non-2xx snapshot requests (labelled, not relabelled verified) |
+| `python3 scripts/check_links.py` (internal) | **11,220 references across 125 HTML files — all OK** |
+| `node scripts/render_check.mjs` (jsdom render) | **5/5 pages rendered with data, 0 errors** (index, alerts, dashboard, pages/alerts, pages/causes) |
+| `npm run check` (`scripts/check-site.mjs monitor`) | **passed** — 15 pages, table rows source-linked, no duplicate IDs |
+| `npm run build` (`scripts/build-site.mjs`) | **built OK** (15 pages into ignored `dist/`) |
+| Generator parity: `python3 tools/build_site.py` + `tools/build_content.py`, then `git status --porcelain` | **no diff** — pages match the generator on merged main |
+| Stray conflict-marker scan (`<<<<<<<`, `>>>>>>>`, `=======`) across the repo | **none remain** after 450-1 |
+
+### 450-3 — live site spot-checks (fetched this session, UTC stamps seen on the pages)
+
+| Page | Observed |
+|---|---|
+| `/` (root dashboard) | Renders; snapshot stamp "2026-11-21 06:47:00.000 UTC" at first fetch; 28,704 in-scope markets; per-topic counts gas 3 · elections 25,453 · culture 1,888 · crypto 1,065 · golf 295; chart and order-book panel present |
+| `/alerts.html` | Two scrolling chats present (all events; high-ROI filter with documented 0.60 cutoff); snapshot 06:47Z; IEC order book panel present; browser→demo-API polling (CORS allows the Pages origin — see `data/cors.json`, fetched 2026-11-21T03:17:52Z, `access-control-allow-origin: https://karagemop466-tech.github.io`) |
+| `/pages/executive-summary.html` | Renders fully; matches repository state (scope, chart, resolutions, portfolio gating, jumps) |
+| `/pages/resolutions.html` | Snapshot 07:17:28Z; **494 resolved in scope** (yes 49 / no 445; topics crypto 432 · elections 33 · culture 28 · golf 1); official `result` field, source link per row |
+| `/pages/flagged.html` | Renders; F1–F23 table intact, 21 Nov audit linked at top |
+| `/desk/index.html` | Renders; 5 topics; snapshot stamp 2026-11-21 01:49 (desk pages rebuild on the every-2-hours `desk-verify` cadence) |
+
+**Desk rebuild probe:** `python3 desk/tools/build_desk.py` exits 0 and only refreshes values from the
+newer `data/dashboard_instrument.json` (e.g. top-volume crypto markets); the rebuilt files were
+**reverted, not committed** — `desk/` output is published by the `desk-verify` workflow on `main`
+(it runs at `:41` past even hours; last desk commit `ddadabe` 2026-11-21T03:27Z; 06:41Z run saw the
+instrument data mid-refresh and the next run at 08:41Z will pick up the 06:52Z snapshot). Not a
+defect; no manual intervention taken to avoid racing the workflow.
+
+### Notes / dispositions
+
+- e29ebc3a's cross-scope request (add `tools/test_series_topic.py` to the `ci.yml` gate) was **not**
+  taken: PRs #59, #67, #71, #72 are all open and all edit `ci.yml` as of 07:25Z. Left for an
+  uncontested owner; doing it here would produce a four-way conflict on the gate.
+- Stale open PRs #59 (2026-11-20 20:43Z) and #61 (2026-11-20 21:00Z) are >60 minutes old but are
+  **not** taken over here: their contents overlap the work merged today via #65/#66/#68/#69 (live
+  alert feeds, data-pipeline repair) and both touch `ci.yml`/shared generators; merging them
+  unreconciled risks breaking generator parity on `main`. They remain flagged for an owner with a
+  full reconciliation pass rather than a drive-by merge. All other open PRs (#67, #71, #72) are
+  active (commits within the hour) and were not touched.
+- `pages/resolutions.html` going from 0 → 494 resolved rows confirms the E2/E3 collector fix
+  (merged in PR #66) is live.
+- Task 21 (demo API key secrets) remains owner action; R-06/R-08 stay blocked on it.
