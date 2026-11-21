@@ -88,6 +88,13 @@ jobs:
           print("analysis fixture OK:", got)
           PY
 
+      - name: Install test dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Dashboard live-layer tests
+        # Offline; asserts documented API shapes only (no network).
+        run: node --test tests/dashboard_live.test.js
+
       - name: Link, nav, data, secret and script checks
         run: python tools/check.py
 

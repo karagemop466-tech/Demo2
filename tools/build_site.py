@@ -21,50 +21,67 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = "https://docs.kalshi.com"
 
+# Grouped navigation. The brief asks for the site to be organised and simplified
+# continuously: 23 flat links became six labelled groups, and no page lost its link.
+# (key, label, href, group). Every generated page carries this exact block, which
+# tools/check.py verifies.
+NAV_GROUPS = [
+    ("main", "Main"),
+    ("topic", "Topics"),
+    ("verify", "Verify"),
+    ("more", "More"),
+]
 NAV = [
-    ("index.html", "Dashboard", "dash"),
-    ("pages/executive-summary.html", "Executive Summary", "exec"),
-    ("pages/gas.html", "Gas", "gas"),
-    ("pages/elections.html", "Elections", "elections"),
-    ("pages/culture.html", "Culture", "culture"),
-    ("pages/crypto.html", "Crypto", "crypto"),
-    ("pages/golf.html", "Golf", "golf"),
-    ("verified/index.html", "Verified Data", "verified"),
-    ("dashboard/index.html", "Static Dashboard", "static"),
-    ("review.html", "Decision Register", "decide"),
-    ("rankings.html", "Dollar Rankings", "rank"),
-    ("instrument-panel/site/index.html", "Instrument Panel", "inst"),
-    ("live/index.html", "Live Console", "live"),
-    ("jumps/index.html", "Price Jumps", "jumps"),
-    # Canonical Live Alerts page = the browser-live one at the site root (assets/alerts.js
-    # polls the demo API directly). Session 848af77d's snapshot-based pages/live-alerts.html
-    # stays published and is cross-linked from alerts.html ("Collected jump chat") and the
-    # Flagged rows — integration ruling a984e8f4: one nav entry per feature (brief: "organize
-    # and simplify the website continuously"), nothing deleted.
-    ("alerts.html", "Live Alerts", "alerts"),
-    ("pages/resolutions.html", "Resolutions", "res"),
-    ("pages/portfolio.html", "Portfolio", "port"),
-    ("pages/analysis.html", "Analysis", "an"),
-    ("pages/suggestions.html", "Suggestions", "sug"),
-    ("pages/questions.html", "Questions", "q"),
-    ("pages/api-reference.html", "API Reference", "api"),
-    ("pages/verification.html", "Verification", "ver"),
-    ("pages/flagged.html", "Flagged", "flag"),
-    ("pages/repo-review.html", "Repo Review", "repo"),
-    ("pages/sources.html", "Sources", "src"),
+    ("dash", "Dashboard", "index.html", "main"),
+    ("alerts", "Live Alerts", "alerts.html", "main"),
+    ("exec", "Executive Summary", "pages/executive-summary.html", "main"),
+    ("res", "Resolutions", "pages/resolutions.html", "main"),
+    ("port", "Portfolio", "pages/portfolio.html", "main"),
+    ("an", "Analysis", "pages/analysis.html", "main"),
+    ("gas", "Gas", "pages/gas.html", "topic"),
+    ("elections", "Elections", "pages/elections.html", "topic"),
+    ("culture", "Culture", "pages/culture.html", "topic"),
+    ("crypto", "Crypto", "pages/crypto.html", "topic"),
+    ("golf", "Golf", "pages/golf.html", "topic"),
+    ("ver", "Verification", "pages/verification.html", "verify"),
+    ("src", "Sources", "pages/sources.html", "verify"),
+    ("flag", "Flagged", "pages/flagged.html", "verify"),
+    ("q", "Questions", "pages/questions.html", "verify"),
+    ("sug", "Suggestions", "pages/suggestions.html", "verify"),
+    ("api", "API Reference", "pages/api-reference.html", "verify"),
+    ("repo", "Repo Review", "pages/repo-review.html", "verify"),
+    # Preserved subsites and older views, kept published and reachable but out of the
+    # primary reading order. Nothing is deleted; this is the brief's "organize and
+    # simplify" rule applied without discarding any session's work.
+    ("verified", "Verified Data", "verified/index.html", "more"),
+    ("static", "Static Dashboard", "dashboard/index.html", "more"),
+    ("decide", "Decision Register", "review.html", "more"),
+    ("rank", "Dollar Rankings", "rankings.html", "more"),
+    ("inst", "Instrument Panel", "instrument-panel/site/index.html", "more"),
+    ("live", "Live Console", "live/index.html", "more"),
+    ("jumps", "Price Jumps", "jumps/index.html", "more"),
 ]
 
 
 def nav_html(active: str, prefix: str) -> str:
-    items = []
-    for href, label, key in NAV:
-        cur = ' aria-current="page"' if key == active else ""
-        items.append(f'<a href="{prefix}{href}"{cur}>{label}</a>')
+    groups = []
+    for gkey, glabel in NAV_GROUPS:
+        items = []
+        for key, label, href, group in NAV:
+            if group != gkey:
+                continue
+            cur = ' aria-current="page"' if key == active else ""
+            items.append(f'<a href="{prefix}{href}"{cur}>{label}</a>')
+        if items:
+            groups.append(
+                f'<div class="navgroup" data-group="{gkey}">'
+                f'<span class="navlabel">{glabel}</span>' + "".join(items) + "</div>"
+            )
     return (
         '<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard'
         "<small>demo environment · not real money</small></div>"
         '<button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button>'
-        '<nav class="main">' + "".join(items) + "</nav></div></header>"
+        '<nav class="main">' + "".join(groups) + "</nav></div></header>"
     )
 
 
@@ -120,13 +137,19 @@ def snapshot_meta() -> dict:
 
 
 def meta_bar(s: dict) -> str:
-    gen = s.get("generated_at_utc") or ""
-    n = (s.get("counts") or {}).get("markets_in_scope", 0)
-    auth = "yes" if s.get("authenticated") else "no"
+    """Snapshot status strip.
+
+    It is deliberately DATA-INDEPENDENT: the timestamp and counts are filled in by the
+    browser from the snapshot it actually loaded (KR.staleness / DASH_JS), not baked in
+    at build time. Baking them in made every generated page change whenever the data bot
+    ran, so the CI gate "generated pages must match the generator" failed on unrelated
+    data commits (observed repeatedly; see COORDINATION.md). The page now states the
+    freshness of the data it is showing, which is also the more honest label.
+    """
     return (
         '<div class="card tight"><div class="row" style="justify-content:space-between">'
-        f'<div class="status" id="staleness">Snapshot <span class="muted">{gen or "none yet"}</span></div>'
-        f'<div class="status muted">{n} in-scope markets · API key configured: {auth} · '
+        '<div class="status" id="staleness">Snapshot <span class="muted">loading…</span></div>'
+        '<div class="status muted"><span id="metaCounts">counts load with the snapshot</span> · '
         f'source <a href="{DOCS}/getting_started/demo_env">demo environment</a></div>'
         "</div></div>"
     )
@@ -168,8 +191,11 @@ tables on the category, resolution and verification pages still work without it.
     <div class="row" style="margin-bottom:8px;align-items:flex-end">
       <div><label for="mktSel">Market</label>
         <select id="mktSel" style="min-width:280px"></select></div>
-      <div><button class="secondary sm" id="btnLiveRefresh" type="button">Fetch live chart &amp; book</button></div>
-    </div>
+      <div><label>&nbsp;</label>
+        <button id="liveToggle" class="secondary sm" aria-pressed="true">Live polling: on</button></div>
+      <div><label>&nbsp;</label><span id="liveBadge" class="pill open">live: starting…</span></div>
+      <div><label>&nbsp;</label>
+        <button class="secondary sm" id="btnLiveRefresh" type="button">Refresh now</button></div>    </div>
     <div class="row" style="margin-bottom:8px">
       <label class="small" style="margin:0">Window</label>
       <div class="seg" id="winSeg" role="group" aria-label="Chart window">
@@ -198,8 +224,10 @@ tables on the category, resolution and verification pages still work without it.
     <p class="small muted" style="margin-top:6px">Long windows use official candlesticks
       (<a href="https://docs.kalshi.com/api-reference/market/get-market-candlesticks">Get Market Candlesticks</a>,
       period 1 min / 1 h / 1 day, max 5,000 periods per request). Short windows use the
-      collector's own tick history, which is sampled every 10 minutes — a 60-second window
-      will legitimately be empty. Nothing is interpolated.</p>
+      collector's own tick history, which is sampled every 10 minutes, <b>plus a live point
+      from the official demo API every 30 seconds</b> while this tab is visible
+      (<a href="https://docs.kalshi.com/api-reference/market/get-market-orderbook">Get Market Orderbook</a>).
+      Nothing is interpolated; a failed poll says so and never fabricates a price.</p>
   </div>
 
   <div class="card">
@@ -226,6 +254,8 @@ tables on the category, resolution and verification pages still work without it.
       <div><h3 class="small">YES asks <span class="muted">(derived)</span></h3><div id="liqAsk"></div></div>
     </div>
     <p class="small muted" id="liqNote"></p>
+    <h3 class="small" style="margin-top:10px">Live book <span class="muted">— polled from the demo API</span></h3>
+    <div id="liveBook"></div>
   </div>
 </div>
 
@@ -274,7 +304,10 @@ DASH_JS = r"""
   const $ = id => document.getElementById(id);
   const TOPICS = ['gas','elections','culture','crypto','golf'];
   const TOPIC_NAMES = {gas:'Gas prices', elections:'Elections', culture:'Culture', crypto:'Crypto', golf:'Golf'};
-  let state = { window: 3600, field: 'mid', ticker: null, snap:null, filtered:[], liveCandles:{}, liveBooks:{} };
+  let state = { window: 3600, field: 'mid', ticker: null, snap:null, filtered:[],
+                hist:{}, livePts:{}, liveOn:true, quote:null, resolutions:[],
+                liveCandles:{}, liveBooks:{} };
+  let liveTimer = null;
 
   function renderTopicStrip(rows, pt){
     const strip = $('topicStrip');
@@ -307,6 +340,50 @@ DASH_JS = r"""
     return links.length ? links.join(' · ') : '<span class="muted">—</span>';
   }
 
+  /* Merge the two official resolution sources. The strict collector maps a settled
+     market through its series' official category/tags; the settled-markets scan
+     (data/resolved.json) classifies by title keyword. Each row keeps its provenance and
+     its own API source URL. A row is never blended without saying which rule produced it. */
+  function newestPointMs(ticker){
+    let newest = 0;
+    const per = (state.snap && state.snap.candles || {})[ticker] || {};
+    Object.keys(per).forEach(k=>{
+      (per[k].candles||[]).forEach(c=>{ if(c.ts) newest = Math.max(newest, c.ts*1000); });
+    });
+    ((state.hist||{})[ticker]||[]).forEach(p=>{ newest = Math.max(newest, KR.pointTime(p)); });
+    return newest;
+  }
+
+  function autoWindowFor(ticker){
+    const newest = newestPointMs(ticker);
+    if(!newest) return null;
+    const age = (Date.now()-newest)/1000;
+    return [60,300,3600,21600,86400,604800].find(w=>w>=age) || 604800;
+  }
+
+  function mergeResolutions(strict, settled){
+    const out = new Map();
+    (strict||[]).forEach(r=>{
+      if(r && r.market_ticker) out.set(r.market_ticker, Object.assign({}, r, {provenance:'strict series mapping'}));
+    });
+    (settled||[]).forEach(m=>{
+      const t = m && (m.ticker || m.market_ticker);
+      if(!t || out.has(t)) return;
+      out.set(t, {
+        topic: (m.topics||[])[0] || '',
+        market_ticker: t,
+        title: m.market_title || m.event_title || t,
+        result: String(m.result||'').toLowerCase(),
+        settlement_value_dollars: (m.settlement_value_dollars === undefined ? null : m.settlement_value_dollars),
+        settlement_ts: m.settled_ts || m.settlement_ts || '',
+        volume_fp: (m.volume_fp === undefined ? null : m.volume_fp),
+        rules_primary_head: null,
+        market_url: m.source || m.market_url || '',
+        provenance: 'settled-markets scan (title-keyword topic)'
+      });
+    });
+    return Array.from(out.values()).sort((a,b)=>String(b.settlement_ts||'').localeCompare(String(a.settlement_ts||'')));  }
+
   try{
     const snap = await KR.snapshot();
     state.snap = snap;
@@ -314,13 +391,15 @@ DASH_JS = r"""
     $('metaBar').innerHTML = '';
     const c = snap.counts || {};
     const pt = c.per_topic || {};
+    const mc = $('metaCounts');
+    if(mc) mc.textContent = KR.num(c.markets_in_scope,0) + ' in-scope markets · API key configured: ' + (snap.authenticated ? 'yes' : 'no');
     $('kpis').innerHTML = `
       <div class="kpi-card"><div class="k">In-scope live markets</div>
         <div class="v">${KR.num(c.markets_in_scope,0)}</div>
         <div class="s">gas ${pt.gas||0} · elections ${pt.elections||0} · culture ${pt.culture||0} · crypto ${pt.crypto||0} · golf ${pt.golf||0}</div></div>
-      <div class="kpi-card"><div class="k">Resolved (tracked) </div>
-        <div class="v">${KR.num(c.resolved_in_scope,0)}</div>
-        <div class="s">official yes/no outcomes</div></div>
+      <div class="kpi-card"><div class="k">Resolved (tracked)</div>
+        <div class="v" id="kpiResolved">${KR.num(c.resolved_in_scope,0)}</div>
+        <div class="s" id="kpiResolvedSrc">official yes/no outcomes</div></div>
       <div class="kpi-card"><div class="k">Series mapped</div>
         <div class="v">${KR.num(c.series_index,0)}</div>
         <div class="s">via official tags + categories</div></div>
@@ -331,22 +410,56 @@ DASH_JS = r"""
         <div class="v ${(snap.exchange_status||{}).response && snap.exchange_status.response.exchange_active ? 'ok':'warn'}">${(snap.exchange_status||{}).response && snap.exchange_status.response.exchange_active ? 'active':'see log'}</div>
         <div class="s">demo /exchange/status</div></div>`;
 
-    // market select: ranked list
+    // Load the committed tick history and both official resolution sources once.
+    const [histDoc, strictDoc, settledDoc] = await Promise.all([
+      KR.history().catch(()=>null),
+      KR.resolutions().catch(()=>null),
+      KR.getJSON('data/resolved.json').catch(()=>null)
+    ]);
+    state.hist = (histDoc && histDoc.points) || {};
+    state.resolutions = mergeResolutions((strictDoc||{}).resolutions||[], (settledDoc||{}).markets||[]);
+    const byProv = state.resolutions.reduce((a,r)=>{a[r.provenance]=(a[r.provenance]||0)+1;return a;},{});
+    if($('kpiResolved')){
+      $('kpiResolved').textContent = String(state.resolutions.length);
+      $('kpiResolvedSrc').textContent = state.resolutions.length
+        ? Object.keys(byProv).map(k=>byProv[k]+' '+k).join(' · ')
+        : 'official yes/no outcomes';
+    }
+
+    // market select: ranked list. Default to the highest-ranked market that actually has
+    // chart data — otherwise the chart opens with 0 points (defect observed on the live
+    // site 2026-11-21). Nothing is re-ranked: the first data-backed row is used.
     const rows = (snap.markets||[]).slice().sort((a,b)=>(b.est_dollar_volume||0)-(a.est_dollar_volume||0));
     state.filtered = rows;
-    renderTopicStrip(rows, pt);
-    $('mktSel').innerHTML = rows.slice(0,80).map(m=>{
-      const t = m.market_title || m.market_ticker;
+    const hasChartData = t => !!(((snap.candles||{})[t] && Object.keys((snap.candles||{})[t]||{}).length) || ((state.hist||{})[t]||[]).length);
+    const defaultMarket = rows.find(m=>hasChartData(m.market_ticker)) || rows[0] || null;
+    const opts = rows.slice(0,80);
+    if(defaultMarket && !opts.some(m=>m.market_ticker===defaultMarket.market_ticker)) opts.push(defaultMarket);
+    $('mktSel').innerHTML = opts.map(m=>{
+    renderTopicStrip(rows, pt);      const t = m.market_title || m.market_ticker;
       const short = t.length>70 ? t.slice(0,68)+'…' : t;
-      return `<option value="${KR.esc(m.market_ticker)}">[${KR.esc(m.topic)}] ${KR.esc(short)}</option>`;
+      const mark = hasChartData(m.market_ticker) ? '' : ' · no chart history yet';
+      return `<option value="${KR.esc(m.market_ticker)}">[${KR.esc(m.topic)}] ${KR.esc(short)}${KR.esc(mark)}</option>`;
     }).join('');
-    state.ticker = rows.length ? rows[0].market_ticker : null;
+    state.ticker = defaultMarket ? defaultMarket.market_ticker : null;
     if(state.ticker) $('mktSel').value = state.ticker;
+    // The collector may run hours behind (GitHub throttles scheduled jobs). Open the
+    // chart on a window that actually contains the newest official point instead of
+    // showing an empty 1-hour chart. Only the initial window is auto-set; a click wins.
+    const autoW = state.ticker ? autoWindowFor(state.ticker) : null;
+    if(autoW && autoW > state.window){
+      state.window = autoW;
+      state.autoWindow = true;
+      document.querySelectorAll('#winSeg button').forEach(x=>{
+        x.setAttribute('aria-pressed', String(parseInt(x.dataset.w,10)===autoW));
+      });
+    }
 
     renderTable(rows);
     await drawChart();
     await renderLiquidity();
-    renderResolved(snap.resolutions||[]);
+    renderResolved(state.resolutions);
+    startLive();
   }catch(e){
     $('kpis').innerHTML = `<div class="notice bad">Data snapshot could not be loaded: ${KR.esc(e.message)}.
       The snapshot is produced by <code>.github/workflows/refresh-data.yml</code>; if this is the first
@@ -493,13 +606,15 @@ DASH_JS = r"""
       const liveSet = await fetchLiveCandles(state.ticker, intervalKey, forceLive);
       if(liveSet && liveSet.length){ cset = liveSet; candleSource = 'live API'; }
     }
-    let hist = [];
-    try{ const h = await KR.history(); hist = ((h.points||{})[state.ticker]||[]); }catch(e){}
-    const fieldMap = {mid:'derived_mid', close:'close_dollars', yes_bid_close:'yes_bid_close', yes_ask_close:'yes_ask_close'};
+    const hist = ((state.hist||{})[state.ticker]||[]);    const fieldMap = {mid:'derived_mid', close:'close_dollars', yes_bid_close:'yes_bid_close', yes_ask_close:'yes_ask_close'};
     const candles = cset.map(c=>({ts:c.ts, close_dollars:c.close, yes_bid_close:c.yes_bid_close,
                                   yes_ask_close:c.yes_ask_close, derived_mid:c.derived_mid}));
+    const liveKey = state.ticker+'|'+state.field;
+    const livePts = ((state.livePts||{})[liveKey]||[]);
     const series = KR.buildSeries(candles, hist, fieldMap[state.field])
-      .filter(p=>p.t >= Date.now()-state.window*1000 && p.t <= Date.now()+60000);
+      .filter(p=>p.t >= Date.now()-state.window*1000 && p.t <= Date.now()+60000)
+      .concat(livePts.filter(p=>p.t >= Date.now()-state.window*1000))
+      .sort((a,b)=>a.t-b.t);
     const jumps = KR.detectJumps(series, 0.10);
     KR.drawChart(document.getElementById('chart'), series, {
       spanSeconds: state.window,
@@ -508,13 +623,18 @@ DASH_JS = r"""
         ? 'No ticks inside this window yet. The collector samples every 10 minutes, so a 60-second or 5-minute window only fills when a run has just completed.'
         : 'No price points in this window. Candlestick price objects are empty in periods with no trade - try the quoted-mid series or a longer window.'
     });
-    const srcCount = series.filter(p=>p.src==='candle').length, tickCount = series.length-srcCount;
+    const srcCount = series.filter(p=>p.src==='candle').length;
+    const liveCount = series.filter(p=>p.src==='live').length;
+    const tickCount = series.length-srcCount-liveCount;
     const label = state.field==='mid' ? 'quoted mid (derived from official bid/ask closes)'
       : state.field==='close' ? 'last traded price - empty in periods with no trade'
       : state.field==='yes_bid_close' ? 'yes bid close' : 'yes ask close';
-    $('chartNote').innerHTML = `${series.length} points · ${tickCount} collector ticks + ${srcCount} candlesticks (${candleSource}, `
-      + `period ${intervalKey==='1m'?'1 min':intervalKey==='1h'?'1 h':'1 day'}) · plotting <b>${label}</b>`
-      + (jumps.length ? ` · ${jumps.length} sharp move${jumps.length!==1?'s':''} ≥ $0.10` : '');
+    if(state.autoWindow && series.length){
+      state.autoWindow = false;   // note it once, then stay quiet
+      state.autoNote = `window auto-set to ${state.window<3600?state.window+' s':(state.window/3600)+' h'} because the newest collected point is ${KR.ago(new Date(newestPointMs(state.ticker)).toISOString())}`;
+    }
+    $('chartNote').innerHTML = (state.autoNote ? state.autoNote + ' · ' : '')
+      + `${series.length} points · ${tickCount} collector ticks + ${srcCount} candlesticks (${candleSource}) + ${liveCount} live polls `      + (jumps.length ? ` · ${jumps.length} sharp move${jumps.length!==1?'s':''} ≥ $0.10` : '');
 
     const m = (state.snap.markets||[]).find(x=>x.market_ticker===state.ticker) || {};
     const ctxQ = encodeURIComponent((m.market_title||m.market_ticker||'Kalshi market') + ' Kalshi');
@@ -553,22 +673,116 @@ DASH_JS = r"""
       '</tbody></table></div>';
   }
 
+  /* ---------------- live polling ---------------- */
+  function setLiveBadge(cls, text){
+    const el = $('liveBadge');
+    if(!el) return;
+    el.className = 'pill ' + cls;
+    el.textContent = text;
+  }
+
+  function renderLiveBook(q, market, ticker){
+    const el = $('liveBook');
+    if(!el) return;
+    const url = KR.bookURL(ticker);
+    const card = (k,v,s)=>`<div class="kpi-card"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`;
+    el.innerHTML = `<div class="kpis">
+        ${card('Best YES bid', KR.usd(q.best_yes_bid,2),
+               q.best_yes_bid_contracts===null?'no YES bids resting':KR.num(q.best_yes_bid_contracts,2)+' contracts at this price')}
+        ${card('Best YES ask <span class="muted">(derived)</span>', KR.usd(q.best_yes_ask,2),
+               q.best_yes_ask_contracts===null?'no NO bids resting':KR.num(q.best_yes_ask_contracts,2)+' contracts at this price')}
+        ${card('Spread', KR.usd(q.spread,3), 'ask − bid, derived')}
+        ${card('Last trade', market?KR.usd(market.last_price_dollars,2):'—',
+               market?'GET /markets/{ticker}':'market record unavailable')}
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
+        <div><h3 class="small">Live YES bids</h3>${tableOf('Live YES bids', q.bids, 'No YES bids resting.')}</div>
+        <div><h3 class="small">Live YES asks <span class="muted">(derived)</span></h3>${tableOf('Live YES asks', q.asks, 'No NO bids resting, so no asks.')}</div>
+      </div>
+      <p class="small muted">Source: ${KR.link(url,'orderbook request')}
+        · <code>${KR.esc(url)}</code>
+        · ${KR.num(q.yes_bid_contracts,2)} contracts bid / ${KR.num(q.ask_contracts,2)} offered across the returned depth
+        · polled ${KR.esc(new Date().toLocaleTimeString())}</p>`;
+  }
+
+  async function pollLive(){
+    if(!state.liveOn || !state.ticker) return;
+    const ticker = state.ticker, t0 = Date.now();
+    try{
+      const [book, mkt] = await Promise.all([
+        KR.liveJSON(KR.bookURL(ticker)),
+        KR.liveJSON(KR.marketURL(ticker)).catch(()=>null)
+      ]);
+      if(state.ticker !== ticker) return;            // market changed mid-request
+      const q = KR.bookQuote(book);
+      state.quote = q;
+      const m = mkt && mkt.market;
+      const value = KR.liveValue(q, m, state.field);
+      if(value !== null && isFinite(value)){
+        const key = ticker+'|'+state.field;
+        const arr = state.livePts[key] || (state.livePts[key]=[]);
+        arr.push({t:t0, v:value, src:'live'});
+        if(arr.length>2000) arr.splice(0, arr.length-2000);
+      }
+      renderLiveBook(q, m, ticker);
+      setLiveBadge('ok', 'live · ' + new Date().toLocaleTimeString() + ' · ' + (Date.now()-t0) + ' ms');
+      await drawChart();
+      await renderLiquidity();
+    }catch(e){
+      setLiveBadge('warn', 'live poll failed: ' + e.message);
+      const el = $('liveBook');
+      if(el) el.innerHTML = '<div class="notice bad">Live order-book request failed ('
+        + KR.esc(e.message) + '). The committed snapshot above is shown unchanged and no value is invented. '
+        + 'Official endpoint: ' + KR.link(KR.bookURL(ticker), 'orderbook request')
+        + ' <code>' + KR.esc(KR.bookURL(ticker)) + '</code></div>';
+    }
+  }
+
+  function startLive(){
+    if(liveTimer) clearInterval(liveTimer);
+    liveTimer = setInterval(()=>{
+      if(document.visibilityState === 'hidden') return;   // no polling in a background tab
+      pollLive();
+    }, 30000);
+    // one poll shortly after load so the live panel is populated without waiting 30 s
+    setTimeout(()=>{ if(document.visibilityState !== 'hidden') pollLive(); }, 1500);
+  }
+
   function renderResolved(rows){
-    const r = rows.slice().sort((a,b)=>String(b.settlement_ts||'').localeCompare(String(a.settlement_ts||''))).slice(0,12);
+    const r = (rows||[]).slice().sort((a,b)=>String(b.settlement_ts||'').localeCompare(String(a.settlement_ts||''))).slice(0,12);
     KR.renderTable($('resolvedMini'), [
       {label:'Topic', get:m=>KR.topicPill(m.topic)},
       {label:'Market', get:m=>`<b>${KR.esc(m.title||m.market_ticker)}</b><br><span class="muted small">${KR.esc(m.market_ticker)}</span>`},
       {label:'Result', get:m=>KR.resultPill(m.result)},
       {label:'Settlement $', num:true, get:m=>KR.usd(m.settlement_value_dollars,2)},
       {label:'Settled (UTC)', get:m=>`<span class="small">${KR.when(m.settlement_ts)}</span>`},
-      {label:'Source', get:m=>`<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">Get Markets</a>`}
+      {label:'Provenance', get:m=>`<span class="pill flag">${KR.esc(m.provenance||'unstated')}</span>`},
+      {label:'Source', get:m=>KR.link(m.market_url,'official API')+' · <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">docs</a>'}
     ], r, 'No resolved in-scope markets in the current snapshot yet.');
   }
 
   // events
-  $('mktSel').addEventListener('change', async e=>{ state.ticker=e.target.value; await drawChart(false); await renderLiquidity(false); });
-  if($('btnLiveRefresh')) $('btnLiveRefresh').addEventListener('click', async ()=>{ await drawChart(true); await renderLiquidity(true); });
-  document.querySelectorAll('#winSeg button').forEach(b=>b.addEventListener('click', async ()=>{
+  $('mktSel').addEventListener('change', async e=>{
+    state.ticker=e.target.value;
+    state.quote=null;
+    const lb=$('liveBook'); if(lb) lb.innerHTML='<div class="empty">Fetching the live book for this market…</div>';
+    await drawChart(false);
+    await renderLiquidity(false);
+    pollLive();
+  });
+  if($('btnLiveRefresh')) $('btnLiveRefresh').addEventListener('click', async ()=>{
+    await drawChart(true);
+    await renderLiquidity(true);
+    pollLive();
+  });
+  const lt = $('liveToggle');
+  if(lt) lt.addEventListener('click', ()=>{
+    state.liveOn = !state.liveOn;
+    lt.setAttribute('aria-pressed', String(state.liveOn));
+    lt.textContent = 'Live polling: ' + (state.liveOn ? 'on' : 'off');
+    if(state.liveOn){ setLiveBadge('open','live: starting…'); pollLive(); }
+    else setLiveBadge('open','live polling paused — committed snapshot shown');
+  });  document.querySelectorAll('#winSeg button').forEach(b=>b.addEventListener('click', async ()=>{
     document.querySelectorAll('#winSeg button').forEach(x=>x.setAttribute('aria-pressed','false'));
     b.setAttribute('aria-pressed','true'); state.window=parseInt(b.dataset.w,10); await drawChart(false);
   }));
@@ -712,6 +926,13 @@ RES_BODY = r"""
 (<b>yes</b> or <b>no</b>), the settlement value, and the settlement timestamp. Rows come
 straight from <code>GET /markets?status=settled</code>; the <code>result</code> field is
 Kalshi's own, not computed here.</p>
+<div class="notice info"><b>Two official sources, labelled per row.</b>
+  <span class="pill flag">strict series mapping</span> is the collector's mapping through each
+  series' official category/tags; <span class="pill flag">settled-markets scan</span> is a
+  separate official settled-markets request whose topic comes from the market title. Both are
+  Kalshi responses; rows are merged by ticker with the strict mapping taking precedence, and no
+  result, price or timestamp is ever inferred. A market whose topic cannot be mapped is left out
+  rather than guessed (see <a href="pages/flagged.html">Flagged</a>).</div>
 <div id="metaBar"><div class="card tight"><div class="status" id="staleness">Loading…</div></div></div>
 <div class="kpis" id="kpis"></div>
 <div class="row" style="margin:10px 0">
@@ -743,19 +964,50 @@ RES_JS = r"""
 (async function(){
   const $ = id=>document.getElementById(id);
   try{
-    const d = await KR.resolutions();
-    KR.staleness($('staleness'), d.generated_at_utc);
-    const rows = d.resolutions||[];
+    // Two OFFICIAL sources, merged by market ticker and never blended silently:
+    //   data/resolutions.json  - collector's strict series-category/tag mapping
+    //   data/resolved.json     - settled-markets scan, topic by title keyword
+    // Both come from GET /markets?status=settled. Each row keeps its own source URL.
+    const [strict, settled] = await Promise.all([
+      KR.resolutions().catch(()=>null),
+      KR.getJSON('data/resolved.json').catch(()=>null)
+    ]);
+    const generated = (strict && strict.generated_at_utc) || (settled && settled.fetched_at) || '';
+    KR.staleness($('staleness'), generated);
+    const map = new Map();
+    (((strict||{}).resolutions)||[]).forEach(r=>{
+      if(r && r.market_ticker) map.set(r.market_ticker, Object.assign({}, r, {provenance:'strict series mapping'}));
+    });
+    (((settled||{}).markets)||[]).forEach(m=>{
+      const t = m && (m.ticker || m.market_ticker);
+      if(!t || map.has(t)) return;
+      map.set(t, {
+        topic: (m.topics||[])[0] || '',
+        market_ticker: t,
+        title: m.market_title || m.event_title || t,
+        result: String(m.result||'').toLowerCase(),
+        settlement_value_dollars: (m.settlement_value_dollars === undefined ? null : m.settlement_value_dollars),
+        settlement_ts: m.settled_ts || m.settlement_ts || '',
+        volume_fp: (m.volume_fp === undefined ? null : m.volume_fp),
+        rules_primary_head: null,
+        market_url: m.source || m.market_url || '',
+        provenance: 'settled-markets scan (title-keyword topic)'
+      });
+    });
+    const rows = Array.from(map.values()).sort((a,b)=>String(b.settlement_ts||'').localeCompare(String(a.settlement_ts||'')));
     const yes = rows.filter(r=>r.result==='yes').length, no = rows.filter(r=>r.result==='no').length;
-    const per = {};
+    const per = {}, prov = {};
     rows.forEach(r=>{ per[r.topic]=per[r.topic]||{yes:0,no:0,total:0}; per[r.topic].total++;
-      if(r.result==='yes')per[r.topic].yes++; if(r.result==='no')per[r.topic].no++; });
+      if(r.result==='yes')per[r.topic].yes++; if(r.result==='no')per[r.topic].no++;
+      prov[r.provenance]=(prov[r.provenance]||0)+1; });
     $('kpis').innerHTML = `
-      <div class="kpi-card"><div class="k">Resolved in scope</div><div class="v">${rows.length}</div><div class="s">all topics</div></div>
+      <div class="kpi-card"><div class="k">Resolved in scope</div><div class="v">${rows.length}</div><div class="s">all topics, both official sources</div></div>
       <div class="kpi-card"><div class="k">Resolved YES</div><div class="v ok">${yes}</div><div class="s">result = yes</div></div>
       <div class="kpi-card"><div class="k">Resolved NO</div><div class="v bad">${no}</div><div class="s">result = no</div></div>
       <div class="kpi-card"><div class="k">Topics with data</div><div class="v">${Object.keys(per).length}</div>
-        <div class="s">${Object.entries(per).map(([k,v])=>k+': '+v.total).join(' · ')||'none'}</div></div>`;
+        <div class="s">${Object.entries(per).map(([k,v])=>k+': '+v.total).join(' · ')||'none'}</div></div>
+      <div class="kpi-card"><div class="k">Provenance</div><div class="v" style="font-size:.95em">${Object.values(prov).reduce((a,b)=>a+b,0)}</div>
+        <div class="s">${Object.entries(prov).map(([k,v])=>v+' '+k).join(' · ')||'no rows'}</div></div>`;
     function render(){
       const t=$('topicFilter').value, rf=$('resFilter').value;
       const f = rows.filter(r=>(!t||r.topic===t)&&(!rf||r.result===rf));
@@ -767,13 +1019,14 @@ RES_JS = r"""
         {label:'Settled (UTC)', get:r=>`<span class="small">${KR.when(r.settlement_ts)}</span>`},
         {label:'Volume', num:true, get:r=>KR.num(r.volume_fp,0)},
         {label:'Rules', get:r=>r.rules_primary_head?`<span class="small" title="${KR.esc(r.rules_primary_head)}">${KR.esc(r.rules_primary_head.slice(0,80))}…</span>`:'—'},
-        {label:'Source', get:r=>`<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">settled markets</a>`}
+        {label:'Provenance', get:r=>`<span class="pill flag">${KR.esc(r.provenance||'unstated')}</span>`},
+        {label:'Source', get:r=>KR.link(r.market_url,'official API')+' · <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">docs</a>'}
       ], f, 'No resolved markets for this filter in the current snapshot.');
     }
     render();
     ['topicFilter','resFilter'].forEach(id=>$(id).addEventListener('change', render));
   }catch(e){
-    $('kpis').innerHTML = `<div class="notice bad">Could not load data/resolutions.json: ${KR.esc(e.message)}</div>`;
+    $('kpis').innerHTML = `<div class="notice bad">Could not load the resolved-market data: ${KR.esc(e.message)}</div>`;
   }
 })();
 </script>
@@ -1214,9 +1467,10 @@ def build_alerts_page(snap: dict) -> None:
     fetch('../data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
   ]).then(function(res){
     var snap=res[0], jdata=res[1];
+    // Freshness is stated from the files actually loaded, not baked in at build time.
     var asOf=(jdata.generated_from&&jdata.generated_from.snapshot_generated_at)||jdata.generated_at_utc||'';
-    var asOfEl=$('jumpsAsOf'); if(asOfEl&&asOf) asOfEl.textContent=asOf;
-    var markets=(snap.markets||[]);
+    var asOfEl=$('jumpsAsOf'); if(asOfEl) asOfEl.textContent=asOf||'timestamp absent from the collected jump file';
+    if(window.KR&&KR.staleness) KR.staleness($('staleness'), asOf);    var markets=(snap.markets||[]);
     var mktByTicker={};
     markets.forEach(function(m){if(m.market_ticker)mktByTicker[m.market_ticker]=m;});
     var trades=(jdata.trade_print_moves||[]);
@@ -1253,7 +1507,7 @@ more in either direction appears in "All alerts"; "High ROI" shows the subset a 
 rule-based filter flags as higher-conviction (a larger move in a more liquid market). Thresholds
 are tunable on the page — this is a rule, not a predictive model, and nothing is inferred about
 why a move happened.</p>
-<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Snapshot {gen or "none yet"}</div></div></div>
+<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Snapshot <span class="muted">loading…</span></div></div></div>
 <div class="card tight" style="margin-top:8px">
   <div class="row" style="margin:0;gap:10px;align-items:flex-end;flex-wrap:wrap">
     <div><label for="roiThreshold">High-ROI move floor ($)</label>
@@ -1280,9 +1534,9 @@ why a move happened.</p>
 <a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>). Market links point to the
 Kalshi series page pattern (checked against the live site); cause is never inferred — each row links to the
 market's own trade/market API responses and is flagged <span class="pill flag">cause unverified</span>.
-Data as of <span id="jumpsAsOf">not collected yet</span>; the collector runs every 10 minutes via
-<a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>.</p>
-"""
+Data as of <span id="jumpsAsOf">not collected yet</span>; the collector runs on a schedule via
+<a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>, and GitHub may
+delay those runs.</p>"""
     page(path="pages/live-alerts.html", title="Live Alerts", active="alerts", body=body, extra_js=js,
          desc="Live alerting feed: scrolling chats for Kalshi demo price swings of $0.10 or more, all-events and a high-ROI filter.")
     print("  wrote pages/live-alerts.html")

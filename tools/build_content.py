@@ -202,9 +202,33 @@ cannot be the only data path. Instead:</p>
    and its HTTP status, and commits the snapshot.</li>
 <li>The pages read those snapshots, so every number on screen traces back to a logged request.</li>
 </ol>
-<p class="small muted">Consequence stated plainly: the site is refreshed every 10 minutes, not
-tick-by-tick. The 60-second chart window is therefore often empty. Real-time would need a hosted
-WebSocket relay, which is raised as a decision in <a href="suggestions.html">Suggestions</a>.</p>
+<p class="small muted">Consequence stated plainly: the committed snapshot is refreshed by a
+scheduled job, and GitHub may delay scheduled runs (observed gaps of hours; <a href="flagged.html">F24</a>).
+Since 2026-11-21 the dashboard therefore <b>also</b> polls the public order-book and market endpoints
+every 30 seconds while the tab is visible and plots that live point beside the collected history.
+The snapshot remains the audit trail and each series is labelled by source. This needs no key and
+no WebSocket handshake; the documented WebSocket channel requires authentication, which a public
+page must not hold (<a href="flagged.html">F14</a>).</p>
+</div>
+<div class="card">
+<h3>Verified state, generated from the committed snapshot</h3>
+<ul class="clean">
+<li><b>Snapshot</b> freshness and counts are read from the loaded snapshot on the
+  <a href="../index.html">Dashboard</a>; this summary deliberately does not restate numbers that
+  change on every collection run (API-log warnings are on
+  <a href="flagged.html">F24–F26</a>).</li>
+<li><b>Resolutions</b> merge two official settled-market sources with per-row provenance:
+  the collector&#8217;s <code>data/resolutions.json</code> and the settled-markets scan
+  (<a href="flagged.html">F25</a>). The row count is shown on
+  <a href="resolutions.html">Resolutions</a> from the loaded files.</li>
+<li><b>Live layer</b> adds one official order-book point per 30 s, clears on a failed request and
+  reports the HTTP status instead of a price.</li>
+<li><b>Navigation</b> is grouped into Main, Topics, Verify and More; the preserved subsites keep
+  their links under &#8220;More&#8221;.</li>
+<li><b>Automated gates</b>: <code>tools/check.py</code> (links, nav, data, secrets, inline JS),
+  <code>scripts/render_check.mjs</code> (six pages rendered in jsdom),
+  <code>npm test</code> (8/8) and <code>tests/dashboard_live.test.js</code> (3/3).</li>
+</ul>
 </div>
 <div class="card">
 <h3>What it explicitly does not do</h3>
@@ -1259,6 +1283,51 @@ FLAGGED = [
   "the assumption is auditable, and the live demo-account path (trade.yml + tools/execute_strategy.py) "
   "records real fees once keys are configured.",
   "getting_started/market_settlement|https://docs.kalshi.com/getting_started/demo_env"),
+ ("F24", "Scheduled collection is throttled, so the committed snapshot can be hours old",
+  "Observed on 2026-11-21: the published dashboard read &#8220;Snapshot 2026-11-21 00:53:18 UTC "
+  "(6 h ago)&#8221; at 06:37Z, while GitHub Actions showed the snapshot-producing workflow&#8217;s "
+  "last run at 00:51Z. GitHub documents that scheduled workflows can be delayed under load; the "
+  "repository also has several scheduled workflows with overlapping `data/` scopes. A stale "
+  "timestamp is a fact about the pipeline, not about the market.",
+  "A reader could take a six-hour-old price for the current one, and the chart could open empty.",
+  "Mitigated 2026-11-21: the dashboard polls the two public demo endpoints every 30 s while the "
+  "tab is visible and plots the live point next to the collected history, labels each series by "
+  "source, and reports a failed poll instead of showing a price. The collector snapshot remains "
+  "the audit trail with an explicit &#8220;as of&#8221; timestamp. The scheduling limit itself is "
+  "outside the repository&#8217;s control and stays flagged.",
+  "https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule"),
+ ("F25", "The resolutions list was empty although settled in-scope markets existed",
+  "<code>data/resolutions.json</code> held <code>count: 0</code> at 2026-11-21T00:53Z, while the "
+  "same official endpoint returned 200 settled in-scope markets to the parallel "
+  "<code>data/resolved.json</code> at 03:17Z. Two causes: the collector requested "
+  "<code>status=settled</code> with no <code>_ts</code> filter (the documented ordering guarantee "
+  "only applies to a filtered listing), and it derived the series ticker as "
+  "<code>event_ticker.split(&#39;-&#39;)[0]</code>, which cannot match real series tickers "
+  "containing a dash (for example <code>GOVPARTY-NH</code>).",
+  "&#8220;Tracked until resolution&#8221; showed nothing, and a zero could be mistaken for "
+  "&#8220;no market has resolved&#8221;.",
+  "Fixed 2026-11-21: the collector now sends <code>min_settled_ts</code> (30 days, widening to a "
+  "year only if empty, with the window published in <code>query</code>), resolves the series ticker "
+  "by the longest known prefix, and drops any settled market whose official <code>result</code> is "
+  "not yes/no. The Resolutions page also renders the parallel settled-markets scan and labels each "
+  "row&#8217;s provenance, so no source is hidden. The collector-side query fix is a logged "
+  "cross-scope request to the owner of tools/collector.py (session e29ebc3a); the union they "
+  "added is live and the 06:47Z snapshot holds 127 rows.",
+  "api-reference/market/get-markets"),
+ ("F26", "Some API requests in the published snapshot failed (429/404), so counts are a floor",
+  "Two snapshots on 2026-11-21: the 00:53Z one logs 1,606 requests, 149 non-2xx "
+  "(44 &#215; 429 rate-limited, 105 &#215; 404); the 06:47Z one logs 1,499 requests, 108 non-2xx, "
+  "all 404. The 429s fell mainly on the per-series enrichment calls, which ran back-to-back. "
+  "A failed page can truncate an event sweep silently, and the current collector has no "
+  "<code>fetch_warnings</code> field to say so.",
+  "In-scope counts and any ranking built from them can be incomplete, and a truncated sweep looks "
+  "identical to a complete one.",
+  "Owner action (collector scope belongs to session e29ebc3a; request logged in "
+  "COORDINATION.md): add a small minimum interval between requests, <code>Retry-After</code> "
+  "support, and a published <code>fetch_warnings</code> entry naming the page and status whenever a "
+  "sweep stops early. The 404s are series absent from the demo catalogue; they are logged, not "
+  "guessed. The incompleteness stays visible on this page and on Verification.",
+  "getting_started/rate_limits|api-reference/market/get-markets"),
 ]
 
 
