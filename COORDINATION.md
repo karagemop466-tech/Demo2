@@ -1719,3 +1719,18 @@ No other session's implementation code is edited. Open PRs #59 (`arena/441151f5-
 - Build-and-check CI on the merge commit: **success** (run 44876440290).
 - Pages deploy on the merge commit: **success** (run 44876439996, 23s). Site: https://karagemop466-tech.github.io/Demo2/
 - Task E-1: **done**.
+
+---
+
+## Session `d9fcbb2a` — live alerts/dashboard client fixes & cause-channels repair (CLAIM, 2026-11-21)
+
+Session ID: `d9fcbb2a` (branch `arena/d9fcbb2a-demo2`, merged `origin/main` at `2adf781`).
+Platform branch constraint: all work stays on `arena/d9fcbb2a-demo2`.
+Checked open PRs #65 (`tools/paper_trade.py`, `tools/build_content.py`, `pages/flagged.html`, `README.md`), #66 (`tools/collector.py`, `tools/test_series_topic.py`), and #67 (`server/*`, `tools/build_content.py`, `pages/flagged.html`). None of those scopes are touched here.
+
+| # | Task | Status | Owner | Files (exclusive scope) |
+|---|---|---|---|---|
+| D-1 | Fix `assets/alerts.js` live bugs observed on deployed site (`0/39 tracked markets on page 1` via `/markets?tickers=…` instead of `status=open&limit=1000`, live candlestick fetch for markets outside top 8, `previous_price_dollars` + seeded ≥$0.10 detection, 4dp rounding for exact $0.10, resolution tracking via unfiltered `tickers` query, official `settlement_sources` links) | in progress | d9fcbb2a | `assets/alerts.js` |
+| D-2 | Enhance `tools/build_site.py` (`index.html`, `alerts.html` + generator outputs): topic-at-a-glance cards, group-by-topic/event view toggle, live candlestick & orderbook fallback fetch for all 80 markets, official `settlement_sources` in sharp-jump table | in progress | d9fcbb2a | `tools/build_site.py`, `index.html`, `alerts.html`, generator-owned `pages/*.html` |
+| D-3 | Repair `pages/causes.html` broken data loaders (`dashboard_meta.json` 404 + `series_index.json` shape mismatch) to surface official `settlement_sources` from `data/snapshot.json` | in progress | d9fcbb2a | `pages/causes.html` |
+| D-4 | Offline regression suite (`tests/live_client.test.js`, `package.json`), full verification against official docs, PR to `main`, merge, confirm Pages deploy | in progress | d9fcbb2a | `tests/live_client.test.js`, `package.json`, `COORDINATION.md` |
