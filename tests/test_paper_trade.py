@@ -123,6 +123,27 @@ def main_test() -> None:
     ok(led3["totals"]["open_positions"] == 20 and led3["totals"]["trades_total"] == 20,
        "caps fill deterministically in ranked order")
 
+    # float precision + near-term horizon reservation test:
+    # 0.60 - 0.50 = 0.09999999999999998 in float; rounded move must trigger momentum
+    data3 = Path(tempfile.mkdtemp(prefix="kalshi-paper-near-"))
+    far_rows = [dict(row(f"FAR-{i}", "elections", "0.0500", "0.0400", "0.0600", vol="500.00"),
+                     est_dollar_volume=1000.0, close_time="2028-11-01T00:00:00Z")
+                for i in range(25)]
+    near_row = dict(row("NEAR-1", "crypto", "0.6000", "0.5800", "0.6200", vol="150.00"),
+                    est_dollar_volume=10.0, close_time="2026-11-22T20:00:00Z")
+    snap3 = {"generated_at_utc": "2026-11-20T20:00:00+00:00",
+             "markets": far_rows + [near_row], "resolutions": []}
+    hist3 = {"points": {"NEAR-1": [{"t": 1, "last": "0.5000"}, {"t": 2, "last": "0.6000"}]}}
+    (data3 / "snapshot.json").write_text(json.dumps(snap3))
+    (data3 / "history.json").write_text(json.dumps(hist3))
+    env3 = dict(os.environ, DATA_DIR=str(data3))
+    subprocess.run([sys.executable, str(ROOT / "tools" / "paper_trade.py")],
+                   check=True, capture_output=True, text=True, env=env3)
+    led4 = json.loads((data3 / "paper_portfolio.json").read_text())
+    by4 = {t["ticker"]: t for t in led4["trades"]}
+    ok("NEAR-1" in by4 and by4["NEAR-1"]["strategy"] == "momentum",
+       "near-term market reserved ahead of 2028 backlog and exact $0.10 float rise (0.50->0.60) fires")
+
 
 if __name__ == "__main__":
     main_test()
