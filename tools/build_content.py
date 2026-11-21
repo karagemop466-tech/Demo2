@@ -213,10 +213,14 @@ page must not hold (<a href="flagged.html">F14</a>).</p>
 <div class="card">
 <h3>Verified state, generated from the committed snapshot</h3>
 <ul class="clean">
-<li><b>Snapshot</b> __SNAP__</li>
+<li><b>Snapshot</b> freshness and counts are read from the loaded snapshot on the
+  <a href="../index.html">Dashboard</a>; this summary deliberately does not restate numbers that
+  change on every collection run (API-log warnings are on
+  <a href="flagged.html">F24–F26</a>).</li>
 <li><b>Resolutions</b> merge two official settled-market sources with per-row provenance:
-  __RES__ official yes/no rows in <code>data/resolutions.json</code> at the same timestamp, plus
-  the settled-markets scan (<a href="flagged.html">F25</a>).</li>
+  the collector&#8217;s <code>data/resolutions.json</code> and the settled-markets scan
+  (<a href="flagged.html">F25</a>). The row count is shown on
+  <a href="resolutions.html">Resolutions</a> from the loaded files.</li>
 <li><b>Live layer</b> adds one official order-book point per 30 s, clears on a failed request and
   reports the HTTP status instead of a price.</li>
 <li><b>Navigation</b> is grouped into Main, Topics, Verify and More; the preserved subsites keep
@@ -280,24 +284,6 @@ or slippage (<a href="flagged.html">F23</a>).</p>
 must be, whether a demo key will be supplied, and how much evidence is enough before a strategy is trusted.
 Those are listed, with the exact information needed to close them, on <a href="questions.html">Questions</a>.</p>
 """
-    snap = snapshot_meta()
-    counts = snap.get("counts", {}) or {}
-    pt = counts.get("per_topic", {}) or {}
-    api_log = snap.get("api_log", []) or []
-    bad = [r for r in api_log if not r.get("ok")]
-    res_count = "—"
-    try:
-        res_count = str(json.loads((ROOT / "data" / "resolutions.json").read_text()).get("count", "—"))
-    except (OSError, json.JSONDecodeError):
-        pass
-    body = body.replace("__SNAP__", (
-        (snap.get("generated_at_utc") or "no snapshot") + ", "
-        + f"{counts.get('markets_in_scope', 0):,} in-scope markets "
-        + f"(gas {pt.get('gas', 0):,}, elections {pt.get('elections', 0):,}, "
-        + f"culture {pt.get('culture', 0):,}, crypto {pt.get('crypto', 0):,}, "
-        + f"golf {pt.get('golf', 0):,}); {len(api_log):,} logged API requests, "
-        + f"{len(bad):,} non-2xx (<a href=\"flagged.html\">F26</a>)."))
-    body = body.replace("__RES__", res_count)
     page(path="pages/executive-summary.html", title="Executive Summary", active="exec", body=body)
 
 

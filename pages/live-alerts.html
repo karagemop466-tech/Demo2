@@ -15,7 +15,7 @@ more in either direction appears in "All alerts"; "High ROI" shows the subset a 
 rule-based filter flags as higher-conviction (a larger move in a more liquid market). Thresholds
 are tunable on the page — this is a rule, not a predictive model, and nothing is inferred about
 why a move happened.</p>
-<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Snapshot 2026-11-21T06:57:14+00:00</div></div></div>
+<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Snapshot <span class="muted">loading…</span></div></div></div>
 <div class="card tight" style="margin-top:8px">
   <div class="row" style="margin:0;gap:10px;align-items:flex-end;flex-wrap:wrap">
     <div><label for="roiThreshold">High-ROI move floor ($)</label>
@@ -42,8 +42,9 @@ why a move happened.</p>
 <a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>). Market links point to the
 Kalshi series page pattern (checked against the live site); cause is never inferred — each row links to the
 market's own trade/market API responses and is flagged <span class="pill flag">cause unverified</span>.
-Data as of 2026-11-21T06:54:21Z; the collector runs every 10 minutes via
-<a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>.</p>
+Data as of <span id="alertDataAsOf">the collected jump file</span>; the collector runs on a
+schedule via <a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>, and
+GitHub may delay those runs.</p>
 
 </div>
 <footer class="site"><div class="in"><div>Kalshi <b>demo</b> environment only · mock funds · no investment advice.</div><div><a href="../pages/sources.html">Sources</a> · <a href="../pages/verification.html">Verification</a> · <a href="../pages/flagged.html">Flagged for Review</a> · <a href="../pages/repo-review.html">Repo Review</a> · <a href="../monitor/index.html">Read-only Monitor</a></div></div></footer>
@@ -132,6 +133,10 @@ Data as of 2026-11-21T06:54:21Z; the collector runs every 10 minutes via
     fetch('../data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
   ]).then(function(res){
     var snap=res[0], jdata=res[1];
+    // Freshness is stated from the files actually loaded, not baked in at build time.
+    var asOf=(jdata.generated_from&&jdata.generated_from.snapshot_generated_at)||'';
+    if($('alertDataAsOf')) $('alertDataAsOf').textContent = asOf || 'the collected jump file (timestamp absent)';
+    if(window.KR&&KR.staleness) KR.staleness($('staleness'), asOf);
     var markets=(snap.markets||[]);
     var mktByTicker={};
     markets.forEach(function(m){if(m.market_ticker)mktByTicker[m.market_ticker]=m;});

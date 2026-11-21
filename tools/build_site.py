@@ -137,13 +137,19 @@ def snapshot_meta() -> dict:
 
 
 def meta_bar(s: dict) -> str:
-    gen = s.get("generated_at_utc") or ""
-    n = (s.get("counts") or {}).get("markets_in_scope", 0)
-    auth = "yes" if s.get("authenticated") else "no"
+    """Snapshot status strip.
+
+    It is deliberately DATA-INDEPENDENT: the timestamp and counts are filled in by the
+    browser from the snapshot it actually loaded (KR.staleness / DASH_JS), not baked in
+    at build time. Baking them in made every generated page change whenever the data bot
+    ran, so the CI gate "generated pages must match the generator" failed on unrelated
+    data commits (observed repeatedly; see COORDINATION.md). The page now states the
+    freshness of the data it is showing, which is also the more honest label.
+    """
     return (
         '<div class="card tight"><div class="row" style="justify-content:space-between">'
-        f'<div class="status" id="staleness">Snapshot <span class="muted">{gen or "none yet"}</span></div>'
-        f'<div class="status muted">{n} in-scope markets · API key configured: {auth} · '
+        '<div class="status" id="staleness">Snapshot <span class="muted">loading…</span></div>'
+        '<div class="status muted"><span id="metaCounts">counts load with the snapshot</span> · '
         f'source <a href="{DOCS}/getting_started/demo_env">demo environment</a></div>'
         "</div></div>"
     )
@@ -336,6 +342,8 @@ DASH_JS = r"""
     $('metaBar').innerHTML = '';
     const c = snap.counts || {};
     const pt = c.per_topic || {};
+    const mc = $('metaCounts');
+    if(mc) mc.textContent = KR.num(c.markets_in_scope,0) + ' in-scope markets · API key configured: ' + (snap.authenticated ? 'yes' : 'no');
     $('kpis').innerHTML = `
       <div class="kpi-card"><div class="k">In-scope live markets</div>
         <div class="v">${KR.num(c.markets_in_scope,0)}</div>
@@ -1303,6 +1311,10 @@ def build_alerts_page(snap: dict) -> None:
     fetch('../data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
   ]).then(function(res){
     var snap=res[0], jdata=res[1];
+    // Freshness is stated from the files actually loaded, not baked in at build time.
+    var asOf=(jdata.generated_from&&jdata.generated_from.snapshot_generated_at)||'';
+    if($('alertDataAsOf')) $('alertDataAsOf').textContent = asOf || 'the collected jump file (timestamp absent)';
+    if(window.KR&&KR.staleness) KR.staleness($('staleness'), asOf);
     var markets=(snap.markets||[]);
     var mktByTicker={};
     markets.forEach(function(m){if(m.market_ticker)mktByTicker[m.market_ticker]=m;});
@@ -1340,7 +1352,7 @@ more in either direction appears in "All alerts"; "High ROI" shows the subset a 
 rule-based filter flags as higher-conviction (a larger move in a more liquid market). Thresholds
 are tunable on the page — this is a rule, not a predictive model, and nothing is inferred about
 why a move happened.</p>
-<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Snapshot {gen or "none yet"}</div></div></div>
+<div id="metaBar"><div class="card tight"><div class="status" id="staleness">Snapshot <span class="muted">loading…</span></div></div></div>
 <div class="card tight" style="margin-top:8px">
   <div class="row" style="margin:0;gap:10px;align-items:flex-end;flex-wrap:wrap">
     <div><label for="roiThreshold">High-ROI move floor ($)</label>
@@ -1367,8 +1379,9 @@ why a move happened.</p>
 <a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>). Market links point to the
 Kalshi series page pattern (checked against the live site); cause is never inferred — each row links to the
 market's own trade/market API responses and is flagged <span class="pill flag">cause unverified</span>.
-Data as of {jumps_gen or "not collected yet"}; the collector runs every 10 minutes via
-<a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>.</p>
+Data as of <span id="alertDataAsOf">the collected jump file</span>; the collector runs on a
+schedule via <a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>, and
+GitHub may delay those runs.</p>
 """
     page(path="pages/live-alerts.html", title="Live Alerts", active="alerts", body=body, extra_js=js,
          desc="Live alerting feed: scrolling chats for Kalshi demo price swings of $0.10 or more, all-events and a high-ROI filter.")
