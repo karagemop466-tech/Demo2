@@ -1505,7 +1505,7 @@ Live responses read this session: `/exchange/status` (trading_active true),
 CI. It covers topic mapping from official fields, verbatim value copying (an absent field stays
 absent), 24-hour dollars from trade prints, order-book normalisation, rolling-log persistence,
 and that a rate-limited series reports "0 markets AND 1 failed series".
-=======
+---
 # Session `arena/a984e8f4-demo2` — gap-fill + integration (CLAIM, 2026-11-20 19:47 UTC)
 
 Branch: `arena/a984e8f4-demo2`, branched from `main` at `e7fabd4` (merged `origin/main` at
@@ -1642,8 +1642,6 @@ The claim does not authorize edits to other sessions' implementation code (`serv
 | F-5 | Audit the deployed Live Alerts page's real browser request paths and publish any live-only failure | done | f75410bb | `session-f75410bb/review.html`, `COORDINATION.md`, `tools/build_content.py`, generated `pages/flagged.html` |
 
 **F-5 live-browser finding (2026-11-20):** the deployed `https://karagemop466-tech.github.io/Demo2/pages/live-alerts.html?cb=1` rendered “Could not load alert data: 503.” The live page source calls `fetch('data/snapshot.json')` / `fetch('data/jumps.json')` from a `/pages/` URL, which targets `/pages/data/...`; the actual published files at `/data/...` are available. Logged as R9 and added to the canonical Flagged for Review generator/page. **Cross-scope request:** owner of `tools/build_site.py` / Live Alerts (session 848af77d) please fix the generated fetch paths (for project pages, `../data/...`) and verify live browser loading; source code is not edited in this audit. Kalshi endpoint docs: https://docs.kalshi.com/api-reference/market/get-markets and https://docs.kalshi.com/api-reference/market/get-trades.
->>>>>>> origin/main
-
 ---
 
 ## Reconciliation of parallel integrations — sessions `b7bc848c` × `a984e8f4` (2026-11-20 ~21:0x UTC)
