@@ -1830,3 +1830,19 @@ Cross-scope request to server owner: correct `/orders` to documented V2 route/bo
 correct ticker-scoped trade requests to `/markets/trades?ticker=...`, fix signing
 path-prefix coverage and test against official schemas before enabling execution.
 
+### Verification results — 74946c6c
+
+V1 done: 40 paper regression assertions pass; quote absence/nonfinite/out-of-range
+leaves null marks and null aggregate equity/P&L, explicit zero remains valid.
+V2 done: `audit-74946c6c.html` is a source-linked executive summary and clearly
+labelled Flagged for Review page, linked from canonical `pages/flagged.html` and
+README. Official docs fetched: demo_env, get-markets, get-market-orderbook,
+get-trades, create-order-v2, websocket-connection (all on docs.kalshi.com).
+V3 local gates: Node 8/8, monitor 15 pages, instrument offline checks, canonical
+links/nav/data/secrets/JS check, 5/5 jsdom page renders pass. Canonical checker
+warns of 149 non-2xx stored snapshot requests; not relabelled as verified data.
+Regeneration repaired one pre-existing timestamp drift in pages/live-alerts.html.
+No API credentials entered, no authenticated account access, no exchange orders.
+Claim push initially used nonexistent remote branch; retried rebase against main
+then pushed only current branch. Later autostash rebase preserved work; no conflict.
+
