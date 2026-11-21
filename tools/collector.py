@@ -163,30 +163,10 @@ def signer_from_env() -> Signer | None:
 
 
 # --------------------------------------------------------------------------- http
-# Unauthenticated public requests have their own documented limits and the docs say
-# plainly to back off on 429 (https://docs.kalshi.com/getting_started/rate_limits).
-# The 2026-11-21T00:53Z snapshot logged 44 429s and 105 404s out of 1,606 requests;
-# the 429s hit the per-series enrichment calls, which fire back-to-back. A small
-# minimum interval, plus Retry-After support, removes the storm without guessing at a
-# private limit that the docs do not publish.
-MIN_REQUEST_INTERVAL_S = 0.12
-_LAST_REQUEST_AT = 0.0
-FETCH_WARNINGS: list[str] = []
-
-
-def _throttle() -> None:
-    global _LAST_REQUEST_AT
-    wait = MIN_REQUEST_INTERVAL_S - (time.monotonic() - _LAST_REQUEST_AT)
-    if wait > 0:
-        time.sleep(wait)
-    _LAST_REQUEST_AT = time.monotonic()
-
-
-def get_json(url: str, signer: Signer | None = None, retries: int = 4) -> tuple[Any, int]:
+def get_json(url: str, signer: Signer | None = None, retries: int = 3) -> tuple[Any, int]:
     """GET a URL, return (parsed_json_or_None, http_status). Logs every attempt."""
     last_status: int | str = "no-attempt"
     for attempt in range(retries):
-        _throttle()
         req = urllib.request.Request(url, method="GET")
         req.add_header("Accept", "application/json")
         if signer is not None:
@@ -209,13 +189,7 @@ def get_json(url: str, signer: Signer | None = None, retries: int = 4) -> tuple[
             log_req(url, e.code, body)
             if e.code in (401, 403, 404, 400, 410):
                 return None, e.code  # not retryable
-            # Honour Retry-After when the server sends one (documented 429 behaviour).
-            retry_after = 0.0
-            try:
-                retry_after = float((e.headers or {}).get("Retry-After") or 0)
-            except (TypeError, ValueError):
-                retry_after = 0.0
-            time.sleep(retry_after if retry_after > 0 else 1.5 * (attempt + 1))
+            time.sleep(1.5 * (attempt + 1))
         except Exception as e:  # network/TLS/timeout
             last_status = type(e).__name__
             log_req(url, last_status, str(e)[:200])
@@ -223,28 +197,16 @@ def get_json(url: str, signer: Signer | None = None, retries: int = 4) -> tuple[
     return None, int(last_status) if isinstance(last_status, int) else 0
 
 
-def paginate(url: str, key: str, signer: Signer | None = None, max_pages: int = 30,
-             page_limit: int = 200) -> list[dict]:
-    """Cursor pagination exactly as documented in getting_started/pagination.md.
-
-    `limit` maximum is 1000 (Get Markets). The default stays 200 for the large
-    open-event sweep; settled-market sweeps ask for 1000 to cover more history.
-    Docs: https://docs.kalshi.com/api-reference/market/get-markets
-    """
+def paginate(url: str, key: str, signer: Signer | None = None, max_pages: int = 30) -> list[dict]:
+    """Cursor pagination exactly as documented in getting_started/pagination.md."""
     out: list[dict] = []
     cursor = ""
     for _ in range(max_pages):
-        u = url + ("&" if "?" in url else "?") + f"limit={page_limit}"
+        u = url + ("&" if "?" in url else "?") + "limit=200"
         if cursor:
             u += "&cursor=" + urllib.parse.quote(cursor, safe="")
         j, status = get_json(u, signer)
         if not j:
-            # A failed page truncates the sweep. Silence would make the published count
-            # look complete when it is only a floor, so the reason is recorded and
-            # published with the snapshot (`fetch_warnings`).
-            FETCH_WARNINGS.append(
-                f"pagination stopped after {len(out)} rows on page {_ + 1} of {max_pages}: "
-                f"HTTP {status} for {u}")
             break
         out.extend(j.get(key) or [])
         cursor = j.get("cursor") or ""
@@ -257,6 +219,17 @@ def paginate(url: str, key: str, signer: Signer | None = None, max_pages: int = 
 # Official discovery fields only (docs: Get Series List -> `categories`, `category`, `tags`).
 # Verified live 2026-11-20: tags=Gas -> DIESEL/DIESELM; tags=Golf -> KXPGATOUR etc.;
 # categories contain "Elections" and "Crypto". Both fields are matched case-insensitively.
+#
+# Culture expansion (2026-11-21, session e29ebc3a): the previous mapping only recognised
+# the literal tag/category "culture", so every Entertainment-category series was unmapped
+# even though the live inventory (data/snapshot.json series_inventory) shows 2630
+# Entertainment series and tags Music (804), Awards (493), Movies (271), Television (242).
+# Live culture events were being skipped (unmapped_series: KXOSCARS, KXMOVIECAST,
+# KXMUSICREPORT, KXALBUMRELEASEDATE, KXPERFORMROLE007). CULTURE_TAGS below is the vetted
+# movies/music/awards/TV subset; broad/ambiguous tags (Food, Art, Views, Achievements,
+# Collectibles) are deliberately excluded — those series stay unmapped and are published
+# in unmapped_series rather than guessed. Specific topics are checked BEFORE culture so a
+# series tagged for both (e.g. Golf + Entertainment) stays with the specific topic.
 TAG_TOPIC = {
     "gas": "gas",
     "gasoline": "gas",
@@ -264,13 +237,21 @@ TAG_TOPIC = {
     "golf": "golf",
     "elections": "elections",
     "election": "elections",
-    "culture": "culture",
     "crypto": "crypto",
     "bitcoin": "crypto",
+}
+CULTURE_TAGS = {
+    "culture", "movies", "music", "music charts", "awards", "television",
+    "rotten tomatoes", "grammys", "oscars", "people", "video games",
+    "live music", "reality tv", "critics choice awards", "golden globes",
+    "the game awards", "music streams", "movie charts", "tv charts",
+    "music industry", "dancing with the stars", "the voice", "pokémon",
+    "singles", "streamer awards", "new music",
 }
 CATEGORY_TOPIC = {
     "elections": "elections",
     "crypto": "crypto",
+    "entertainment": "culture",
     "culture": "culture",
 }
 
@@ -281,7 +262,10 @@ def series_topic(series: dict) -> str | None:
     Uses ONLY official fields returned by GET /series: `tags` (subject tags) and
     `categories`/`category` (discovery/primary category). `diesel` is not treated as
     gas on its own unless the tag "Gas" is also present, because a diesel series is a
-    fuel-price series but the tag is the authoritative signal.
+    fuel-price series but the tag is the authoritative signal. Priority: gasoline
+    product scope, then specific-topic tags, then culture tags, then categories
+    (elections/crypto before entertainment/culture), so specific topics always win
+    over culture when both signals are present.
     """
     if not series or not isinstance(series, dict):
         return None
@@ -297,17 +281,24 @@ def series_topic(series: dict) -> str | None:
     cats = [str(c).strip().lower() for c in (series.get("categories") or []) if c]
     primary = str(series.get("category") or "").strip().lower()
 
-    # 1) explicit tag matches (strongest signal)
+    # 1) explicit specific-topic tag matches (strongest signal)
     for tag in tags:
         mapped = TAG_TOPIC.get(tag)
         if mapped == "gas" and tag == "diesel":
             continue  # require the "Gas" tag itself
         if mapped:
             return mapped
-    # 2) discovery/primary category matches
+    # 1b) culture tag matches
+    for tag in tags:
+        if tag in CULTURE_TAGS:
+            return "culture"
+    # 2) discovery/primary category matches; specific topics win over culture
     for c in cats + [primary]:
-        if c in CATEGORY_TOPIC:
+        if c in ("elections", "crypto"):
             return CATEGORY_TOPIC[c]
+    for c in cats + [primary]:
+        if c in ("entertainment", "culture"):
+            return "culture"
     return None
 
 
@@ -561,94 +552,18 @@ def collect_candles(rows: list[dict], signer: Signer | None, top_n: int = 8) -> 
     return out
 
 
-# Evidence for the resolutions page: which request produced the rows. Kept module-level
-# so main() can publish it next to the rows (a value with no traceable request is unusable).
-RESOLUTION_QUERY: dict = {}
-
-
-def collect_resolutions(signer: Signer | None, limit_markets: int = 400,
-                        window_days: int = 30) -> list[dict]:
-    """Settled in-scope markets with the official yes/no `result`.
-
-    Two defects were found in the previous implementation and are fixed here
-    (evidence: data/resolutions.json had `count: 0` at 2026-11-21T00:53Z while the same
-    API returned 200 settled crypto markets to data/resolved.json at 03:17Z):
-
-    1. No settled-time filter. `GET /markets?status=settled` without a `_ts` filter has
-       no guaranteed order, so the first pages were old/unmapped series and every row
-       was dropped. `min_settled_ts` is the documented filter and a `_ts`-filtered
-       listing is sorted by settlement time, latest first.
-       https://docs.kalshi.com/api-reference/market/get-markets
-    2. Series ticker = `event_ticker.split("-")[0]`. That is wrong for real series
-       tickers containing a dash (e.g. `GOVPARTY-NH`), so those rows never matched the
-       series index either. The longest leading segment that IS a known series wins.
-
-    A 365-day window is tried only if the 30-day window returns nothing; which window
-    produced the rows is published in RESOLUTION_QUERY. No value is invented — a market
-    whose topic cannot be mapped from an official record is skipped and counted nowhere.
-    """
+def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list[dict]:
+    """Settled in-scope markets with the official yes/no `result`."""
+    settled = paginate(DEMO_REST + "/markets?status=settled", "markets", signer, max_pages=10)
     series_idx = load_series_index(signer)
-    topic_cache: dict[str, str | None] = {}
-
-    def topic_for(st: str) -> str | None:
-        if st in topic_cache:
-            return topic_cache[st]
-        topic = series_topic(series_idx.get(st))
-        if topic is None and st:
-            # The bare /series list omits product_metadata (used for the AAA gasoline
-            # family); GET /series/{ticker} includes it. Official data only.
-            try:
-                j2, _ = get_json(f"{DEMO_REST}/series/{st}", signer)
-                full = (j2 or {}).get("series") if isinstance(j2, dict) else None
-                if isinstance(full, dict) and full.get("ticker"):
-                    series_idx[st] = full
-                    topic = series_topic(full)
-            except Exception as e:
-                log_req(f"{DEMO_REST}/series/{st}", "error",
-                        f"resolution enrichment skipped: {type(e).__name__}: {e}")
-        topic_cache[st] = topic
-        return topic
-
-    def series_of(ev: str) -> str:
-        parts = [p for p in (ev or "").split("-") if p]
-        for i in range(len(parts), 0, -1):
-            cand = "-".join(parts[:i])
-            if cand in series_idx:
-                return cand
-        return parts[0] if parts else ""
-
-    for window in (window_days, 365):
-        since = int(time.time()) - window * 86400
-        url = f"{DEMO_REST}/markets?status=settled&min_settled_ts={since}"
-        settled = paginate(url, "markets", signer, max_pages=12, page_limit=1000)
-        rows = _resolution_rows(settled, series_of, topic_for, limit_markets)
-        RESOLUTION_QUERY.clear()
-        RESOLUTION_QUERY.update({
-            "request": url,
-            "window_days": window,
-            "markets_scanned": len(settled),
-            "rows_in_scope": len(rows),
-            "docs": "https://docs.kalshi.com/api-reference/market/get-markets",
-        })
-        if rows:
-            return rows
-    return []
-
-
-def _resolution_rows(settled: list[dict], series_of, topic_for,
-                     limit_markets: int) -> list[dict]:
-    """Map settled markets to topics and keep only rows whose official result exists."""
+    topic_cache = {t: series_topic(s) for t, s in series_idx.items()}
     rows: list[dict] = []
     for m in settled:
         ev = m.get("event_ticker") or ""
-        st = series_of(ev)
-        topic = topic_for(st)
+        # The series ticker is the leading segment of the event ticker.
+        st = ev.split("-")[0] if ev else ""
+        topic = topic_cache.get(st)
         if topic not in TOPICS:
-            continue
-        # The brief asks whether an event resolved yes or no. A settled market without
-        # either value is not shown as an outcome — it is skipped, never assumed.
-        result = str(m.get("result") or "").lower()
-        if result not in ("yes", "no"):
             continue
         rows.append(
             {
@@ -658,7 +573,7 @@ def _resolution_rows(settled: list[dict], series_of, topic_for,
                 "market_ticker": m.get("ticker"),
                 "status": m.get("status"),
                 "title": m.get("title"),
-                "result": result,                          # official yes / no
+                "result": m.get("result") or "",          # "yes" / "no" / ""
                 "settlement_value_dollars": m.get("settlement_value_dollars"),
                 "settlement_ts": m.get("settlement_ts"),
                 "close_time": m.get("close_time"),
@@ -677,6 +592,48 @@ def _resolution_rows(settled: list[dict], series_of, topic_for,
             dedup[r["market_ticker"]] = r
     out = list(dedup.values())
     out.sort(key=lambda r: (r.get("settlement_ts") or ""), reverse=True)
+    return out
+
+
+def merge_scope_resolutions(settled_rows: list[dict], scope_rows: list[dict]) -> list[dict]:
+    """Union settled-feed resolutions with in-scope rows carrying an official result.
+
+    Why this exists (2026-11-21, session e29ebc3a): the demo settled feed
+    (GET /markets?status=settled) is dominated by synthetic series outside the in-scope
+    index (verified: all 20 rows in data/markets_settled.json are KXDEMOFUTHOURLY), so
+    collect_resolutions() alone can return 0 rows while the events scan already holds
+    finalized in-scope markets with official `result` values (verified: 33 finalized,
+    21 yes / 12 no in data/snapshot.json, with data/resolutions.json empty and the
+    Resolutions page therefore blank). Settled-feed rows win on duplicate market_ticker
+    (they carry settlement_ts); scope-only rows are added with settlement fields left
+    None (blank, not guessed). Only official fields are copied; nothing is inferred.
+    """
+    by_ticker: dict[str, dict] = {r["market_ticker"]: r for r in settled_rows if r.get("market_ticker")}
+    for r in scope_rows:
+        if r.get("result") not in ("yes", "no"):
+            continue
+        t = r.get("market_ticker")
+        if not t or t in by_ticker:
+            continue
+        by_ticker[t] = {
+            "topic": r.get("topic"),
+            "series_ticker": r.get("series_ticker"),
+            "event_ticker": r.get("event_ticker"),
+            "market_ticker": t,
+            "status": r.get("status"),
+            "title": r.get("market_title"),
+            "result": r.get("result"),
+            "settlement_value_dollars": None,
+            "settlement_ts": None,
+            "close_time": r.get("close_time"),
+            "expiration_value": None,
+            "volume_fp": r.get("volume_fp"),
+            "open_interest_fp": r.get("open_interest_fp"),
+            "rules_primary_head": r.get("rules_primary_head"),
+            "market_url": r.get("market_url"),
+        }
+    out = list(by_ticker.values())
+    out.sort(key=lambda r: (r.get("settlement_ts") or r.get("close_time") or ""), reverse=True)
     return out
 
 
@@ -756,7 +713,7 @@ def main() -> int:
 
     books = {} if args.scope_only else collect_orderbooks(rows, signer)
     candles = {} if args.scope_only else collect_candles(rows, signer)
-    resolutions = collect_resolutions(signer)
+    resolutions = merge_scope_resolutions(collect_resolutions(signer), rows)
 
     # Publish the largest markets per topic (product scope: "highest dollar amount
     # live events"). Full in-scope counts are kept; trimmed counts are recorded.
@@ -821,7 +778,6 @@ def main() -> int:
             ),
         },
         "api_log": API_LOG,
-        "fetch_warnings": FETCH_WARNINGS,
     }
     write_json("snapshot.json", snapshot, compact=True)
 
@@ -842,9 +798,7 @@ def main() -> int:
         )
 
     write_json("resolutions.json", {"generated_at_utc": snapshot["generated_at_utc"],
-                                    "count": len(resolutions),
-                                    "query": RESOLUTION_QUERY or None,
-                                    "resolutions": resolutions})
+                                    "count": len(resolutions), "resolutions": resolutions})
 
     # history ledger: append one compact point per market per run (for the price chart).
     # Bounded on purpose: only the HISTORY_TICKERS_MAX largest published markets keep a

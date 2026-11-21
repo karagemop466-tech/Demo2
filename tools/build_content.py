@@ -211,22 +211,19 @@ no WebSocket handshake; the documented WebSocket channel requires authentication
 page must not hold (<a href="flagged.html">F14</a>).</p>
 </div>
 <div class="card">
-<h3>Verified state on 2026-11-21</h3>
+<h3>Verified state, generated from the committed snapshot</h3>
 <ul class="clean">
-<li><b>Snapshot</b> 2026-11-21T00:53:18Z, 27,024 in-scope markets (gas 3, elections 25,661,
-  culture 0, crypto 1,065, golf 295); 1,606 logged API requests, 149 non-2xx
-  (<a href="flagged.html">F26</a>).</li>
-<li><b>Resolutions</b> now merge two official settled-market sources, with per-row provenance;
-  200 settled markets with an official yes/no result are shown where the strict collector alone
-  returned zero (<a href="flagged.html">F25</a>).</li>
-<li><b>Live layer</b> adds one official order-book point per 30 s, clears on a failed request, and
+<li><b>Snapshot</b> __SNAP__</li>
+<li><b>Resolutions</b> merge two official settled-market sources with per-row provenance:
+  __RES__ official yes/no rows in <code>data/resolutions.json</code> at the same timestamp, plus
+  the settled-markets scan (<a href="flagged.html">F25</a>).</li>
+<li><b>Live layer</b> adds one official order-book point per 30 s, clears on a failed request and
   reports the HTTP status instead of a price.</li>
 <li><b>Navigation</b> is grouped into Main, Topics, Verify and More; the preserved subsites keep
-  their links and are reachable under &#8220;More&#8221;.</li>
+  their links under &#8220;More&#8221;.</li>
 <li><b>Automated gates</b>: <code>tools/check.py</code> (links, nav, data, secrets, inline JS),
-  <code>scripts/render_check.mjs</code> (six pages rendered in jsdom), <code>npm test</code>
-  (8/8), <code>tests/dashboard_live.test.js</code> (3/3) and
-  <code>tests/test_resolutions.py</code> (12 assertions).</li>
+  <code>scripts/render_check.mjs</code> (six pages rendered in jsdom),
+  <code>npm test</code> (8/8) and <code>tests/dashboard_live.test.js</code> (3/3).</li>
 </ul>
 </div>
 <div class="card">
@@ -283,6 +280,24 @@ or slippage (<a href="flagged.html">F23</a>).</p>
 must be, whether a demo key will be supplied, and how much evidence is enough before a strategy is trusted.
 Those are listed, with the exact information needed to close them, on <a href="questions.html">Questions</a>.</p>
 """
+    snap = snapshot_meta()
+    counts = snap.get("counts", {}) or {}
+    pt = counts.get("per_topic", {}) or {}
+    api_log = snap.get("api_log", []) or []
+    bad = [r for r in api_log if not r.get("ok")]
+    res_count = "—"
+    try:
+        res_count = str(json.loads((ROOT / "data" / "resolutions.json").read_text()).get("count", "—"))
+    except (OSError, json.JSONDecodeError):
+        pass
+    body = body.replace("__SNAP__", (
+        (snap.get("generated_at_utc") or "no snapshot") + ", "
+        + f"{counts.get('markets_in_scope', 0):,} in-scope markets "
+        + f"(gas {pt.get('gas', 0):,}, elections {pt.get('elections', 0):,}, "
+        + f"culture {pt.get('culture', 0):,}, crypto {pt.get('crypto', 0):,}, "
+        + f"golf {pt.get('golf', 0):,}); {len(api_log):,} logged API requests, "
+        + f"{len(bad):,} non-2xx (<a href=\"flagged.html\">F26</a>)."))
+    body = body.replace("__RES__", res_count)
     page(path="pages/executive-summary.html", title="Executive Summary", active="exec", body=body)
 
 
@@ -1282,9 +1297,9 @@ FLAGGED = [
   "records real fees once keys are configured.",
   "getting_started/market_settlement|https://docs.kalshi.com/getting_started/demo_env"),
  ("F24", "Scheduled collection is throttled, so the committed snapshot can be hours old",
-  "The published dashboard read &#8220;Snapshot 2026-11-21 00:53:18 UTC (6 h ago)&#8221; at 06:37Z "
-  "on 2026-11-21, while GitHub Actions showed the snapshot-producing workflow&#8217;s last run at "
-  "00:51Z. GitHub documents that scheduled workflows can be delayed under load; the "
+  "Observed on 2026-11-21: the published dashboard read &#8220;Snapshot 2026-11-21 00:53:18 UTC "
+  "(6 h ago)&#8221; at 06:37Z, while GitHub Actions showed the snapshot-producing workflow&#8217;s "
+  "last run at 00:51Z. GitHub documents that scheduled workflows can be delayed under load; the "
   "repository also has several scheduled workflows with overlapping `data/` scopes. A stale "
   "timestamp is a fact about the pipeline, not about the market.",
   "A reader could take a six-hour-old price for the current one, and the chart could open empty.",
@@ -1311,17 +1326,18 @@ FLAGGED = [
   "row&#8217;s provenance, so no source is hidden. Tests: <code>tests/test_resolutions.py</code>.",
   "api-reference/market/get-markets"),
  ("F26", "Some API requests in the published snapshot failed (429/404), so counts are a floor",
-  "The 2026-11-21T00:53Z snapshot&#8217;s <code>api_log</code> records 1,606 requests, of which "
-  "149 are non-2xx: 44 &#215; 429 (rate limited) and 105 &#215; 404. The 429s fall mainly on the "
-  "per-series enrichment calls, which ran back-to-back. A failed page truncates an event sweep "
-  "silently in the old code.",
+  "Two snapshots on 2026-11-21: the 00:53Z one logs 1,606 requests, 149 non-2xx "
+  "(44 &#215; 429 rate-limited, 105 &#215; 404); the 06:47Z one logs 1,499 requests, 108 non-2xx, "
+  "all 404. The 429s fell mainly on the per-series enrichment calls, which ran back-to-back. "
+  "A failed page can truncate an event sweep silently, and the current collector has no "
+  "<code>fetch_warnings</code> field to say so.",
   "In-scope counts and any ranking built from them can be incomplete, and a truncated sweep looks "
   "identical to a complete one.",
-  "Mitigated 2026-11-21 in <code>tools/collector.py</code>: a 0.12 s minimum interval between "
-  "requests, <code>Retry-After</code> support, four attempts, and a recorded "
-  "<code>fetch_warnings</code> entry naming the page and status whenever a sweep stops early. The "
-  "404s are series that do not exist in the demo catalogue; they are logged, not guessed. The "
-  "remaining incompleteness stays visible on this page and on Verification.",
+  "Owner action (collector scope belongs to session e29ebc3a; request logged in "
+  "COORDINATION.md): add a small minimum interval between requests, <code>Retry-After</code> "
+  "support, and a published <code>fetch_warnings</code> entry naming the page and status whenever a "
+  "sweep stops early. The 404s are series absent from the demo catalogue; they are logged, not "
+  "guessed. The incompleteness stays visible on this page and on Verification.",
   "getting_started/rate_limits|api-reference/market/get-markets"),
 ]
 

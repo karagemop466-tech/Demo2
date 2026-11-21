@@ -1505,7 +1505,6 @@ Live responses read this session: `/exchange/status` (trading_active true),
 CI. It covers topic mapping from official fields, verbatim value copying (an absent field stays
 absent), 24-hour dollars from trade prints, order-book normalisation, rolling-log persistence,
 and that a rate-limited series reports "0 markets AND 1 failed series".
-=======
 # Session `arena/a984e8f4-demo2` — gap-fill + integration (CLAIM, 2026-11-20 19:47 UTC)
 
 Branch: `arena/a984e8f4-demo2`, branched from `main` at `e7fabd4` (merged `origin/main` at
@@ -1642,7 +1641,6 @@ The claim does not authorize edits to other sessions' implementation code (`serv
 | F-5 | Audit the deployed Live Alerts page's real browser request paths and publish any live-only failure | done | f75410bb | `session-f75410bb/review.html`, `COORDINATION.md`, `tools/build_content.py`, generated `pages/flagged.html` |
 
 **F-5 live-browser finding (2026-11-20):** the deployed `https://karagemop466-tech.github.io/Demo2/pages/live-alerts.html?cb=1` rendered “Could not load alert data: 503.” The live page source calls `fetch('data/snapshot.json')` / `fetch('data/jumps.json')` from a `/pages/` URL, which targets `/pages/data/...`; the actual published files at `/data/...` are available. Logged as R9 and added to the canonical Flagged for Review generator/page. **Cross-scope request:** owner of `tools/build_site.py` / Live Alerts (session 848af77d) please fix the generated fetch paths (for project pages, `../data/...`) and verify live browser loading; source code is not edited in this audit. Kalshi endpoint docs: https://docs.kalshi.com/api-reference/market/get-markets and https://docs.kalshi.com/api-reference/market/get-trades.
->>>>>>> origin/main
 
 ---
 
@@ -1719,30 +1717,155 @@ No other session's implementation code is edited. Open PRs #59 (`arena/441151f5-
 - Build-and-check CI on the merge commit: **success** (run 44876440290).
 - Pages deploy on the merge commit: **success** (run 44876439996, 23s). Site: https://karagemop466-tech.github.io/Demo2/
 - Task E-1: **done**.
+## Session e29ebc3a — branch `arena/e29ebc3a-demo2` (claimed 2026-11-21)
+
+Session owner: `e29ebc3a`. Scope (exclusive): `tools/collector.py` (culture scope mapping +
+resolutions union fix), `tools/test_series_topic.py` (new offline test), this file's section.
+No other session has claimed these files. Shared outputs (`index.html`, `pages/*`, `data/*`)
+are NOT edited by hand — they regenerate via `tools/build_site.py` / `tools/build_content.py`
+and the Actions collector.
+
+| Task | Status | Owner | Files touched |
+|---|---|---|---|
+| E1 Audit repo vs requirements (line by line, official sources) | in progress | e29ebc3a | this file |
+| E2 Fix Culture scope mapping (Entertainment category + vetted culture tags, priority-ordered) | in progress | e29ebc3a | `tools/collector.py` |
+| E3 Fix empty Resolutions (union settled fetch with in-scope rows carrying official results) | in progress | e29ebc3a | `tools/collector.py` |
+| E4 Offline unit test for `series_topic` (synthetic official-shaped records) | in progress | e29ebc3a | `tools/test_series_topic.py` |
+| E5 Regenerate site, run `tools/check.py` + link check, PR, merge, verify Pages | pending | e29ebc3a | generated pages, this file |
+
+### Audit findings (2026-11-21, evidence in repo)
+
+- **Culture = 0 markets (bug).** `data/snapshot.json` `counts.per_topic.culture = 0` while
+  `series_inventory.categories` shows `Entertainment: 2630` series and `tags_top` shows
+  `Music: 804, Awards: 493, Movies: 271, Television: 242`. `series_topic()` in
+  `tools/collector.py` only maps tag `culture` / category `culture`, so all Entertainment
+  series are unmapped. `unmapped_series` proves live culture events were skipped:
+  `KXOSCARS (10), KXMOVIECAST (8), KXMUSICREPORT (7), KXALBUMRELEASEDATE (6),
+  KXPERFORMROLE007 (6)`. Fix E2 maps Entertainment/Culture categories + vetted culture tags
+  to `culture`, checked AFTER gas/elections/crypto/golf so specific topics win.
+- **Resolutions page empty (bug).** `data/resolutions.json` = `{"count": 0, "resolutions": []}`
+  and `pages/resolutions.html` reads exactly that file, yet `data/snapshot.json` markets
+  contain 33 finalized in-scope markets with official results (21 `yes`, 12 `no`).
+  `collect_resolutions()` only uses the separate `GET /markets?status=settled` fetch and
+  re-derives the series from `event_ticker.split("-")[0]`; the demo settled feed is dominated
+  by synthetic series (e.g. `KXDEMOFUTHOURLY`, 20/20 rows in `data/markets_settled.json`)
+  that are not in the in-scope index, so the fetch contributes 0. Fix E3 unions the settled
+  fetch with in-scope rows already carrying official `result` values.
+- **Portfolio / real demo execution: not configured (owner action, not a bug).**
+  `data/portfolio.json` = `authenticated: false` ("No demo API key configured");
+  `data/analysis.json` verdict `insufficient_data` (0 fills). Paper trading works:
+  `data/paper_portfolio.json` (3 simulated trades, cash 79.49 of 100.00). Enabling real demo
+  orders needs repo secrets `KALSHI_DEMO_API_KEY_ID` + `KALSHI_DEMO_PRIVATE_KEY` and
+  variable `KALSHI_TRADING_ENABLED=1` — see `pages/questions.html` Q4. Flagged, not blocking.
+- **Three collectors write `data/` on different schedules** (`refresh-data.yml` →
+  `tools/collector.py`, `collect.yml` → `tools/collect_kalshi.py`, `data-refresh.yml` →
+  `scripts/fetch_data.py`). They write mostly disjoint files but share `data/` and push to
+  `main`; `desk-verify.yml` already shares concurrency key `kalshi-data-writers` with one of
+  them. Not changed in this session (other sessions' workflows); flagged for the owner.
+- **Live site verified:** Pages API `status: built`, `build_type: legacy`, source `main /`;
+  latest `pages build and deployment` runs succeed (e.g. run 44861186297). One older
+  `Deploy GitHub Pages` failure (44852384694) predates the latest successful builds.
+  Sandbox cannot reach `github.io` or Kalshi (egress blocked), so live-page checks rely on
+  Actions runs + `gh` API, recorded here.
+- **Official docs re-verified 2026-11-21 (fetch, not recall):**
+  demo REST/WS roots + mock-funds warning (demo_env); Get Markets `status` values
+  unopened/open/closed/settled + `result`/`settlement_value_dollars`/`settlement_ts` fields;
+  Get Market Orderbook `depth` 0–100 + `orderbook_fp.yes_dollars/no_dollars` [price, count]
+  pairs; Create Order (V2) `POST /portfolio/events/orders` body shape. All match the repo's
+  `pages/api-reference.html` claims.
+
+### E1–E5 results (2026-11-21, session e29ebc3a)
+
+- **E2 done:** `series_topic()` now maps Entertainment/Culture categories + vetted culture
+  tags (Movies, Music, Awards, Television, Oscars, Grammys, Rotten Tomatoes, Video games,
+  People, …) to `culture`, checked after gas/elections/crypto/golf so specific topics win.
+  Broad tags (Food, Art, Views, Achievements, Collectibles) stay unmapped by design.
+  Takes effect on the next `Refresh Kalshi demo data` Actions run (sandbox has no Kalshi
+  egress, so the live run happens in CI). Evidence for the tag list:
+  `data/snapshot.json` `series_inventory.tags_top`.
+- **E3 done:** `merge_scope_resolutions()` unions the settled feed with in-scope rows
+  carrying official `result` yes/no. Settled rows win on duplicate ticker; scope-only rows
+  keep settlement fields blank (None, not guessed). Next collector run will populate
+  `data/resolutions.json` (expect ≥ 33 rows from the current snapshot's finalized markets)
+  and the Resolutions page.
+- **E4 done:** `tools/test_series_topic.py` — 39/39 PASS offline (specific topics unchanged,
+  culture expansion, priority ordering, resolutions union). Run: `python3 tools/test_series_topic.py`.
+- **E5 done:** `tools/build_site.py` + `tools/build_content.py` regenerated (only
+  `pages/live-alerts.html` timestamp changed); `tools/check.py` clean (links/nav/data/
+  secrets/js ok); `scripts/check_links.py` clean (10,673 refs, 0 broken).
+- **Cross-scope request (not edited):** owner of `.github/workflows/ci.yml` — consider
+  adding `python3 tools/test_series_topic.py` to the CI gate so the scope mapping is
+  regression-tested on every push. File left untouched per coordination rules.
+- **Flagged (not blocking, owner action):** real demo portfolio/execution needs repo
+  secrets `KALSHI_DEMO_API_KEY_ID` + `KALSHI_DEMO_PRIVATE_KEY` and variable
+  `KALSHI_TRADING_ENABLED=1` (`pages/questions.html` Q4). Three collectors write `data/`
+  on different schedules — see audit above. Repo-growth cadence (K-F1) still open.
 
 ---
 
-## Session d5905246 — final integration and usability fix (2026-11-21 06:50 UTC)
+## Session d5905246 — final integration, live chart and navigation (2026-11-21)
 
-Session ID: `d5905246` (branch `arena/d5905246-demo2`, base `ddadabe` → rebased onto `3310d0b`).
-This session runs after `e303aead`'s merge (#64) and does **not** touch their output.
+Session ID: `d5905246`, branch `arena/d5905246-demo2`, base `ddadabe`. The branch is merged with
+`origin/main` as it stood after PR #63/#64/#65 and the 06:47Z data refresh.
 
-| # | Task | Status | Owner | Files (exclusive scope) |
-|---|------|--------|-------|--------------------------|
-| D-1 | Dashboard chart defect: the default selected market is the top-ranked row by estimate, which has no history/candles, so the chart renders **0 points** on load. Fix default selection + add a 30 s live poll of the selected market from the official public `GET /markets/{ticker}` with explicit live/stale/error states. | in progress | d5905246 | `tools/build_site.py` (DASH_JS), `assets/site.js` (append helpers), `assets/style.css` (append), generated `index.html`, new `tests/chart_live.test.js` |
-| D-2 | Resolution coverage: the canonical collector returns **0** resolutions (`data/resolutions.json` count 0) while the parallel pipeline's `data/resolved.json` holds 200 official settled crypto markets. Fix the collect query/derivation and show every official settled row with provenance; never infer a result. | in progress | d5905246 | `tools/collector.py` (`collect_resolutions` only), `tools/build_site.py` (RES_JS/build), generated `pages/resolutions.html` |
-| D-3 | Navigation simplification: one grouped nav (Dashboard · Alerts · Topics · Portfolio · Verification · Archive) instead of 24 flat links; every existing page keeps its link. | in progress | d5905246 | `tools/build_site.py` (`NAV`/`nav_html`), all generated pages, `assets/style.css` (append) |
-| D-4 | Verify line by line, run all gates, PR → main, merge, confirm Pages deploy, record sources + irregularities here. | in progress | d5905246 | this section, PR record |
+### Scope, and how it was deconflicted
 
-Scope exclusions: `pages/live-alerts.html` and its generator are owned by `e303aead`/`848af77d`;
-`server/`, `live/`, `monitor/`, `intelligence/`, `site/`, `dashboard/`, `verified/` are other
-sessions' subsites. Open PR #59 and #61 are other sessions' work and are not merged or closed here.
+| # | Task | Status | Files |
+|---|------|--------|-------|
+| D-1 | Chart defect: default market had no history (0 points on the live site) + 30 s live poll of the selected market from the public demo API, explicit live/failed states, live contract counts | **done** | `tools/build_site.py` (DASH_JS/DASH_BODY), `assets/site.js` (append), `assets/style.css` (append), generated `index.html`, `tests/dashboard_live.test.js` |
+| D-2 | Resolutions page: merge the collector output with the settled-markets scan, per-row provenance + source link; never infer a result | **done (page side only)** | `tools/build_site.py` (RES_JS/RES_BODY), generated `pages/resolutions.html` |
+| D-3 | Navigation simplification: six labelled groups replace 23 flat links; every link kept | **done** | `tools/build_site.py` (`NAV`/`nav_html`), `assets/style.css`, all generated pages, hand-written nav in `pages/alerts.html` + `pages/causes.html` patched to the same block |
+| D-4 | Verify, PR, merge, confirm Pages deploy, record | in progress | this section |
 
-### Sources this session verifies against (official only)
+**Collector conflict, resolved by yielding:** while this session was working, `origin/main`
+received session `e29ebc3a`'s claim on `tools/collector.py` (culture mapping + a
+`merge_scope_resolutions` union). That file is their exclusive scope, so this session **reverted
+its own collector edits** (`git checkout origin/main -- tools/collector.py`) and kept only the
+page-side change. Their union is live in the 06:47Z data: `data/resolutions.json` now has **127**
+rows (generated 2026-11-21T06:47:00Z), where it had 0 at 00:53Z. The resolution defects found here
+are logged as cross-scope requests below rather than edited.
 
-- https://docs.kalshi.com/getting_started/demo_env
-- https://docs.kalshi.com/api-reference/market/get-markets (status, ticker, result, settlement fields, cursor)
-- https://docs.kalshi.com/api-reference/market/get-market
-- https://docs.kalshi.com/api-reference/market/get-market-orderbook
-- https://docs.kalshi.com/getting_started/market_settlement
-- https://docs.kalshi.com/getting_started/historical_data
+### Verification performed (official sources only, checked 2026-11-21)
+
+| Claim | Official source | How checked |
+|---|---|---|
+| `GET /markets` supports `min_settled_ts` / `max_settled_ts`; `limit` max is 1000; a `_ts`-filtered listing is sorted by settlement time, an unfiltered one has no guaranteed order | https://docs.kalshi.com/api-reference/market/get-markets | Parameters read in the published parameter list; the sorting rule is stated on the same page |
+| `GET /markets/{ticker}/orderbook` returns `orderbook_fp.{yes_dollars,no_dollars}` as `[price, count]`; there is no ask array | https://docs.kalshi.com/api-reference/market/get-market-orderbook | Used by `KR.bookQuote`; ask = 1 − NO bid, labelled derived |
+| `GET /markets/{ticker}` returns the market record (`last_price_dollars`, `result`, `status`) | https://docs.kalshi.com/api-reference/market/get-market | Used for the live “last trade” card |
+| Public market-data endpoints need no auth; back off on 429 | https://docs.kalshi.com/getting_started/quick_start_market_data · https://docs.kalshi.com/getting_started/rate_limits | Stated on both pages; live page sends no credentials |
+| Cross-origin reads from the Pages origin are allowed | `data/cors.json` (probe 2026-11-21T03:17:52Z: `access-control-allow-origin: https://karagemop466-tech.github.io`, HTTP 200) | Recorded response headers in the repo; the live layer depends on this |
+| Demo environment only; mock funds; prices may not reflect production | https://docs.kalshi.com/getting_started/demo_env | Site banner and README |
+| Order placement (when keys exist) uses `POST /portfolio/events/orders` | https://docs.kalshi.com/api-reference/orders/create-order-v2 | Unchanged by this session; no order was sent |
+
+Local gates, all green on this branch:
+
+- `python3 tools/build_site.py && python3 tools/build_content.py` — regenerated, no drift
+- `python3 tools/check.py` — links, nav (20 pages), data, secrets, inline JS: clean
+- `node --test tests/dashboard_live.test.js` — 3/3 (derived ask, chart points + live poll, failure path)
+- `npm test` — 8/8; `node scripts/render_check.mjs` — 6/6 pages rendered with data
+- `python3 tests/test_resolutions.py` — **removed** in the merge: it tested collector code owned by
+  `e29ebc3a`; their `tools/test_series_topic.py` covers the mapping.
+
+### Irregularities (published on Flagged for Review with source links)
+
+- **F24** scheduled collection is throttled (page read “6 h ago”; Actions showed no run since
+  00:51Z), mitigated by the browser live poll.
+- **F25** resolutions list was 0 at 00:53Z (now 127 after `e29ebc3a`'s union); page now labels
+  provenance per row across both official sources.
+- **F26** 149 of 1,606 logged requests in the 00:53Z snapshot were non-2xx (44 × 429, 105 × 404);
+  counts are a floor and the sweep can truncate. **Not fixed here** (collector scope) — request below.
+- **Repo hygiene:** `COORDINATION.md` carried orphaned merge-conflict markers (`=======` /
+  `>>>>>>> origin/main`) with no opening marker; both content blocks were kept and the two marker
+  lines removed. No text discarded.
+- 10 workflows still write `data/` on different schedules (pre-existing); growth cadence (K-F1) open.
+
+### Cross-scope requests (not edited by this session)
+
+1. Owner of `tools/collector.py` (`e29ebc3a`): consider `min_settled_ts` (30 days, widen to a year
+   once if empty) on the settled sweep, longest-known-prefix series resolution (dash-containing
+   series such as `GOVPARTY-NH`), a yes/no-only outcome filter, and a small request interval with
+   `Retry-After` support. Evidence and a working implementation are in commit `3bdf9e6` of this
+   branch; the offline test is `tests/test_resolutions.py` in that commit. Docs:
+   https://docs.kalshi.com/api-reference/market/get-markets · https://docs.kalshi.com/getting_started/rate_limits
+2. Owner of `tools/collector.py`: publish `fetch_warnings` when a paginated sweep stops early, so a
+   truncated scan cannot look complete.
