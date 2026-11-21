@@ -1,5 +1,5 @@
 {
- "fetched_at": "2026-11-21T03:16:54Z",
+ "fetched_at": "2026-11-21T12:48:02Z",
  "source": "https://external-api.demo.kalshi.co/trade-api/v2/series?include_volume=true",
  "note": "Official GET /series response, filtered to the 5 focus topics by the documented classification rules. volume_fp is the official series total volume in contracts (include_volume=true).",
  "series": [
@@ -698,7 +698,7 @@
    ],
    "scope": null,
    "frequency": "fifteen_min",
-   "volume_fp": "19512.00",
+   "volume_fp": "19538.00",
    "topics": [
     "crypto"
    ],
@@ -851,7 +851,7 @@
    ],
    "scope": null,
    "frequency": "hourly",
-   "volume_fp": "117396355.00",
+   "volume_fp": "117396404.00",
    "topics": [
     "crypto"
    ],
@@ -886,7 +886,7 @@
    ],
    "scope": null,
    "frequency": "fifteen_min",
-   "volume_fp": "8116887.00",
+   "volume_fp": "8188131.00",
    "topics": [
     "crypto"
    ],
@@ -981,7 +981,7 @@
    ],
    "scope": null,
    "frequency": "one_off",
-   "volume_fp": "3440387.00",
+   "volume_fp": "3444275.00",
    "topics": [
     "crypto"
    ],
@@ -1185,7 +1185,7 @@
    ],
    "scope": null,
    "frequency": "hourly",
-   "volume_fp": "5726439292.00",
+   "volume_fp": "5726446239.00",
    "topics": [
     "crypto"
    ],
@@ -1717,7 +1717,7 @@
    ],
    "scope": null,
    "frequency": "monthly",
-   "volume_fp": "11312510.00",
+   "volume_fp": "11312576.00",
    "topics": [
     "crypto"
    ],
@@ -1736,7 +1736,7 @@
    ],
    "scope": null,
    "frequency": "annual",
-   "volume_fp": "19480246.00",
+   "volume_fp": "19499493.00",
    "topics": [
     "crypto"
    ],
@@ -1888,7 +1888,7 @@
    ],
    "scope": null,
    "frequency": "annual",
-   "volume_fp": "1973468771.00",
+   "volume_fp": "1973553831.00",
    "topics": [
     "crypto"
    ],
@@ -2128,7 +2128,7 @@
    ],
    "scope": null,
    "frequency": "fifteen_min",
-   "volume_fp": "58648.00",
+   "volume_fp": "58747.00",
    "topics": [
     "crypto"
    ],
@@ -2148,7 +2148,7 @@
    ],
    "scope": null,
    "frequency": "hourly",
-   "volume_fp": "20042070.00",
+   "volume_fp": "20042220.00",
    "topics": [
     "crypto"
    ],
@@ -2549,7 +2549,7 @@
    ],
    "scope": null,
    "frequency": "fifteen_min",
-   "volume_fp": "1276451.00",
+   "volume_fp": "1276945.00",
    "topics": [
     "crypto"
    ],
@@ -2642,7 +2642,7 @@
    ],
    "scope": null,
    "frequency": "hourly",
-   "volume_fp": "142618819.00",
+   "volume_fp": "142623269.00",
    "topics": [
     "crypto"
    ],
@@ -3392,7 +3392,7 @@
    ],
    "scope": null,
    "frequency": "fifteen_min",
-   "volume_fp": "17524.00",
+   "volume_fp": "17676.00",
    "topics": [
     "crypto"
    ],
@@ -3838,7 +3838,7 @@
    ],
    "scope": null,
    "frequency": "fifteen_min",
-   "volume_fp": "33872.00",
+   "volume_fp": "33889.00",
    "topics": [
     "crypto"
    ],
@@ -4457,7 +4457,7 @@
    ],
    "scope": null,
    "frequency": "fifteen_min",
-   "volume_fp": "320813.00",
+   "volume_fp": "320976.00",
    "topics": [
     "crypto"
    ],
@@ -4622,7 +4622,7 @@
    ],
    "scope": null,
    "frequency": "hourly",
-   "volume_fp": "128150.00",
+   "volume_fp": "130850.00",
    "topics": [
     "crypto"
    ],
@@ -5469,7 +5469,7 @@
    ],
    "scope": null,
    "frequency": "fifteen_min",
-   "volume_fp": "275634.00",
+   "volume_fp": "276079.00",
    "topics": [
     "crypto"
    ],
@@ -5504,7 +5504,7 @@
    ],
    "scope": null,
    "frequency": "hourly",
-   "volume_fp": "43270700.00",
+   "volume_fp": "43271060.00",
    "topics": [
     "crypto"
    ],
@@ -12384,7 +12384,7 @@
    ],
    "scope": null,
    "frequency": "one_off",
-   "volume_fp": "72903.00",
+   "volume_fp": "73000.00",
    "topics": [
     "elections"
    ],
@@ -18431,7 +18431,7 @@
    ],
    "scope": null,
    "frequency": "custom",
-   "volume_fp": "213043.00",
+   "volume_fp": "213382.00",
    "topics": [
     "elections"
    ],
@@ -20524,7 +20524,7 @@
    ],
    "scope": null,
    "frequency": "custom",
-   "volume_fp": "9612904.00",
+   "volume_fp": "9699154.00",
    "topics": [
     "elections"
    ],
@@ -24708,7 +24708,7 @@
    ],
    "scope": null,
    "frequency": "one_off",
-   "volume_fp": "5550879.00",
+   "volume_fp": "5550880.00",
    "topics": [
     "elections"
    ],
@@ -26111,7 +26111,7 @@
    ],
    "scope": null,
    "frequency": "one_off",
-   "volume_fp": "897852.00",
+   "volume_fp": "897854.00",
    "topics": [
     "elections"
    ],
@@ -31720,7 +31720,7 @@
    ],
    "scope": null,
    "frequency": "one_off",
-   "volume_fp": "5238756.00",
+   "volume_fp": "5238757.00",
    "topics": [
     "elections"
    ],
@@ -31738,7 +31738,7 @@
    ],
    "scope": null,
    "frequency": "one_off",
-   "volume_fp": "7573.00",
+   "volume_fp": "7577.00",
    "topics": [
     "elections"
    ],
@@ -33761,7 +33761,7 @@
    ],
    "scope": null,
    "frequency": "custom",
-   "volume_fp": "140040.00",
+   "volume_fp": "140060.00",
    "topics": [
     "elections"
    ],
@@ -38466,7 +38466,7 @@
    ],
    "scope": null,
    "frequency": "custom",
-   "volume_fp": "7983628531.00",
+   "volume_fp": "7983766544.00",
    "topics": [
     "elections"
    ],
@@ -38523,7 +38523,7 @@
    ],
    "scope": null,
    "frequency": "custom",
-   "volume_fp": "1027849277.00",
+   "volume_fp": "1028006936.00",
    "topics": [
     "elections"
    ],
@@ -38596,7 +38596,7 @@
    ],
    "scope": null,
    "frequency": "custom",
-   "volume_fp": "1443072353.00",
+   "volume_fp": "1443213934.00",
    "topics": [
     "elections"
    ],
@@ -42105,7 +42105,7 @@
    ],
    "scope": null,
    "frequency": "one_off",
-   "volume_fp": "2045198.00",
+   "volume_fp": "2058647.00",
    "topics": [
     "elections"
    ],
@@ -43422,7 +43422,7 @@
    ],
    "scope": null,
    "frequency": "one_off",
-   "volume_fp": "434181.00",
+   "volume_fp": "434182.00",
    "topics": [
     "elections"
    ],
@@ -57131,7 +57131,7 @@
    ],
    "scope": null,
    "frequency": "monthly",
-   "volume_fp": "74918421.00",
+   "volume_fp": "74918425.00",
    "topics": [
     "gas prices"
    ],
@@ -57393,7 +57393,7 @@
    ],
    "scope": null,
    "frequency": "weekly",
-   "volume_fp": "94718977.00",
+   "volume_fp": "94724063.00",
    "topics": [
     "gas prices"
    ],
@@ -59665,7 +59665,7 @@
    ],
    "scope": null,
    "frequency": "custom",
-   "volume_fp": "42199973631.00",
+   "volume_fp": "42200160426.00",
    "topics": [
     "golf"
    ],

@@ -1,7 +1,7 @@
 {
- "fetched_at": "2026-11-21T03:17:55Z",
+ "fetched_at": "2026-11-21T12:49:16Z",
  "base_url": "https://external-api.demo.kalshi.co/trade-api/v2",
- "runtime_seconds": 63.4,
+ "runtime_seconds": 76.2,
  "topics": [
   "gas prices",
   "elections",
