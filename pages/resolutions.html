@@ -5,7 +5,7 @@
 <meta name="description" content="In-scope Kalshi demo markets tracked until resolution, with the official yes/no result.">
 <link rel="stylesheet" href="../assets/style.css">
 </head><body>
-<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><a href="../index.html">Dashboard</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a><a href="../alerts.html">Live Alerts</a><a href="../pages/resolutions.html" aria-current="page">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/questions.html">Questions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/verification.html">Verification</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/repo-review.html">Repo Review</a><a href="../pages/sources.html">Sources</a></nav></div></header>
+<header class="top"><div class="hbar"><div class="brand">Kalshi <b>Demo</b> Dashboard<small>demo environment · not real money</small></div><button class="navtoggle secondary sm" aria-label="Toggle navigation">Menu</button><nav class="main"><div class="navgroup" data-group="main"><span class="navlabel">Main</span><a href="../index.html">Dashboard</a><a href="../alerts.html">Live Alerts</a><a href="../pages/executive-summary.html">Executive Summary</a><a href="../pages/resolutions.html" aria-current="page">Resolutions</a><a href="../pages/portfolio.html">Portfolio</a><a href="../pages/analysis.html">Analysis</a></div><div class="navgroup" data-group="topic"><span class="navlabel">Topics</span><a href="../pages/gas.html">Gas</a><a href="../pages/elections.html">Elections</a><a href="../pages/culture.html">Culture</a><a href="../pages/crypto.html">Crypto</a><a href="../pages/golf.html">Golf</a></div><div class="navgroup" data-group="verify"><span class="navlabel">Verify</span><a href="../pages/verification.html">Verification</a><a href="../pages/sources.html">Sources</a><a href="../pages/flagged.html">Flagged</a><a href="../pages/questions.html">Questions</a><a href="../pages/suggestions.html">Suggestions</a><a href="../pages/api-reference.html">API Reference</a><a href="../pages/repo-review.html">Repo Review</a></div><div class="navgroup" data-group="more"><span class="navlabel">More</span><a href="../verified/index.html">Verified Data</a><a href="../dashboard/index.html">Static Dashboard</a><a href="../review.html">Decision Register</a><a href="../rankings.html">Dollar Rankings</a><a href="../instrument-panel/site/index.html">Instrument Panel</a><a href="../live/index.html">Live Console</a><a href="../jumps/index.html">Price Jumps</a></div></nav></div></header>
 <div class="wrap">
 
 <h1>Resolutions — tracked until the market resolves</h1>
@@ -13,6 +13,13 @@
 (<b>yes</b> or <b>no</b>), the settlement value, and the settlement timestamp. Rows come
 straight from <code>GET /markets?status=settled</code>; the <code>result</code> field is
 Kalshi's own, not computed here.</p>
+<div class="notice info"><b>Two official sources, labelled per row.</b>
+  <span class="pill flag">strict series mapping</span> is the collector's mapping through each
+  series' official category/tags; <span class="pill flag">settled-markets scan</span> is a
+  separate official settled-markets request whose topic comes from the market title. Both are
+  Kalshi responses; rows are merged by ticker with the strict mapping taking precedence, and no
+  result, price or timestamp is ever inferred. A market whose topic cannot be mapped is left out
+  rather than guessed (see <a href="pages/flagged.html">Flagged</a>).</div>
 <div id="metaBar"><div class="card tight"><div class="status" id="staleness">Loading…</div></div></div>
 <div class="kpis" id="kpis"></div>
 <div class="row" style="margin:10px 0">
@@ -47,19 +54,50 @@ Kalshi's own, not computed here.</p>
 (async function(){
   const $ = id=>document.getElementById(id);
   try{
-    const d = await KR.resolutions();
-    KR.staleness($('staleness'), d.generated_at_utc);
-    const rows = d.resolutions||[];
+    // Two OFFICIAL sources, merged by market ticker and never blended silently:
+    //   data/resolutions.json  - collector's strict series-category/tag mapping
+    //   data/resolved.json     - settled-markets scan, topic by title keyword
+    // Both come from GET /markets?status=settled. Each row keeps its own source URL.
+    const [strict, settled] = await Promise.all([
+      KR.resolutions().catch(()=>null),
+      KR.getJSON('data/resolved.json').catch(()=>null)
+    ]);
+    const generated = (strict && strict.generated_at_utc) || (settled && settled.fetched_at) || '';
+    KR.staleness($('staleness'), generated);
+    const map = new Map();
+    (((strict||{}).resolutions)||[]).forEach(r=>{
+      if(r && r.market_ticker) map.set(r.market_ticker, Object.assign({}, r, {provenance:'strict series mapping'}));
+    });
+    (((settled||{}).markets)||[]).forEach(m=>{
+      const t = m && (m.ticker || m.market_ticker);
+      if(!t || map.has(t)) return;
+      map.set(t, {
+        topic: (m.topics||[])[0] || '',
+        market_ticker: t,
+        title: m.market_title || m.event_title || t,
+        result: String(m.result||'').toLowerCase(),
+        settlement_value_dollars: (m.settlement_value_dollars === undefined ? null : m.settlement_value_dollars),
+        settlement_ts: m.settled_ts || m.settlement_ts || '',
+        volume_fp: (m.volume_fp === undefined ? null : m.volume_fp),
+        rules_primary_head: null,
+        market_url: m.source || m.market_url || '',
+        provenance: 'settled-markets scan (title-keyword topic)'
+      });
+    });
+    const rows = Array.from(map.values()).sort((a,b)=>String(b.settlement_ts||'').localeCompare(String(a.settlement_ts||'')));
     const yes = rows.filter(r=>r.result==='yes').length, no = rows.filter(r=>r.result==='no').length;
-    const per = {};
+    const per = {}, prov = {};
     rows.forEach(r=>{ per[r.topic]=per[r.topic]||{yes:0,no:0,total:0}; per[r.topic].total++;
-      if(r.result==='yes')per[r.topic].yes++; if(r.result==='no')per[r.topic].no++; });
+      if(r.result==='yes')per[r.topic].yes++; if(r.result==='no')per[r.topic].no++;
+      prov[r.provenance]=(prov[r.provenance]||0)+1; });
     $('kpis').innerHTML = `
-      <div class="kpi-card"><div class="k">Resolved in scope</div><div class="v">${rows.length}</div><div class="s">all topics</div></div>
+      <div class="kpi-card"><div class="k">Resolved in scope</div><div class="v">${rows.length}</div><div class="s">all topics, both official sources</div></div>
       <div class="kpi-card"><div class="k">Resolved YES</div><div class="v ok">${yes}</div><div class="s">result = yes</div></div>
       <div class="kpi-card"><div class="k">Resolved NO</div><div class="v bad">${no}</div><div class="s">result = no</div></div>
       <div class="kpi-card"><div class="k">Topics with data</div><div class="v">${Object.keys(per).length}</div>
-        <div class="s">${Object.entries(per).map(([k,v])=>k+': '+v.total).join(' · ')||'none'}</div></div>`;
+        <div class="s">${Object.entries(per).map(([k,v])=>k+': '+v.total).join(' · ')||'none'}</div></div>
+      <div class="kpi-card"><div class="k">Provenance</div><div class="v" style="font-size:.95em">${Object.values(prov).reduce((a,b)=>a+b,0)}</div>
+        <div class="s">${Object.entries(prov).map(([k,v])=>v+' '+k).join(' · ')||'no rows'}</div></div>`;
     function render(){
       const t=$('topicFilter').value, rf=$('resFilter').value;
       const f = rows.filter(r=>(!t||r.topic===t)&&(!rf||r.result===rf));
@@ -71,13 +109,14 @@ Kalshi's own, not computed here.</p>
         {label:'Settled (UTC)', get:r=>`<span class="small">${KR.when(r.settlement_ts)}</span>`},
         {label:'Volume', num:true, get:r=>KR.num(r.volume_fp,0)},
         {label:'Rules', get:r=>r.rules_primary_head?`<span class="small" title="${KR.esc(r.rules_primary_head)}">${KR.esc(r.rules_primary_head.slice(0,80))}…</span>`:'—'},
-        {label:'Source', get:r=>`<a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">settled markets</a>`}
+        {label:'Provenance', get:r=>`<span class="pill flag">${KR.esc(r.provenance||'unstated')}</span>`},
+        {label:'Source', get:r=>KR.link(r.market_url,'official API')+' · <a href="https://docs.kalshi.com/api-reference/market/get-markets" target="_blank" rel="noopener">docs</a>'}
       ], f, 'No resolved markets for this filter in the current snapshot.');
     }
     render();
     ['topicFilter','resFilter'].forEach(id=>$(id).addEventListener('change', render));
   }catch(e){
-    $('kpis').innerHTML = `<div class="notice bad">Could not load data/resolutions.json: ${KR.esc(e.message)}</div>`;
+    $('kpis').innerHTML = `<div class="notice bad">Could not load the resolved-market data: ${KR.esc(e.message)}</div>`;
   }
 })();
 </script>

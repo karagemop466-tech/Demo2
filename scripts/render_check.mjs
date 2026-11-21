@@ -37,6 +37,9 @@ const PAGES = [
   ['dashboard.html', ['#kpis', '#topicStrip', '#mktTable']],
   ['pages/alerts.html', ['#alertStatus', '#chatAll', '#chatModel']],
   ['pages/causes.html', ['#srcTable', '#newsTable']],
+  // Session d5905246: the resolutions view merges two official settled-market sources.
+  // Render it so a missing/renamed JSON file is caught here, not on the published site.
+  ['pages/resolutions.html', ['#kpis', '#resTable']],
 ];
 
 function stubCanvas(dom) {

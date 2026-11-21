@@ -319,7 +319,95 @@
     var age = (Date.now() - new Date(generatedAtUtc).getTime()) / 60000;
     var cls = age > 60 ? "warn" : "ok";
     el.innerHTML = 'Snapshot <span class="' + cls + '">' + KR.when(generatedAtUtc) + "</span>" +
-      " (" + KR.ago(generatedAtUtc) + ") · refreshes every 10 min via GitHub Actions";
+      " (" + KR.ago(generatedAtUtc) + ") · collected by GitHub Actions; the chart also polls the live demo API";
+  };
+
+  /* ---------------- live (browser) polling ----------------
+   * The static snapshot above is committed by GitHub Actions, which GitHub may delay
+   * (observed gaps of hours on this repository). To keep the dashboard genuinely live
+   * the browser also polls two PUBLIC, unauthenticated endpoints:
+   *
+   *   GET /markets/{ticker}/orderbook?depth=100   documented side arrays
+   *   GET /markets/{ticker}                       documented market record
+   *
+   * Docs: https://docs.kalshi.com/api-reference/market/get-market-orderbook
+   *       https://docs.kalshi.com/api-reference/market/get-market
+   *
+   * Nothing is invented: a failed request reports the HTTP status and leaves the last
+   * committed snapshot visible with its own timestamp. No credentials ever reach the page.
+   */
+  KR.liveJSON = function (url) {
+    return fetch(url, { cache: "no-store", headers: { Accept: "application/json" } })
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      });
+  };
+  KR.bookURL = function (ticker) {
+    return KR.DEMO_REST + "/markets/" + encodeURIComponent(ticker) + "/orderbook?depth=100";
+  };
+  KR.marketURL = function (ticker) {
+    return KR.DEMO_REST + "/markets/" + encodeURIComponent(ticker);
+  };
+
+  /* Best (highest-price) level with a positive contract count, from a documented
+     [price, count] string array. Returns null when the side is empty — an empty book
+     is a real, documented state and must not become a 0.00 price. */
+  KR.bestLevel = function (levels) {
+    var best = null;
+    (levels || []).forEach(function (level) {
+      var p = Number(level && level[0]), c = Number(level && level[1]);
+      if (!isFinite(p) || !isFinite(c) || c <= 0) return;
+      if (!best || p > best.price) best = { price: p, count: c };
+    });
+    return best;
+  };
+
+  /* Quote one order-book response. Kalshi returns YES bids and NO bids only; a YES ask
+     at p is a NO bid at 1-p (documented), so the ask side is DERIVED and labelled. */
+  KR.bookQuote = function (book) {
+    var fp = (book && (book.orderbook_fp || book.orderbook)) || {};
+    var yes = fp.yes_dollars || fp.yes || [];
+    var no = fp.no_dollars || fp.no || [];
+    var yb = KR.bestLevel(yes), nb = KR.bestLevel(no);
+    var ask = nb ? Math.round((1 - nb.price) * 10000) / 10000 : null;
+    var asks = (no || []).map(function (l) {
+      var p = Number(l && l[0]), c = Number(l && l[1]);
+      if (!isFinite(p) || !isFinite(c) || c <= 0) return null;
+      return [Math.round((1 - p) * 10000) / 10000, c];
+    }).filter(Boolean).sort(function (a, b) { return a[0] - b[0]; });
+    var bids = (yes || []).map(function (l) {
+      var p = Number(l && l[0]), c = Number(l && l[1]);
+      if (!isFinite(p) || !isFinite(c) || c <= 0) return null;
+      return [p, c];
+    }).filter(Boolean).sort(function (a, b) { return b[0] - a[0]; });
+    return {
+      best_yes_bid: yb ? yb.price : null,
+      best_yes_bid_contracts: yb ? yb.count : null,
+      best_yes_ask: ask,
+      best_yes_ask_contracts: nb ? nb.count : null,
+      spread: yb && ask !== null ? Math.round((ask - yb.price) * 10000) / 10000 : null,
+      bids: bids,
+      asks: asks,
+      yes_bid_contracts: bids.reduce(function (s, l) { return s + l[1]; }, 0),
+      ask_contracts: asks.reduce(function (s, l) { return s + l[1]; }, 0),
+    };
+  };
+
+  /* The value the chart is currently plotting, taken from live official fields.
+     Returns null (rendered as "—", never 0) when the field cannot be derived. */
+  KR.liveValue = function (quote, market, field) {
+    if (!quote) return null;
+    if (field === "yes_bid_close") return quote.best_yes_bid;
+    if (field === "yes_ask_close") return quote.best_yes_ask;
+    if (field === "close") {
+      var lp = market && market.last_price_dollars;
+      if (lp === undefined || lp === null || lp === "") return null;
+      var n = Number(lp);
+      return isFinite(n) ? n : null;
+    }
+    if (quote.best_yes_bid === null || quote.best_yes_ask === null) return null;
+    return Math.round(((quote.best_yes_bid + quote.best_yes_ask) / 2) * 10000) / 10000;
   };
 
   window.KR = KR;

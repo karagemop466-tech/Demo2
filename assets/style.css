@@ -165,3 +165,23 @@ dl.kv dd{margin:.1em 0 0}
 .msg .down{color:var(--bad)}
 .flagpill{border:1px solid var(--warn);color:var(--warn);border-radius:999px;padding:0 7px;font-size:.72rem}
 .emptyp{color:var(--muted);padding:14px;font-size:.85rem}
+
+/* ---------------- grouped navigation (session d5905246) ----------------
+   The brief asks for continuous simplification. Six labelled groups replace one
+   flat row of 23 links; every link is still present and reachable. */
+nav.main{gap:10px;row-gap:4px;align-items:center}
+nav.main .navgroup{display:flex;flex-wrap:wrap;gap:4px;align-items:center;
+  padding:0 8px 0 0;border-right:1px solid var(--line)}
+nav.main .navgroup:last-child{border-right:0;padding-right:0}
+nav.main .navlabel{font-size:.62rem;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--muted);padding:0 4px 0 2px;user-select:none}
+@media (max-width:720px){
+  nav.main{flex-direction:column;align-items:flex-start;gap:6px}
+  nav.main .navgroup{border-right:0;padding-right:0;flex-direction:column;align-items:flex-start}
+  nav.main .navlabel{padding-left:6px}
+}
+
+/* live-poll status badge + live book (index.html) */
+#liveBadge{font-size:.72rem;white-space:nowrap}
+#liveBook .kpis{margin:8px 0 4px}
+#liveBook table td,#liveBook table th{font-size:.78rem}

@@ -88,6 +88,15 @@ jobs:
           print("analysis fixture OK:", got)
           PY
 
+      - name: Install test dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Dashboard live layer and resolution collector tests
+        # Both suites are offline and assert documented API shapes only (no network).
+        run: |
+          node --test tests/dashboard_live.test.js
+          python3 tests/test_resolutions.py
+
       - name: Link, nav, data, secret and script checks
         run: python tools/check.py
 
