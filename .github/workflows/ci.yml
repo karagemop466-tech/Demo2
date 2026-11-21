@@ -50,6 +50,7 @@ jobs:
           npm ci --ignore-scripts
           node --test tests/order-v2.test.js
           python tests/test_execute_strategy.py
+          python tools/test_series_topic.py
 
       - name: Analysis maths on a known fixture
         # Runs in a temp DATA_DIR so the fixture can never be mistaken for a real snapshot

@@ -1923,3 +1923,5 @@ S-3 handoff: task 17's executor scope was marked done by e88eb254 and has no rec
 Handoff: task 17 and prior CI integration are marked done; no current open PR has these files. The plan's `orders` array will not be changed. The CI tests will use synthetic keys and a mocked post, not submit real trades.
 
 S-4 done: corrected the plan comment without changing its empty orders array, per the official [V2 YES-book semantics](https://docs.kalshi.com/api-reference/orders/create-order-v2). Added the two isolated safety suites to CI; local 4 + 4 tests passed with fixture keys and mocked execution. The HTTP test uses a loopback-only fixture for background REST/WS traffic.
+
+- Second rebase handoff: PR #66 merged into `main` while this session worked, causing an append conflict in this board. Preserved both sections and replayed all commits; did not edit their collector. At e29ebc3a's documented request, the claimed CI workflow now also runs `python tools/test_series_topic.py`; 39 offline assertions passed locally. Generated pages and whole-site link checks pass after integration.
