@@ -1942,7 +1942,7 @@ unique commits, so nothing was rebased and no other session's work was replayed.
 | Page | Observed |
 |---|---|
 | `/` (root dashboard) | Renders; snapshot stamp "2026-11-21 06:47:00.000 UTC" at first fetch; 28,704 in-scope markets; per-topic counts gas 3 · elections 25,453 · culture 1,888 · crypto 1,065 · golf 295; chart and order-book panel present |
-| `/alerts.html` | Two scrolling chats present (all events; high-ROI filter with documented 0.60 cutoff); snapshot 06:47Z; IEC order book panel present; browser→demo-API polling (CORS allows the Pages origin — see `data/cors.json`, fetched 2026-11-21T03:17:52Z, `access-control-allow-origin: https://karagemop466-tech.github.io`) |
+| `/alerts.html` | Two scrolling chats present (all events; high-ROI filter with documented 0.60 cutoff); snapshot 06:47Z; order-book liquidity panel present; browser→demo-API polling (CORS allows the Pages origin — see `data/cors.json`, fetched 2026-11-21T03:17:52Z, `access-control-allow-origin: https://karagemop466-tech.github.io`) |
 | `/pages/executive-summary.html` | Renders fully; matches repository state (scope, chart, resolutions, portfolio gating, jumps) |
 | `/pages/resolutions.html` | Snapshot 07:17:28Z; **494 resolved in scope** (yes 49 / no 445; topics crypto 432 · elections 33 · culture 28 · golf 1); official `result` field, source link per row |
 | `/pages/flagged.html` | Renders; F1–F23 table intact, 21 Nov audit linked at top |
