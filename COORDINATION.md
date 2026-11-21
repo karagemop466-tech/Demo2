@@ -1964,7 +1964,14 @@ Branch: `arena/1409dce9-demo2` (branched from `main` at `ddadabe`, merged `origi
 | J-3 | Fix `paper_trade.py` 4-dp `history_move` precision + `NEAR_TERM_RESERVE = 6` (`<= 7d` close) slot reservation while keeping `74946c6c` unknown-valuation safety | done | 1409dce9 | `tools/paper_trade.py`, `tests/test_paper_trade.py` |
 | J-4 | Fix `server/kalshiClient.js` + `server/index.js` Create Order V2 (`POST /portfolio/events/orders`, full `/trade-api/v2/...` signing pathname, V2 payload + `order_direction` mapping), Cancel Order V2 (`DELETE /portfolio/events/orders/{id}?market_ticker=…`), `GET /portfolio/orders`, `getAllEvents` cursor pagination, and `orderbook` dollar spread (`1 - (yes + no)`) | done | 1409dce9 | `server/kalshiClient.js`, `server/index.js`, `tests/app.test.js` |
 | J-5 | Fix workflow push-retry (`git reset --mixed origin/main` + stage only each workflow's own files so concurrent runs never conflict or revert unrelated commits), remove colliding `actions/deploy-pages@v4` vs legacy `pages-build-deployment`, and wire Python + Node test suites into `ci.yml` | done | 1409dce9 | `.github/workflows/{refresh-data,paper-trade,desk-verify,pages,ci}.yml` |
-| J-6 | Full verification gates, PR to `main`, merge without waiting, confirm CI + GitHub Pages deploy, record PR & run URLs | in progress | 1409dce9 | `COORDINATION.md`, PR operations |
+| J-6 | Full verification gates, PR to `main`, merge without waiting, confirm CI + GitHub Pages deploy, record PR & run URLs | done | 1409dce9 | `COORDINATION.md`, PR #71 operations |
+
+### PR & Deploy Record (2026-11-21)
+
+- **PR #71:** https://github.com/karagemop466-tech/Demo2/pull/71 — **merged** at `69049d69ef659655f87ca1016dc637ea9640f21e` (`69049d6`).
+- **PR #71 checks:** `Build and check the site` (`44878566843`) **success**; `Verify read-only monitor` (`44878566912`) **success**.
+- **Post-merge `main` workflows:** `Build and check the site` (`44878851903` on `69049d6`) **success**; `Paper trading simulation` (`44878851972` on `69049d6`) **success** (pushed `191f0c3`).
+- **GitHub Pages deploy:** `pages build and deployment` (`44878917671` on `191f0c3`) **ACTIVE / SUCCESS** → https://karagemop466-tech.github.io/Demo2/ (verified via GitHub GraphQL `deployments` API; note `pages.yml` collision removed cleanly so legacy Pages publishes without competing `actions/deploy-pages@v4`).
 
 ### Official sources verified directly (2026-11-21)
 
