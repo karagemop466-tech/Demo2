@@ -1,6 +1,6 @@
 {
   "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/search/tags_by_categories",
-  "collected_at": "2026-11-21T03:18:08Z",
+  "collected_at": "2026-11-21T12:50:51Z",
   "tags_by_categories": {
     "AI": null,
     "Business": null,
@@ -126,7 +126,6 @@
       "Reality TV",
       "Collectibles",
       "Music Industry",
-      "Views",
       "Achievements",
       "Art",
       "TV Charts",
@@ -140,6 +139,7 @@
       "Music Streams",
       "The Game Awards",
       "The Voice",
+      "Views",
       "Pok\u00e9mon",
       "Singles",
       "Streamer Awards",
@@ -253,8 +253,8 @@
     "Social": null,
     "Sports": [
       "Soccer",
-      "Football",
       "Basketball",
+      "Football",
       "Hockey",
       "Tennis",
       "Golf",
