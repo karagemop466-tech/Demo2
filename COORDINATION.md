@@ -1802,3 +1802,12 @@ and the Actions collector.
   secrets `KALSHI_DEMO_API_KEY_ID` + `KALSHI_DEMO_PRIVATE_KEY` and variable
   `KALSHI_TRADING_ENABLED=1` (`pages/questions.html` Q4). Three collectors write `data/`
   on different schedules — see audit above. Repo-growth cadence (K-F1) still open.
+
+## 74946c6c — urgent publication race repair
+
+Taking over >60-minute-old workflow retry scope `.github/workflows/{refresh-data,
+paper-trade,desk-verify}.yml`: commit 433aabd soft-reset retry reverted PR #65's
+unrelated source, report and tests. Claim: restore only lost PR #65 files (not data),
+replace soft-reset/recommit with conflict-safe rebase, regenerate pages, verify and
+republish. Evidence: `git show --stat 433aabd`; successful Pages build alone did not
+prove the changes remained present. Session files are recoverable from e44b644.
