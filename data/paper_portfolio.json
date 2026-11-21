@@ -575,9 +575,9 @@
    "opened_ts": "2026-11-21T02:51:57+00:00",
    "strategy": "longshot",
    "source_url": "https://external-api.demo.kalshi.co/trade-api/v2/markets/KXPRESNOMD-28-REMA",
-   "mark_price_dollars": 0.022,
+   "mark_price_dollars": 0.021,
    "mark_note": "",
-   "unrealized_pnl_dollars": -0.01
+   "unrealized_pnl_dollars": -0.02
   },
   {
    "ticker": "KXPRESNOMD-28-JBP",
@@ -716,6 +716,12 @@
    "equity_dollars": 91.54,
    "cash_dollars": 79.49,
    "open_positions": 20
+  },
+  {
+   "ts": "2026-11-21T11:49:53+00:00",
+   "equity_dollars": 91.53,
+   "cash_dollars": 79.49,
+   "open_positions": 20
   }
  ],
  "definitions": {
@@ -732,8 +738,8 @@
    "favorite": "buy YES at ask when last >= $0.90 and spread <= $0.05"
   }
  },
- "generated_at_utc": "2026-11-21T07:09:31+00:00",
- "source_snapshot_generated_at": "2026-11-21T06:57:14+00:00",
+ "generated_at_utc": "2026-11-21T11:49:53+00:00",
+ "source_snapshot_generated_at": "2026-11-21T08:05:47+00:00",
  "strategy_stats": {
   "longshot": {
    "trades": 18,
@@ -765,10 +771,10 @@
  },
  "totals": {
   "cash_dollars": 79.49,
-  "equity_dollars": 91.54,
+  "equity_dollars": 91.53,
   "unpriced_positions": 0,
   "realized_pnl_dollars": 0,
-  "unrealized_pnl_dollars": -8.46,
+  "unrealized_pnl_dollars": -8.47,
   "trades_total": 20,
   "open_positions": 20,
   "settled_positions": 0,
