@@ -6,7 +6,7 @@
 //   - Path is signed WITHOUT the query string.
 //   - Ed25519 signs the message directly; RSA uses RSA-PSS with SHA-256,
 //     salt length = digest length.
-import { createPrivateKey, sign as cryptoSign, constants } from 'crypto';
+import { createPrivateKey, sign as cryptoSign, constants, randomUUID } from 'crypto';
 
 export class KalshiError extends Error {
   constructor(message, { status, body } = {}) {
@@ -32,12 +32,62 @@ function signText(privateKeyPem, text) {
   });
 }
 
+export function buildCreateOrderV2Payload(input = {}) {
+  const ticker = String(input.ticker || input.market_ticker || '').trim();
+  if (!ticker) {
+    throw new KalshiError('ticker is required for Create Order V2', { status: 400 });
+  }
+  const rawSide = String(input.side || '').toLowerCase();
+  const action = String(input.action || 'buy').toLowerCase();
+  let bookSide;
+  if (rawSide === 'bid' || rawSide === 'ask') {
+    bookSide = rawSide;
+  } else if (rawSide === 'yes' || rawSide === 'no') {
+    if (action === 'sell') {
+      bookSide = rawSide === 'yes' ? 'ask' : 'bid';
+    } else {
+      bookSide = rawSide === 'yes' ? 'bid' : 'ask';
+    }
+  } else {
+    throw new KalshiError(`Invalid order side: ${input.side}`, { status: 400 });
+  }
+  const countNum = Number(input.count);
+  if (!Number.isFinite(countNum) || countNum <= 0) {
+    throw new KalshiError(`Invalid order count: ${input.count}`, { status: 400 });
+  }
+  const priceNum = Number(input.price ?? input.price_dollars);
+  if (!Number.isFinite(priceNum) || priceNum <= 0 || priceNum >= 1) {
+    throw new KalshiError(`Invalid order price (must be in (0, 1) dollars): ${input.price ?? input.price_dollars}`, { status: 400 });
+  }
+  const tifMap = {
+    gtc: 'good_till_canceled',
+    good_till_canceled: 'good_till_canceled',
+    ioc: 'immediate_or_cancel',
+    immediate_or_cancel: 'immediate_or_cancel',
+    fok: 'fill_or_kill',
+    fill_or_kill: 'fill_or_kill',
+  };
+  const tifKey = String(input.time_in_force || input.type || 'good_till_canceled').toLowerCase();
+  const timeInForce = tifMap[tifKey] || 'good_till_canceled';
+  const stp = input.self_trade_prevention_type === 'maker' ? 'maker' : 'taker_at_cross';
+  return {
+    ticker,
+    client_order_id: String(input.client_order_id || randomUUID()),
+    side: bookSide,
+    count: countNum.toFixed(2),
+    price: priceNum.toFixed(4),
+    time_in_force: timeInForce,
+    self_trade_prevention_type: stp,
+  };
+}
+
 export class KalshiClient {
-  constructor({ baseUrl, keyId, privateKeyPem, enabled }) {
+  constructor({ baseUrl, keyId, privateKeyPem, enabled, fetchImpl } = {}) {
     this.baseUrl = baseUrl.replace(/\/+$/, '');
     this.keyId = keyId;
     this.privateKeyPem = privateKeyPem;
     this.enabled = enabled && Boolean(keyId) && Boolean(privateKeyPem);
+    this.fetchImpl = fetchImpl || globalThis.fetch;
   }
 
   _authHeaders(method, pathWithoutQuery) {
@@ -59,7 +109,8 @@ export class KalshiClient {
         if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, String(v));
       }
     }
-    const pathWithoutQuery = path; // signing strips the query (path excludes query here)
+    // Signing message uses full API pathname without query string (e.g. /trade-api/v2/portfolio/events/orders).
+    const pathWithoutQuery = url.pathname;
     const headers = { Accept: 'application/json' };
     const ah = auth ? this._authHeaders(method, pathWithoutQuery) : {};
     Object.assign(headers, ah);
@@ -72,7 +123,7 @@ export class KalshiClient {
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     let res;
     try {
-      res = await fetch(url, {
+      res = await this.fetchImpl(url, {
         method,
         headers,
         body: payload,
@@ -108,17 +159,56 @@ export class KalshiClient {
     return this.request('GET', '/exchange/status', { auth: false });
   }
 
-  getEvents({ status, withNestedMarkets, limit, seriesTicker, minUpdatedTs } = {}) {
+  getEvents({ status, withNestedMarkets, limit, cursor, seriesTicker, minUpdatedTs } = {}) {
     return this.request('GET', '/events', {
       auth: false,
       query: {
         status,
         with_nested_markets: withNestedMarkets ? 'true' : undefined,
         limit,
+        cursor,
         series_ticker: seriesTicker,
         min_updated_ts: minUpdatedTs,
       },
     });
+  }
+
+  async getAllEvents({
+    status,
+    withNestedMarkets = true,
+    limit = 200,
+    maxPages = 25,
+    seriesTicker,
+    minUpdatedTs,
+  } = {}) {
+    const seen = new Set();
+    const events = [];
+    let cursor;
+    let pagesFetched = 0;
+    let truncated = false;
+    while (pagesFetched < maxPages) {
+      const page = await this.getEvents({
+        status,
+        withNestedMarkets,
+        limit,
+        cursor,
+        seriesTicker,
+        minUpdatedTs,
+      });
+      pagesFetched++;
+      for (const ev of page?.events || []) {
+        if (!ev?.event_ticker || seen.has(ev.event_ticker)) continue;
+        seen.add(ev.event_ticker);
+        events.push(ev);
+      }
+      const nextCursor = page?.cursor;
+      if (!nextCursor || nextCursor === cursor) break;
+      cursor = nextCursor;
+      if (pagesFetched >= maxPages) {
+        truncated = true;
+      }
+    }
+    return { events, pagesFetched, truncated };
   }
 
   getMarkets({ seriesTicker, status, eventTicker, limit, cursor } = {}) {
@@ -176,21 +266,25 @@ export class KalshiClient {
     return this.request('GET', '/portfolio/positions', { auth: true, query: { subaccount } });
   }
 
-  getOrders({ status, marketTicker, limit } = {}) {
-    return this.request('GET', '/orders', {
+  getOrders({ status, marketTicker, limit, cursor } = {}) {
+    return this.request('GET', '/portfolio/orders', {
       auth: true,
-      query: { status, market_ticker: marketTicker, limit },
+      query: { status, ticker: marketTicker, limit, cursor },
     });
   }
 
   createOrder(order) {
-    return this.request('POST', '/orders', { auth: true, body: order });
+    const body = buildCreateOrderV2Payload(order);
+    return this.request('POST', '/portfolio/events/orders', { auth: true, body });
   }
 
   cancelOrder({ orderId, marketTicker }) {
-    return this.request('POST', '/orders/cancel', {
+    if (!orderId || !marketTicker) {
+      throw new KalshiError('orderId and marketTicker are required for Cancel Order V2', { status: 400 });
+    }
+    return this.request('DELETE', `/portfolio/events/orders/${encodeURIComponent(orderId)}`, {
       auth: true,
-      body: { order_id: orderId, market_ticker: marketTicker },
+      query: { market_ticker: marketTicker },
     });
   }
 }
