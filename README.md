@@ -206,10 +206,3 @@ behavior is not yet verified. The existing dashboard, backend, Pages site, and t
 `intelligence/` subsite are kept independently; the monitor is not a replacement.
 See [`monitor/review.html`](monitor/review.html) for caveats, including the labeled
 bid-depth proxy used for the ambiguous “highest dollar amount” ranking.
-
-## Current scoped audit — 21 November 2026
-
-[Executive summary and Flagged for Review](audit-74946c6c.html)
-([Markdown](docs/SESSION_74946c6c.md)). Fixes missing-quote paper valuations without
-inventing marks. Account trading remains unverified; the alternative Node backend
-has documented route discrepancies. Do not enter private keys in any public page.

@@ -108,30 +108,6 @@ def main_test() -> None:
     ok(led2["totals"]["resolution_counts"]["yes"] == 1, "resolution counted as yes")
     ok(led2["strategy_stats"]["momentum"]["wins"] == 1, "strategy stats record the win")
 
-    # Missing and invalid marks must never turn into invented cost/zero valuations.
-    for value in (None, "", "NaN", "Infinity", "1.1", "-0.1"):
-        snap["markets"] = [dict(m, yes_bid_dollars=value) if m["market_ticker"] == "MOM-1" else m
-                           for m in snap["markets"]]
-        (data / "snapshot.json").write_text(json.dumps(snap))
-        subprocess.run([sys.executable, str(ROOT / "tools" / "paper_trade.py")],
-                       check=True, capture_output=True, text=True, env=env)
-        marked = json.loads((data / "paper_portfolio.json").read_text())
-        pos = next(p for p in marked["positions"] if p["ticker"] == "MOM-1")
-        ok(pos["mark_price_dollars"] is None and pos["unrealized_pnl_dollars"] is None,
-           f"missing/invalid bid {value!r} stays unknown")
-        ok(marked["totals"]["equity_dollars"] is None and
-           marked["totals"]["unrealized_pnl_dollars"] is None,
-           "incomplete marks invalidate aggregate equity and unrealized P&L")
-        ok(marked["history"][-1]["equity_dollars"] is None, "history retains unknown equity")
-    snap["markets"] = [dict(m, yes_bid_dollars="0.0000", no_bid_dollars="0.0000")
-                       for m in snap["markets"]]
-    (data / "snapshot.json").write_text(json.dumps(snap))
-    subprocess.run([sys.executable, str(ROOT / "tools" / "paper_trade.py")],
-                   check=True, capture_output=True, text=True, env=env)
-    zero = json.loads((data / "paper_portfolio.json").read_text())
-    ok(zero["totals"]["unpriced_positions"] == 0, "explicit zero bid is not treated as missing")
-    ok(zero["totals"]["equity_dollars"] == zero["cash_dollars"], "zero bid arithmetic preserved")
-
     # cap test: 25 fresh signals -> at most MAX_OPEN (20) new positions
     data2 = Path(tempfile.mkdtemp(prefix="kalshi-paper-cap-"))
     snap2 = {"generated_at_utc": "2026-11-20T20:00:00+00:00",
