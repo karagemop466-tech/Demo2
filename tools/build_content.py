@@ -1246,6 +1246,25 @@ FLAGGED = [
   "table, and the page states plainly that it is not financial advice and makes no outcome prediction. "
   "Nothing is inferred from outside the API; detections themselves use only official prices.",
   "api-reference/market/get-markets"),
+ ("F24", "Backend trading and private portfolio are disabled pending access controls",
+  "The Node server had no application authentication or CSRF protection on its order endpoint; "
+  "its prior request used <code>POST /orders</code> and a body unlike Kalshi V2. "
+  "It also exposed authenticated portfolio data to anonymous callers.",
+  "Enabling credentials on a network-accessible server could expose account data or orders. "
+  "The actual account and execution path have not been tested here.",
+  "Both HTTP routes now fail closed even when keys are present. The low-level V2 client uses "
+  "the documented endpoint, signs the full path, restricts authenticated requests to demo hosts, "
+  "and is tested with mocked responses and locally generated keys. A secured backend and live "
+  "demo-account verification are still needed; no order was submitted in this audit.",
+  "api-reference/orders/create-order-v2|getting_started/quick_start_authenticated_requests"),
+ ("F25", "Alert and ranking coverage is incomplete",
+  "The browser alert feed selects up to 12 markets per topic from the published snapshot; "
+  "the snapshot records pagination and per-topic publication limits. The backend reads one events page.",
+  "Not every in-scope event or swing is monitored; resolved markets and highest-dollar rankings "
+  "cannot be claimed complete. Polling can miss moves that reverse between observations.",
+  "Treat alerts as a sampled watchlist and inspect the recorded collection metadata; complete "
+  "tracking needs pagination, persistent state and a reliable authenticated streaming service.",
+  "api-reference/events/get-events|getting_started/quick_start_websockets"),
  ("F23", "The paper-trading simulator does not model fees or slippage",
   "tools/paper_trade.py runs four deterministic strategies over the collected snapshot and "
   "settles positions on the official result field. Fills are assumed at the quoted ask with no "
@@ -1320,7 +1339,7 @@ Full prior registers: <a href="../verified/flagged-for-review.html">verified/ (F
 <h2>Implementation audit (session f75410bb, 2026-11-20)</h2>
 <p class="lead">The audit and reproducible checks are published in <a href="../session-f75410bb/review.html">the detailed review</a>. The rows below highlight issues found in the current tree; they are open, not claimed as fixed.</p>
 <div class="tablewrap"><table><thead><tr><th>Finding</th><th>Observed issue</th><th>Action / status</th><th>Official source</th></tr></thead><tbody>
-<tr><td>Trade request contract</td><td><code>server/</code> submits to <code>POST /orders</code> using fields that do not match the documented Create Order V2 request.</td><td>Needs backend-owner correction and a contract test; no trade was sent.</td><td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2">Create Order V2</a></td></tr>
+<tr><td>Trade request contract</td><td>The earlier backend submitted to <code>POST /orders</code> with a non-V2 body. Its public HTTP endpoint lacked user authentication.</td><td>HTTP order and private portfolio routes now fail closed; the low-level V2 client is covered by offline signature and request tests. Live trading remains unverified; see F24.</td><td><a href="https://docs.kalshi.com/api-reference/orders/create-order-v2">Create Order V2</a></td></tr>
 <tr><td>Event coverage</td><td>The backend reads one event page and does not follow the response cursor.</td><td>Needs pagination before claiming a complete ranking/tracker.</td><td><a href="https://docs.kalshi.com/api-reference/events/get-events">Get Events</a></td></tr>
 <tr><td>Alerts freshness</td><td>The two alert panes are generated from static snapshots and do not refresh while open; high-ROI is a rule-based filter, not a trained model.</td><td>Snapshot-only; not real-time or model-selected. Keep that limitation visible.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-trades">Get Trades</a> · <a href="https://docs.kalshi.com/getting_started/quick_start_websockets">WebSocket quick start</a></td></tr>
 <tr><td>Alert joins / sources</td><td>With the committed snapshot files, the page rendered 14 alert rows but matched 0 ticker rows to market metadata; the default high-ROI feed was empty and six alert rows had no source link.</td><td>Needs a same-source data join, matching freshness metadata, and official per-row links.</td><td><a href="https://docs.kalshi.com/api-reference/market/get-markets">Get Markets</a> · <a href="https://docs.kalshi.com/api-reference/market/get-trades">Get Trades</a></td></tr>
