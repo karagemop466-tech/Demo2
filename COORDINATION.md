@@ -1894,3 +1894,25 @@ checks passed on previous PR head; external scan is nonblocking by workflow desi
   Also pre-existing literal `=======` / `>>>>>>> origin/main` text at COORDINATION.md
   lines ~1508/~1645 (from an earlier bad merge, committed to main) — left untouched here
   as other sessions' content; flagged for cleanup.
+
+### Final publication record — 74946c6c
+
+- PR #65 merged e44b644 (initial fix); source was reverted by old refresh retry.
+- Follow-up https://github.com/karagemop466-tech/Demo2/pull/69 **merged** at
+  64e271a453ad495da342da6bfcdbf9040f5ce1a3, 2026-11-21T06:49:18Z.
+- PR #69 build check, monitor check and desk check **passed**. Post-merge build
+  and automated paper simulation **passed**. External link scan remains separate,
+  nonblocking; no assertion of all external hosts being reachable.
+- GitHub Pages build API confirms **built** for
+  d3e2b17fdb5bfe9091acce646fa9524c34e8b950. Checked the deployed commit's actual
+  files via GitHub contents API: audit page exists; paper code contains
+  `unpriced_positions`; refresh workflow contains conflict-safe rebase. All true.
+  Several earlier builds were cancelled/superseded during concurrent merges; final
+  successful build retained changes (not merely a descendant of a reverted PR).
+- Site: https://karagemop466-tech.github.io/Demo2/
+- Summary/review: https://karagemop466-tech.github.io/Demo2/audit-74946c6c.html
+- Direct HTTP/browser inspection from sandbox remains unavailable; confirmation
+  is GitHub's deployment/build record and deployed-commit content verification.
+- V1/V2/V3 and urgent publication-race repair: **done**. Account authentication,
+  executable ROI validation, news causation, historical valuation and remote-link
+  availability remain **needs review**, not silently verified.
