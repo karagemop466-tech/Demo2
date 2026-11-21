@@ -1505,7 +1505,7 @@ Live responses read this session: `/exchange/status` (trading_active true),
 CI. It covers topic mapping from official fields, verbatim value copying (an absent field stays
 absent), 24-hour dollars from trade prints, order-book normalisation, rolling-log persistence,
 and that a rate-limited series reports "0 markets AND 1 failed series".
-=======
+---
 # Session `arena/a984e8f4-demo2` — gap-fill + integration (CLAIM, 2026-11-20 19:47 UTC)
 
 Branch: `arena/a984e8f4-demo2`, branched from `main` at `e7fabd4` (merged `origin/main` at
@@ -1642,7 +1642,6 @@ The claim does not authorize edits to other sessions' implementation code (`serv
 | F-5 | Audit the deployed Live Alerts page's real browser request paths and publish any live-only failure | done | f75410bb | `session-f75410bb/review.html`, `COORDINATION.md`, `tools/build_content.py`, generated `pages/flagged.html` |
 
 **F-5 live-browser finding (2026-11-20):** the deployed `https://karagemop466-tech.github.io/Demo2/pages/live-alerts.html?cb=1` rendered “Could not load alert data: 503.” The live page source calls `fetch('data/snapshot.json')` / `fetch('data/jumps.json')` from a `/pages/` URL, which targets `/pages/data/...`; the actual published files at `/data/...` are available. Logged as R9 and added to the canonical Flagged for Review generator/page. **Cross-scope request:** owner of `tools/build_site.py` / Live Alerts (session 848af77d) please fix the generated fetch paths (for project pages, `../data/...`) and verify live browser loading; source code is not edited in this audit. Kalshi endpoint docs: https://docs.kalshi.com/api-reference/market/get-markets and https://docs.kalshi.com/api-reference/market/get-trades.
->>>>>>> origin/main
 
 ---
 
@@ -1949,3 +1948,41 @@ PR: https://github.com/karagemop466-tech/Demo2/pull/70
   for real portfolio/execution (Q4); shared concurrency group for all data writers;
   literal conflict-marker cleanup at COORDINATION.md ~1508/~1645; add
   `tools/test_series_topic.py` to the CI gate (cross-scope request logged above).
+
+---
+
+## Session `1409dce9` — defect resolution, live verification & final integration (2026-11-21)
+
+Branch: `arena/1409dce9-demo2` (branched from `main` at `ddadabe`, merged `origin/main` at `f6bb863` (including `d9fcbb2a` PR #70 + `e29ebc3a` PR #73)).
+
+### Task table
+
+| # | Task | Status | Owner | Files |
+|---|------|--------|-------|-------|
+| J-1 | Fix `collect_resolutions` (`min_settled_ts`, `mve_filter=exclude`, `limit=1000`, longest-prefix `resolve_series_ticker`, reuse `series_idx`/`topic_cache`, paper-portfolio ticker fallback, combined with `merge_scope_resolutions`) | done | 1409dce9 | `tools/collector.py`, `tests/test_collector_output.py` |
+| J-2 | Fix `alerts.js` live quote/settlement polling (`GET /markets?tickers=…` batches), `KR.detectJumps` 4-dp float rounding, `index.html` quick topic/alert nav + live browser candlestick/orderbook refresh, `pages/gas.html` blurb, `pages/live-alerts.html` dynamic `#jumpsAsOf` to stop generator drift, `tools/build_content.py` verification/flagged updates (`orderbook_fp` dollar-string literal fix, 2026-11-21 status) | done | 1409dce9 | `assets/alerts.js`, `assets/site.js`, `tools/build_site.py`, `tools/build_content.py`, `index.html`, `pages/*` |
+| J-3 | Fix `paper_trade.py` 4-dp `history_move` precision + `NEAR_TERM_RESERVE = 6` (`<= 7d` close) slot reservation while keeping `74946c6c` unknown-valuation safety | done | 1409dce9 | `tools/paper_trade.py`, `tests/test_paper_trade.py` |
+| J-4 | Fix `server/kalshiClient.js` + `server/index.js` Create Order V2 (`POST /portfolio/events/orders`, full `/trade-api/v2/...` signing pathname, V2 payload + `order_direction` mapping), Cancel Order V2 (`DELETE /portfolio/events/orders/{id}?market_ticker=…`), `GET /portfolio/orders`, `getAllEvents` cursor pagination, and `orderbook` dollar spread (`1 - (yes + no)`) | done | 1409dce9 | `server/kalshiClient.js`, `server/index.js`, `tests/app.test.js` |
+| J-5 | Fix workflow push-retry (`git reset --mixed origin/main` + stage only each workflow's own files so concurrent runs never conflict or revert unrelated commits), remove colliding `actions/deploy-pages@v4` vs legacy `pages-build-deployment`, and wire Python + Node test suites into `ci.yml` | done | 1409dce9 | `.github/workflows/{refresh-data,paper-trade,desk-verify,pages,ci}.yml` |
+| J-6 | Full verification gates, PR to `main`, merge without waiting, confirm CI + GitHub Pages deploy, record PR & run URLs | in progress | 1409dce9 | `COORDINATION.md`, PR operations |
+
+### Official sources verified directly (2026-11-21)
+
+- `https://docs.kalshi.com/getting_started/demo_env` — demo REST/WS roots (`https://external-api.demo.kalshi.co/trade-api/v2`, `wss://external-api-ws.demo.kalshi.co/trade-api/ws/v2`) and demo price disclaimer.
+- `https://docs.kalshi.com/api-reference/market/get-markets` — `limit <= 1000`, `min_settled_ts` sorting by settlement time, `mve_filter=exclude`, `tickers=<list>`, `cursor` pagination.
+- `https://docs.kalshi.com/api-reference/events/get-events` — `limit <= 200`, `cursor` pagination.
+- `https://docs.kalshi.com/api-reference/market/get-market-orderbook` — `orderbook_fp.{yes_dollars, no_dollars}` `[price_dollars, count_fp]` bid-only pairs.
+- `https://docs.kalshi.com/api-reference/market/get-trades` — `GET /markets/trades?min_ts=…&limit=1000`.
+- `https://docs.kalshi.com/api-reference/orders/create-order-v2` & `https://docs.kalshi.com/getting_started/order_direction` — `POST /portfolio/events/orders`, `bid ≡ yes`, `ask ≡ no`, unified YES-leg price scale, fixed-point `count` (`2dp`) and `price` (`4dp`).
+- `https://docs.kalshi.com/getting_started/quick_start_websockets` — signed handshake headers required.
+
+### Pre-PR verification gates (all passing on merged tree)
+
+- `python3 tests/test_collector_output.py`: 54/54 PASS
+- `python3 tests/test_paper_trade.py`: 41/41 PASS
+- `python3 tools/test_series_topic.py`: 39/39 PASS
+- `python3 session-eeb796d7/tools/test_collector_fix.py`: 13/13 PASS
+- `npm test` (`tests/app.test.js`): 11/11 PASS
+- `python3 tools/check.py`: 125 HTML files, 20 generated pages, links/nav/data/secrets/js clean (108 non-2xx API log entries surfaced on `pages/verification.html` per policy)
+- `python3 scripts/check_links.py`: 11,231 references across 125 HTML files, 0 broken
+- `node scripts/render_check.mjs`: 5/5 pages rendered with data, 0 errors

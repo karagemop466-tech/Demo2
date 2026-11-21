@@ -201,10 +201,11 @@ def paginate(url: str, key: str, signer: Signer | None = None, max_pages: int = 
     """Cursor pagination exactly as documented in getting_started/pagination.md."""
     out: list[dict] = []
     cursor = ""
+    has_limit = "limit=" in url
     for _ in range(max_pages):
-        u = url + ("&" if "?" in url else "?") + "limit=200"
+        u = url if has_limit else (url + ("&" if "?" in url else "?") + "limit=200")
         if cursor:
-            u += "&cursor=" + urllib.parse.quote(cursor, safe="")
+            u += ("&" if "?" in u else "?") + "cursor=" + urllib.parse.quote(cursor, safe="")
         j, status = get_json(u, signer)
         if not j:
             break
@@ -437,6 +438,8 @@ def collect_scope(signer: Signer | None) -> dict:
 
     return {
         "series_index_size": len(series_idx),
+        "series_idx": series_idx,
+        "topic_cache": topic_cache,
         "topic_catalog": catalog,
         "events_scanned": len(events),
         "markets_in_scope": rows,
@@ -552,16 +555,73 @@ def collect_candles(rows: list[dict], signer: Signer | None, top_n: int = 8) -> 
     return out
 
 
-def collect_resolutions(signer: Signer | None, limit_markets: int = 400) -> list[dict]:
-    """Settled in-scope markets with the official yes/no `result`."""
-    settled = paginate(DEMO_REST + "/markets?status=settled", "markets", signer, max_pages=10)
-    series_idx = load_series_index(signer)
-    topic_cache = {t: series_topic(s) for t, s in series_idx.items()}
+def resolve_series_ticker(event_ticker: str, known_series: dict[str, Any]) -> str:
+    """Match an event_ticker to its series_ticker using the longest known prefix.
+
+    Avoids splitting on the first hyphen when a series ticker itself contains '-'
+    (e.g. 'GOVPARTY-NH' inside 'GOVPARTY-NH-26'). Falls back to first segment.
+    """
+    if not event_ticker:
+        return ""
+    parts = event_ticker.split("-")
+    for i in range(len(parts), 0, -1):
+        cand = "-".join(parts[:i])
+        if cand in known_series:
+            return cand
+    return parts[0]
+
+
+def collect_resolutions(
+    signer: Signer | None,
+    limit_markets: int = 400,
+    series_idx: dict[str, dict] | None = None,
+    topic_cache: dict[str, str | None] | None = None,
+    lookback_days: int = 30,
+) -> list[dict]:
+    """Settled in-scope markets with the official yes/no `result`.
+
+    Per official Get Markets docs, `min_settled_ts` sorts settled markets by
+    settlement time (latest first), and `mve_filter=exclude` omits combo legs.
+    Without `min_settled_ts`, `/markets?status=settled` sorts by creation time
+    and can return zero in-scope resolutions on the first pages.
+    """
+    if series_idx is None:
+        series_idx = load_series_index(signer)
+    if topic_cache is None:
+        topic_cache = {t: series_topic(s) for t, s in series_idx.items()}
+
+    since = int(time.time()) - lookback_days * 86400
+    settled_url = (
+        f"{DEMO_REST}/markets?status=settled&min_settled_ts={since}"
+        "&mve_filter=exclude&limit=1000"
+    )
+    settled = paginate(settled_url, "markets", signer, max_pages=6)
+
+    # Also check any open paper-portfolio tickers directly so simulated positions
+    # that settled outside the top pages are still tracked until yes/no.
+    paper_path = DATA / "paper_portfolio.json"
+    if paper_path.exists():
+        try:
+            pp = json.loads(paper_path.read_text())
+            open_tickers = [
+                p.get("ticker") for p in (pp.get("positions") or []) if p.get("ticker")
+            ]
+            seen_tickers = {m.get("ticker") for m in settled if m.get("ticker")}
+            missing = [t for t in open_tickers if t not in seen_tickers]
+            for i in range(0, len(missing), 50):
+                batch = missing[i:i + 50]
+                q = urllib.parse.quote(",".join(batch), safe=",")
+                j, _ = get_json(f"{DEMO_REST}/markets?tickers={q}", signer)
+                for m in (j or {}).get("markets") or []:
+                    if (m.get("result") or "") in ("yes", "no"):
+                        settled.append(m)
+        except (OSError, json.JSONDecodeError):
+            pass
+
     rows: list[dict] = []
     for m in settled:
         ev = m.get("event_ticker") or ""
-        # The series ticker is the leading segment of the event ticker.
-        st = ev.split("-")[0] if ev else ""
+        st = m.get("series_ticker") or resolve_series_ticker(ev, series_idx)
         topic = topic_cache.get(st)
         if topic not in TOPICS:
             continue
@@ -713,7 +773,14 @@ def main() -> int:
 
     books = {} if args.scope_only else collect_orderbooks(rows, signer)
     candles = {} if args.scope_only else collect_candles(rows, signer)
-    resolutions = merge_scope_resolutions(collect_resolutions(signer), rows)
+    resolutions = merge_scope_resolutions(
+        collect_resolutions(
+            signer,
+            series_idx=scope["series_idx"],
+            topic_cache=scope["topic_cache"],
+        ),
+        rows,
+    )
 
     # Publish the largest markets per topic (product scope: "highest dollar amount
     # live events"). Full in-scope counts are kept; trimmed counts are recorded.

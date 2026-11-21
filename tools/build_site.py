@@ -139,6 +139,13 @@ DASH_BODY = r"""
 elections, culture, crypto, golf</b>. Ranked by <i>estimated</i> dollar volume, charted by
 contract price over time, with order-book liquidity at each price, tracked until the market
 resolves <b>yes</b> or <b>no</b>.</p>
+<p class="lead" style="font-size:.95em">Topics: <a href="pages/gas.html">Gas</a> ·
+<a href="pages/elections.html">Elections</a> · <a href="pages/culture.html">Culture</a> ·
+<a href="pages/crypto.html">Crypto</a> · <a href="pages/golf.html">Golf</a> ·
+<a href="alerts.html"><b>Live Alert Chats (≥ $0.10)</b></a> ·
+<a href="pages/resolutions.html">Resolutions</a> ·
+<a href="pages/portfolio.html">Portfolio &amp; Simulated Lab</a> ·
+<a href="pages/analysis.html">Analysis</a></p>
 <p class="lead" style="font-size:.95em">All sections: <a href="rankings.html">Dollar Rankings</a> ·
 <a href="verified/index.html">Verified rows</a> · <a href="dashboard/index.html">Dashboard</a> ·
 <a href="site/index.html">Site</a> · <a href="intelligence/index.html">Intelligence</a> ·
@@ -919,15 +926,15 @@ def build_live_pages() -> None:
 
     category_page(
         "gas", "Gas prices",
-        "Fuel-price markets on the Kalshi demo exchange. The in-scope series are the ones tagged "
-        "<code>Gas</code>. <b>Verified on 2026-11-20:</b> the demo environment lists "
-        "<code>DIESEL</code> (weekly diesel price) and <code>DIESELM</code> (monthly diesel price), "
-        "both settled against U.S. Energy Information Administration data, but has <b>no open events "
-        "or markets</b> for either series &mdash; so this page shows series, not live prices. That is "
-        "a property of the demo exchange, not a gap in the data; the page fills in automatically "
-        "when those markets are listed.",
-        'tags include <code>Gas</code>; categories are <code>Economics</code> — so category alone '
-        'would not find these, which is why the tag is used')
+        "Fuel-price markets on the Kalshi demo exchange. Scope is identified strictly from "
+        "official series records: <code>tags</code> containing <code>Gas</code> (<code>DIESEL</code>, "
+        "<code>DIESELM</code>, settled against U.S. Energy Information Administration data) and "
+        "<code>product_metadata.scope == \"Gasoline\"</code> (<code>KXAAAGASD</code>, AAA national "
+        "retail gasoline averages). <b>Note:</b> <code>DIESEL</code> and <code>DIESELM</code> "
+        "currently have no open demo events, whereas <code>KXAAAGASD</code> surfaces live gas-price "
+        "contracts when active; crude oil (<code>KXWTI</code>) is excluded because it is not retail gas.",
+        'tags include <code>Gas</code> or <code>product_metadata.scope == "Gasoline"</code>; '
+        'categories are <code>Economics</code>/<code>Other</code>, so category alone is insufficient')
     category_page(
         "elections", "Elections",
         "Election markets: primaries, seat control, party control and international votes. "
@@ -1187,7 +1194,7 @@ def build_alerts_page(snap: dict) -> None:
     var thr=parseFloat(thrInp.value)||THRESHOLD_DEFAULT;
     var minv=parseFloat(volInp.value)||MINVOL_DEFAULT;
     var roi=allRows.filter(function(r){
-      var d=Math.abs(parseFloat(r.delta)||0);
+      var d=Math.round(Math.abs(parseFloat(r.delta)||0)*1e4)/1e4;
       var raw=(r.est_vol||'').toString().replace(/[^0-9.]/g,'');
       var known=raw!=='';
       var e=parseFloat(raw||'0');
@@ -1207,6 +1214,8 @@ def build_alerts_page(snap: dict) -> None:
     fetch('../data/jumps.json?t='+Date.now()).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
   ]).then(function(res){
     var snap=res[0], jdata=res[1];
+    var asOf=(jdata.generated_from&&jdata.generated_from.snapshot_generated_at)||jdata.generated_at_utc||'';
+    var asOfEl=$('jumpsAsOf'); if(asOfEl&&asOf) asOfEl.textContent=asOf;
     var markets=(snap.markets||[]);
     var mktByTicker={};
     markets.forEach(function(m){if(m.market_ticker)mktByTicker[m.market_ticker]=m;});
@@ -1271,7 +1280,7 @@ why a move happened.</p>
 <a href="https://docs.kalshi.com/api-reference/market/get-markets">get-markets</a>). Market links point to the
 Kalshi series page pattern (checked against the live site); cause is never inferred — each row links to the
 market's own trade/market API responses and is flagged <span class="pill flag">cause unverified</span>.
-Data as of {jumps_gen or "not collected yet"}; the collector runs every 10 minutes via
+Data as of <span id="jumpsAsOf">not collected yet</span>; the collector runs every 10 minutes via
 <a href="https://docs.kalshi.com/getting_started/demo_env">GitHub Actions</a>.</p>
 """
     page(path="pages/live-alerts.html", title="Live Alerts", active="alerts", body=body, extra_js=js,
